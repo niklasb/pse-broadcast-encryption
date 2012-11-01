@@ -1,0 +1,165 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{amssymb} % needed for math
+\usepackage{amsmath} % needed for math
+\usepackage[utf8]{inputenc} % this is needed for german umlauts
+\usepackage[ngerman]{babel} % this is needed for german umlauts
+\usepackage[T1]{fontenc}    % this is needed for correct output of umlauts in pdf
+\usepackage[margin=2.5cm]{geometry} %layout
+\usepackage{booktabs}
+
+% this is needed for forms and links within the text
+\usepackage{hyperref}
+
+% glossar, see http://en.wikibooks.org/wiki/LaTeX/Glossary
+% has to be loaded AFTER hyperref so that entries are clickable
+\usepackage[nonumberlist]{glossaries}
+
+% The following is needed in order to make the code compatible
+% with both latex/dvips and pdflatex.
+\ifx\pdftexversion\undefined
+\usepackage[dvips]{graphicx}
+\else
+\usepackage[pdftex]{graphicx}
+\DeclareGraphicsRule{*}{mps}{*}{}
+\fi
+
+\makeglossary
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Variablen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\authorName}{Niklas Baumstark}
+\newcommand{\auftraggeber}{Karlsruhe Institute of Technology}
+\newcommand{\auftragnehmer}{Eine Firma}
+\newcommand{\projektName}{Lösungseinzugszentrale für die Softwaretechnik}
+\newcommand{\tags}{\authorName, Lastenheft, KIT, Informatik, SWT, Tichy}
+\newcommand{\glossarName}{Glossar}
+\title{\projektName~(Lastenheft)}
+\author{\authorName}
+\date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PDF Meta information
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypersetup{
+  pdfauthor   = {\authorName},
+  pdfkeywords = {\tags},
+  pdftitle    = {\projektName~(Lastenheft)}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Create a shorter version for tables.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\addrow[2]{#1 &#2\\ }
+
+\newcommand\addheading[2]{#1 &#2\\ \hline}
+\newcommand\tabularhead{\begin{tabular}{lp{13cm}}
+\hline
+}
+
+\newcommand\addmulrow[2]{ \begin{minipage}[t][][t]{2.5cm}#1\end{minipage}%
+   &\begin{minipage}[t][][t]{8cm}
+    \begin{enumerate} #2   \end{enumerate}
+    \end{minipage}\\ }
+
+\newenvironment{usecase}{\tabularhead}
+{\hline\end{tabular}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% THE DOCUMENT BEGINS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+  \begin{tabular}[t]{ll}
+	Projekt:       & \quad \projektName \\[1.2ex]
+	Auftraggeber:  & \quad \auftraggeber\\[1.2ex]
+	Auftragnehmer: & \quad \auftragnehmer\\[1.2ex]
+  \end{tabular}
+
+\begin{tabular}{|p{3 cm}|p{3 cm}|p{5 cm}|}
+\hline
+\textbf{Version} & \textbf{Datum} & \textbf{Autor(en)} \\
+\hline
+\hline
+1.0 & 29.04.2012 & \authorName \\
+\hline
+\end{tabular}
+
+\tableofcontents          % Inhaltsverzeichnis ausgeben
+
+\section{Zielbestimmung}
+
+Der Übungsbetrieb der Softwaretechnik-Vorlesung läuft im Groben wie folgt ab: Die Übungsleiter veröffentlichen Übungsblätter, welche Aufgaben für die Studierenden enthalten.  Unter diesen Aufgaben finden sich auch praktische Programmierübungen.  In Tutorien, denen die Studenten zugeteilt werden, werden parallel zur Vorlesung die Lerninhalte noch einmal aufgearbeitet und vorgestellt, sowie die Übungsaufgaben vorbereitet.
+
+Bisher wurde die Korrektur von Lösungsabgaben der Übungsblätter ohne eine zentrale Verwaltungsstelle organisiert.  Die Aufgaben inklusive Source-Code wurden auf Papier abgegeben, um Authentizität zu gewährleisten.  Mit der wachsenden Anzahl der Studenten ist dieses Vorgehen für die Tutoren inzwischen jedoch nicht mehr zu realisieren.  Stattdessen kristalliert sich die Notwendigkeit einer zentralen, computergestützten Plattform heraus, welche die Tutoren in ihrer Arbeit unterstützt und im Ganzen den Übungsbetrieb stark vereinfacht.
+
+Das Produkt soll nun die Veranstalter der Softwaretechnik-Vorlesung in die Lage versetzen, den Übungsbetrieb durch Einsatz elektronischer Hilfsmittel kosteneffektiver zu organisieren.
+
+\section{Produkteinsatz}
+
+Das Produkt dient der Verwaltung von Übungsblättern und -aufgaben, sowie der Entgegennahme von Lösungen der Teilnehmer.  Es dient zudem als zentrale Bewertungsplattform für die Tutoren und als Kommunikationsplattform aller Benutzer untereinander.
+
+Es soll unter Einsatz des Produktes für alle Beteiligten (Übungsleiter, Tutoren und Studenten) einfacher werden, ihre ihnen durch den Übungsbetrieb auferlegten Aufgaben zu erfüllen.
+
+\section{Funktionale Anforderungen}
+\begin{usecase}
+
+\addheading{Nummer}{Beschreibung}
+\addrow{/FA10/} {Authentifizerung von Benutzern durch den bestehenden (LDAP-)Verzeichnisdienst des SCC.}
+\addrow{/FA20/} {Möglichkeit für Übungsleiter zur Verwaltung (Zuweisung, Löschung) von Benutzergruppen (Tutor, Student, Übungsleiter) der authentifizierten Benutzern sowie zur Festlegung der Zuordnung zwischen Studenten und Tutoren}
+\addrow{/FA30/} {Möglichkeit für Übungsleiter zur Ersterfassung, Änderung und Löschung von Übungsblättern und zugehörigen Aufgaben.  Für Übungsblätter soll eine Deadline konfigurierbar sein, bis zu der Lösungen akzeptiert werden.  Es soll für jede Aufgabe einzeln festgelegt werden können, ob ein Online-Abgabe in Form eines Dateiuploads möglich ist, und wenn ja, welche Bedingungen für die Abgabe gelten müssen (z.B. keine Compilerfehler, keine Checkstyle-Violations).}
+\addrow{/FA40/} {Hochladen von Lösungsdateien durch Studenten für ein spezifisches Aufgabenblatt, im Rahmen der Deadline. Die hochgeladene Lösung soll direkt auf Erfüllung der Abgabebedingungen getestet und im Fehlerfall abgewiesen werden.}
+\addrow{/FA50/} {Tutoren sollen am Ende der Deadline eines Übungsblattes in der Lage sein, genau die Abgaben der ihnen zugeordneten Studenten einzusehen/herunterzuladen und diese mit Punkten zu bewerten (sowohl elektronische Abgaben als auch andere).}
+\addrow{/FA60/} {Übersicht für Übungsleiter über alle Studenten sowie für Tutoren über die zugeordneten Studenten: Punktestand, abgegebene Aufgaben etc.}
+\addrow{/FA70/} {Kommunikation zwischen allen Benutzern des Systems}
+
+\end{usecase}
+
+\section{Produktdaten}
+\begin{usecase}
+
+\addheading{Nummer}{Beschreibung}
+\addrow{/PD10/} {Es ist die Zuordnung von Benutzergruppen, sowie die Zuordnung von Studenten zu Tutoren zu speichern}
+\addrow{/PD20/} {Es sind relevante Daten über die Übungsblätter und Aufgaben zu speichern}
+\addrow{/PD30/} {Es sind die Abgaben der Studenten zu speichern.}
+
+\end{usecase}
+
+\section{Nichtfunktionale Anforderungen}
+\begin{usecase}
+
+\addheading{Nummer}{Beschreibung}
+\addrow{/NF10/} {Die Plattform wird als Webapplikation realisiert, sodass ein moderner Browser zur Benutzung ausreicht.}
+\addrow{/NF20/} {Die Funktion /FA60/ gibt eine schnelle Rückmeldung (weniger als 20 Sekunden für das Überprüfen der Lösung und weniger als 10 Minuten bis zum Erhalt der Bestätigungsmail). Die Reaktionszeiten der anderen Funktionen liegt in einem annehmbaren Rahmen (unter 10 Sekunden für einen Seitenabruf bei einer zeitgemässen Internetverbindung von über 1000kbit/s)}
+\addrow{/NF30/} {Das System kann 1500 Studenten und 100 Tutoren gleichzeitig verwalten}
+\addrow{/NF40/} {Benutzbarkeit: Die Tutoren sollen in der Lage sein, für alle ihnen zugeordneten Studenten zusammen die Benotungspunkte einzutragen, sodass sie nicht durch Seitenladezeiten zwischen den einzelnen Bewertungen in ihrer Arbeit behindert werden.}
+
+\end{usecase}
+
+\section{Systemmodelle}
+\subsection{Szenarien}
+\subsubsection{Lebenslauf eines Übungsblatts}
+
+Bob, der Übungsleiter lädt ein neues Übungsblatt in das System. Die Studenten haben nun 2 Wochen Zeit, dieses zu bearbeiten. Während die Studenten Alice und Gertrude die Zeit nutzen, eine Lösung erarbeiten und diese hochladen, lässt Mirko die Frist verstreichen. Jonas, der Tutor der drei, hat nun weniger zu tun als erwartet: Er muss nur zwei Lösungen bewerten, was sich in einem einzigen Bearbeitungsschritt erledigen lässt.
+
+\subsection{Anwendungsfälle}
+\subsubsection{Lösungsabgabe}
+
+John, ein Student, hat eine Lösung für die Programmieraufgabe des aktuellen Übungsblatts erarbeitet. Er besucht also die Lösungseinzugszentrale um diese einzureichen. Dazu loggt er sich mit seinem SCC-Benutzeraccount ein. Er wählt aus, welche Aufgabe er bearbeitet hat und findet ein Uploadformular vor, in welches er seine Abgabedatei einträgt. Er bestätigt den Upload und sieht wenige Sekunden später das Ergebnis der automatischen Überprüfung: Alle Tests sind bestanden.
+
+\subsubsection{Bewertung}
+
+Jonas, John's Tutor, loggt sich mit seinem SCC-Benutzeraccount in der Lösungseinzugszentrale ein und wird als Tutor vom System erkannt.  Da die Frist für das letzte Übungsblatt abgelaufen ist, erwartet ihn eine Übersicht der Abgaben seiner Studenten. Mit einem Mausklick gelangt er zu einem Bewertungsformular mit einer tabellenartigen Übersicht über die Lösungen.  Er trägt hier seine Benotungspunkte für jeden Schüler ein und bestätigt.
+
+\subsubsection{Punkteübersicht}
+
+Jonas will nach dem dritten Übungsblatt sehen, wie der aktuelle Stand seiner Studenten ist.  Dazu loggt er sich in der LEZ ein und navigiert zur Punkteübersicht. Diese zeigt ihm eine genaue Auflistung seiner Studenten mit deren Punkten für die einzelnen Übungsblätter und einer Gesamtpunktzahl.
+
+\subsubsection{Visualisierung}
+
+\includegraphics{usecase.1}
+
+\clearpage
+\input{glossary}
+\end{document}

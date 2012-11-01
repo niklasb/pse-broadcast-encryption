@@ -1,0 +1,40 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Begriffslexikon zur Beschreibung des Produkts						 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newglossaryentry{uebungsleiter}
+{
+  name=Übungsleiter,
+  description={Organisator des Übungsbetriebs, administrativer Benutzer innerhalb der Anwendung}
+}
+\newglossaryentry{student}
+{
+  name=Student,
+  description={Teilnehmer der Übungsbetriebs, muss Übungsaufgaben bearbeiten und Lösungen für Übungsaufgaben abgeben (u.U. durch Dateiupload in der Anwendung). Ist genau einem Tutor zugeordnet}
+}
+\newglossaryentry{tutor}
+{
+  name=Tutor,
+  description={Organisiert Tutorien für die ihm zugeordneten Studenten. Innerhalb der Anwendung hat er die Aufgabe, die Abgaben seiner Studenten mit Punkten zu bewerten}
+}
+\newglossaryentry{uebungsblatt}
+{
+  name=Übungsblatt,
+  description={Eine Sammlung von Übungsaufgaben, die eine gemeinsame Abgabedeadline besitzen. Von den Übungsleitern erstellt und verwaltet}
+}
+\newglossaryentry{uebungsaufgabe}
+{
+  name=Übungsaufgabe,
+  description={Eine konkrete Arbeitsanweisung oder Frage für die Studenten. Kann entweder in der Anwendung als elektronisch zu bearbeiten markiert sein, in welchem Fall die Abgabe einer Lösung in elektronischer Form erfolgen {\em muss}, oder wird andernfalls auf Papier bearbeitet}
+}
+
+
+% Setze den richtigen Namen für das Glossar
+\renewcommand*{\glossaryname}{\section{\glossarName}}
+
+% Drucke das gesamte Glossar
+\glsaddall
+\printglossaries
+
+% Trage das Glossar in das Inhaltsverzeichnis ein
+\stepcounter{section}
+\addcontentsline{toc}{section}{\numberline {\thesection} \glossarName}
