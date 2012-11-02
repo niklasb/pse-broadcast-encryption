@@ -10,7 +10,7 @@
 % this is needed for forms and links within the text
 \usepackage{hyperref}
 
-% glossar, see http://en.wikibooks.org/wiki/LaTeX/Glossary
+% glossary, see http://en.wikibooks.org/wiki/LaTeX/Glossary
 % has to be loaded AFTER hyperref so that entries are clickable
 \usepackage[nonumberlist]{glossaries}
 
@@ -25,9 +25,7 @@
 
 \makeglossary
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Variablen
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Variables
 \newcommand{\authorName}{Mohammed Abu~Jayyab, Niklas Baumstark,
                          Tobias Gräf, Amrei Loose, Christoph Michel}
 \newcommand{\dateFirstVersion}{\today}
@@ -42,20 +40,15 @@
 \author{\authorName}
 \date{\today}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PDF Meta information
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypersetup{
   pdfauthor   = {\authorName},
   pdfkeywords = {\tags},
   pdftitle    = {\doctitle}
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create a shorter version for tables.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand\addrow[2]{#1 &#2\\ }
-
 \newcommand\addheading[2]{#1 &#2\\ \hline}
 \newcommand\tabularhead{\begin{tabular}{lp{13cm}}
 \hline
@@ -69,13 +62,10 @@
 \newenvironment{usecase}{\tabularhead}
 {\hline\end{tabular}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% THE DOCUMENT BEGINS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
 \input{frontpage}
-\tableofcontents          % Inhaltsverzeichnis ausgeben
+\tableofcontents
 
 \section{Zielbestimmung}
 
