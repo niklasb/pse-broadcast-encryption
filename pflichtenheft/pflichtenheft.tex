@@ -103,17 +103,17 @@ Entgegen dem aktuellen Stand der Technik skaliert das System mit der Anzahl ausg
 \newcommand{\mussKuerzel}{MU}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/\mussKuerzel10/} {Der Server muss Daten versenden können.}
-\addrow{/\mussKuerzel20/} {Der Server muss Daten verschlüsseln können.}
-\addrow{/\mussKuerzel25/} {Der Server muss über eine Trafficanzeige bzw. Log verfügen.}
-\addrow{/\mussKuerzel30/} {Der Server muss Schlüssel generieren können.}
-\addrow{/\mussKuerzel40/} {Der Server muss jedem Benutzer einen Schlüssel zuordnen können.}
-\addrow{/\mussKuerzel50/} {Der Server muss Nutzer ausschließen können.}
-\addrow{/\mussKuerzel60/} {Der Server muss ausgeschlossene Nutzer speichern.}
-\addrow{/\mussKuerzel70/} {Der Client muss sich zu einem Server verbinden können.}
-\addrow{/\mussKuerzel80/} {Der Client muss Daten empfangen können.}
-\addrow{/\mussKuerzel90/} {Der Client muss Daten entschlüsseln können.}
-\addrow{/\mussKuerzel100/} {Der Client muss entschlüsselte Daten darstellen können.}
+\addrow{/\mussKuerzel10/} {Der Server kann Daten versenden.}
+\addrow{/\mussKuerzel20/} {Der Server kann Daten verschlüsseln.}
+\addrow{/\mussKuerzel30/} {Der Server kann Schlüssel generieren.}
+\addrow{/\mussKuerzel40/} {Der Server kann jedem Benutzer einen Schlüssel zuordnen.}
+\addrow{/\mussKuerzel50/} {Der Server kann Nutzer ausschließen.}
+\addrow{/\mussKuerzel60/} {Der Client kann sich zu einem Server verbinden.}
+\addrow{/\mussKuerzel70/} {Der Client kann Daten empfangen.}
+\addrow{/\mussKuerzel80/} {Der Client kann Daten entschlüsseln.}
+\addrow{/\mussKuerzel90/} {Der Client stellt entschlüsselte Daten dar.}
+\addrow{/\mussKuerzel100/} {Der Client merkt sich die letzten ausgewählten Server,
+                            sodass ein erneuter Zugriff schnell möglich ist.}
 \addrow{/\mussKuerzel110/} {Die Verschlüsselung erfolgt mit dem vorgegeben Verfahren.}
 \end{usecase}
 
@@ -122,26 +122,39 @@ Entgegen dem aktuellen Stand der Technik skaliert das System mit der Anzahl ausg
 \newcommand{\wunschKuerzel}{WU}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/\wunschKuerzel10/} {Der Client kann mehrere Serverfavoriten speichern, welche über ein Kontextmenü auswählbar sind.}
-\addrow{/\wunschKuerzel20/} {Der Client kann in einen "WIFI only" Modus wechseln, sodass er nur Daten im WLAN empfängt.}
+\addrow{/\wunschKuerzel10/} {Der Benutzer kann im Client mehrere Serverfavoriten
+                             mit Namen verwalten, welche dann über ein Kontextmenü
+                             auswählbar sind.}
+\addrow{/\wunschKuerzel20/} {Der Server führt Statistiken über Nutzdatenmenge und Traffic,
+                             um den Kommunikationsaufwand für die Verschküsselung zu
+                             analysieren}
 \addrow{/\wunschKuerzel30/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
-\addrow{/\wunschKuerzel40/} {Der Client kann empfangene Daten Buffern, um eine flüssigere Wiedergabe von empfangnen Daten zu ermöglichen.}
-\addrow{/\wunschKuerzel50/} {Es könnte ein effizienteres Verschlüsselungsverfahren als das vorgebene implementiert werden.}
-\addrow{/\wunschKuerzel60/} {Es soll möglich sein nicht nur von einer Quelle zu senden sondern von mehreren.}
+\addrow{/\wunschKuerzel40/} {Der Client puffert empfangene Daten, um eine flüssigere
+                             Wiedergabe zu ermöglichen.}
+\addrow{/\wunschKuerzel50/} {Ein effizienteres Verschlüsselungsverfahren als das vorgebene
+                             wird entwickelt und implementiert.}
+\addrow{/\wunschKuerzel60/} {Mehrere Quellen können Daten an dieselbe Multicast-Gruppe senden.}
 \end{usecase}
 
 \subsection{Abgrenzungskriterien}
 \newcommand{\abgrenzungKuerzel}{AG}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/\abgrenzungKuerzel10/} {Es wird nicht definiert, welche Art von Daten übertragen werden.}
-\addrow{/\abgrenzungKuerzel20/} {Keine bidirektionale Kommunikation zwischen Server und Klienten.}
+\addrow{/\abgrenzungKuerzel10/} {Es wird nicht definiert, welche Art von Daten
+                                 übertragen werden.}
+\addrow{/\abgrenzungKuerzel20/} {Keine bidirektionale Kommunikation zwischen Server
+                                 und Clients.}
+\addrow{/\abgrenzungKuerzel30/} {Es wird kein Multicast-Protokoll implementiert. Stattdessen
+                                 wird TCP zur Kommunikation eingesetzt und die Software
+                                 ist so flexibel erweiterbar, dass eine Adaption auf
+                                 ein zuverlässiges Multicastverfahren leicht möglich ist}
 \end{usecase}
 
 \section{Produkteinsatz}
 Das Produkt wird benutzt um Inhalte an eine festgelegte Benutzergruppe zu verteilen.
 \subsection{Anwendungsbereich}
-Das Produkt kann in allen Bereichen zum Einsatz kommen, die das Verteilen von Daten an bestimmte Nutzergruppen erfordert.
+Das Produkt kann in allen Bereichen zum Einsatz kommen, die das Verteilen von Daten an
+bestimmte Nutzergruppen erfordert.
 \subsection{Zielgruppen}
 
 \subsection{Betriebsbedingungen}
