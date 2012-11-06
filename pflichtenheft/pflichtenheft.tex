@@ -69,12 +69,37 @@
 
 \clearpage
 \section{Einleitung}
+
+Heutzutage gängige Streamingdienste im Internet basieren bis auf wenige Ausnahmen auf
+einem Client-Server-Modell, bei dem jeder Client eine eigene Verbindung zum Server
+aufbaut, um einen Stream zu empfangen. Das Trafficaufkommen, das durch diese Art der
+Kommunikation verursacht wird sowie die notwendige Bandbreite sind enorm. Nur große
+Anbieter von Inhalten können sich diese Form der Verteilung überhaupt leisten.
+
+Mit der naheliegenden Erkenntnis, dass bei dem beschriebenen Verfahren dieselben Daten
+vielfach an verschiedene Empfänger versendet werden, ergibt sich ein alternatives
+Vorgehen auf der Basis von Multicast: Inhalte werden vom Server nur einmal versendet
+und über das Internet an mehrere Empfänger zugestellt. Damit wird vor allem der Sender,
+aber auch die gesamte Internet-Infrastruktur entlastet.
+
+Ein großes Problem stellt allerdings die Zugangskontrolle für diese Multicast-Streams
+dar: Da nun der Server nicht mehr weiß, wer eigentlich den Stream empfängt, kann
+er auch nicht verhindern, dass unauthorisierte Benutzer Zugang erhalten. Die Lösung
+dieses Problems erfordert den Einsatz von speziellen Verschlüsselungsverfahren,
+sodass zwar jeder den Stream empfangen, aber nur authorisierte Benutzer den Stream
+entschlüsseln können. Besonderes Augenmerk muss dabei auf Effizienz gelegt werden,
+da der Kommunikationsaufwand durch die Verschlüsselung nicht wesentlich erhöht werden
+darf.
+
+Wir wurden daher beauftragt, einen Prototyp zu entwickeln, der ein effizientes
+Broadcast-Verschlüsselungsverfahren mit speziellen wünschenswerten Eigenschaften
+demonstriert.
+
 \section{Zielbestimmung}
-Die Software soll es ermöglichen Inhalte verschlüsselt von einem Server an verschiedene Klienten verteilen. Die komunikation erfolgt dabei ausschließlich unidirektional. 
-Entgegen dem aktuellen Stand der Technik skaliert das System mit den ausgeschlossenen Nutzern anstelle der Anzahl der Benutzer.
+Die Software soll es ermöglichen, Inhalte verschlüsselt von einem Server an verschiedene Klienten verteilen. Die Kommunikation soll dabei ausschließlich unidirektional erfolgen.
+Entgegen dem aktuellen Stand der Technik skaliert das System mit der Anzahl ausgeschlossenen Nutzern anstelle der gesamten Anzahl der Benutzer.
 
 \subsection{Musskriterien}
-% Musskriterien
 \newcommand{\mussKuerzel}{MU}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
@@ -92,7 +117,6 @@ Entgegen dem aktuellen Stand der Technik skaliert das System mit den ausgeschlos
 \addrow{/\mussKuerzel110/} {Die Verschlüsselung erfolgt mit dem vorgegeben Verfahren.}
 \end{usecase}
 
-% Wunschkriterien
 %TODO 'zu implementierendes Verschlüsselungsverfahren' spezifizieren
 \subsection{Wunschkriterien}
 \newcommand{\wunschKuerzel}{WU}
@@ -106,7 +130,6 @@ Entgegen dem aktuellen Stand der Technik skaliert das System mit den ausgeschlos
 \addrow{/\wunschKuerzel60/} {Es soll möglich sein nicht nur von einer Quelle zu senden sondern von mehreren.}
 \end{usecase}
 
-% Abgrenzungskriterien
 \subsection{Abgrenzungskriterien}
 \newcommand{\abgrenzungKuerzel}{AG}
 \begin{usecase}
@@ -115,19 +138,16 @@ Entgegen dem aktuellen Stand der Technik skaliert das System mit den ausgeschlos
 \addrow{/\abgrenzungKuerzel20/} {Keine bidirektionale Kommunikation zwischen Server und Klienten.}
 \end{usecase}
 
-% Produkteinsatz
 \section{Produkteinsatz}
-Das Produkt wird benutzt um Daten an exklusive Benutzer zu senden.
+Das Produkt wird benutzt um Inhalte an eine festgelegte Benutzergruppe zu verteilen.
 \subsection{Anwendungsbereich}
 Das Produkt kann in allen Bereichen zum Einsatz kommen, die das Verteilen von Daten an bestimmte Nutzergruppen erfordert.
 \subsection{Zielgruppen}
 
 \subsection{Betriebsbedingungen}
 
-% Produktfunktion
 \section{Produktfunktion}
 
-% Produktdaten
 \section{Produktdaten}
 \newcommand{\datenKuerzel}{PD}
 \begin{usecase}
@@ -138,32 +158,26 @@ Das Produkt kann in allen Bereichen zum Einsatz kommen, die das Verteilen von Da
 \addrow{/\datenKuerzel40/} {Daten die Performance betreffend werden auf dem Server gespeichert.}
 \end{usecase}
 
-% Produktumgebung
 \section{Produktumgebung}
 Der Server muss auf einem Java-fähigen System laufen.
-Der Client muss auf einem portablen Android Gerät laufen.
+Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems laufen.
 \subsection{Software}
 
 \subsection{Hardware}
 Android-Tablet/-Smartphone, Werte?!
-% Systemmodell
+
 \section{Systemmodell}
 
-% Produktleistungn
-%TODO nur Anregungen was hier stehen soll!
+% TODO nur Anregungen was hier stehen soll!
 \section{Produktleistung}
-*Angaben über die mögliche Anzahl ausgeschlossener Nutzer
-*Dauer des Groupkeyupdates, da in dieser Zeit nichts empfangen werden kann
+* Angaben über die mögliche Anzahl ausgeschlossener Nutzer
+* Dauer des Groupkeyupdates, da in dieser Zeit nichts empfangen werden kann
 * Machbarkeit der Keygeneration
 
-
-% GUI
 \section{GUI}
 
-% Testfälle
 \section{Testfälle}
 
-%Entwicklungsumgebung
 \section{Entwicklungsumgebung}
 
 \clearpage
