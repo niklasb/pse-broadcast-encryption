@@ -70,7 +70,8 @@
 \clearpage
 \section{Einleitung}
 \section{Zielbestimmung}
-Die Software soll es ermöglichen Inhalte verschlüsselt von einem Server an verschiedene Klienten verteilen. Entgegen dem aktuellen Stand der Technik skaliert das System mit den ausgeschlossenen Nutzern anstelle der Anzahl der Benutzer.
+Die Software soll es ermöglichen Inhalte verschlüsselt von einem Server an verschiedene Klienten verteilen. Die komunikation erfolgt dabei ausschließlich unidirektional. 
+Entgegen dem aktuellen Stand der Technik skaliert das System mit den ausgeschlossenen Nutzern anstelle der Anzahl der Benutzer.
 
 \subsection{Musskriterien}
 % Musskriterien
@@ -88,9 +89,11 @@ Die Software soll es ermöglichen Inhalte verschlüsselt von einem Server an ver
 \addrow{/\mussKuerzel80/} {Der Client muss Daten empfangen können.}
 \addrow{/\mussKuerzel90/} {Der Client muss Daten entschlüsseln können.}
 \addrow{/\mussKuerzel100/} {Der Client muss entschlüsselte Daten darstellen können.}
+\addrow{/\mussKuerzel110/} {Die Verschlüsselung erfolgt mit dem vorgegeben Verfahren.}
 \end{usecase}
 
 % Wunschkriterien
+%TODO 'zu implementierendes Verschlüsselungsverfahren' spezifizieren
 \subsection{Wunschkriterien}
 \newcommand{\wunschKuerzel}{WU}
 \begin{usecase}
@@ -99,14 +102,17 @@ Die Software soll es ermöglichen Inhalte verschlüsselt von einem Server an ver
 \addrow{/\wunschKuerzel20/} {Der Client kann in einen "WIFI only" Modus wechseln, sodass er nur Daten im WLAN empfängt.}
 \addrow{/\wunschKuerzel30/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
 \addrow{/\wunschKuerzel40/} {Der Client kann empfangene Daten Buffern, um eine flüssigere Wiedergabe von empfangnen Daten zu ermöglichen.}
+\addrow{/\wunschKuerzel50/} {Es könnte ein effizienteres Verschlüsselungsverfahren als das vorgebene implementiert werden.}
+\addrow{/\wunschKuerzel60/} {Es soll möglich sein nicht nur von einer Quelle zu senden sondern von mehreren.}
 \end{usecase}
 
-% Wunschkriterien
+% Abgrenzungskriterien
 \subsection{Abgrenzungskriterien}
 \newcommand{\abgrenzungKuerzel}{AG}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
 \addrow{/\abgrenzungKuerzel10/} {Es wird nicht definiert, welche Art von Daten übertragen werden.}
+\addrow{/\abgrenzungKuerzel20/} {Keine bidirektionale Kommunikation zwischen Server und Klienten.}
 \end{usecase}
 
 % Produkteinsatz
@@ -129,6 +135,7 @@ Das Produkt kann in allen Bereichen zum Einsatz kommen, die das Verteilen von Da
 \addrow{/\datenKuerzel10/} {Der Server speichert ausgeschlossene Nutzer.}
 \addrow{/\datenKuerzel20/} {Der Server ordnet Nutzern einen Schlüssel zu.}
 \addrow{/\datenKuerzel30/} {Der Server speichert zur Verschlüsselung erforderliche Daten.}
+\addrow{/\datenKuerzel40/} {Daten die Performance betreffend werden auf dem Server gespeichert.}
 \end{usecase}
 
 % Produktumgebung
@@ -142,8 +149,13 @@ Android-Tablet/-Smartphone, Werte?!
 % Systemmodell
 \section{Systemmodell}
 
-% Produktleistung
+% Produktleistungn
+%TODO nur Anregungen was hier stehen soll!
 \section{Produktleistung}
+*Angaben über die mögliche Anzahl ausgeschlossener Nutzer
+*Dauer des Groupkeyupdates, da in dieser Zeit nichts empfangen werden kann
+* Machbarkeit der Keygeneration
+
 
 % GUI
 \section{GUI}
