@@ -6,6 +6,7 @@
 \usepackage[T1]{fontenc}    % this is needed for correct output of umlauts in pdf
 \usepackage[margin=2.5cm]{geometry} %layout
 \usepackage{booktabs}
+\usepackage{xspace}
 
 % this is needed for forms and links within the text
 \usepackage{hyperref}
@@ -22,7 +23,6 @@
 \usepackage[pdftex]{graphicx}
 \DeclareGraphicsRule{*}{mps}{*}{}
 \fi
-
 \makeglossary
 
 % Variables
@@ -31,11 +31,11 @@
 \newcommand{\dateFirstVersion}{\today}
 \newcommand{\customer}{Karlsruhe Institute of Technology}
 \newcommand{\contractor}{Eine Firma}
-\newcommand{\projectName}{Broadcast-Verschlüsselung}
+\newcommand{\projectName}{Broadcast-Verschlüsselung\xspace}
 \newcommand{\tags}{\authorName, Pflichtenheft, KIT, Informatik,
                    PSE, Broadcast-Verschlüsselung}
 \newcommand{\glossarName}{Glossar}
-\newcommand{\doctitle}{\projectName\ (Pflichtenheft)}
+\newcommand{\doctitle}{\projectName (Pflichtenheft)}
 \title{\doctitle}
 \author{\authorName}
 \date{\today}
@@ -92,7 +92,7 @@ da der Kommunikationsaufwand durch die Verschlüsselung nicht wesentlich erhöht
 darf.
 
 Wir wurden daher beauftragt, einen Prototyp zu entwickeln, der ein effizientes
-Broadcast-Verschlüsselungsverfahren mit speziellen wünschenswerten Eigenschaften
+Broadcast"=Verschlüsselungsverfahren mit speziellen wünschenswerten Eigenschaften
 demonstriert.
 
 \section{Zielbestimmung}
@@ -126,7 +126,7 @@ Entgegen dem aktuellen Stand der Technik skaliert das System mit der Anzahl ausg
                              mit Namen verwalten, welche dann über ein Kontextmenü
                              auswählbar sind.}
 \addrow{/\wunschKuerzel20/} {Der Server führt Statistiken über Nutzdatenmenge und Traffic,
-                             um den Kommunikationsaufwand für die Verschküsselung zu
+                             um den Kommunikationsaufwand für die Verschlüsselung zu
                              analysieren}
 \addrow{/\wunschKuerzel30/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
 \addrow{/\wunschKuerzel40/} {Der Client puffert empfangene Daten, um eine flüssigere
@@ -140,7 +140,7 @@ Entgegen dem aktuellen Stand der Technik skaliert das System mit der Anzahl ausg
 \newcommand{\abgrenzungKuerzel}{AG}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/\abgrenzungKuerzel10/} {Es wird nicht definiert, welche Art von Daten
+\addrow{/\abgrenzungKuerzel10/} {Es wird nicht festgelegt, welche Art von Daten
                                  übertragen werden.}
 \addrow{/\abgrenzungKuerzel20/} {Keine bidirektionale Kommunikation zwischen Server
                                  und Clients.}
