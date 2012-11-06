@@ -70,89 +70,86 @@
 
 \section{Einleitung}
 \section{Zielbestimmung}
+Die Software soll es ermöglichen Inhalte verschlüsselt von einem Server an verschiedene Klienten verteilen. Entgegen dem aktuellen Stand der Technik skaliert das System mit den ausgeschlossenen Nutzern anstelle der Anzahl der Benutzer.
+
+
 \subsection{Musskriterien}
+% Musskriterien
+\newcommand{\mussKuerzel}{MU}
+\begin{usecase}
+\addheading{Nummer}{Beschreibung}
+\addrow{/\mussKuerzel10/} {Der Server muss Daten versenden können.}
+\addrow{/\mussKuerzel20/} {Der Server muss Daten verschlüsseln können.}
+\addrow{/\mussKuerzel25/} {Der Server muss über eine Trafficanzeige bzw. Log verfügen.}
+\addrow{/\mussKuerzel30/} {Der Server muss Schlüssel generieren können.}
+\addrow{/\mussKuerzel40/} {Der Server muss jedem Benutzer einen Schlüssel zuordnen können.}
+\addrow{/\mussKuerzel50/} {Der Server muss Nutzer ausschließen können.}
+\addrow{/\mussKuerzel60/} {Der Server muss ausgeschlossene Nutzer speichern.}
+\addrow{/\mussKuerzel70/} {Der Client muss sich zu einem Server verbinden können.}
+\addrow{/\mussKuerzel80/} {Der Client muss Daten empfangen können.}
+\addrow{/\mussKuerzel90/} {Der Client muss Daten entschlüsseln können.}
+\addrow{/\mussKuerzel100/} {Der Client muss entschlüsselte Daten darstellen können.}
+\end{usecase}
+
+% Wunschkriterien
 \subsection{Wunschkriterien}
+\newcommand{\wunschKuerzel}{WU}
+\begin{usecase}
+\addheading{Nummer}{Beschreibung}
+\addrow{/\wunschKuerzel10/} {Der Client kann mehrere Serverfavoriten speichern, welche über ein Kontextmenü auswählbar sind.}
+\addrow{/\wunschKuerzel20/} {Der Client kann in einen "WIFI only" Modus wechseln, sodass er nur Daten im WLan empfängt.}
+\addrow{/\wunschKuerzel30/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
+\addrow{/\wunschKuerzel40/} {Der Client kann empfangene Daten Buffern, um eine flüssigere Wiedergabe von empfangnen Daten zu ermöglichen.}
+\end{usecase}
+
+% Wunschkriterien
 \subsection{Abgrenzungskriterien}
+\newcommand{\abgrenzungKuerzel}{AG}
+\begin{usecase}
+\addheading{Nummer}{Beschreibung}
+\addrow{/\abgrenzungKuerzel10/} {Es wird nicht definiert, welche Art von Daten übertragen werden.}
+\end{usecase}
+
+% Produkteinsatz
 \section{Produkteinsatz}
+Das Produkt wird benutzt um Daten an exklusive Benutzer zu senden.
+
+% Produktfunktion
 \section{Produktfunktion}
+
+% Produktdaten
 \section{Produktdaten}
+\newcommand{\datenKuerzel}{PD}
+\begin{usecase}
+\addheading{Nummer}{Beschreibung}
+\addrow{/\datenKuerzel10/} {Der Server speichert ausgeschlossene Nutzer.}
+\addrow{/\datenKuerzel20/} {Der Server ordnet Nutzern einen Schlüssel zu.}
+\addrow{/\datenKuerzel30/} {Der Server speichert zur Verschlüsselung erforderliche Daten.}
+\end{usecase}
+
+% Produktumgebung
 \section{Produktumgebung}
+Der Server muss auf einem Java-fähigen System laufen.
+Der Client muss auf einem portablen Android Gerät laufen.
+
+% Systemmodell
 \section{Systemmodell}
+
+% Produktleistung
 \section{Produktleistung}
+
+% GUI
 \section{GUI}
-\section{Testfaelle}
+
+% Testfälle
+\section{Testfälle}
+
+%Entwicklungsumgebung
 \section{Entwicklungsumgebung}
+
+% Glossar
 \section{Glossar}
 
-\section{Zielbestimmung}
-
-Der Übungsbetrieb der Softwaretechnik-Vorlesung läuft im Groben wie folgt ab: Die Übungsleiter veröffentlichen Übungsblätter, welche Aufgaben für die Studierenden enthalten.  Unter diesen Aufgaben finden sich auch praktische Programmierübungen.  In Tutorien, denen die Studenten zugeteilt werden, werden parallel zur Vorlesung die Lerninhalte noch einmal aufgearbeitet und vorgestellt, sowie die Übungsaufgaben vorbereitet.
-
-Bisher wurde die Korrektur von Lösungsabgaben der Übungsblätter ohne eine zentrale Verwaltungsstelle organisiert.  Die Aufgaben inklusive Source-Code wurden auf Papier abgegeben, um Authentizität zu gewährleisten.  Mit der wachsenden Anzahl der Studenten ist dieses Vorgehen für die Tutoren inzwischen jedoch nicht mehr zu realisieren.  Stattdessen kristalliert sich die Notwendigkeit einer zentralen, computergestützten Plattform heraus, welche die Tutoren in ihrer Arbeit unterstützt und im Ganzen den Übungsbetrieb stark vereinfacht.
-
-Das Produkt soll nun die Veranstalter der Softwaretechnik-Vorlesung in die Lage versetzen, den Übungsbetrieb durch Einsatz elektronischer Hilfsmittel kosteneffektiver zu organisieren.
-
-\section{Produkteinsatz}
-
-Das Produkt dient der Verwaltung von Übungsblättern und -aufgaben, sowie der Entgegennahme von Lösungen der Teilnehmer.  Es dient zudem als zentrale Bewertungsplattform für die Tutoren und als Kommunikationsplattform aller Benutzer untereinander.
-
-Es soll unter Einsatz des Produktes für alle Beteiligten (Übungsleiter, Tutoren und Studenten) einfacher werden, ihre ihnen durch den Übungsbetrieb auferlegten Aufgaben zu erfüllen.
-
-\section{Funktionale Anforderungen}
-\begin{usecase}
-
-\addheading{Nummer}{Beschreibung}
-\addrow{/FA10/} {Authentifizerung von Benutzern durch den bestehenden (LDAP-)Verzeichnisdienst des SCC.}
-\addrow{/FA20/} {Möglichkeit für Übungsleiter zur Verwaltung (Zuweisung, Löschung) von Benutzergruppen (Tutor, Student, Übungsleiter) der authentifizierten Benutzern sowie zur Festlegung der Zuordnung zwischen Studenten und Tutoren}
-\addrow{/FA30/} {Möglichkeit für Übungsleiter zur Ersterfassung, Änderung und Löschung von Übungsblättern und zugehörigen Aufgaben.  Für Übungsblätter soll eine Deadline konfigurierbar sein, bis zu der Lösungen akzeptiert werden.  Es soll für jede Aufgabe einzeln festgelegt werden können, ob ein Online-Abgabe in Form eines Dateiuploads möglich ist, und wenn ja, welche Bedingungen für die Abgabe gelten müssen (z.B. keine Compilerfehler, keine Checkstyle-Violations).}
-\addrow{/FA40/} {Hochladen von Lösungsdateien durch Studenten für ein spezifisches Aufgabenblatt, im Rahmen der Deadline. Die hochgeladene Lösung soll direkt auf Erfüllung der Abgabebedingungen getestet und im Fehlerfall abgewiesen werden.}
-\addrow{/FA50/} {Tutoren sollen am Ende der Deadline eines Übungsblattes in der Lage sein, genau die Abgaben der ihnen zugeordneten Studenten einzusehen/herunterzuladen und diese mit Punkten zu bewerten (sowohl elektronische Abgaben als auch andere).}
-\addrow{/FA60/} {Übersicht für Übungsleiter über alle Studenten sowie für Tutoren über die zugeordneten Studenten: Punktestand, abgegebene Aufgaben etc.}
-\addrow{/FA70/} {Kommunikation zwischen allen Benutzern des Systems}
-
-\end{usecase}
-
-\section{Produktdaten}
-\begin{usecase}
-
-\addheading{Nummer}{Beschreibung}
-\addrow{/PD10/} {Es ist die Zuordnung von Benutzergruppen, sowie die Zuordnung von Studenten zu Tutoren zu speichern}
-\addrow{/PD20/} {Es sind relevante Daten über die Übungsblätter und Aufgaben zu speichern}
-\addrow{/PD30/} {Es sind die Abgaben der Studenten zu speichern.}
-
-\end{usecase}
-
-\section{Nichtfunktionale Anforderungen}
-\begin{usecase}
-
-\addheading{Nummer}{Beschreibung}
-\addrow{/NF10/} {Die Plattform wird als Webapplikation realisiert, sodass ein moderner Browser zur Benutzung ausreicht.}
-\addrow{/NF20/} {Die Funktion /FA60/ gibt eine schnelle Rückmeldung (weniger als 20 Sekunden für das Überprüfen der Lösung und weniger als 10 Minuten bis zum Erhalt der Bestätigungsmail). Die Reaktionszeiten der anderen Funktionen liegt in einem annehmbaren Rahmen (unter 10 Sekunden für einen Seitenabruf bei einer zeitgemässen Internetverbindung von über 1000kbit/s)}
-\addrow{/NF30/} {Das System kann 1500 Studenten und 100 Tutoren gleichzeitig verwalten}
-\addrow{/NF40/} {Benutzbarkeit: Die Tutoren sollen in der Lage sein, für alle ihnen zugeordneten Studenten zusammen die Benotungspunkte einzutragen, sodass sie nicht durch Seitenladezeiten zwischen den einzelnen Bewertungen in ihrer Arbeit behindert werden.}
-
-\end{usecase}
-
-\section{Systemmodelle}
-\subsection{Szenarien}
-\subsubsection{Lebenslauf eines Übungsblatts}
-
-Bob, der Übungsleiter lädt ein neues Übungsblatt in das System. Die Studenten haben nun 2 Wochen Zeit, dieses zu bearbeiten. Während die Studenten Alice und Gertrude die Zeit nutzen, eine Lösung erarbeiten und diese hochladen, lässt Mirko die Frist verstreichen. Jonas, der Tutor der drei, hat nun weniger zu tun als erwartet: Er muss nur zwei Lösungen bewerten, was sich in einem einzigen Bearbeitungsschritt erledigen lässt.
-
-\subsection{Anwendungsfälle}
-\subsubsection{Lösungsabgabe}
-
-John, ein Student, hat eine Lösung für die Programmieraufgabe des aktuellen Übungsblatts erarbeitet. Er besucht also die Lösungseinzugszentrale um diese einzureichen. Dazu loggt er sich mit seinem SCC-Benutzeraccount ein. Er wählt aus, welche Aufgabe er bearbeitet hat und findet ein Uploadformular vor, in welches er seine Abgabedatei einträgt. Er bestätigt den Upload und sieht wenige Sekunden später das Ergebnis der automatischen Überprüfung: Alle Tests sind bestanden.
-
-\subsubsection{Bewertung}
-
-Jonas, John's Tutor, loggt sich mit seinem SCC-Benutzeraccount in der Lösungseinzugszentrale ein und wird als Tutor vom System erkannt.  Da die Frist für das letzte Übungsblatt abgelaufen ist, erwartet ihn eine Übersicht der Abgaben seiner Studenten. Mit einem Mausklick gelangt er zu einem Bewertungsformular mit einer tabellenartigen Übersicht über die Lösungen.  Er trägt hier seine Benotungspunkte für jeden Schüler ein und bestätigt.
-
-\subsubsection{Punkteübersicht}
-
-Jonas will nach dem dritten Übungsblatt sehen, wie der aktuelle Stand seiner Studenten ist.  Dazu loggt er sich in der LEZ ein und navigiert zur Punkteübersicht. Diese zeigt ihm eine genaue Auflistung seiner Studenten mit deren Punkten für die einzelnen Übungsblätter und einer Gesamtpunktzahl.
-
-\subsubsection{Visualisierung}
 
 \clearpage
 \input{glossary}
