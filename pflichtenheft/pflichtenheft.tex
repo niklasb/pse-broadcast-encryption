@@ -185,12 +185,16 @@ bestimmte Nutzergruppen erfordert.
 
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/FA10/} {Der Server kann Daten versenden.}
-\addrow{/FA20/} {Der Server kann Daten verschlüsseln.}
-\addrow{/FA30/} {Der Server kann Schlüssel generieren.}
-\addrow{/FA40/} {Der Server kann jedem Benutzer einen Schlüssel zuordnen.}
-\addrow{/FA50/} {Der Server kann Nutzer ausschließen.}
-\addrow{/FA60/} {Der Client kann sich zu einem Server verbinden.}
+\addrow{/FA10/} {Der Server versendet Daten an eine Empf"angergruppe.}
+\addrow{/FA20/} {Der Server bietet die M"oglichkeit eines Rekeyings, also
+                 der Erzeugung eines komplett neuen Satzes private Schl"ussel
+                 f"ur die Benutzer. Diese m"ussen dann auf einem sicheren
+                 Weg zugestellt werden}
+\addrow{/FA30/} {Der Server verschl"usselt Daten so, dass nur authorisierte
+                 Benutzer den Stream entschl"usseln k"onnen.}
+\addrow{/FA40/} {Der Server bietet die M"oglichkeit, Nutzer per Namen auszuschließen,
+                 ohne dass ein Rekeying erforderlich ist.}
+\addrow{/FA50/} {Der Client kann sich zu einem Server verbinden.}
 \addrow{/FA70/} {Der Client kann Daten empfangen.}
 \addrow{/FA80/} {Der Client kann Daten entschlüsseln.}
 \addrow{/FA90/} {Der Client stellt entschlüsselte Daten dar.}
