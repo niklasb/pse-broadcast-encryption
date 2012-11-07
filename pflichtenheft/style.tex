@@ -21,10 +21,18 @@
 \newenvironment{usecase}{\tabularhead}
 {\hline\end{tabular}}
 
-\newcommand\illustration[2]{
+% templates and default styles for figures and graphics
+\tikzset{>=triangle 45}
+\tikzset{font=\sffamily}
+
+\newcommand{\tmpCaption}{}
+\newenvironment{illustration}[1]
+{
+   \renewcommand{\tmpCaption}{#1}
    \begin{figure}[h!]
    \centering
-   #2
-   \caption{#1}
+}
+{
+   \caption{\tmpCaption}
    \end{figure}
 }

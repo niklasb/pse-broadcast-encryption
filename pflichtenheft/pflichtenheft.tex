@@ -9,6 +9,9 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{tikz-uml}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+\usetikzlibrary{calc}
 \usepackage{float}
 \usepackage[section]{placeins} % don't move figures beyond the next section heading
 
@@ -116,8 +119,8 @@ ausgeschlossener Benutzer zu skalieren.
          infrage.
    \item Daten werden verschl"usselt "ubertragen. Der Server bietet entsprechende
          Optionen zur Erzeugung von Schl"usseln und zur Kontrolle und Konfiguration
-         der Verschl"usselungsschicht. Jeder Benutzer erh"alt "uber einen sicheren
-         Kanal einen privaten Schl"ussel (z.B. eine Datei), mit dem er seine
+         der Verschl"usselungsschicht. "Uber einen externen, sicheren Kanal erh"alt
+         jeder Benutzer einen privaten Schl"ussel (z.B. eine Datei), mit dem er seine
          Clientsoftware konfigurieren kann.
    \item Das verwendete Broadcast"=Verschl"usselungsverfahren basiert auf den
          in~\cite[Section~2.2]{Naor00} oder~\cite{Garg10} beschriebenen Verfahren

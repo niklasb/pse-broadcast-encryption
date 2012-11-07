@@ -1,12 +1,38 @@
-\illustration{Client/Server-Modell unserer Broadcasting-Anwendung}{
+\begin{illustration}{Client/Server-Modell unserer Broadcasting-Anwendung}
 
-\begin{tikzpicture}
+\tikzset{
+  rect/.style={draw,fill=green!15,minimum height=0.8cm,rectangle},
+  box/.style={
+    draw=blue!50!white,
+    line width=1pt,
+    dash pattern=on 1pt off 4pt on 6pt off 4pt,
+    inner sep=4mm, rectangle, rounded corners
+  },
+}
 
-\begin{umlpackage}[x=0,y=0]{Server}
-\end{umlpackage}
-\begin{umlpackage}[x=3,y=0]{Client}
-\end{umlpackage}
+\begin{tikzpicture}[auto,node distance=1.5cm]
+
+\node[rect](server) {\textbf{Server}};
+\node[rect,minimum width=2cm,xshift=5cm,right of=server](view) {View};
+\node[rect,minimum width=2cm,below of=view](controller) {Controller};
+\node[box,fit=(view.north west) (view.north east)
+              (controller.south east) (controller.south west),
+      inner sep=0.3cm](client) {};
+
+\node[rect,fill=red!15,below of=client,xshift=-3cm,yshift=-2cm](library)
+    {\textbf{Broadcast-Library}};
+\node at (client.north) [above, inner sep=2mm] {\textbf{Client}};
+
+\draw [->] (server.east) -- (client.west |- server.east)
+           node[pos=.5]{sendet an}
+           node[pos=0.94]{*};
+
+%\path[->] (server) edge node {sendet an *} (client);
+\path[->] (view) edge node {} (controller);
+\path[->] (controller) edge node {} (view);
+\path[->] (controller) edge node {benutzt} (library);
+\path[->] (server) edge node {benutzt} (library);
 
 \end{tikzpicture}
 
-}
+\end{illustration}
