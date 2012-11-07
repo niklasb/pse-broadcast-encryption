@@ -6,3 +6,5 @@
 *.toc
 *.1
 *.log
+*.bbl
+*.blg

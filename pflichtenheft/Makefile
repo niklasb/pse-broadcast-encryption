@@ -1,5 +1,7 @@
 make:
-	pdflatex pflichtenheft.tex -output-format=pdf
+	pdflatex pflichtenheft.tex
 	makeglossaries pflichtenheft
-	pdflatex pflichtenheft.tex -output-format=pdf
+	bibtex pflichtenheft
+	pdflatex pflichtenheft.tex
+	pdflatex pflichtenheft.tex
 	rm -rf *.class *.html *.log *.aux *.out *.glo *.glg *.gls *.ist *.xdy *.1 *.toc

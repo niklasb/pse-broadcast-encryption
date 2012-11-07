@@ -7,6 +7,8 @@
 \usepackage[margin=2.5cm]{geometry} %layout
 \usepackage{booktabs}
 \usepackage{xspace}
+\usepackage{enumitem}
+\usepackage{cite}
 
 % this is needed for forms and links within the text
 \usepackage{hyperref}
@@ -23,6 +25,7 @@
 \usepackage[pdftex]{graphicx}
 \DeclareGraphicsRule{*}{mps}{*}{}
 \fi
+
 \makeglossary
 
 % Variables
@@ -47,27 +50,14 @@
   pdftitle    = {\doctitle}
 }
 
-% Create a shorter version for tables.
-\newcommand\addrow[2]{#1 &#2\\ }
-\newcommand\addheading[2]{#1 &#2\\ \hline}
-\newcommand\tabularhead{\begin{tabular}{lp{13cm}}
-\hline
-}
-
-\newcommand\addmulrow[2]{ \begin{minipage}[t][][t]{2.5cm}#1\end{minipage}%
-   &\begin{minipage}[t][][t]{8cm}
-    \begin{enumerate} #2   \end{enumerate}
-    \end{minipage}\\ }
-
-\newenvironment{usecase}{\tabularhead}
-{\hline\end{tabular}}
+\include{style}
 
 \begin{document}
 
 \input{frontpage}
 \tableofcontents
-
 \clearpage
+
 \section{Einleitung}
 
 Heutzutage gängige Streamingdienste im Internet basieren bis auf wenige Ausnahmen auf
@@ -91,15 +81,45 @@ entschlüsseln können. Besonderes Augenmerk muss dabei auf Effizienz gelegt wer
 da der Kommunikationsaufwand durch die Verschlüsselung nicht wesentlich erhöht werden
 darf.
 
-Wir wurden daher beauftragt, einen Prototyp zu entwickeln, der ein effizientes
+Wir wurden daher beauftragt, einen Prototyp zu entwickeln, der ein
 Broadcast"=Verschlüsselungsverfahren mit speziellen wünschenswerten Eigenschaften
 demonstriert.
 
 \section{Zielbestimmung}
-Die Software soll es ermöglichen, Inhalte verschlüsselt von einem Server an verschiedene Klienten verteilen. Die Kommunikation soll dabei ausschließlich unidirektional erfolgen.
-Entgegen dem aktuellen Stand der Technik skaliert das System mit der Anzahl ausgeschlossenen Nutzern anstelle der gesamten Anzahl der Benutzer.
+
+Die entwickelte Software ist eine Client/Server-Kombination, die es ermöglicht,
+Inhalte verschlüsselt von einem Server an verschiedene Clients verteilen. Dafür
+soll kein bidirektionales Kommunikationsmedium erforderlich sein.
+
+Es wird ein Verschlüsselungsverfahren eingesetzt, welches die besondere
+Eigenschaft besitzt, nicht mit der Gesamtzahl der Empfänger, sondern mit der Anzahl
+ausgeschlossener Benutzer zu skalieren.
 
 \subsection{Musskriterien}
+
+\subsubsection{Server}
+\begin{itemize}
+   \item sendet Daten an eine Empfängergruppe
+   \item erlaubt es, Schlüssel zu generieren, die dann an Clients verteilt werden
+   \item verschlüsselt Daten
+   \item erlaubt es, nicht mehr authorisierte Benutzer auszuschließen
+\end{itemize}
+
+\subsubsection{Client}
+\begin{itemize}
+   \item erlaubt es, sich mit einem Server zu verbinden (einer Gruppe beizutreten)
+   \item empfängt Daten vom Server
+   \item entschl"usselt Daten vom Server mithilfe eines konfigurierbaren Schl"ussels
+   \item merkt sich zuletzt ausgew"ahlte Server, sodass ein erneuter Zugriff schnell
+         m"oglich ist
+\end{itemize}
+
+\subsubsection{Kommunikation und Verschlüsselung}
+\begin{itemize}
+   \item Das verwendete Broadcast"=Verschl"usselungsverfahren basiert auf
+         dem in~\cite[Section~2.2]{Naor00} beschriebenen Algorithmus
+\end{itemize}
+
 \newcommand{\mussKuerzel}{MU}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
@@ -195,4 +215,8 @@ Android-Tablet/-Smartphone, Werte?!
 
 \clearpage
 \input{glossary}
+
+\bibliography{../bibtex/references}{}
+\bibliographystyle{plain}
+
 \end{document}
