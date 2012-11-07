@@ -1,14 +1,16 @@
 \documentclass[a4paper,10pt]{article}
-\usepackage{amssymb} % needed for math
-\usepackage{amsmath} % needed for math
-\usepackage[utf8]{inputenc} % this is needed for german umlauts
-\usepackage[ngerman]{babel} % this is needed for german umlauts
-\usepackage[T1]{fontenc}    % this is needed for correct output of umlauts in pdf
-\usepackage[margin=2.5cm]{geometry} %layout
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
 \usepackage{booktabs}
 \usepackage{xspace}
 \usepackage{enumitem}
 \usepackage{cite}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\usepackage{float}
+\usepackage[section]{placeins} % don't move figures beyond the next section heading
 
 % this is needed for forms and links within the text
 \usepackage{hyperref}
@@ -16,15 +18,6 @@
 % glossary, see http://en.wikibooks.org/wiki/LaTeX/Glossary
 % has to be loaded AFTER hyperref so that entries are clickable
 \usepackage[nonumberlist]{glossaries}
-
-% The following is needed in order to make the code compatible
-% with both latex/dvips and pdflatex.
-\ifx\pdftexversion\undefined
-\usepackage[dvips]{graphicx}
-\else
-\usepackage[pdftex]{graphicx}
-\DeclareGraphicsRule{*}{mps}{*}{}
-\fi
 
 \makeglossary
 
@@ -187,39 +180,38 @@ bestimmte Nutzergruppen erfordert.
 
 \subsection{Grundfunktionen}
 
-\newcommand{\mussKuerzel}{MU}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/\mussKuerzel10/} {Der Server kann Daten versenden.}
-\addrow{/\mussKuerzel20/} {Der Server kann Daten verschlüsseln.}
-\addrow{/\mussKuerzel30/} {Der Server kann Schlüssel generieren.}
-\addrow{/\mussKuerzel40/} {Der Server kann jedem Benutzer einen Schlüssel zuordnen.}
-\addrow{/\mussKuerzel50/} {Der Server kann Nutzer ausschließen.}
-\addrow{/\mussKuerzel60/} {Der Client kann sich zu einem Server verbinden.}
-\addrow{/\mussKuerzel70/} {Der Client kann Daten empfangen.}
-\addrow{/\mussKuerzel80/} {Der Client kann Daten entschlüsseln.}
-\addrow{/\mussKuerzel90/} {Der Client stellt entschlüsselte Daten dar.}
-\addrow{/\mussKuerzel100/} {Der Client merkt sich die letzten ausgewählten Server,
-                            sodass ein erneuter Zugriff schnell möglich ist.}
-\addrow{/\mussKuerzel110/} {Die Verschlüsselung erfolgt mit dem vorgegeben Verfahren.}
+\addrow{/FA10/} {Der Server kann Daten versenden.}
+\addrow{/FA20/} {Der Server kann Daten verschlüsseln.}
+\addrow{/FA30/} {Der Server kann Schlüssel generieren.}
+\addrow{/FA40/} {Der Server kann jedem Benutzer einen Schlüssel zuordnen.}
+\addrow{/FA50/} {Der Server kann Nutzer ausschließen.}
+\addrow{/FA60/} {Der Client kann sich zu einem Server verbinden.}
+\addrow{/FA70/} {Der Client kann Daten empfangen.}
+\addrow{/FA80/} {Der Client kann Daten entschlüsseln.}
+\addrow{/FA90/} {Der Client stellt entschlüsselte Daten dar.}
+\addrow{/FA100/} {Der Client merkt sich die letzten ausgewählten Server,
+                  sodass ein erneuter Zugriff schnell möglich ist.}
+\addrow{/FA110/} {Die Verschlüsselung erfolgt mit dem vorgegeben Verfahren.}
 \end{usecase}
 
 \subsection{Erweiterte Funktionen}
 \newcommand{\wunschKuerzel}{WU}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/\wunschKuerzel10/} {Der Benutzer kann im Client mehrere Serverfavoriten
-                             mit Namen verwalten, welche dann über ein Kontextmenü
-                             auswählbar sind.}
-\addrow{/\wunschKuerzel20/} {Der Server führt Statistiken über Nutzdatenmenge und Traffic,
-                             um den Kommunikationsaufwand für die Verschlüsselung zu
-                             analysieren}
-\addrow{/\wunschKuerzel30/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
-\addrow{/\wunschKuerzel40/} {Der Client puffert empfangene Daten, um eine flüssigere
-                             Wiedergabe zu ermöglichen.}
-\addrow{/\wunschKuerzel50/} {Ein effizienteres Verschlüsselungsverfahren als das vorgebene
-                             wird entwickelt und implementiert.}
-\addrow{/\wunschKuerzel60/} {Mehrere Quellen können Daten an dieselbe Multicast-Gruppe senden.}
+\addrow{/FA200/} {Der Benutzer kann im Client mehrere Serverfavoriten
+                  mit Namen verwalten, welche dann über ein Kontextmenü
+                  auswählbar sind.}
+\addrow{/FA210/} {Der Server führt Statistiken über Nutzdatenmenge und Traffic,
+                  um den Kommunikationsaufwand für die Verschlüsselung zu
+                  analysieren}
+\addrow{/FA220/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
+\addrow{/FA230/} {Der Client puffert empfangene Daten, um eine flüssigere
+                  Wiedergabe zu ermöglichen.}
+\addrow{/FA240/} {Ein effizienteres Verschlüsselungsverfahren als das vorgebene
+                  wird entwickelt und implementiert.}
+\addrow{/FA250/} {Mehrere Quellen können Daten an dieselbe Multicast-Gruppe senden.}
 \end{usecase}
 
 \section{Produktdaten}
@@ -242,7 +234,8 @@ Android-Tablet/-Smartphone, Werte?!
 
 \section{Systemmodell}
 
-% TODO nur Anregungen was hier stehen soll!
+\input{figures/system_model}
+
 \section{Produktleistung}
 * Angaben über die mögliche Anzahl ausgeschlossener Nutzer
 * Dauer des Groupkeyupdates, da in dieser Zeit nichts empfangen werden kann
