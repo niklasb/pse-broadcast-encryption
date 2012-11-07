@@ -99,26 +99,81 @@ ausgeschlossener Benutzer zu skalieren.
 
 \subsubsection{Server}
 \begin{itemize}
-   \item sendet Daten an eine Empfängergruppe
+   \item sendet Daten an eine Empfängergruppe.
    \item erlaubt es, Schlüssel zu generieren, die dann an Clients verteilt werden
-   \item verschlüsselt Daten
-   \item erlaubt es, nicht mehr authorisierte Benutzer auszuschließen
+   \item verschlüsselt Daten.
+   \item erlaubt es, nicht mehr authorisierte Benutzer auszuschließen.
 \end{itemize}
 
 \subsubsection{Client}
 \begin{itemize}
-   \item erlaubt es, sich mit einem Server zu verbinden (einer Gruppe beizutreten)
-   \item empfängt Daten vom Server
-   \item entschl"usselt Daten vom Server mithilfe eines konfigurierbaren Schl"ussels
+   \item erlaubt es, sich mit einem Server zu verbinden (einer Gruppe beizutreten).
+   \item empfängt Daten vom Server.
+   \item entschl"usselt Daten vom Server mithilfe eines konfigurierbaren Schl"ussels.
    \item merkt sich zuletzt ausgew"ahlte Server, sodass ein erneuter Zugriff schnell
-         m"oglich ist
+         m"oglich ist.
 \end{itemize}
 
 \subsubsection{Kommunikation und Verschlüsselung}
 \begin{itemize}
-   \item Das verwendete Broadcast"=Verschl"usselungsverfahren basiert auf
-         dem in~\cite[Section~2.2]{Naor00} beschriebenen Algorithmus
+   \item Zur Demonstration wird ein einfacher Audio- oder Videostream als Payload
+         verwendet.
+   \item Das verwendete Broadcast"=Verschl"usselungsverfahren basiert auf den
+         in~\cite[Section~2.2]{Naor00} oder~\cite{Garg10} beschriebenen Verfahren
+         oder einer Variante der Algorithmen mit vergleichbaren kryptografischen
+         Eigenschaften.
+   \item Die Verschl"usselung erfordert im laufenden Betrieb nur einen
+         Kommunikationsoverhead, der sublinear in der Gesamtanzahl der Benutzer und
+         stattdessen linear oder quasilinear in der Anzahl der ausgeschlossenen
+         Benutzer ist.
 \end{itemize}
+
+\subsection{Wunschkriterien}
+
+\subsubsection{Server}
+\begin{itemize}
+   \item f"uhrt Statistik "uber Nutzdatenmenge und Traffic, um den Kommunikationsaufwand
+         der Verschl"usselung zu analysieren.
+\end{itemize}
+
+\subsubsection{Client}
+\begin{itemize}
+   \item verf"ugt "uber eine Anzeige des angefallenen Traffics.
+   \item puffert oder speichert Inhalte, sodass z.B. in einem Stream auch
+         zur"uckgespult werden kann.
+\end{itemize}
+
+\subsubsection{Kommunikation und Verschlüsselung}
+\begin{itemize}
+   \item Ein effizienteres Verfahren als das in~\cite{Naor00} beschriebene wird
+         entwickelt und implementiert.
+\end{itemize}
+
+\subsection{Abgrenzungskriterien}
+\begin{itemize}
+   \item Es wird kein Framework zur Verf"ugung gestellt, welches verschiedene
+         Streamtypen implementiert. Stattdessen bleibt die Implementierung
+         unabh"angig von den zugrundeliegenden Nutzdaten und ist so flexibel,
+         dass eine konkrete Implementierung eines neuen Streamtyps mit
+         problemlos m"oglich ist.
+   \item Es wird kein Multicast-Protokoll implementiert. Stattdessen wird
+         zur Demonstrationszwecken TCP zur Kommunikation benutzt und die Software
+         ist so flexibel, dass eine Adaptation an ein zuverl"assiges
+         Multicastverfahren problemlos m"oglich ist.
+\end{itemize}
+
+\section{Produkteinsatz}
+Das Produkt wird benutzt um Inhalte an eine festgelegte Benutzergruppe zu verteilen.
+\subsection{Anwendungsbereich}
+Das Produkt kann in allen Bereichen zum Einsatz kommen, die das Verteilen von Daten an
+bestimmte Nutzergruppen erfordert.
+\subsection{Zielgruppen}
+
+\subsection{Betriebsbedingungen}
+
+\section{Produktfunktion}
+
+\subsection{Grundfunktionen}
 
 \newcommand{\mussKuerzel}{MU}
 \begin{usecase}
@@ -137,8 +192,7 @@ ausgeschlossener Benutzer zu skalieren.
 \addrow{/\mussKuerzel110/} {Die Verschlüsselung erfolgt mit dem vorgegeben Verfahren.}
 \end{usecase}
 
-%TODO 'zu implementierendes Verschlüsselungsverfahren' spezifizieren
-\subsection{Wunschkriterien}
+\subsection{Erweiterte Funktionen}
 \newcommand{\wunschKuerzel}{WU}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
@@ -155,31 +209,6 @@ ausgeschlossener Benutzer zu skalieren.
                              wird entwickelt und implementiert.}
 \addrow{/\wunschKuerzel60/} {Mehrere Quellen können Daten an dieselbe Multicast-Gruppe senden.}
 \end{usecase}
-
-\subsection{Abgrenzungskriterien}
-\newcommand{\abgrenzungKuerzel}{AG}
-\begin{usecase}
-\addheading{Nummer}{Beschreibung}
-\addrow{/\abgrenzungKuerzel10/} {Es wird nicht festgelegt, welche Art von Daten
-                                 übertragen werden.}
-\addrow{/\abgrenzungKuerzel20/} {Keine bidirektionale Kommunikation zwischen Server
-                                 und Clients.}
-\addrow{/\abgrenzungKuerzel30/} {Es wird kein Multicast-Protokoll implementiert. Stattdessen
-                                 wird TCP zur Kommunikation eingesetzt und die Software
-                                 ist so flexibel erweiterbar, dass eine Adaption auf
-                                 ein zuverlässiges Multicastverfahren leicht möglich ist}
-\end{usecase}
-
-\section{Produkteinsatz}
-Das Produkt wird benutzt um Inhalte an eine festgelegte Benutzergruppe zu verteilen.
-\subsection{Anwendungsbereich}
-Das Produkt kann in allen Bereichen zum Einsatz kommen, die das Verteilen von Daten an
-bestimmte Nutzergruppen erfordert.
-\subsection{Zielgruppen}
-
-\subsection{Betriebsbedingungen}
-
-\section{Produktfunktion}
 
 \section{Produktdaten}
 \newcommand{\datenKuerzel}{PD}
