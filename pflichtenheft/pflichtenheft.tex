@@ -97,27 +97,34 @@ ausgeschlossener Benutzer zu skalieren.
 
 \subsection{Musskriterien}
 
-\subsubsection{Server}
 \begin{itemize}
-   \item sendet Daten an eine Empfängergruppe.
-   \item erlaubt es, Schlüssel zu generieren, die dann an Clients verteilt werden
-   \item verschlüsselt Daten.
+
+\item Server
+\begin{itemize}
+   \item sendet Daten an eine Empfängergruppe. Zu Demonstrationszwecken wird
+         ein einfacher Audio- oder Videostream als Payload eingesetzt.
    \item erlaubt es, nicht mehr authorisierte Benutzer auszuschließen.
 \end{itemize}
 
-\subsubsection{Client}
+\item Client
 \begin{itemize}
    \item erlaubt es, sich mit einem Server zu verbinden (einer Gruppe beizutreten).
-   \item empfängt Daten vom Server.
-   \item entschl"usselt Daten vom Server mithilfe eines konfigurierbaren Schl"ussels.
+   \item empfängt Daten vom Server und stellt sie dar.
    \item merkt sich zuletzt ausgew"ahlte Server, sodass ein erneuter Zugriff schnell
          m"oglich ist.
 \end{itemize}
 
-\subsubsection{Kommunikation und Verschlüsselung}
+\item Kommunikation und Verschl"usselung
 \begin{itemize}
-   \item Zur Demonstration wird ein einfacher Audio- oder Videostream als Payload
-         verwendet.
+   \item Nur ein unidirektionaler Kommunikationskanal vom Server zum Client wird
+         vorausgesetzt. Zu Demonstrationszwecken wird TCP als Transportprotokoll
+         verwendet, aber auch zuverl"assige Multicastprotokolle k"amen als Medium
+         infrage.
+   \item Daten werden verschl"usselt "ubertragen. Der Server bietet entsprechende
+         Optionen zur Erzeugung von Schl"usseln und zur Kontrolle und Konfiguration
+         der Verschl"usselungsschicht. Jeder Benutzer erh"alt "uber einen sicheren
+         Kanal einen privaten Schl"ussel (z.B. eine Datei), mit dem er seine
+         Clientsoftware konfigurieren kann.
    \item Das verwendete Broadcast"=Verschl"usselungsverfahren basiert auf den
          in~\cite[Section~2.2]{Naor00} oder~\cite{Garg10} beschriebenen Verfahren
          oder einer Variante der Algorithmen mit vergleichbaren kryptografischen
@@ -127,26 +134,30 @@ ausgeschlossener Benutzer zu skalieren.
          stattdessen linear oder quasilinear in der Anzahl der ausgeschlossenen
          Benutzer ist.
 \end{itemize}
+\end{itemize}
 
 \subsection{Wunschkriterien}
 
-\subsubsection{Server}
+\begin{itemize}
+
+\item Server
 \begin{itemize}
    \item f"uhrt Statistik "uber Nutzdatenmenge und Traffic, um den Kommunikationsaufwand
          der Verschl"usselung zu analysieren.
 \end{itemize}
 
-\subsubsection{Client}
+\item Client
 \begin{itemize}
    \item verf"ugt "uber eine Anzeige des angefallenen Traffics.
    \item puffert oder speichert Inhalte, sodass z.B. in einem Stream auch
          zur"uckgespult werden kann.
 \end{itemize}
 
-\subsubsection{Kommunikation und Verschlüsselung}
+\item Kommunikation und Verschl"usselung
 \begin{itemize}
    \item Ein effizienteres Verfahren als das in~\cite{Naor00} beschriebene wird
          entwickelt und implementiert.
+\end{itemize}
 \end{itemize}
 
 \subsection{Abgrenzungskriterien}
