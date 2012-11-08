@@ -1,12 +1,19 @@
 \documentclass[a4paper,10pt]{article}
-\usepackage{amssymb} % needed for math
-\usepackage{amsmath} % needed for math
-\usepackage[utf8]{inputenc} % this is needed for german umlauts
-\usepackage[ngerman]{babel} % this is needed for german umlauts
-\usepackage[T1]{fontenc}    % this is needed for correct output of umlauts in pdf
-\usepackage[margin=2.5cm]{geometry} %layout
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
 \usepackage{booktabs}
 \usepackage{xspace}
+\usepackage{enumitem}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+\usetikzlibrary{calc}
+\usepackage{float}
+\usepackage[section]{placeins} % don't move figures beyond the next section heading
 
 % this is needed for forms and links within the text
 \usepackage{hyperref}
@@ -15,19 +22,12 @@
 % has to be loaded AFTER hyperref so that entries are clickable
 \usepackage[nonumberlist]{glossaries}
 
-% The following is needed in order to make the code compatible
-% with both latex/dvips and pdflatex.
-\ifx\pdftexversion\undefined
-\usepackage[dvips]{graphicx}
-\else
-\usepackage[pdftex]{graphicx}
-\DeclareGraphicsRule{*}{mps}{*}{}
-\fi
 \makeglossary
 
 % Variables
-\newcommand{\authorName}{Mohammed Abu~Jayyab, Niklas Baumstark,
-                         Tobias Gräf, Amrei Loose, Christoph Michel}
+\newcommand{\authorName}{
+      Mohammed Abu~Jayyab, Niklas Baumstark,
+      Tobias Gräf, Amrei Loose, \textbf{Christoph Michel}}
 \newcommand{\dateFirstVersion}{\today}
 \newcommand{\customer}{Karlsruhe Institute of Technology}
 \newcommand{\contractor}{Eine Firma}
@@ -47,27 +47,14 @@
   pdftitle    = {\doctitle}
 }
 
-% Create a shorter version for tables.
-\newcommand\addrow[2]{#1 &#2\\ }
-\newcommand\addheading[2]{#1 &#2\\ \hline}
-\newcommand\tabularhead{\begin{tabular}{lp{13cm}}
-\hline
-}
-
-\newcommand\addmulrow[2]{ \begin{minipage}[t][][t]{2.5cm}#1\end{minipage}%
-   &\begin{minipage}[t][][t]{8cm}
-    \begin{enumerate} #2   \end{enumerate}
-    \end{minipage}\\ }
-
-\newenvironment{usecase}{\tabularhead}
-{\hline\end{tabular}}
+\include{style}
 
 \begin{document}
 
 \input{frontpage}
 \tableofcontents
-
 \clearpage
+
 \section{Einleitung}
 
 Heutzutage gängige Streamingdienste im Internet basieren bis auf wenige Ausnahmen auf
@@ -91,7 +78,7 @@ entschlüsseln können. Besonderes Augenmerk muss dabei auf Effizienz gelegt wer
 da der Kommunikationsaufwand durch die Verschlüsselung nicht wesentlich erhöht werden
 darf.
 
-Wir wurden daher beauftragt, einen Prototyp zu entwickeln, der ein effizientes
+Wir wurden daher beauftragt, einen Prototyp zu entwickeln, der ein
 Broadcast"=Verschlüsselungsverfahren mit speziellen wünschenswerten Eigenschaften
 demonstriert.
 \begin{flushleft}
@@ -100,58 +87,99 @@ demonstriert.
 
 
 \section{Zielbestimmung}
+<<<<<<< HEAD
 Die Software soll es ermöglichen, Inhalte verschlüsselt von einem Server an verschiedene Klienten zu verteilen.
+=======
+
+Die entwickelte Software ist eine Client/Server-Kombination, die es ermöglicht,
+Inhalte verschlüsselt von einem Server an verschiedene Clients verteilen. Dafür
+soll kein bidirektionales Kommunikationsmedium erforderlich sein.
+
+Die Clients werden auf Basis des g"angigen mobilen Betriebssystems Android
+implementiert.
+
+Es wird ein Verschlüsselungsverfahren eingesetzt, welches die besondere
+Eigenschaft besitzt, nicht mit der Gesamtzahl der Empfänger, sondern mit der Anzahl
+ausgeschlossener Benutzer zu skalieren.
+>>>>>>> 82d8f01430ec6fe075cfe0917f898aefcdd14289
 
 \subsection{Musskriterien}
-\newcommand{\mussKuerzel}{MU}
-\begin{usecase}
-\addheading{Nummer}{Beschreibung}
-\addrow{/\mussKuerzel10/} {Der Server kann Daten versenden.}
-\addrow{/\mussKuerzel20/} {Der Server kann Daten verschlüsseln.}
-\addrow{/\mussKuerzel30/} {Der Server kann Schlüssel generieren.}
-\addrow{/\mussKuerzel40/} {Der Server kann jedem Benutzer einen Schlüssel zuordnen.}
-\addrow{/\mussKuerzel50/} {Der Server kann Nutzer ausschließen.}
-\addrow{/\mussKuerzel60/} {Der Client kann sich zu einem Server verbinden.}
-\addrow{/\mussKuerzel70/} {Der Client kann Daten empfangen.}
-\addrow{/\mussKuerzel80/} {Der Client kann Daten entschlüsseln.}
-\addrow{/\mussKuerzel90/} {Der Client stellt entschlüsselte Daten dar.}
-\addrow{/\mussKuerzel100/} {Der Client merkt sich die letzten ausgewählten Server,
-                            sodass ein erneuter Zugriff schnell möglich ist.}
-\addrow{/\mussKuerzel110/} {Die Verschlüsselung erfolgt mit dem vorgegeben Verfahren.}
-\end{usecase}
 
-%TODO 'zu implementierendes Verschlüsselungsverfahren' spezifizieren
+\begin{itemize}
+
+\item Server
+\begin{itemize}
+   \item sendet Daten an eine Empfängergruppe. Zu Demonstrationszwecken wird
+         ein einfacher Audio- oder Videostream als Payload eingesetzt.
+   \item erlaubt es, nicht mehr authorisierte Benutzer auszuschließen.
+\end{itemize}
+
+\item Client
+\begin{itemize}
+   \item erlaubt es, sich mit einem Server zu verbinden (einer Gruppe beizutreten).
+   \item empfängt Daten vom Server und stellt sie dar.
+   \item merkt sich zuletzt ausgew"ahlte Server, sodass ein erneuter Zugriff schnell
+         m"oglich ist.
+\end{itemize}
+
+\item Kommunikation und Verschl"usselung
+\begin{itemize}
+   \item Nur ein unidirektionaler Kommunikationskanal vom Server zum Client wird
+         vorausgesetzt. Zu Demonstrationszwecken wird TCP als Transportprotokoll
+         verwendet, aber auch zuverl"assige Multicastprotokolle k"amen als Medium
+         infrage.
+   \item Daten werden verschl"usselt "ubertragen. Der Server bietet entsprechende
+         Optionen zur Erzeugung von Schl"usseln und zur Kontrolle und Konfiguration
+         der Verschl"usselungsschicht. "Uber einen externen, sicheren Kanal erh"alt
+         jeder Benutzer einen privaten Schl"ussel (z.B. eine Datei), mit dem er seine
+         Clientsoftware konfigurieren kann.
+   \item Das verwendete Broadcast"=Verschl"usselungsverfahren basiert auf den
+         in~\cite[Section~2.2]{Naor00} oder~\cite{Garg10} beschriebenen Verfahren
+         oder einer Variante der Algorithmen mit vergleichbaren kryptografischen
+         Eigenschaften.
+   \item Die Verschl"usselung erfordert im laufenden Betrieb nur einen
+         Kommunikationsoverhead, der sublinear in der Gesamtanzahl der Benutzer und
+         stattdessen linear oder quasilinear in der Anzahl der ausgeschlossenen
+         Benutzer ist.
+\end{itemize}
+\end{itemize}
+
 \subsection{Wunschkriterien}
-\newcommand{\wunschKuerzel}{WU}
-\begin{usecase}
-\addheading{Nummer}{Beschreibung}
-\addrow{/\wunschKuerzel10/} {Der Benutzer kann im Client mehrere Serverfavoriten
-                             mit Namen verwalten, welche dann über ein Kontextmenü
-                             auswählbar sind.}
-\addrow{/\wunschKuerzel20/} {Der Server führt Statistiken über Nutzdatenmenge und Traffic,
-                             um den Kommunikationsaufwand für die Verschlüsselung zu
-                             analysieren}
-\addrow{/\wunschKuerzel30/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
-\addrow{/\wunschKuerzel40/} {Der Client puffert empfangene Daten, um eine flüssigere
-                             Wiedergabe zu ermöglichen.}
-\addrow{/\wunschKuerzel50/} {Ein effizienteres Verschlüsselungsverfahren als das vorgebene
-                             wird entwickelt und implementiert.}
-\addrow{/\wunschKuerzel60/} {Mehrere Quellen können Daten an dieselbe Multicast-Gruppe senden.}
-\end{usecase}
+
+\begin{itemize}
+
+\item Server
+\begin{itemize}
+   \item f"uhrt Statistik "uber Nutzdatenmenge und Traffic, um den Kommunikationsaufwand
+         der Verschl"usselung zu analysieren.
+\end{itemize}
+
+\item Client
+\begin{itemize}
+   \item verf"ugt "uber eine Anzeige des angefallenen Traffics.
+   \item puffert oder speichert Inhalte, sodass z.B. in einem Stream auch
+         zur"uckgespult werden kann.
+\end{itemize}
+
+\item Kommunikation und Verschl"usselung
+\begin{itemize}
+   \item Ein effizienteres Verfahren als das in~\cite{Naor00} beschriebene wird
+         entwickelt und implementiert.
+\end{itemize}
+\end{itemize}
 
 \subsection{Abgrenzungskriterien}
-\newcommand{\abgrenzungKuerzel}{AG}
-\begin{usecase}
-\addheading{Nummer}{Beschreibung}
-\addrow{/\abgrenzungKuerzel10/} {Es wird nicht festgelegt, welche Art von Daten
-                                 übertragen werden.}
-\addrow{/\abgrenzungKuerzel20/} {Keine bidirektionale Kommunikation zwischen Server
-                                 und Clients.}
-\addrow{/\abgrenzungKuerzel30/} {Es wird kein Multicast-Protokoll implementiert. Stattdessen
-                                 wird TCP zur Kommunikation eingesetzt und die Software
-                                 ist so flexibel erweiterbar, dass eine Adaption auf
-                                 ein zuverlässiges Multicastverfahren leicht möglich ist}
-\end{usecase}
+\begin{itemize}
+   \item Es wird kein Framework zur Verf"ugung gestellt, welches verschiedene
+         Streamtypen implementiert. Stattdessen bleibt die Implementierung
+         unabh"angig von den zugrundeliegenden Nutzdaten und ist so flexibel,
+         dass eine konkrete Implementierung eines neuen Streamtyps mit
+         problemlos m"oglich ist.
+   \item Es wird kein Multicast-Protokoll implementiert. Stattdessen wird
+         zur Demonstrationszwecken TCP zur Kommunikation benutzt und die Software
+         ist so flexibel, dass eine Adaptation an ein zuverl"assiges
+         Multicastverfahren problemlos m"oglich ist.
+\end{itemize}
 
 \section{Produkteinsatz}
 Das Produkt wird benutzt um Inhalte an eine festgelegte Benutzergruppe zu verteilen.
@@ -168,6 +196,55 @@ bestimmte Nutzergruppen erfordert. Beispielsweise in den Bereichen Pay-TV, Blu-r
 
 
 \section{Produktfunktion}
+
+\subsection{Grundfunktionen}
+
+\begin{usecase}
+\addheading{Nummer}{Beschreibung}
+\addrow{/FA10/} {Der Server versendet Daten an eine Empf"angergruppe.}
+\addrow{/FA20/} {Der Server bietet die M"oglichkeit eines Rekeyings, also
+                 der Erzeugung eines komplett neuen Satzes private Schl"ussel
+                 f"ur die Benutzer. Diese m"ussen dann auf einem sicheren
+                 Weg zugestellt werden}
+\addrow{/FA30/} {Der Server verschl"usselt Daten so, dass nur authorisierte
+                 Benutzer den Stream entschl"usseln k"onnen.}
+\addrow{/FA40/} {Der Server bietet die M"oglichkeit, Nutzer per Namen auszuschließen,
+                 ohne dass ein Rekeying erforderlich ist.}
+\addrow{/FA50/} {Der Client bietet die M"oglichkeit, sich zu einem Server verbinden.}
+\addrow{/FA70/} {Der Client empf"angt Daten und stellt sie dar.}
+\addrow{/FA80/} {Der Client erlaubt die Angabe eines privaten Schl"ussels, der von
+                 einem Server erzeugt wurde.}
+\addrow{/FA90/} {Der Client kann Daten entschlüsseln, nachdem er mit einem
+                 g"ultigen Schl"ussel konfiguriert wurde und solange er nicht
+                 vom Server explizit ausgeschlossen wurde.}
+\addrow{/FA100/} {Der Client merkt sich die letzten ausgewählten Server mit
+                  zugeh"origem Schl"ussel, sodass ein erneuter Zugriff schnell möglich
+                  ist.}
+\addrow{/FA110/} {Die Verschlüsselung erfolgt mit einer Variante des in~\cite[Section 2.2]{Naor00}
+                  oder~\cite{Garg10} vorgestellten Verfahrens}
+\end{usecase}
+
+\subsection{Erweiterte Funktionen}
+\newcommand{\wunschKuerzel}{WU}
+\begin{usecase}
+\addheading{Nummer}{Beschreibung}
+\addrow{/FA200/} {Der Benutzer kann im Client mehrere Serverfavoriten
+                  mit Namen und Schl"usseln in einem dedizierten Optionsdialog verwalten,
+                  welche dann über ein Kontextmenü auswählbar sind.}
+\addrow{/FA210/} {Der Server führt Statistiken über Nutzdatenmenge und Traffic,
+                  um den Kommunikationsaufwand für die Verschlüsselung zu
+                  analysieren}
+\addrow{/FA220/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
+\addrow{/FA230/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
+\addrow{/FA240/} {Um Kunden mit volumenbasierten Datentarifen nicht zu belasten,
+                  bietet der Client einen "WiFi-only mode", in dem er nur bei
+                  verf"ugbarer drahtloser Netzwerkverbindung eine Verbindung erlaubt,
+                  und nicht "uber das Telefonanbieternetz.}
+\addrow{/FA250/} {Der Client puffert empfangene Daten, um eine flüssigere
+                  Wiedergabe zu ermöglichen.}
+\addrow{/FA260/} {Ein effizienteres Verschlüsselungsverfahren als das vorgebene
+                  wird entwickelt und implementiert.}
+\end{usecase}
 
 \section{Produktdaten}
 \newcommand{\datenKuerzel}{PD}
@@ -200,7 +277,8 @@ Internetfähiger Server
 
 \section{Systemmodell}
 
-% TODO nur Anregungen was hier stehen soll!
+\input{figures/system_model}
+
 \section{Produktleistung}
 \newcommand{\leistungKuerzel}{L}
 \begin{usecase}
@@ -230,4 +308,8 @@ Im wesentlichen analog zur Produktumgebung
 
 \clearpage
 \input{glossary}
+
+\bibliography{../bibtex/references}{}
+\bibliographystyle{plain}
+
 \end{document}
