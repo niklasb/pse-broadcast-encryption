@@ -220,7 +220,7 @@ TODO
 \end{usecase}
 
 \subsection{Erweiterte Funktionen}
-\newcommand{\wunschKuerzel}{WU}
+
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
 \addrow{/FA200/} {Der Benutzer kann im Client mehrere Serverfavoriten
@@ -242,13 +242,13 @@ TODO
 \end{usecase}
 
 \section{Produktdaten}
-\newcommand{\datenKuerzel}{PD}
+
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/\datenKuerzel10/} {Der Server speichert ausgeschlossene Nutzer.}
-\addrow{/\datenKuerzel20/} {Der Server ordnet Nutzern einen Schlüssel zu.}
-\addrow{/\datenKuerzel30/} {Der Server speichert zur Verschlüsselung erforderliche Daten.}
-\addrow{/\datenKuerzel40/} {Daten die Performance betreffend werden auf dem Server gespeichert.}
+\addrow{/PD10/} {Der Server speichert ausgeschlossene Nutzer.}
+\addrow{/PD20/} {Der Server ordnet Nutzern einen Schlüssel zu.}
+\addrow{/PD30/} {Der Server speichert zur Verschlüsselung erforderliche Daten.}
+\addrow{/PD40/} {Daten die Performance betreffend werden auf dem Server gespeichert.}
 \end{usecase}
 
 \section{Produktumgebung}
@@ -283,12 +283,17 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \input{figures/system_model}
 
 \section{Produktleistung}
-\newcommand{\leistungKuerzel}{L}
+
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/\leistungKuerzel10/} {Die Antwort auf einen Klick eines Benutzers soll recht schnell 
-                               erfolgen}
-\addrow{/\leistungKuerzel20/} {Die Anwendung soll einfach zu bedienen sein}
+\addrow{/L10/} {Die Antwort auf einen Klick eines Benutzers erfolgt innerhalb von
+                höchstens 200ms.}
+\addrow{/L20/} {Die Oberfläche der Client-Anwendung ist so intuitiv, dass jeder Benutzer
+                sich innerhalb von höchstens 5 Minuten Einarbeitungszeit selbst
+                zurechtfindet, ohne die Dokumentation konsultieren zu müssen.}
+\addrow{/L30/} {Der Server und das Kommunikationssystem ist in der Lage,
+                100000 Benutzer zu bedienen, von denen h"ochestens 1000 einen
+                privaten Schl"ussel besitzen, der aber ausgeschlossen ist.}
 \end{usecase}
 
 \section{GUI}
@@ -296,7 +301,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \section{Testfälle}
 
 \section{Entwicklungsumgebung}
-Im wesentlichen analog zur Produktumgebung
+Im Wesentlichen analog zur Produktumgebung
 
 \subsection{Software}
 \begin{itemize}
