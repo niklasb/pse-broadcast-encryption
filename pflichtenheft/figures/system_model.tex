@@ -28,10 +28,12 @@
              node[pos=0.94]{*};
 
 %\path[->] (server) edge node {sendet an *} (client);
-\path[->] (view) edge node {} (controller);
-\path[->] (controller) edge node {} (view);
-\path[->] (controller) edge node {benutzt} (library);
-\path[->] (server) edge node {benutzt} (library);
+\path[->]
+  (view) edge node {} (controller)
+  (controller) edge node {} (view)
+  (controller) edge node {benutzt} (library)
+  (server) edge node {benutzt} (library)
+  ;
 
 \end{tikzpicture}
 
