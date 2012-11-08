@@ -94,10 +94,13 @@ darf.
 Wir wurden daher beauftragt, einen Prototyp zu entwickeln, der ein effizientes
 Broadcast"=Verschlüsselungsverfahren mit speziellen wünschenswerten Eigenschaften
 demonstriert.
+\begin{flushleft}
+
+\end{flushleft}
+
 
 \section{Zielbestimmung}
-Die Software soll es ermöglichen, Inhalte verschlüsselt von einem Server an verschiedene Klienten verteilen. Die Kommunikation soll dabei ausschließlich unidirektional erfolgen.
-Entgegen dem aktuellen Stand der Technik skaliert das System mit der Anzahl ausgeschlossenen Nutzern anstelle der gesamten Anzahl der Benutzer.
+Die Software soll es ermöglichen, Inhalte verschlüsselt von einem Server an verschiedene Klienten zu verteilen.
 
 \subsection{Musskriterien}
 \newcommand{\mussKuerzel}{MU}
@@ -154,10 +157,15 @@ Entgegen dem aktuellen Stand der Technik skaliert das System mit der Anzahl ausg
 Das Produkt wird benutzt um Inhalte an eine festgelegte Benutzergruppe zu verteilen.
 \subsection{Anwendungsbereich}
 Das Produkt kann in allen Bereichen zum Einsatz kommen, die das Verteilen von Daten an
-bestimmte Nutzergruppen erfordert.
+bestimmte Nutzergruppen erfordert. Beispielsweise in den Bereichen Pay-TV, Blu-ray, Audio-Video-Streaming oder Digital-Rights-Management
 \subsection{Zielgruppen}
+\begin{itemize}
+\item Die Gruppe der Firma-Mitarbeiter.
+\item Personengruppe, die die Dienstleistung der Firma in Anspruch nehmen wollen.
+\end{itemize}
 
 \subsection{Betriebsbedingungen}
+
 
 \section{Produktfunktion}
 
@@ -175,23 +183,50 @@ bestimmte Nutzergruppen erfordert.
 Der Server muss auf einem Java-fähigen System laufen.
 Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems laufen.
 \subsection{Software}
-
+\begin{itemize}
+\item Klient\newline
+Betriebssystem: Android
+\item Server\newline
+Java-fähiges System
+\end{itemize}
 \subsection{Hardware}
-Android-Tablet/-Smartphone, Werte?!
+\begin{itemize}
+\item Klient\newline
+Internetfähiger Tablet/-Smartphone
+\item Server\newline
+Internetfähiger Server
+\end{itemize}
+
 
 \section{Systemmodell}
 
 % TODO nur Anregungen was hier stehen soll!
 \section{Produktleistung}
-* Angaben über die mögliche Anzahl ausgeschlossener Nutzer
-* Dauer des Groupkeyupdates, da in dieser Zeit nichts empfangen werden kann
-* Machbarkeit der Keygeneration
+\newcommand{\leistungKuerzel}{L}
+\begin{usecase}
+\addheading{Nummer}{Beschreibung}
+\addrow{/\leistungKuerzel10/} {Die Antwort auf einen Klick eines Benutzers soll recht schnell 
+                               erfolgen}
+\addrow{/\leistungKuerzel20/} {Die Anwendung soll einfach zu bedienen sein}
+\end{usecase}
 
 \section{GUI}
 
 \section{Testfälle}
 
 \section{Entwicklungsumgebung}
+Im wesentlichen analog zur Produktumgebung
+
+\subsection{Software}
+\begin{itemize}
+\item Eclipse
+\item Git
+\end{itemize}
+\subsection{Hardware}
+\begin{itemize}
+\item Rechner
+\end{itemize}
+
 
 \clearpage
 \input{glossary}
