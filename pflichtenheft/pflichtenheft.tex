@@ -25,14 +25,24 @@
 
 % Variables
 \newcommand{\authorName}{
-      Mohammed Abu~Jayyab, Niklas Baumstark,
-      Tobias Gräf, Amrei Loose, \textbf{Christoph Michel}}
+   Mohammed Abu~Jayyab,
+   Niklas Baumstark,
+   Tobias Gräf,
+   Amrei Loose,
+   \textbf{Christoph Michel}
+}
 \newcommand{\dateFirstVersion}{\today}
 \newcommand{\customer}{Karlsruhe Institute of Technology}
 \newcommand{\contractor}{Eine Firma}
 \newcommand{\projectName}{Broadcast-Verschlüsselung\xspace}
-\newcommand{\tags}{\authorName, Pflichtenheft, KIT, Informatik,
-                   PSE, Broadcast-Verschlüsselung}
+\newcommand{\tags}{
+   \authorName,
+   Pflichtenheft,
+   KIT,
+   Informatik,
+   PSE,
+   Broadcast-Verschlüsselung
+}
 \newcommand{\glossarName}{Glossar}
 \newcommand{\doctitle}{\projectName (Pflichtenheft)}
 \title{\doctitle}
@@ -41,9 +51,9 @@
 
 % PDF Meta information
 \hypersetup{
-  pdfauthor   = {\authorName},
-  pdfkeywords = {\tags},
-  pdftitle    = {\doctitle}
+   pdfauthor = {\authorName},
+   pdfkeywords = {\tags},
+   pdftitle = {\doctitle}
 }
 
 \include{style}
@@ -281,6 +291,14 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \section{Systemmodell}
 
 \input{figures/system_model}
+
+TODO Abbildung, die das geschichtete Kommunikationsmodell darstellt:
+
+\begin{itemize}
+   \item Nutzdaten (oberste Schicht)
+   \item Verschl"usselungsschicht
+   \item Transport (Reliable Multicast/TCP/..)
+\end{itemize}
 
 \section{Produktleistung}
 
