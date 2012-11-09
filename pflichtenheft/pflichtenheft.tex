@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper,10pt]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
@@ -24,15 +24,17 @@
 \makeglossary
 
 % Variables
-\newcommand{\authorName}{
-   Mohammed Abu~Jayyab,
-   Niklas Baumstark,
-   Tobias Gräf,
-   Amrei Loose,
-   \textbf{Christoph Michel}
+\newcommand{\authors}{
+   Mohammed~Abu~Jayyab,
+   Niklas~Baumstark,
+   Tobias~Gräf,
+   Amrei~Loose\xspace
 }
+\newcommand{\authorName}{ \authors, Christoph~Michel }
+\newcommand{\authorNameEmph}{ \authors, \textbf{Christoph~Michel} }
+
 \newcommand{\dateFirstVersion}{\today}
-\newcommand{\customer}{Karlsruhe Institute of Technology}
+\newcommand{\customer}{Karlsruher Institut für Technologie}
 \newcommand{\contractor}{Eine Firma}
 \newcommand{\projectName}{Broadcast-Verschlüsselung\xspace}
 \newcommand{\tags}{
@@ -48,13 +50,6 @@
 \title{\doctitle}
 \author{\authorName}
 \date{\today}
-
-% PDF Meta information
-\hypersetup{
-   pdfauthor = {\authorName},
-   pdfkeywords = {\tags},
-   pdftitle = {\doctitle}
-}
 
 \include{style}
 
