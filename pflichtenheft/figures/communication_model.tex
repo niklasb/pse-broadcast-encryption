@@ -15,19 +15,44 @@
 \node[rect,minimum width=2cm](server) {\textbf{Server}};
 \node[rect,minimum width=2cm,xshift=4.5cm,right of=server](client) {Client};
 
-\node[rect,minimum width=8cm,fill=red!15,below of=server,xshift=3cm,](data)
-    {\textbf{Nutzdaten}};
+\node[rect,minimum width=2cm, fill=red!15, below of=server](dataleft) {\textbf{}};
+\node[rect,minimum width=2cm, fill=red!15, below of=client](dataright) {\textbf{}};
 
-\node[rect,minimum width=8cm,fill=red!15,below of=data](encryption)
-    {\textbf{Verschlüsselung}};
+\node[box,fit=(dataleft.north west) (dataright.north east)
+              (dataright.south east) (dataleft.south west),
+      inner sep=0.3cm](data) {};
 
-\node[rect,minimum width=8cm,fill=red!15,below of=encryption](transport)
-    {\textbf{Transport}};
+\node at (dataleft.east) [right, inner sep=1cm] {\textbf{Nutzdaten}};
+
+\node[rect,minimum width=2cm, fill=red!15, below of=dataleft](encleft) {\textbf{}};
+\node[rect,minimum width=2cm, fill=red!15, below of=dataright](encright) {\textbf{}};
+
+\node at (encleft.east) [right, inner sep=1cm] {\textbf{Verschlüsselung}};
+
+\node[box,fit=(encleft.north west) (encright.north east)
+              (encright.south east) (encleft.south west),
+      inner sep=0.3cm](encryption) {};
+
+\node[rect,minimum width=2cm, fill=red!15, below of=encleft](transpleft) {\textbf{}};
+\node[rect,minimum width=2cm, fill=red!15, below of=encright](transpright) {\textbf{}};
+
+\node[box,fit=(transpleft.north west) (transpright.north east)
+              (transpright.south east) (transpleft.south west),
+      inner sep=0.3cm](transport) {};
 
 \path[->]
-  (server) edge node {} (data)
-  (client) edge node {} (data)
- 
+  (server) edge node {} (dataleft)
+  (dataleft) edge node {} (encleft)
+  (encleft) edge node {} (transpleft)
+  (transpright) edge node {} (encright)
+  (encright) edge node {} (dataright)
+  (dataright) edge node {} (client)
+  
+  
+  ;
+\path[<->]
+   (transpleft) edge node{Transport} (transpright)
+  ;
   ;
 
 \end{tikzpicture}
