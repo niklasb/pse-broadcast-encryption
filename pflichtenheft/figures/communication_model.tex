@@ -13,15 +13,21 @@
 \begin{tikzpicture}[auto,node distance=1.5cm]
 
 \node[rect,minimum width=2cm](server) {\textbf{Server}};
-\node[rect,minimum width=2cm,xshift=5cm,right of=server](client) {Client};
+\node[rect,minimum width=2cm,xshift=4.5cm,right of=server](client) {Client};
 
-\node[rect,minimum width=4cm,fill=red!15,below of=server,xshift=2cm,yshift=-2cm](encryption)
-    {\textbf{Verschlüsselungsschicht}};
+\node[rect,minimum width=8cm,fill=red!15,below of=server,xshift=3cm,](data)
+    {\textbf{Nutzdaten}};
+
+\node[rect,minimum width=8cm,fill=red!15,below of=data](encryption)
+    {\textbf{Verschlüsselung}};
+
+\node[rect,minimum width=8cm,fill=red!15,below of=encryption](transport)
+    {\textbf{Transport}};
 
 \path[->]
-  (server) edge node {} (encryption)
-  (encryption) edge node {} (server)
-  (controller) edge node {benutzt} (library)
+  (server) edge node {} (data)
+  (client) edge node {} (data)
+ 
   ;
 
 \end{tikzpicture}
