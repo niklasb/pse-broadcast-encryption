@@ -255,10 +255,41 @@ TODO
 
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/PD10/} {Der Server speichert ausgeschlossene Nutzer.}
-\addrow{/PD20/} {Der Server ordnet Nutzern einen Schlüssel zu.}
-\addrow{/PD30/} {Der Server speichert zur Verschlüsselung erforderliche Daten.}
-\addrow{/PD40/} {Daten die Performance betreffend werden auf dem Server gespeichert.}
+\addrow{/PD10/} {Benutzerdaten: alle Informationen zu einem Benutzer
+              \begin{itemize}
+              \item Identifikation
+              \begin{itemize}
+              \item Benutzername (eindeutig)
+	 						\item Passwort (verschlüsselt)
+              \end{itemize}
+              \item Persönliche Daten
+              \begin{itemize}
+							\item Personenbezogene Daten
+							\begin{itemize}
+		   				\item Vor- und Nachname
+				      \item Alter
+							\item Geschlecht
+							\end{itemize}
+							\item Kontaktinformationen
+							\begin{itemize}
+							\item Straße und Hausnummer
+							\item Postleitzahl
+							\item Ort
+							\item Land
+							\item Telefon
+							\item E-Mail-Adresse 
+							\end{itemize}
+							\end{itemize}
+              \end{itemize} }
+\addrow{/PD20/} {Informationen über die Daten, die versendet werden
+              \begin{itemize}
+		   				\item Art der Daten
+							\begin{itemize}
+				      \item Audio- oder Videostream
+							\end{itemize}
+							\item Kosten der Daten
+							\end{itemize} }
+\addrow{/PD30/} {Performance-Daten}
 \end{usecase}
 
 \section{Produktumgebung}
