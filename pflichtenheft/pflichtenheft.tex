@@ -248,23 +248,15 @@ TODO
 
 \section{Produktdaten}
 
+\subsection{Grunddaten}
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/PD10/} {Benutzerdaten: alle Informationen zu einem Benutzer
-\begin{itemize}
-\item Identifikation
+\addrow{/PD10/} {Server: Benutzerdaten
    \begin{itemize}
-   \item Benutzername (eindeutig)
-   \item Passwort (verschlüsselt)
-   \end{itemize}
+   \item Daten f"ur Verschl"usselung: User-ID, Privater Schl"ussel
    \item Persönliche Daten
       \begin{itemize}
-      \item Personenbezogene Daten
-         \begin{itemize}
-         \item Vor- und Nachname
-         \item Alter
-         \item Geschlecht
-         \end{itemize}
+      \item Vor- und Nachname
       \item Kontaktinformationen
          \begin{itemize}
          \item Straße und Hausnummer
@@ -275,16 +267,27 @@ TODO
          \item E-Mail-Adresse
          \end{itemize}
       \end{itemize}
-   \end{itemize} }
-\addrow{/PD20/} {Informationen über die Daten, die versendet werden
-\begin{itemize}
-\item Art der Daten
-\begin{itemize}
-\item Audio- oder Videostream
-\end{itemize}
-\item Kosten der Daten
-\end{itemize} }
-\addrow{/PD30/} {Performance-Daten}
+   \end{itemize}
+}
+\addrow{/PD20/} {Client: Serverdaten
+   \begin{itemize}
+   \item (optional) Alias
+   \item Hostname/IP
+   \item TCP-Port
+   \item Privater Schl"ussel
+   \end{itemize}
+}
+\end{usecase}
+
+\subsection{Erweiterte Daten}
+\begin{usecase}
+\addheading{Nummer}{Beschreibung}
+\addrow{/PD30/} {Server/Client: Trafficstatistiken
+   \begin{itemize}
+   \item "ubertragene/empfangene Nutzdatenmenge
+   \item "ubertragene/empfangene Datenmenge insgesamt
+   \end{itemize}
+}
 \end{usecase}
 
 \section{Produktumgebung}
