@@ -5,7 +5,6 @@
   box/.style={
     draw=blue!50!white,
     line width=1pt,
-    dash pattern=on 1pt off 4pt on 6pt off 4pt,
     inner sep=4mm, rectangle, rounded corners
   },
 }
@@ -13,32 +12,28 @@
 \begin{tikzpicture}[auto,node distance=1.5cm]
 
 \node[rect,minimum width=2cm](server) {\textbf{Server}};
-\node[rect,minimum width=2cm,xshift=4.5cm,right of=server](client) {Client};
+\node[rect,minimum width=2cm,xshift=4.5cm,right of=server](client) {\textbf{Client}};
 
-\node[rect,minimum width=2cm, fill=red!15, below of=server](dataleft) {\textbf{}};
-\node[rect,minimum width=2cm, fill=red!15, below of=client](dataright) {\textbf{}};
+\node[rect,minimum width=2cm, fill=red!15, below of=server](dataleft) {};
+\node[rect,minimum width=2cm, fill=red!15, below of=client](dataright) {};
 
 \node[box,fit=(dataleft.north west) (dataright.north east)
               (dataright.south east) (dataleft.south west),
-      inner sep=0.3cm](data) {};
+      inner sep=0.2cm](data) {};
 
-\node at (dataleft.east) [right, inner sep=1cm] {\textbf{Nutzdaten}};
-
-\node[rect,minimum width=2cm, fill=red!15, below of=dataleft](encleft) {\textbf{}};
-\node[rect,minimum width=2cm, fill=red!15, below of=dataright](encright) {\textbf{}};
-
-\node at (encleft.east) [right, inner sep=1cm] {\textbf{Verschlüsselung}};
+\node[rect,minimum width=2cm, fill=red!15, below of=dataleft](encleft) {};
+\node[rect,minimum width=2cm, fill=red!15, below of=dataright](encright) {};
 
 \node[box,fit=(encleft.north west) (encright.north east)
               (encright.south east) (encleft.south west),
-      inner sep=0.3cm](encryption) {};
+      inner sep=0.2cm](encryption) {};
 
-\node[rect,minimum width=2cm, fill=red!15, below of=encleft](transpleft) {\textbf{}};
-\node[rect,minimum width=2cm, fill=red!15, below of=encright](transpright) {\textbf{}};
+\node[rect,minimum width=2cm, fill=red!15, below of=encleft](transpleft) {};
+\node[rect,minimum width=2cm, fill=red!15, below of=encright](transpright) {};
 
 \node[box,fit=(transpleft.north west) (transpright.north east)
               (transpright.south east) (transpleft.south west),
-      inner sep=0.3cm](transport) {};
+      inner sep=0.2cm](transport) {};
 
 \path[->]
   (server) edge node {} (dataleft)
@@ -47,12 +42,10 @@
   (transpright) edge node {} (encright)
   (encright) edge node {} (dataright)
   (dataright) edge node {} (client)
-  
-  
-  ;
-\path[<->]
-   (transpleft) edge node{Transport} (transpright)
-  ;
+
+  (dataleft) edge node {Nutzdaten} (dataright)
+  (encleft) edge node {Verschl"usselung} (encright)
+  (transpleft) edge node {Multicast} (transpright)
   ;
 
 \end{tikzpicture}
