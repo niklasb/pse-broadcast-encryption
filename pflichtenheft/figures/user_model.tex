@@ -1,7 +1,7 @@
 \begin{illustration}{Nutzer können entweder die Daten entschlüsseln(grün) oder sind ausgeschlossen(rot)}
 
 \tikzset{
-  rect/.style={draw,fill=green!15,minimum height=0.8cm,rectangle},
+  rect/.style={draw,fill=green!60,minimum height=0.8cm,rectangle},
   box/.style={
     draw=blue!50!white,
     line width=1pt,
@@ -12,15 +12,19 @@
 
 \begin{tikzpicture}[auto,node distance=1.5cm]
 
-\node[rect,minimum width=2cm](server) {\textbf{Server}};
-\node[rect,minimum width=2cm,xshift=4.5cm,right of=server](client1) {\textbf{Client1}};
+\node[rect,fill=green!15,minimum width=2cm](server) {\textbf{Server}};
+\node[rect,fill=red!60,minimum width=2cm,xshift=4.5cm,right of=server](client1) {\textbf{Client1}};
 \node[rect,minimum width=2cm,below of=client1](client2) {\textbf{Client2}};
 \node[rect,minimum width=2cm,below of=client2](client3) {\textbf{Client3}};
-\node[rect,minimum width=2cm,below of=client3](client4) {\textbf{Client4}};
+\node[rect,fill=red!60,minimum width=2cm,below of=client3](client4) {\textbf{Client4}};
 
 \node[box,fit=(client1.north west) (client1.north east)
               (client4.south east) (client4.south west),
       inner sep=0.3cm](clients) {};
+
+\path[->]
+    (server) edge node[pos=.3] {sendet Daten} (clients)
+;
 
 \end{tikzpicture}
 
