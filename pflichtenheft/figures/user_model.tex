@@ -5,6 +5,7 @@
   box/.style={
     draw=blue!50!white,
     line width=1pt,
+   dash pattern=on 1pt off 4pt on 6pt off 4pt,
     inner sep=4mm, rectangle, rounded corners
   },
 }
@@ -12,11 +13,14 @@
 \begin{tikzpicture}[auto,node distance=1.5cm]
 
 \node[rect,minimum width=2cm](server) {\textbf{Server}};
-\node[rect,minimum width=2cm,xshift=4.5cm,right of=server](client) {\textbf{Client}};
+\node[rect,minimum width=2cm,xshift=4.5cm,right of=server](client1) {\textbf{Client1}};
+\node[rect,minimum width=2cm,below of=client1](client2) {\textbf{Client2}};
+\node[rect,minimum width=2cm,below of=client2](client3) {\textbf{Client3}};
+\node[rect,minimum width=2cm,below of=client3](client4) {\textbf{Client4}};
 
-\node[box,fit=(dataleft.north west) (dataright.north east)
-              (dataright.south east) (dataleft.south west),
-      inner sep=0.2cm](data) {};
+\node[box,fit=(client1.north west) (client1.north east)
+              (client4.south east) (client4.south west),
+      inner sep=0.3cm](clients) {};
 
 \end{tikzpicture}
 
