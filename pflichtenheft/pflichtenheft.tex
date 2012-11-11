@@ -330,14 +330,19 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
-\addrow{/L10/} {Die Antwort auf einen Klick eines Benutzers erfolgt innerhalb von
-                höchstens 200ms.}
+\addrow{/L10/} {Der Server und das Kommunikationssystem ist in der Lage,
+                100000 Benutzer zu bedienen, von denen h"ochestens 1000 einen
+                privaten Schl"ussel besitzen, der aber ausgeschlossen ist.}
 \addrow{/L20/} {Die Oberfläche der Client-Anwendung ist so intuitiv, dass jeder Benutzer
                 sich innerhalb von höchstens 5 Minuten Einarbeitungszeit selbst
                 zurechtfindet, ohne die Dokumentation konsultieren zu müssen.}
-\addrow{/L30/} {Der Server und das Kommunikationssystem ist in der Lage,
-                100000 Benutzer zu bedienen, von denen h"ochestens 1000 einen
-                privaten Schl"ussel besitzen, der aber ausgeschlossen ist.}
+\addrow{/L30/} {Die Antwort auf einen Klick eines Benutzers erfolgt innerhalb von
+                höchstens 200ms.}
+\addrow{/L40/} {Die Dauer der Überprüfung der Anmeldedaten muss im Bereich von 
+                1-2 Sekunden liegen.}
+\addrow{/L50/} {Bei fehlerhaften Eingaben wird dem Benutzer eine entsprechende 
+                Fehlermeldung angezeigt und die Korrektur der Eingabedaten soll möglich sein
+								ohne die Eingabe wiederholt vornehmen zu müssen.}								
 \end{usecase}
 
 \section{GUI}
