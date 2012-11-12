@@ -1,4 +1,4 @@
-\begin{illustration}{Kommunikations-Modell unserer Broadcasting-Anwendung}
+\begin{illustration}{Die Kommunikationsschichten unserer Anwendung}
 
 \tikzset{
   rect/.style={draw,fill=green!15,minimum height=0.8cm,rectangle},
@@ -12,7 +12,7 @@
 \begin{tikzpicture}[auto,node distance=1.5cm]
 
 \node[rect,minimum width=2cm](server) {\textbf{Server}};
-\node[rect,minimum width=2cm,xshift=4.5cm,right of=server](client) {\textbf{Client}};
+\node[rect,minimum width=2cm,xshift=8cm,right of=server](client) {\textbf{Client}};
 
 \node[rect,minimum width=2cm, fill=red!15, below of=server](dataleft) {};
 \node[rect,minimum width=2cm, fill=red!15, below of=client](dataright) {};
@@ -35,6 +35,10 @@
               (transpright.south east) (transpleft.south west),
       inner sep=0.2cm](transport) {};
 
+\node[left of=data,xshift=-5.6cm](datacaption) {\textbf{Nutzdaten}};
+\node[left of=encryption,xshift=-6.0cm](enccaption) {\textbf{Verschl"usselung}};
+\node[left of=transport,xshift=-5.5cm](transpcaption) {\textbf{Multicast}};
+
 \path[->]
   (server) edge node {} (dataleft)
   (dataleft) edge node {} (encleft)
@@ -43,9 +47,9 @@
   (encright) edge node {} (dataright)
   (dataright) edge node {} (client)
 
-  (dataleft) edge node {Nutzdaten} (dataright)
-  (encleft) edge node {Verschl"usselung} (encright)
-  (transpleft) edge node {Multicast} (transpright)
+  (dataleft) edge node {Inhalte} (dataright)
+  (encleft) edge node {verschl"usselte Inhalte, Kontrollnachrichten} (encright)
+  (transpleft) edge node {Datenpakete} (transpright)
   ;
 
 \end{tikzpicture}
