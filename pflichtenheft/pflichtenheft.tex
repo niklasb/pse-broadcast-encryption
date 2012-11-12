@@ -159,6 +159,9 @@ ausgeschlossener Benutzer zu skalieren.
 
 \item Kommunikation und Verschl"usselung
 \begin{itemize}
+   \item Die Verbindung des Clients zum Server erfolgt ohne eine zus"tzliche TCP-Verbindung.
+         Dazu muss ein Verfahren entwickelt werden, bei dem der Server den Group-Key
+         in regelm"a"sigen Abst"anden sendet.
    \item Ein effizienteres Verfahren als das in~\cite{Naor00} beschriebene wird
          entwickelt und implementiert.
 \end{itemize}
@@ -183,18 +186,23 @@ Das Produkt wird benutzt um Inhalte an eine festgelegte Benutzergruppe zu vertei
 
 \subsection{Anwendungsbereich}
 
-Durch die Beliebigkeit des Datentyps kann das Produkt in allen Bereichen zum Einsatz kommen, die das Verteilen von Daten an
-bestimmte Nutzergruppen erfordern. Beispielsweise in den Bereichen Pay-TV, Blu-ray, Audio-Video-Streaming oder Digital-Rights-Management.
-Da das Verfahren eine sehr breite Verteilung erm"oglicht, bietet es sich unter anderem für das Live-Streaming bedeutender Events an.
-Dabei kommt es aufgrund großen "offentlichen Interesses häufig zur Überlastung der Server, was mithilfe der entwickelten Software umgangen werden k"onnte.
+Durch die Abstraktion vom gesendeten Datentyps kann das Produkt in allen Bereichen zum Einsatz kommen,
+die das Verteilen von Daten an bestimmte Nutzergruppen erfordern, z.B. f"ur Media-Streaming oder
+die Verteilung von Texten und Bildern.
 
-Mithilfe der Verschl"usselung kann das Programm auch für kostenpflichtige Internetdienste wie Pay-TV, Zeitschriften,  etc. verwendet werden.
+Da das Verfahren eine sehr breite Verteilung erm"oglicht, bietet es sich unter anderem für das
+Live-Streaming bedeutender Events an. Dabei kommt es aufgrund großen "offentlichen Interesses
+häufig zur Überlastung der Server, was mithilfe der entwickelten Software umgangen werden k"onnte.
+
+Mithilfe der Verschl"usselung kann das Programm auch für kostenpflichtige Internetdienste
+wie Pay-TV, Zeitschriften, etc\. verwendet werden.
 
 \subsection{Zielgruppen}
 
 Es gibt in diesem Fall zwei Zielgruppen: Die der Dienstanbieter und die der Nutzer.
 
-Die Dienstanbieter sind die Betreiber der Server von denen aus Datenmengen an die Nutzer versendet werden. Diese Anbieter möchten die Möglichkeit haben bestimmte Nutzer auszuschließen.
+Die Dienstanbieter sind die Betreiber der Server von denen aus Datenmengen an die Nutzer versendet
+werden. Diese Anbieter möchten die Möglichkeit haben bestimmte Nutzer auszuschließen.
 
 Die Nutzer wollen die Dienstleistung in Anspruch nehmen und Daten empfangen.
 
