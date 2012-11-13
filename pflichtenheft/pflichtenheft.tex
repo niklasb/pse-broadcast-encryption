@@ -452,16 +452,17 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
          zu, welchen er auch anzeigt.
    \end{itemize}
 }
-\addrow{/TF70/} {Datenkonsistenzen
+\addrow{/TF70/} {Ungültige Befehle
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: Es existiert keine Empfängergruppe.
    \item Ausgangsaktion: Es wird eine Fehlermeldung angezeigt.
    \item Ereignissfluss: 
           \begin{itemize}
-           \item Der Anbieter startet eine Datenübertragung.
-           \item Ein Benutzer wird vom Anbieter gesperrt.
-           \item Der Anbieter fügt einen Benutzer hinzu.
+           \item Der Anbieter startet eine Datenübertragung, was ohne Empfängergruppe jedoch fehlschlägt.
+           \item Der Anbieter fügt einen Benutzer hinzu
+           \item Ein Benutzer wird vom Anbieter gesperrt, da es jedoch keine Benutzer geben kann wird nichts unternommen
+                    und ein Fehler gemeldet.
            \end{itemize}
    \end{itemize}
 }
