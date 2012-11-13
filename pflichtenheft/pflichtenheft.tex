@@ -61,10 +61,10 @@
 
 \section{Einleitung}
 
-Heutzutage gängige Streamingdienste im Internet basieren bis auf wenige Ausnahmen auf
+Heutzutage basieren gängige Streamingdienste im Internet bis auf wenige Ausnahmen auf
 einem Client-Server-Modell, bei dem jeder Client eine eigene Verbindung zum Server
 aufbaut, um einen Stream zu empfangen. Das Trafficaufkommen, das durch diese Art der
-Kommunikation verursacht wird sowie die notwendige Bandbreite sind enorm. Nur große
+Kommunikation verursacht wird, sowie die notwendige Bandbreite sind enorm. Nur große
 Anbieter von Inhalten können sich diese Form der Verteilung überhaupt leisten.
 
 Mit der naheliegenden Erkenntnis, dass bei dem beschriebenen Verfahren dieselben Daten
@@ -83,7 +83,7 @@ da der Kommunikationsaufwand durch die Verschlüsselung nicht wesentlich erhöht
 darf.
 
 Wir wurden daher beauftragt, einen Prototyp zu entwickeln, der ein
-Broadcast"=Verschlüsselungsverfahren mit speziellen wünschenswerten Eigenschaften
+Broadcast"=Verschlüsselungsverfahren mit speziellen, wünschenswerten Eigenschaften
 demonstriert.
 
 \section{Zielbestimmung}
@@ -103,14 +103,14 @@ ausgeschlossener Benutzer zu skalieren.
 
 \begin{itemize}
 
-\item Server
+\item Der Server
 \begin{itemize}
    \item sendet Daten an eine Empfängergruppe. Zu Demonstrationszwecken wird
          ein einfacher Audio- oder Videostream als Payload eingesetzt.
    \item erlaubt es, nicht mehr authorisierte Benutzer auszuschließen.
 \end{itemize}
 
-\item Client
+\item Der Client
 \begin{itemize}
    \item erlaubt es, sich mit einem Server zu verbinden (einer Gruppe beizutreten).
    \item empfängt Daten vom Server und stellt sie dar.
@@ -118,7 +118,7 @@ ausgeschlossener Benutzer zu skalieren.
          m"oglich ist.
 \end{itemize}
 
-\item Kommunikation und Verschl"usselung
+\item Kommunikation und Verschl"usselung:
 \begin{itemize}
    \item Nur ein unidirektionaler Kommunikationskanal vom Server zum Client wird
          vorausgesetzt. Zu Demonstrationszwecken wird TCP als Transportprotokoll
@@ -144,14 +144,14 @@ ausgeschlossener Benutzer zu skalieren.
 
 \begin{itemize}
 
-\item Server
+\item Der Server
 \begin{itemize}
    \item f"uhrt Statistik "uber Nutzdatenmenge und Traffic, um den Kommunikationsaufwand
          der Verschl"usselung zu analysieren.
-   \item Gesperrte Benutzer lassen sich wieder entsperren
+   \item Gesperrte Benutzer lassen sich wieder entsperren.
 \end{itemize}
 
-\item Client
+\item Der Client
 \begin{itemize}
    \item verf"ugt "uber eine Anzeige des angefallenen Traffics.
    \item puffert oder speichert Inhalte, sodass z.B. in einem Stream auch
@@ -187,16 +187,16 @@ Das Produkt wird benutzt um Inhalte an eine festgelegte Benutzergruppe zu vertei
 
 \subsection{Anwendungsbereich}
 
-Durch die Abstraktion vom gesendeten Datentyps kann das Produkt in allen Bereichen zum Einsatz kommen,
+Durch die Abstraktion vom gesendeten Datentyp kann das Produkt in allen Bereichen zum Einsatz kommen,
 die das Verteilen von Daten an bestimmte Nutzergruppen erfordern, z.B. f"ur Media-Streaming oder
 die Verteilung von Texten und Bildern.
 
 Da das Verfahren eine sehr breite Verteilung erm"oglicht, bietet es sich unter anderem für das
-Live-Streaming bedeutender Events an. Dabei kommt es aufgrund großen "offentlichen Interesses
+Live-Streaming bedeutender Events an. Dabei kommt es auf Grund großen "offentlichen Interesses
 häufig zur Überlastung der Server, was mithilfe der entwickelten Software umgangen werden k"onnte.
 
 Mithilfe der Verschl"usselung kann das Programm auch für kostenpflichtige Internetdienste
-wie Pay-TV, Zeitschriften, etc. verwendet werden.
+wie Pay-TV, Zeitschriften oder ähnlichem verwendet werden.
 
 \subsection{Zielgruppen}
 
@@ -266,11 +266,10 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/FA60/} {Der Client empf"angt Daten und stellt sie dar.}
 \addrow{/FA70/} {Der Client erlaubt die Angabe eines privaten Schl"ussels, der von
                  einem Server erzeugt wurde.}
-\addrow{/FA80/} {Der Client kann Daten entschlüsseln, nachdem er mit einem
-                 g"ultigen Schl"ussel konfiguriert wurde und solange er nicht
-                 vom Server explizit ausgeschlossen wurde.}
+\addrow{/FA80/} {Nachdem er mit einem g"ultigen Schl"ussel konfiguriert wurde kann der 
+                 Client solange kann Daten entschlüsseln bis er vom Server explizit ausgeschlossen wurde.}
 \addrow{/FA90/} {Der Client merkt sich den letzten ausgewählten Server mit
-                 zugeh"origem Schl"ussel, sodass ein erneuter Zugriff schnell möglich
+                 zugeh"origem Schl"ussel, so dass ein erneuter Zugriff schnell möglich
                  ist.}
 \addrow{/FA100/} {Die Verschlüsselung erfolgt mit einer Variante des in~\cite[Section 2.2]{Naor00}
                   oder~\cite{Garg10} vorgestellten Verfahrens}
@@ -289,7 +288,6 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/FA220/} {Der Server bietet die M"oglichkeit, ausgeschlossene Benutzer wieder
                   zu authorisieren.}
 \addrow{/FA230/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
-\addrow{/FA240/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
 \addrow{/FA250/} {Um Benutzer mit volumenbasierten Datentarifen nicht zu belasten,
                   bietet der Client einen WiFi-Modus, in dem er nur bei
                   verf"ugbarer drahtloser Netzwerkverbindung eine Verbindung erlaubt,
