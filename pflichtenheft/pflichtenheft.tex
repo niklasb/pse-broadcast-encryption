@@ -405,7 +405,7 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
    \item Ausgangsaktion:  Da der Benutzer ausgeschlossen wurde bleibt ihm der Zugang verwehrt und er kann
              die Daten nicht betrachten
    \item Ereignissfluss: Der Benutzer wird dazu aufgefordert den Anbieter und seinen Schlüssel
-         einzugeben.Er durch eine Fehlermeldung auf eine eventuelle Falscheingabe aufmerksam gemacht, aber selbst wenn er keinen
+         einzugeben. Er wird durch eine Fehlermeldung auf eine eventuelle Falscheingabe aufmerksam gemacht. Aber selbst wenn er keinen
          Fehler gemacht hat bleibt ihm der Zugriff verwehrt, da er explizit vom Anbieter ausgeschlossen wurde.
    \end{itemize}
 }
@@ -414,7 +414,8 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: -
    \item Ausgangsaktion: Ein neues Satz privater Schlüssel wird gespeichert.
-   \item Ereignissfluss: Der Anbieter will ein neue Empfängergruppe eröffnen und lässt
+   \item Ereignissfluss: Der Anbieter will Daten an eine neue Benutzergruppe senden oder die Anzahl der
+         mögliche ausgeschlossenen Nutzer erhöhen und lässt
          den Server einen neuen Satz privater Schlüssel zur Verteilung erstellen.
    \end{itemize}
 }
@@ -488,22 +489,29 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
 \subsubsection{Missbrauch}
 Hans A. will den neuen Video-Stream-Dienst 'Fußball-Bayern' für sein neues Android-Smartphone ausprobieren. Er schließt einen Vertrag mit dem Anbieter ab und zahlt die einmalige Anmeldegebühr. Daraufhin erhält er vom Anbieter einen für ihn ausgestellten privaten Schlüssel und kann, nachdem er die benötigte Software installiert hat, den Dienst nutzen.
 
-Sein Freunden Werner B. und Otto C. entschließen sich nach einer kleinen Demonstration dafür, dass sie das Ganze unbedingt auch brauchen. Der Informatiker Otto auf die Idee, dass sie, anstatt jeder zu zahlen, auch gemeinsam die Zugangsdaten von Hans nutzen können. Sofort setzen sie den Plan in die Tat um und kopieren den Schlüssel auf ihre Smartphones. Begeistert von der Tatsache dass es funktioniert, machen sie sich fröhlich auf den Heimweg. Kurz vor seiner Haustür läuft Werner seine Nachbarin Ute Liebkind über den Weg. Sofort erzählt er ihr von dem neusten Coup um "Fußball-Bayern". Allerdings ist sie überhaupt nicht begeistert von dem ihrer Meinung nach kriminellen Vorgehen der Drei. Werner tut ihre Einwände damit ab, dass die Firma sowieso zu viel Geld verdiene und sie ja keinem schaden. Überhaupt würde das nie jemand merken.
+Sein Freunden Werner B. und Otto C. entschließen sich nach einer kleinen Demonstration dafür, dass sie das Ganze unbedingt auch benötigen. 
+Der Informatiker Otto auf die Idee, dass sie, anstatt jeder zu zahlen, auch gemeinsam die Zugangsdaten von Hans nutzen können.
+Sofort setzen sie den Plan in die Tat um und kopieren den Schlüssel auf ihre Smartphones. Begeistert von der Tatsache, dass es funktioniert,
+machen sie sich fröhlich auf den Heimweg. Kurz vor seiner Haustür läuft Werner seine Nachbarin Ute Liebkind über den Weg. Sofort erzählt
+er ihr von dem ihrem Coup um "Fußball-Bayern". Allerdings ist diese überhaupt nicht begeistert von dem ihrer Meinung nach kriminellen 
+Vorgehen der Drei. Werner tut ihre Einwände damit ab, dass die Firma sowieso zu viel Geld verdiene und sie ja keinem schaden. 
+Überhaupt würde das nie jemand merken.
 
-Als Ute am nächsten Morgen aufsteht, kann sie ihr schlechtes Gewissen nicht länger ertragen und entschließt sich bei 'Fußball-Bayern' anzurufen und Hans zu melden, woraufhin Hans sofort der Zugang auf Lebenszeit gesperrt.
+Als Ute am nächsten Morgen aufsteht kann sie ihr schlechtes Gewissen nicht länger ertragen und entschließt sich bei 'Fußball-Bayern' anzurufen und
+Hans zu melden, woraufhin ihm sofort der Zugang auf Lebenszeit gesperrt wird.
 
 \subsubsection{Härtefall}
 Die tüchtige Chefin Franziska F. langweiligt sich bei den langwierigen
 Debatten an ihrem Arbeitsplatz immer so sehr, dass sie sich entschließt doch
 das neue Radio Hörgutzu zu testen, dass ihr Freund Udo U. unlängst für sich entdeckt hat.
 Sie registriert sich und erhält ihren privaten Schlüssel.
-Sie ist sofort begeistert und da sie als Trendsetterin gilt haben sich bald alle ihre Freunde
-und Mitarbeiter bei Radio 'Hörgutzu' registriert. Da jetzt jedoch alle Mitarbeiter am Arbeitsplatz
+Auf grund ihrer begeisterung und da sie als Trendsetterin gilt haben sich bald alle ihre Freunde
+und Mitarbeiter bei Radio 'Hörgutzu' registriert. Weil jetzt jedoch alle Mitarbeiter am Arbeitsplatz
 Radio hören, sinkt die Arbeitsmoral drastisch. Franziska entschließt sich dazu ihren Mitarbeitern
-die Konten sperren zu lassen, worauf Radio Hörgutzu nach kurzem Zögern eingeht. Da ihre
-gegenwärtige Verschlüsselung aber nur auf maximal 500 gesperrte
-Nutzer ausgelegt ist, müssen sie eine neue Schl"usselerzeugung durchführen, die neuen Schl"ussel
-zustellen und dabei die Anzahl der maximalen gesperrten Nutzer auf 1000 erhöhen.
+die Konten sperren zu lassen, worauf Radio Hörgutzu nach kurzem Zögern eingeht. Deren
+gegenwärtige Verschlüsselung ist aber nur auf maximal 200 gesperrte
+Nutzer ausgelegt ist, deshalb müssen sie eine neue Schl"usselerzeugung durchführen,
+dabei die Anzahl der maximalen gesperrten Nutzer auf 500 erhöhen und die Schlüssel zustellen.
 
 \subsection{Qualitätsanforderungen}
 
