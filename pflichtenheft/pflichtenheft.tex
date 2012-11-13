@@ -196,14 +196,14 @@ Live-Streaming bedeutender Events an. Dabei kommt es aufgrund großen "offentlic
 häufig zur Überlastung der Server, was mithilfe der entwickelten Software umgangen werden k"onnte.
 
 Mithilfe der Verschl"usselung kann das Programm auch für kostenpflichtige Internetdienste
-wie Pay-TV, Zeitschriften, etc\. verwendet werden.
+wie Pay-TV, Zeitschriften, etc. verwendet werden.
 
 \subsection{Zielgruppen}
 
 Es gibt in diesem Fall zwei Zielgruppen: Die der Dienstanbieter und die der Nutzer.
 
-Die Dienstanbieter sind die Betreiber der Server von denen aus Datenmengen an die Nutzer versendet
-werden. Diese Anbieter möchten die Möglichkeit haben bestimmte Nutzer auszuschließen.
+Die Dienstanbieter sind die Betreiber der Server, die Inhalte an die Nutzer verteilen wollen. Sie
+möchten die Möglichkeit einer Zugangskontrolle zu ihrem Dienst haben.
 
 Die Nutzer wollen die Dienstleistung in Anspruch nehmen und Daten empfangen.
 
@@ -220,14 +220,13 @@ Der Client wird mobil und nur auf Anfrage benötigt.
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
 \addrow{/FA10/} {Der Server versendet Daten an eine Empf"angergruppe.}
-\addrow{/FA20/} {Der Server bietet die M"oglichkeit eines Rekeyings, also
-                 der Erzeugung eines komplett neuen Satzes private Schl"ussel
-                 f"ur die Benutzer. Diese m"ussen dann auf einem sicheren
-                 Weg zugestellt werden}
+\addrow{/FA20/} {Der Server bietet die M"oglichkeit einer initialen Schl"usselerzeugung, wobei
+                 ein kompletter Satz privater Schl"ussel f"ur die Benutzer erstellt wird.
+                 Diese m"ussen dann auf einem sicheren Weg zugestellt werden.}
 \addrow{/FA30/} {Der Server verschl"usselt Daten so, dass nur authorisierte
                  Benutzer den Stream entschl"usseln k"onnen.}
 \addrow{/FA40/} {Der Server bietet die M"oglichkeit, Nutzer per Namen auszuschließen,
-                 ohne dass ein Rekeying erforderlich ist.}
+                 ohne dass eine neue Schl"usselerzeugung erforderlich ist.}
 \addrow{/FA50/} {Der Client bietet die M"oglichkeit, sich zu einem Server verbinden.}
 \addrow{/FA60/} {Der Client empf"angt Daten und stellt sie dar.}
 \addrow{/FA70/} {Der Client erlaubt die Angabe eines privaten Schl"ussels, der von
@@ -327,12 +326,14 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \item Client
    \begin{itemize}
       \item Internetfähiges Smartphone
-      \item Prozessor mind. 384 MB
-      \item Auflösung 240x320 Pixel
+      \item CPU mit mindestens 500 MHz
+      \item mindestens 384 MB RAM
+      \item Displayaufl"osung mindestens 240x320 Pixel
    \end{itemize}
 \item Server
    \begin{itemize}
-      \item Internetfähiger Server
+      \item Angemessene Hardwareausstattung, je nach Auslastung des Dienstes und
+            Anzahl der Benutzer.
    \end{itemize}
 \end{itemize}
 
@@ -480,7 +481,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \subsubsection{Missbrauch}
 Hans A. will den neuen Video-Stream-Dienst 'Fußball-Bayern' für sein neues Android-Smartphone ausprobieren. Er schließt einen Vertrag mit dem Anbieter ab und zahlt die einmalige Anmeldegebühr. Daraufhin erhält er vom Anbieter einen für ihn ausgestellten privaten Schlüssel und kann, nachdem er die benötigte Software installiert hat, den Dienst nutzen.
 
-Sein Freunden Werner B. und Otto C. entschließen sich nach einer kleinen Demonstration dafür, dass sie das Ganze unbedingt auch brauchen. Der Informatiker Otto auf die Idee, dass sie, anstatt jeder zu zahlen, auch gemeinsam die Zugangsdaten von Hans nutzen können. Sofort setzen sie den Plan in die Tat um und kopieren den Schlüssel auf ihre Smartphones. Von der Tatsache, dass es funktioniert begeistert machen sie sich fröhlich auf den Heimweg.Kurz vor seiner Haustür läuft Werner seine Nachbarin Ute Liebkind über den Weg. Sofoert erzählt er ihr von dem neusten Coup um "Fußball-Bayern". Allerdings ist sie überhaupt nicht begeistert von dem ihrer Meinung nach kriminellen Vorgehen der Drei. Werner tut ihre Einwände damit ab, dass die Firma sowieso zu viel Geld verdiene und sie ja keinem schadeteten. Überhaupt würde das nie jemand merken. 
+Sein Freunden Werner B. und Otto C. entschließen sich nach einer kleinen Demonstration dafür, dass sie das Ganze unbedingt auch brauchen. Der Informatiker Otto auf die Idee, dass sie, anstatt jeder zu zahlen, auch gemeinsam die Zugangsdaten von Hans nutzen können. Sofort setzen sie den Plan in die Tat um und kopieren den Schlüssel auf ihre Smartphones. Von der Tatsache, dass es funktioniert begeistert machen sie sich fröhlich auf den Heimweg.Kurz vor seiner Haustür läuft Werner seine Nachbarin Ute Liebkind über den Weg. Sofoert erzählt er ihr von dem neusten Coup um "Fußball-Bayern". Allerdings ist sie überhaupt nicht begeistert von dem ihrer Meinung nach kriminellen Vorgehen der Drei. Werner tut ihre Einwände damit ab, dass die Firma sowieso zu viel Geld verdiene und sie ja keinem schadeteten. Überhaupt würde das nie jemand merken.
 
 Als Ute am nächsten Morgen aufsteht, kann sie ihr schlechtes Gewissen nicht länger ertragen und entschließt sich bei 'Fußball-Bayern' anzurufen und Hans zu melden, woraufhin Hans sofort der Zugang auf Lebenszeit gesperrt.
 
@@ -494,8 +495,8 @@ und Mitarbeiter bei Radio 'Hörgutzu' registriert. Da jetzt jedoch alle Mitarbei
 Radio hören, sinkt die Arbeitsmoral drastisch. Franziska entschließt sich dazu ihren Mitarbeitern
 die Konten sperren zu lassen, worauf Radio Hörgutzu nach kurzem Zögern eingeht. Da ihre
 gegenwärtige Verschlüsselung aber nur auf maximal 500 gesperrte
-Nutzer ausgelegt ist, müssen sie ein Rekey durchführen und die Anzahl der gesperrten Nutzer
-auf 1000 erhöhen.
+Nutzer ausgelegt ist, müssen sie eine neue Schl"usselerzeugung durchführen, die neuen Schl"ussel
+zustellen und dabei die Anzahl der maximalen gesperrten Nutzer auf 1000 erhöhen.
 
 \subsection{Qualitätsanforderungen}
 
