@@ -160,7 +160,7 @@ ausgeschlossener Benutzer zu skalieren.
 \item Kommunikation und Verschl"usselung
 \begin{itemize}
    \item Die Verbindung des Clients zum Server erfolgt ohne eine zus"atzliche TCP-Verbindung.
-         Dazu muss ein Verfahren entwickelt werden, bei dem der Server den Group-Key
+         Dazu muss ein Verfahren entwickelt werden, bei dem der Server den Session-Key
          in regelm"a"sigen Abst"anden sendet.
    \item Ein effizienteres Verfahren als das in~\cite{Naor00} beschriebene wird
          entwickelt und implementiert.
@@ -212,37 +212,6 @@ Der Server läuft im unbeaufsichtigten, stationären Dauerbetrieb.
 
 Der Client wird mobil und nur auf Anfrage benötigt.
 
-\section{Produktumgebung}
-Der Server muss auf einem Java-fähigen System laufen.
-Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems laufen.
-\subsection{Software}
-\begin{itemize}
-\item Client
-   \begin{itemize}
-      \item Betriebssystem: Android (mind. 2.1)
-   \end{itemize}
-\item Server
-   \begin{itemize}
-      \item Java-fähiges System
-   \end{itemize}
-\end{itemize}
-
-\subsection{Hardware}
-\begin{itemize}
-\item Client
-   \begin{itemize}
-      \item Internetfähiges Smartphone
-      \item Prozessor mind. 384 MB
-      \item Auflösung 240x320 Pixel
-   \end{itemize}
-\item Server
-   \begin{itemize}
-      \item Internetfähiger Server
-   \end{itemize}
-\end{itemize}
-
-
-
 \section{Produktfunktion}
 
 \subsection{Grundfunktionen}
@@ -282,16 +251,18 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/FA210/} {Der Server führt Statistiken über Nutzdatenmenge und Traffic,
                   um den Kommunikationsaufwand für die Verschlüsselung zu
                   analysieren}
-\addrow{/FA220/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
+\addrow{/FA220/} {Der Server bietet die M"oglichkeit, ausgeschlossene Benutzer wieder
+                  zu authorisieren.}
 \addrow{/FA230/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
-\addrow{/FA240/} {Um Benutzer mit volumenbasierten Datentarifen nicht zu belasten,
+\addrow{/FA240/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
+\addrow{/FA250/} {Um Benutzer mit volumenbasierten Datentarifen nicht zu belasten,
                   bietet der Client einen WiFi-Modus, in dem er nur bei
                   verf"ugbarer drahtloser Netzwerkverbindung eine Verbindung erlaubt,
                   und nicht "uber das Telefonanbieternetz.}
-\addrow{/FA250/} {Der Client puffert empfangene Daten, um eine flüssigere
+\addrow{/FA260/} {Der Client puffert empfangene Daten, um eine flüssigere
                   Wiedergabe zu ermöglichen.}
-\addrow{/FA260/} {Ein effizienteres Verschlüsselungsverfahren als das vorgebene
-                  wird entwickelt und implementiert.}
+\addrow{/FA270/} {Ein effizienteres Verschlüsselungsverfahren als das in~\cite{Naor00} beschriebene
+                  wird verwendet.}
 \end{usecase}
 
 \section{Produktdaten}
@@ -333,6 +304,35 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
    \end{itemize}
 }
 \end{usecase}
+
+\section{Produktumgebung}
+Der Server muss auf einem Java-fähigen System laufen.
+Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems laufen.
+\subsection{Software}
+\begin{itemize}
+\item Client
+   \begin{itemize}
+      \item Betriebssystem: Android (mindestens 2.1)
+   \end{itemize}
+\item Server
+   \begin{itemize}
+      \item Java-fähiges System
+   \end{itemize}
+\end{itemize}
+
+\subsection{Hardware}
+\begin{itemize}
+\item Client
+   \begin{itemize}
+      \item Internetfähiges Smartphone
+      \item Prozessor mind. 384 MB
+      \item Auflösung 240x320 Pixel
+   \end{itemize}
+\item Server
+   \begin{itemize}
+      \item Internetfähiger Server
+   \end{itemize}
+\end{itemize}
 
 \section{Systemmodell}
 
