@@ -325,10 +325,12 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \begin{itemize}
 \item Client
    \begin{itemize}
-      \item Internetfähiges Smartphone
-      \item CPU mit mindestens 500 MHz
-      \item mindestens 384 MB RAM
-      \item Displayaufl"osung mindestens 240x320 Pixel
+      \item Internetfähiges Smartphone mit folgenden Mindestanforderungen:
+         \begin{itemize}
+         \item 500 MHz CPU
+         \item 384 MB RAM
+         \item 240$\times$320 Pixel Displayaufl"osung
+      \end{itemize}
    \end{itemize}
 \item Server
    \begin{itemize}
@@ -355,11 +357,11 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
                 zurechtfindet, ohne die Dokumentation konsultieren zu müssen.}
 \addrow{/L30/} {Die Antwort auf einen Klick eines Benutzers erfolgt innerhalb von
                 höchstens 200ms.}
-\addrow{/L40/} {Die Dauer der Überprüfung der Anmeldedaten muss im Bereich von
-                1-2 Sekunden liegen.}
+\addrow{/L40/} {Die Dauer der Anmeldnung muss weniger als 20 Sekunden betragen.}
 \addrow{/L50/} {Bei fehlerhaften Eingaben wird dem Benutzer eine entsprechende
-                Fehlermeldung angezeigt und die Korrektur der Eingabedaten soll möglich sein
-                ohne die Eingabe wiederholt vornehmen zu müssen.}
+                Fehlermeldung angezeigt.}
+\addrow{/L60/} {Der Server zeigt korrigierbare Ausnahmesituationen an und loggt diese,
+                anstatt sofort abzust"urzen.}
 \end{usecase}
 
 \section{GUI}
