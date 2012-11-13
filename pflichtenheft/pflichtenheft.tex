@@ -161,7 +161,7 @@ ausgeschlossener Benutzer zu skalieren.
 \item Kommunikation und Verschl"usselung
 \begin{itemize}
    \item Die Verbindung des Clients zum Server erfolgt ohne eine zus"atzliche TCP-Verbindung.
-         Dazu muss ein Verfahren entwickelt werden, bei dem der Server den Group-Key
+         Dazu muss ein Verfahren entwickelt werden, bei dem der Server den Session-Key
          in regelm"a"sigen Abst"anden sendet.
    \item Ein effizienteres Verfahren als das in~\cite{Naor00} beschriebene wird
          entwickelt und implementiert.
@@ -252,16 +252,18 @@ Der Client wird mobil und nur auf Anfrage benötigt.
 \addrow{/FA210/} {Der Server führt Statistiken über Nutzdatenmenge und Traffic,
                   um den Kommunikationsaufwand für die Verschlüsselung zu
                   analysieren}
-\addrow{/FA220/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
+\addrow{/FA220/} {Der Server bietet die M"oglichkeit, ausgeschlossene Benutzer wieder
+                  zu authorisieren.}
 \addrow{/FA230/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
-\addrow{/FA240/} {Um Benutzer mit volumenbasierten Datentarifen nicht zu belasten,
+\addrow{/FA240/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
+\addrow{/FA250/} {Um Benutzer mit volumenbasierten Datentarifen nicht zu belasten,
                   bietet der Client einen WiFi-Modus, in dem er nur bei
                   verf"ugbarer drahtloser Netzwerkverbindung eine Verbindung erlaubt,
                   und nicht "uber das Telefonanbieternetz.}
-\addrow{/FA250/} {Der Client puffert empfangene Daten, um eine flüssigere
+\addrow{/FA260/} {Der Client puffert empfangene Daten, um eine flüssigere
                   Wiedergabe zu ermöglichen.}
-\addrow{/FA260/} {Ein effizienteres Verschlüsselungsverfahren als das vorgebene
-                  wird entwickelt und implementiert.}
+\addrow{/FA270/} {Ein effizienteres Verschlüsselungsverfahren als das in~\cite{Naor00} beschriebene
+                  wird verwendet.}
 \end{usecase}
 
 \section{Produktdaten}
@@ -315,7 +317,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \begin{itemize}
 \item Client
    \begin{itemize}
-      \item Betriebssystem: Android (mind. 2.1)
+      \item Betriebssystem: Android (mindestens 2.1)
    \end{itemize}
 \item Server
    \begin{itemize}
@@ -435,6 +437,11 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
          damit die Änderungen sofort wirksam werden.
    \end{itemize}
 }
+% unterbrechen der Tabelle, damit sie über 2 Seiten geht
+\end{usecase}
+\clearpage
+\begin{usecase}
+
 \addrow{/TF60/} {Benutzer hinzufügen
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
