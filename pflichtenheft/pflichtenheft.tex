@@ -391,8 +391,9 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/TF10/} {Anmeldung durch privilegierten Benutzer
    \begin{itemize}
    \item Teilnehmender Akteur: Benutzer
-   \item Eingangsbedingung: Der Benutzer hat seinen Schlüssel erhalten und an die Empfängergruppe werden Daten gesendet.
-   \item Ausgangsaktion: Der Benutzer kann die gewünschten Daten ansehen
+   \item Eingangsbedingung: Der Benutzer hat seinen Schlüssel erhalten und es werden Daten vom Anbieter
+                            gesendet.
+   \item Ausgangsaktion: Der Benutzer kann die gewünschten Daten ansehen.
    \item Ereignissfluss: Der Benutzer wird dazu aufgefordert den Anbieter und seinen Schlüssel
          einzugeben. Damit kann er die Daten betrachten, da er nicht explizit ausgeschlossen wurde.
    \end{itemize}
@@ -400,7 +401,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/TF15/} {Anmeldung durch ausgeschlossenen Benutzer
    \begin{itemize}
    \item Teilnehmender Akteur: Benutzer
-   \item Eingangsbedingung: Der Benutzer hat seinen Schlüssel erhalten und wurde ausgeschlossen
+   \item Eingangsbedingung: Der Benutzer hat seinen Schlüssel erhalten und wurde ausgeschlossen.
    \item Ausgangsaktion:  Da der Benutzer ausgeschlossen wurde bleibt ihm der Zugang verwehrt und er kann
              die Daten nicht betrachten
    \item Ereignissfluss: Der Benutzer wird dazu aufgefordert den Anbieter und seinen Schlüssel
@@ -412,7 +413,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: -
-   \item Ausgangsaktion: Ein neues Satz privater Schlüssel wird gespeichert
+   \item Ausgangsaktion: Ein neues Satz privater Schlüssel wird gespeichert.
    \item Ereignissfluss: Der Anbieter will ein neue Empfängergruppe eröffnen und lässt
          den Server einen neuen Satz privater Schlüssel zur Verteilung erstellen.
    \end{itemize}
@@ -420,21 +421,20 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/TF30/} {Starte Datenübertragung
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
-   \item Eingangsbedingung: Es existiert eine Empfängergruppe.
-   \item Ausgangsaktion: Benutzer sind in der Lage die gesendeten Daten zu empfangen
-   \item Ereignissfluss: Der Anbieter wählt Daten aus, die gesendet werden soll, aus und
-         teilt diese dem Server mit. Diese Daten werden vom Server verschlüsselt, so 
-         dass ausgeschlossene Nutzer sie nicht entschlüsseln können, und versandt, damit
-         Benutzer diese empfangen können
+   \item Eingangsbedingung: Es existiert ein Satz Schl"ussel.
+   \item Ausgangsaktion: Benutzer sind in der Lage die gesendeten Inhalte zu empfangen.
+   \item Ereignissfluss: Der Anbieter wählt Inhalte aus, die gesendet werden soll, aus und
+         teilt diese dem Server mit. Diese Inhalte werden vom Server in verschlüsselter Form
+         versendet, so dass ausgeschlossene Nutzer sie nicht entschlüsseln können.
    \end{itemize}
 }
 \addrow{/TF40/} {Benutzer sperren
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
-   \item Eingangsbedingung: Es existiert eine Empfängergruppe und mindestens ein Benutzer
+   \item Eingangsbedingung: Es existiert ein Satz Schl"ussel und mindestens ein Benutzer.
    \item Ausgangsaktion: Der betreffende Benutzer kann die Daten nicht mehr entschlüsseln
    \item Ereignissfluss: Der Anbieter teilt dem Server mit welchen Benutzer er ausschließen möchte.
-         D084baaie betreffenden Daten werden vom Server gespeichert und die Auswirkungen werden
+         Die betreffenden Daten werden vom Server gespeichert und die Auswirkungen werden
          sofort sichtbar. Falls der ausgeschlossene Benutzer gerade einen Stream empf"angt,
          erscheint im Client eine Fehlermeldung.
    \end{itemize}
@@ -447,7 +447,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/TF50/} {Benutzer hinzufügen
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
-   \item Eingangsbedingung: Es existiert eine Empfängergruppe
+   \item Eingangsbedingung: Es existiert ein Satz Schl"ussel.
    \item Ausgangsaktion: Der dem Benutzer zugeordnete Schl"ussel wird gespeichert.
    \item Ereignissfluss: Der Anbieter übergibt dem Server die nötigen Daten über den Benutzer.
          Dieser speichert die Informationen und ordnet dem Benutzer einen privaten Schlüssel
@@ -455,28 +455,30 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
    \end{itemize}
 }
 
-\addrow{/TF70/} {Ungültige Befehle
+\addrow{/TF60/} {Ungültige Befehle
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
-   \item Eingangsbedingung: Es existiert keine Empfängergruppe.
+   \item Eingangsbedingung: keine
    \item Ausgangsaktion: Es wird eine Fehlermeldung angezeigt.
    \item Ereignissfluss:
+          Eine der folgenden Situationen entsteht:
           \begin{itemize}
-           \item Der Anbieter startet eine Datenübertragung, was ohne Empfängergruppe jedoch fehlschlägt.
-           \item Der Anbieter fügt einen Benutzer hinzu
-           \item Ein Benutzer wird vom Anbieter gesperrt, da es jedoch keine Benutzer geben kann wird nichts unternommen
-                    und ein Fehler gemeldet.
+           \item Der Anbieter startet eine Datenübertragung ohne vorher eine Schl"usselerzeugung
+                 durchzuf"uhren
+           \item Ein Benutzer wird vom Anbieter gesperrt, der nicht existiert.
            \end{itemize}
    \end{itemize}
 }
-\addrow{/TF80/} {Menschliche Schwäche
+\addrow{/TF70/} {Menschliche Schwäche
    \begin{itemize}
    \item Teilnehmender Akteur: Benutzer
-   \item Eingangsbedingung: Es existiert keine Empfängergruppe und es werden Daten an diese gesendet.
-   \item Ausgangsaktion: Es wird eine Fehlermeldung angezeigt.
-   \item Ereignissfluss: Ein Benutzer will sich zu einem Server verbinden, hat aber entweder die Serverdaten oder den privaten Schlüssel falsch angegeben.
-             Nachdem eine Fehlermeldung mit dem Hinweis auf eine eventuelle Falscheingabe angezeigt wurde bemerkt er wo sein Fehler lag und korrigiert ihn.
-            Danach kann er sich verbinden und die Daten entschlüsseln.
+   \item Eingangsbedingung: Vom Anbieter werden Daten gesendet und Benutzer ist authorisiert.
+   \item Ausgangsaktion: Benutzer kann Daten empfangen.
+   \item Ereignissfluss: Ein Benutzer will sich zu einem Server verbinden, hat aber entweder
+             die Serverdaten oder den privaten Schlüssel falsch angegeben. Nachdem eine
+             Fehlermeldung mit dem Hinweis auf eine eventuelle Falscheingabe angezeigt wurde
+             bemerkt er wo sein Fehler lag und korrigiert ihn. Danach kann er sich verbinden
+             und die Daten entschlüsseln.
    \end{itemize}
 }
 \end{usecase}
