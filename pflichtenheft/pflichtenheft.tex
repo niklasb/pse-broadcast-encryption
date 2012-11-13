@@ -239,6 +239,7 @@ Der Client wird mobil und nur auf Anfrage benötigt.
                  ist.}
 \addrow{/FA100/} {Die Verschlüsselung erfolgt mit einer Variante des in~\cite[Section 2.2]{Naor00}
                   oder~\cite{Garg10} vorgestellten Verfahrens}
+\addrow{/FA110/} {Sowohl Server als auch Client sind durch Falscheingaben nicht zum Absturz zu bringen}
 \end{usecase}
 
 \subsection{Erweiterte Funktionen}
@@ -382,10 +383,10 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/TF10/} {Anmeldung durch privilegierten Benutzer
    \begin{itemize}
    \item Teilnehmender Akteur: Benutzer
-   \item Eingangsbedingung: Der Benutzer hat seinen Schlüssel erhalten
+   \item Eingangsbedingung: Der Benutzer hat seinen Schlüssel erhalten und an die Empfängergruppe werden Daten gesendet.
    \item Ausgangsaktion: Der Benutzer kann die gewünschten Daten ansehen
    \item Ereignissfluss: Der Benutzer wird dazu aufgefordert den Anbieter und seinen Schlüssel
-         einzugeben. Damit kann er die Daten entschlüsseln, da er nicht explizit ausgeschlossen wurde.
+         einzugeben. Damit kann er die Daten betrachten, da er nicht explizit ausgeschlossen wurde.
    \end{itemize}
 }
 \addrow{/TF15/} {Anmeldung durch ausgeschlossenen Benutzer
@@ -422,7 +423,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/TF40/} {Benutzer sperren
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
-   \item Eingangsbedingung: Es existiert eine Empfängergruppe
+   \item Eingangsbedingung: Es existiert eine Empfängergruppe und mindestens ein Benutzer
    \item Ausgangsaktion: Der betreffende Benutzer kann die Daten nicht mehr entschlüsseln
    \item Ereignissfluss: Der Anbieter teilt dem Server mit welchen Benutzer er ausschließen möchte.
          Die betreffenden Daten werden vom Server gespeichert und beim zukünftigen generieren des
@@ -451,6 +452,16 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
            \item Ein Benutzer wird vom Anbieter gesperrt.
            \item Der Anbieter fügt einen Benutzer hinzu.
            \end{itemize}
+   \end{itemize}
+}
+\addrow{/TF80/} {Menschliche Schwäche
+   \begin{itemize}
+   \item Teilnehmender Akteur: Benutzer
+   \item Eingangsbedingung: Es existiert keine Empfängergruppe und es werden Daten an diese gesendet.
+   \item Ausgangsaktion: Es wird eine Fehlermeldung angezeigt.
+   \item Ereignissfluss: Ein Benutzer will sich zu einem Server verbinden, hat aber entweder die Serverdaten oder den privaten Schlüssel falsch angegeben.
+             Nachdem eine Fehlermeldung mit dem Hinweis auf eine eventuelle Falscheingabe angezeigt wurde bemerkt er wo sein Fehler lag und korrigiert ihn.
+            Danach kann er sich verbinden und die Daten entschlüsseln.
    \end{itemize}
 }
 \end{usecase}
