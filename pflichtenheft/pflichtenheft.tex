@@ -88,7 +88,7 @@ demonstriert.
 
 \section{Zielbestimmung}
 
-Die entwickelte Software ist eine Client/Server-Kombination, die es ermöglicht,
+Die entwickelte Software ist eine Client-Server-Kombination, die es ermöglicht,
 Inhalte verschlüsselt von einem Server an verschiedene Clients verteilen. Dafür
 soll kein bidirektionales Kommunikationsmedium erforderlich sein.
 
@@ -96,7 +96,7 @@ Die Clients werden auf Basis des g"angigen mobilen Betriebssystems Android
 implementiert.
 
 Es wird ein Verschlüsselungsverfahren eingesetzt, welches die besondere
-Eigenschaft besitzt, nicht mit der Gesamtzahl der Empfänger, sondern mit der Anzahl
+Eigenschaft besitzt, nicht in der Gesamtzahl der Empfänger, sondern in der Anzahl
 ausgeschlossener Benutzer zu skalieren.
 
 \subsection{Musskriterien}
@@ -127,7 +127,7 @@ ausgeschlossener Benutzer zu skalieren.
    \item Daten werden verschl"usselt "ubertragen. Der Server bietet entsprechende
          Optionen zur Erzeugung von Schl"usseln und zur Kontrolle und Konfiguration
          der Verschl"usselungsschicht. "Uber einen externen, sicheren Kanal erh"alt
-         jeder Benutzer einen privaten Schl"ussel (z.B. eine Datei), mit dem er seine
+         jeder Benutzer einen privaten Schl"ussel (zum Beispiel eine Datei), mit dem er seine
          Clientsoftware konfigurieren kann.
    \item Das verwendete Broadcast"=Verschl"usselungsverfahren basiert auf den
          in~\cite[Section~2.2]{Naor00} oder~\cite{Garg10} beschriebenen Verfahren
@@ -154,7 +154,7 @@ ausgeschlossener Benutzer zu skalieren.
 \item Der Client
 \begin{itemize}
    \item verf"ugt "uber eine Anzeige des angefallenen Traffics.
-   \item puffert oder speichert Inhalte, sodass z.B. in einem Stream auch
+   \item puffert oder speichert Inhalte, sodass beispielsweise in einem Stream auch
          zur"uckgespult werden kann.
 \end{itemize}
 
@@ -183,12 +183,12 @@ ausgeschlossener Benutzer zu skalieren.
 
 \section{Produkteinsatz}
 
-Das Produkt wird benutzt um Inhalte an eine festgelegte Benutzergruppe zu verteilen. 
+Das Produkt wird benutzt, um Inhalte an eine festgelegte Benutzergruppe zu verteilen. 
 
 \subsection{Anwendungsbereich}
 
 Durch die Abstraktion vom gesendeten Datentyp kann das Produkt in allen Bereichen zum Einsatz kommen,
-die das Verteilen von Daten an bestimmte Nutzergruppen erfordern, z.B. f"ur Media-Streaming oder
+die das Verteilen von Daten an bestimmte Nutzergruppen erfordern, zum Beispiel f"ur Media-Streaming oder
 die Verteilung von Texten und Bildern.
 
 Da das Verfahren eine sehr breite Verteilung erm"oglicht, bietet es sich unter anderem für das
@@ -200,18 +200,12 @@ wie Pay-TV, Zeitschriften oder ähnlichem verwendet werden.
 
 \subsection{Zielgruppen}
 
-Es gibt in diesem Fall zwei Zielgruppen: Die der Dienstanbieter und die der Nutzer.
-
-Die Dienstanbieter sind die Betreiber der Server, die Inhalte an die Nutzer verteilen wollen. Sie
-möchten die Möglichkeit einer Zugangskontrolle zu ihrem Dienst haben.
-
-Die Nutzer wollen die Dienstleistung in Anspruch nehmen und Daten empfangen.
+Es gibt in diesem Fall zwei Zielgruppen: Die der Dienstanbieter und die der Nutzer. Die Dienstanbieter sind die Betreiber der Server, die Inhalte an die Nutzer verteilen wollen. Sie
+möchten die Möglichkeit einer Zugangskontrolle zu ihrem Dienst haben. Die Nutzer wollen die Dienstleistung in Anspruch nehmen und Daten empfangen.
 
 \subsection{Betriebsbedingungen}
 
-Der Server läuft im unbeaufsichtigten, stationären Dauerbetrieb.
-
-Der Client wird mobil und nur auf Anfrage benötigt.
+Der Server läuft im unbeaufsichtigten, stationären Dauerbetrieb. Der Client wird mobil und nur auf Anfrage benötigt.
 
 \section{Produktumgebung}
 
@@ -249,7 +243,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \end{itemize}
 
 \section{Produktfunktion}
-
+Im Folgenden werden die grundlegenden und erweiterten Funktionen aufgelistet.
 \subsection{Grundfunktionen}
 
 \begin{usecase}
@@ -266,7 +260,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
 \addrow{/FA60/} {Der Client empf"angt Daten und stellt sie dar.}
 \addrow{/FA70/} {Der Client erlaubt die Angabe eines privaten Schl"ussels, der von
                  einem Server erzeugt wurde.}
-\addrow{/FA80/} {Nachdem er mit einem g"ultigen Schl"ussel konfiguriert wurde kann der
+\addrow{/FA80/} {Nachdem er mit einem g"ultigen Schl"ussel konfiguriert wurde, kann der
                  Client solange Daten entschlüsseln bis er vom Server explizit ausgeschlossen wurde.}
 \addrow{/FA90/} {Der Client merkt sich den letzten ausgewählten Server mit
                  zugeh"origem Schl"ussel, so dass ein erneuter Zugriff schnell möglich
@@ -284,7 +278,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
                   welche dann über ein Kontextmenü auswählbar sind.}
 \addrow{/FA210/} {Der Server führt Statistiken über Nutzdatenmenge und Traffic,
                   um den Kommunikationsaufwand für die Verschlüsselung zu
-                  analysieren}
+                  analysieren.}
 \addrow{/FA220/} {Der Server bietet die M"oglichkeit, ausgeschlossene Benutzer wieder
                   zu authorisieren.}
 \addrow{/FA230/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
@@ -315,7 +309,7 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
 }
 \addrow{/PD20/} {Client: Daten des zuletzt besuchten Servers
    \begin{itemize}
-   \item Hostname/Port-Kombination
+   \item Hostname-Port-Kombination
    \item Privater Schl"ussel
    \end{itemize}
 }
@@ -333,7 +327,7 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
 \addrow{/PD40/} {Client: Liste von Servern
    \begin{itemize}
    \item (optional) Alias
-   \item Hostname/Port-Kombination
+   \item Hostname-Port-Kombination
    \item Privater Schl"ussel
    \end{itemize}
 }
@@ -346,7 +340,7 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
 \input{figures/user_model}
 
 \section{Produktleistung}
-
+Die folgenden Daten stellen Richtwerte für die Leistung des Produktes dar.
 \begin{usecase}
 \addheading{Nummer}{Beschreibung}
 \addrow{/L10/} {Das Verschlüsselungssystem ist in der Lage, 100000 Benutzer zu bedienen,
@@ -365,7 +359,7 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
 \end{usecase}
 
 \section{GUI}
-
+Die folgenden Abbildungen stellen einen experimentellen Entwurf der Benutzeroberfläche dar.
 \begin{illustration}{Der Ausgangsbildschirm, von dem aus es möglicht ist, zu einem Server zu verbinden.}
 \includegraphics[width=150px]{figures/images/homescreen.jpg}
 \end{illustration}
@@ -386,7 +380,7 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
 \end{illustration}
 
 \section{Testfälle und Testszenarien}
-
+Szenarien und Testfälle, die das Produktverhalten in verschiedenen Situationen charakterisieren.
 \subsection{Testf"alle}
 
 \begin{usecase}
@@ -405,11 +399,11 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
    \begin{itemize}
    \item Teilnehmender Akteur: Benutzer
    \item Eingangsbedingung: Der Benutzer hat seinen Schlüssel erhalten und wurde ausgeschlossen.
-   \item Ausgangsaktion:  Da der Benutzer ausgeschlossen wurde bleibt ihm der Zugang verwehrt und er kann
-             die Daten nicht betrachten
-   \item Ereignissfluss: Der Benutzer wird dazu aufgefordert den Anbieter und seinen Schlüssel
+   \item Ausgangsaktion:  Da der Benutzer ausgeschlossen wurde, bleibt ihm der Zugang verwehrt und er kann
+             die Daten nicht betrachten.
+   \item Ereignissfluss: Der Benutzer wird dazu aufgefordert, den Anbieter und seinen Schlüssel
          einzugeben. Er wird durch eine Fehlermeldung auf eine eventuelle Falscheingabe aufmerksam gemacht. Aber selbst wenn er keinen
-         Fehler gemacht hat bleibt ihm der Zugriff verwehrt, da er explizit vom Anbieter ausgeschlossen wurde.
+         Fehler gemacht hat, bleibt ihm der Zugriff verwehrt, da er explizit vom Anbieter ausgeschlossen wurde.
    \end{itemize}
 }
 \addrow{/TF20/} {Schl"usselerzeugung
@@ -426,8 +420,8 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: Es existiert ein Satz Schl"ussel.
-   \item Ausgangsaktion: Benutzer sind in der Lage die gesendeten Inhalte zu empfangen.
-   \item Ereignissfluss: Der Anbieter wählt Inhalte aus, die gesendet werden soll, aus und
+   \item Ausgangsaktion: Benutzer sind in der Lage, die gesendeten Inhalte zu empfangen.
+   \item Ereignissfluss: Der Anbieter wählt Inhalte aus, die gesendet werden sollen und
          teilt diese dem Server mit. Diese Inhalte werden vom Server in verschlüsselter Form
          versendet, so dass ausgeschlossene Nutzer sie nicht entschlüsseln können.
    \end{itemize}
@@ -437,7 +431,7 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: Es existiert ein Satz Schl"ussel und mindestens ein Benutzer.
    \item Ausgangsaktion: Der betreffende Benutzer kann die Daten nicht mehr entschlüsseln
-   \item Ereignissfluss: Der Anbieter teilt dem Server mit welchen Benutzer er ausschließen möchte.
+   \item Ereignissfluss: Der Anbieter teilt dem Server mit, welchen Benutzer er ausschließen möchte.
          Die betreffenden Daten werden vom Server gespeichert und die Auswirkungen werden
          sofort sichtbar. Falls der ausgeschlossene Benutzer gerade einen Stream empf"angt,
          erscheint im Client eine Fehlermeldung.
@@ -468,8 +462,8 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
           Eine der folgenden Situationen entsteht:
           \begin{itemize}
            \item Der Anbieter startet eine Datenübertragung ohne vorher eine Schl"usselerzeugung
-                 durchzuf"uhren
-           \item Obwohl keine Schlüsselerzeugung durchgeführt wurde fügt der Anbieter einen Benutzer hinzu.
+                 durchzuf"uhren.
+           \item Obwohl keine Schlüsselerzeugung durchgeführt wurde, fügt der Anbieter einen Benutzer hinzu.
            \item Ein Benutzer, der nicht existiert, wird vom Anbieter gesperrt.
            \end{itemize}
    \end{itemize}
@@ -481,7 +475,7 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
    \item Ausgangsaktion: Benutzer kann Daten empfangen.
    \item Ereignissfluss: Ein Benutzer will sich zu einem Server verbinden, hat aber entweder
              die Serverdaten oder den privaten Schlüssel falsch angegeben. Nachdem eine
-             Fehlermeldung mit dem Hinweis auf eine eventuelle Falscheingabe angezeigt wurde
+             Fehlermeldung mit dem Hinweis auf eine eventuelle Falscheingabe angezeigt wurde,
              bemerkt er wo sein Fehler lag und korrigiert ihn. Danach kann er sich verbinden
              und die Daten entschlüsseln.
    \end{itemize}
