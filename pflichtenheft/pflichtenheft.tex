@@ -75,9 +75,9 @@ aber auch die gesamte Internet-Infrastruktur entlastet.
 
 Ein großes Problem stellt allerdings die Zugangskontrolle für diese Multicast-Streams
 dar: Da nun der Server nicht mehr weiß, wer eigentlich den Stream empfängt, kann
-er auch nicht verhindern, dass unauthorisierte Benutzer Zugang erhalten. Die Lösung
+er auch nicht verhindern, dass unautorisierte Benutzer Zugang erhalten. Die Lösung
 dieses Problems erfordert den Einsatz von speziellen Verschlüsselungsverfahren,
-sodass zwar jeder den Stream empfangen, aber nur authorisierte Benutzer den Stream
+sodass zwar jeder den Stream empfangen, aber nur autorisierte Benutzer den Stream
 entschlüsseln können. Besonderes Augenmerk muss dabei auf Effizienz gelegt werden,
 da der Kommunikationsaufwand durch die Verschlüsselung nicht wesentlich erhöht werden
 darf.
@@ -107,7 +107,8 @@ ausgeschlossener Benutzer zu skalieren.
 \begin{itemize}
    \item sendet Daten an eine Empfängergruppe. Zu Demonstrationszwecken wird
          ein einfacher Audio- oder Videostream als Payload eingesetzt.
-   \item erlaubt es, nicht mehr authorisierte Benutzer auszuschließen.
+   \item ermöglicht das Aufnehmen neuer Benutzer.
+   \item erlaubt es, nicht mehr autorisierte Benutzer auszuschließen.
 \end{itemize}
 
 \item Der Client
@@ -220,7 +221,7 @@ Der Client muss auf einem portablen Gerät auf Basis des Android-Betriebssystems
    \end{itemize}
 \item Server
    \begin{itemize}
-      \item Java-fähiges System
+      \item Java-fähiges System (mindestens Java 7)
    \end{itemize}
 \end{itemize}
 
