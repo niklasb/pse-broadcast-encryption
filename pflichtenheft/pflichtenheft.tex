@@ -257,20 +257,22 @@ Im Folgenden werden die grundlegenden und erweiterten Funktionen aufgelistet.
 \addrow{/FA20/} {Der Server bietet die M"oglichkeit einer initialen Schl"usselerzeugung, wobei
                  ein kompletter Satz privater Schl"ussel f"ur die Benutzer erstellt wird.
                  Diese m"ussen dann auf einem sicheren Weg zugestellt werden.}
-\addrow{/FA30/} {Der Server verschl"usselt Daten so, dass nur authorisierte
+\addrow{/FA30/} {Der Server verschl"usselt Daten so, dass nur autorisierte
                  Benutzer den Stream entschl"usseln k"onnen.}
-\addrow{/FA40/} {Der Server bietet die M"oglichkeit, Nutzer per Namen auszuschließen,
+\addrow{/FA40/} {Der Server bietet die M"oglichkeit, Nutzer per Namen hinzuzuf"ugen und dabei
+                 einen privaten Schl"ussel zu vergeben.}
+\addrow{/FA50/} {Der Server bietet die M"oglichkeit, Nutzer per Namen auszuschließen,
                  ohne dass eine neue Schl"usselerzeugung erforderlich ist.}
-\addrow{/FA50/} {Der Client bietet die M"oglichkeit, sich zu einem Server verbinden.}
-\addrow{/FA60/} {Der Client empf"angt Daten und stellt sie dar.}
-\addrow{/FA70/} {Der Client erlaubt die Angabe eines privaten Schl"ussels, der von
+\addrow{/FA60/} {Der Client bietet die M"oglichkeit, sich zu einem Server verbinden.}
+\addrow{/FA70/} {Der Client empf"angt Daten und stellt sie dar.}
+\addrow{/FA80/} {Der Client erlaubt die Angabe eines privaten Schl"ussels, der von
                  einem Server erzeugt wurde.}
-\addrow{/FA80/} {Nachdem er mit einem g"ultigen Schl"ussel konfiguriert wurde, kann der
+\addrow{/FA90/} {Nachdem er mit einem g"ultigen Schl"ussel konfiguriert wurde, kann der
                  Client solange Daten entschlüsseln bis er vom Server explizit ausgeschlossen wurde.}
-\addrow{/FA90/} {Der Client merkt sich den letzten ausgewählten Server mit
-                 zugeh"origem Schl"ussel, so dass ein erneuter Zugriff schnell möglich
-                 ist.}
-\addrow{/FA100/} {Die Verschlüsselung erfolgt mit einer Variante des in~\cite[Section 2.2]{Naor00}
+\addrow{/FA100/} {Der Client merkt sich den letzten ausgewählten Server mit
+                  zugeh"origem Schl"ussel, so dass ein erneuter Zugriff schnell möglich
+                  ist.}
+\addrow{/FA110/} {Die Verschlüsselung erfolgt mit einer Variante des in~\cite[Section 2.2]{Naor00}
                   oder~\cite{Garg10} vorgestellten Verfahrens}
 \end{usecase}
 
@@ -285,7 +287,7 @@ Im Folgenden werden die grundlegenden und erweiterten Funktionen aufgelistet.
                   um den Kommunikationsaufwand für die Verschlüsselung zu
                   analysieren.}
 \addrow{/FA220/} {Der Server bietet die M"oglichkeit, ausgeschlossene Benutzer wieder
-                  zu authorisieren.}
+                  zu autorisieren.}
 \addrow{/FA230/} {Der Client verfügt über eine Anzeige des angefallenen Traffics.}
 \addrow{/FA250/} {Um Benutzer mit volumenbasierten Datentarifen nicht zu belasten,
                   bietet der Client einen WiFi-Modus, in dem er nur bei
@@ -311,7 +313,7 @@ dem Anbieter "uberlassen und lediglich ein Identifikationsstring wird im Server 
    \begin{itemize}
    \item User-ID (beliebiger String)
    \item Privater Schl"ussel
-   \item Status: ausgeschlossen oder authorisiert
+   \item Status: ausgeschlossen oder autorisiert
    \end{itemize}
 }
 \addrow{/PD20/} {Client: Daten des zuletzt besuchten Servers
@@ -399,7 +401,7 @@ Szenarien und Testfälle, die das Produktverhalten in verschiedenen Situationen 
    \item Eingangsbedingung: Der Benutzer hat seinen Schlüssel erhalten und es werden Daten vom Anbieter
                             gesendet.
    \item Ausgangsaktion: Der Benutzer kann die gewünschten Daten ansehen.
-   \item Ereignissfluss: Der Benutzer wird dazu aufgefordert den Anbieter und seinen Schlüssel
+   \item Ereignisfluss: Der Benutzer wird dazu aufgefordert den Anbieter und seinen Schlüssel
          einzugeben. Damit kann er die Daten betrachten, da er nicht explizit ausgeschlossen wurde.
    \end{itemize}
 }
@@ -409,7 +411,7 @@ Szenarien und Testfälle, die das Produktverhalten in verschiedenen Situationen 
    \item Eingangsbedingung: Der Benutzer hat seinen Schlüssel erhalten und wurde ausgeschlossen.
    \item Ausgangsaktion:  Da der Benutzer ausgeschlossen wurde, bleibt ihm der Zugang verwehrt und er kann
              die Daten nicht betrachten.
-   \item Ereignissfluss: Der Benutzer wird dazu aufgefordert, den Anbieter und seinen Schlüssel
+   \item Ereignisfluss: Der Benutzer wird dazu aufgefordert, den Anbieter und seinen Schlüssel
          einzugeben. Er wird durch eine Fehlermeldung auf eine eventuelle Falscheingabe aufmerksam gemacht. Aber selbst wenn er keinen
          Fehler gemacht hat, bleibt ihm der Zugriff verwehrt, da er explizit vom Anbieter ausgeschlossen wurde.
    \end{itemize}
@@ -419,7 +421,7 @@ Szenarien und Testfälle, die das Produktverhalten in verschiedenen Situationen 
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: -
    \item Ausgangsaktion: Ein neuer Satz privater Schlüssel wird gespeichert.
-   \item Ereignissfluss: Der Anbieter will Daten an eine neue Benutzergruppe senden oder die Anzahl der
+   \item Ereignisfluss: Der Anbieter will Daten an eine neue Benutzergruppe senden oder die Anzahl der
          mögliche ausgeschlossenen Nutzer erhöhen und lässt
          den Server einen neuen Satz privater Schlüssel zur Verteilung erstellen.
    \end{itemize}
@@ -429,7 +431,7 @@ Szenarien und Testfälle, die das Produktverhalten in verschiedenen Situationen 
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: Es existiert ein Satz Schl"ussel.
    \item Ausgangsaktion: Benutzer sind in der Lage, die gesendeten Inhalte zu empfangen.
-   \item Ereignissfluss: Der Anbieter wählt Inhalte aus, die gesendet werden sollen und
+   \item Ereignisfluss: Der Anbieter wählt Inhalte aus, die gesendet werden sollen und
          teilt diese dem Server mit. Diese Inhalte werden vom Server in verschlüsselter Form
          versendet, so dass ausgeschlossene Nutzer sie nicht entschlüsseln können.
    \end{itemize}
@@ -439,7 +441,7 @@ Szenarien und Testfälle, die das Produktverhalten in verschiedenen Situationen 
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: Es existiert ein Satz Schl"ussel und mindestens ein Benutzer.
    \item Ausgangsaktion: Der betreffende Benutzer kann die Daten nicht mehr entschlüsseln
-   \item Ereignissfluss: Der Anbieter teilt dem Server mit, welchen Benutzer er ausschließen möchte.
+   \item Ereignisfluss: Der Anbieter teilt dem Server mit, welchen Benutzer er ausschließen möchte.
          Die betreffenden Daten werden vom Server gespeichert und die Auswirkungen werden
          sofort sichtbar. Falls der ausgeschlossene Benutzer gerade einen Stream empf"angt,
          erscheint im Client eine Fehlermeldung.
@@ -455,18 +457,29 @@ Szenarien und Testfälle, die das Produktverhalten in verschiedenen Situationen 
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: Es existiert ein Satz Schl"ussel.
    \item Ausgangsaktion: Der dem Benutzer zugeordnete Schl"ussel wird gespeichert.
-   \item Ereignissfluss: Der Anbieter übergibt dem Server die nötigen Daten über den Benutzer.
+   \item Ereignisfluss: Der Anbieter übergibt dem Server die nötigen Daten über den Benutzer.
          Dieser speichert die Informationen und ordnet dem Benutzer einen privaten Schlüssel
          zu, welcher in einer vorgegebenen Datei gespeichert wird.
    \end{itemize}
 }
+\addrow{/TF60/} {Verbindung zu bereits besuchtem Server
+   \begin{itemize}
+   \item Teilnehmender Akteur: Benutzer
+   \item Eingangsbedingung: Benutzer hat einen Server schon einmal besucht und ist
+         autorisiert.
+   \item Ausgangsaktion: Benutzer kann den Stream empfangen und entschl"usseln.
+   \item Ereignisfluss: Der Benutzer verbindet sich zu einem Server. Da der Client sich
+         den zugeh"origen Schl"ussel gemerkt hat, muss der Benutzer keine Schl"usseldatei
+         angeben und wird direkt verbunden.
+   \begin{itemize}
+}
 
-\addrow{/TF60/} {Ungültige Befehle
+\addrow{/TF70/} {Ungültige Befehle
    \begin{itemize}
    \item Teilnehmender Akteur: Anbieter
    \item Eingangsbedingung: keine
    \item Ausgangsaktion: Es wird eine Fehlermeldung angezeigt.
-   \item Ereignissfluss:
+   \item Ereignisfluss:
           Eine der folgenden Situationen entsteht:
           \begin{itemize}
            \item Der Anbieter startet eine Datenübertragung ohne vorher eine Schl"usselerzeugung
@@ -476,12 +489,12 @@ Szenarien und Testfälle, die das Produktverhalten in verschiedenen Situationen 
            \end{itemize}
    \end{itemize}
 }
-\addrow{/TF70/} {Menschliche Schwäche
+\addrow{/TF80/} {Menschliche Schwäche
    \begin{itemize}
    \item Teilnehmender Akteur: Benutzer
-   \item Eingangsbedingung: Vom Anbieter werden Daten gesendet und Benutzer ist authorisiert.
+   \item Eingangsbedingung: Vom Anbieter werden Daten gesendet und Benutzer ist autorisiert.
    \item Ausgangsaktion: Benutzer kann Daten empfangen.
-   \item Ereignissfluss: Ein Benutzer will sich zu einem Server verbinden, hat aber entweder
+   \item Ereignisfluss: Ein Benutzer will sich zu einem Server verbinden, hat aber entweder
              die Serverdaten oder den privaten Schlüssel falsch angegeben. Nachdem eine
              Fehlermeldung mit dem Hinweis auf eine eventuelle Falscheingabe angezeigt wurde,
              bemerkt er wo sein Fehler lag und korrigiert ihn. Danach kann er sich verbinden
@@ -531,7 +544,6 @@ die Konten sperren zu lassen, worauf Radio Hörgutzu nach kurzem Zögern eingeht
 gegenwärtige Verschlüsselung ist aber nur auf maximal 200 gesperrte
 Nutzer ausgelegt ist, deshalb müssen sie eine neue Schl"usselerzeugung durchführen,
 dabei die Anzahl der maximalen gesperrten Nutzer auf 500 erhöhen und die Schlüssel zustellen.
-
 
 \section{Entwicklungsumgebung}
 
