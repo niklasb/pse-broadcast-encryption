@@ -8,3 +8,4 @@
 *.log
 *.bbl
 *.blg
+javadoc-data.json
