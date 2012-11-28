@@ -1,3 +1,5 @@
+package broadcastenc.server;
+
 /**
  * This Class represents an User.
  */
@@ -11,5 +13,7 @@ class User {
     /** Sets the name of this User. */
     public void setName(String name) { }
     /** Returns this User's name. */
-    public String getName() { }
+    public String getName() {
+		return name; 
+	}
 }

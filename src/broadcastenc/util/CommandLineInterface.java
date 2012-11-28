@@ -1,9 +1,10 @@
-package mosaic;
+package broadcastenc.util;
 
 import java.io.PrintStream;
 
 /** Common base class for command line programs. */
 public abstract class CommandLineInterface {
+	
     /** Signals the exit of the application. */
     protected class Exit extends Throwable {
         private int status;
