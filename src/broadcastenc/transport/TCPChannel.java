@@ -3,7 +3,7 @@ package broadcastenc.transport;
 /**
  * This class implements Channel-based communication via TCP. 
  */
-class TCPChannel extends MessageInChannel, MessageOutChannel {
+class TCPChannel extends MulitOutChannel {
 
     /**
      * Creates a TCP Channel which connects to the given ip.

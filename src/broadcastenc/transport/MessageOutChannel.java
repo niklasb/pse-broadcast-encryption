@@ -9,9 +9,17 @@ class MessageOutChannel {
      * @param inner the OutChannel which will be wrapped
      */
     public MessageOutChannel(OutChannel inner) { }
+    
     /**
-	 * Sends bytes via the channel.
+	 * Sends the given message via the channel.
 	 * @param data the data to send
 	 */
-    public void send(byte[] message) { }
+    public void send(Message message) { }
+    
+    /**
+     * Packetizes the given Message as byte array to send it via a channel.
+     * @param message the message to packetize
+     * @return the packetized message
+     */
+    private byte[] packetize(Message message) { }
 }
