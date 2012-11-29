@@ -4,6 +4,14 @@ package broadcastenc.transport;
  * channel.
  */
 class MessageOutChannel {
+    /**
+     * Creates a new MessageOutChannel with the given OutChannel as inner channel.
+     * @param inner the OutChannel which will be wrapped
+     */
     public MessageOutChannel(OutChannel inner) { }
+    /**
+	 * Sends bytes via the channel.
+	 * @param data the data to send
+	 */
     public void send(byte[] message) { }
 }
