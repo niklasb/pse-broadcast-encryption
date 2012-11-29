@@ -1,0 +1,80 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{xspace}
+\usepackage{enumitem}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+\usetikzlibrary{calc}
+\usepackage{float}
+\usepackage[section]{placeins} % don't move figures beyond the next section heading
+
+% this is needed for forms and links within the text
+\usepackage{hyperref}
+
+% glossary, see http://en.wikibooks.org/wiki/LaTeX/Glossary
+% has to be loaded AFTER hyperref so that entries are clickable
+\usepackage[nonumberlist]{glossaries}
+
+\makeglossary
+
+% Variables
+\newcommand{\authors}{
+   Mohammed~Abu~Jayyab,
+   Niklas~Baumstark,
+   Christoph~Michel,
+   Amrei~Loose\xspace
+}
+\newcommand{\authorName}{ \authors, Tobias~Gräf }
+\newcommand{\authorNameEmph}{ \authors, \textbf{Tobias~Gräf} }
+
+\newcommand{\dateFirstVersion}{\today}
+\newcommand{\customer}{Karlsruher Institut für Technologie}
+\newcommand{\contractor}{Eine Firma}
+\newcommand{\projectName}{Broadcast-Verschlüsselung\xspace}
+\newcommand{\tags}{
+   \authorName,
+   Entwurf,
+   KIT,
+   Informatik,
+   PSE,
+   Broadcast-Verschlüsselung
+}
+\newcommand{\glossarName}{Glossar}
+\newcommand{\doctitle}{\projectName (Entwurf)}
+\title{\doctitle}
+\author{\authorName}
+\date{\today}
+
+\include{style}
+
+\begin{document}
+
+\input{frontpage}
+\tableofcontents
+\clearpage
+
+\section{Einleitung}
+
+\section{Aufbau}
+\subsection{Architektur}
+\subsection{Klassendiagramm}
+
+
+\section{Klassenbeschreibung}
+
+\section{Abläufe}
+
+
+
+\input{glossary}
+
+\bibliography{../bibtex/references}{}
+\bibliographystyle{plain}
+
+\end{document}

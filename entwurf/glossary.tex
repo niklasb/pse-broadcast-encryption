@@ -1,0 +1,56 @@
+\newglossaryentry{broadcastenc}
+{
+  name=Broadcast-Verschl"usselung,
+  description={Ein Verschl"usselungsverfahren f"ur unidirektionale Streams, bei dem der
+  Sender die Untermenge der Empf"anger bestimmen kann, die in der Lage ist, den Stream
+  zu entschl"usseln}
+}
+\newglossaryentry{sessionkey}
+{
+  name=Session-Key,
+  description={Der symmetrische Schl"ussel, mit dem bei der Broadcast"=Verschl"usselung die
+  Nutzdaten verschl"usselt werden. Jeder nicht ausgeschlossene Client muss diesen Schl"ussel
+  aus den Server-Nachrichten berechnen k"onnen}
+}
+\newglossaryentry{server}
+{
+  name=Server,
+  description={Eine Instanz, der in einem Computersystem Daten oder Ressourcen zur Verfügung stellt}
+}
+\newglossaryentry{client}
+{
+  name=Client,
+  description={Eine Instanz, die Daten oder Anwendungen von einem Server anfordert}
+}
+\newglossaryentry{traffic}
+{
+  name=Traffic,
+  description={Durch Netzwerkübertragungen entstehender Datenfluss}
+}
+\newglossaryentry{key}
+{
+  name=Schlüssel,
+  description={Ein Schlüssel in der Kryptologie ist zusätzliche Information, die man benötigt um eine
+	Nachricht zu chiffrieren bzw. dechiffrieren. Normalerweise besteht ein Schlüssel aus einer Folge von
+	Zahlen oder Buchstaben, die entweder nur dem Empf"anger, oder sowohl Absender als auch Empfänger
+        einer Nachricht bekannt sind}
+}
+\newglossaryentry{hostname}
+{
+  name=Hostname,
+  description={Die eindeutige Bezeichnung, mit der ein Rechner er im Netzwerk angesprochen wird}
+}
+\newglossaryentry{gui}
+{
+  name=GUI (Graphical User Interface),
+  description={Eine Software-Komponente, die einem Computerbenutzer die Interaktion mit der Maschine
+   über grafische Symbole erlaubt}
+}
+
+% Setze den richtigen Namen für das Glossar
+\renewcommand*{\glossaryname}{\section{\glossarName}}
+
+% Drucke das gesamte Glossar
+\glsaddall
+\printglossaries
+
