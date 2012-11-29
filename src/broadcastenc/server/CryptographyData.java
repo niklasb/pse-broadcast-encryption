@@ -1,5 +1,7 @@
 package broadcastenc.server;
 
+import java.io.Serializable;
+
 /** Contains the data which is changed by Controller and presented by View
  */
 public class CryptographyData implements Serializable {
