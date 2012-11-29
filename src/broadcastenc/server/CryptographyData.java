@@ -8,5 +8,5 @@ public class CryptographyData implements Serializable {
 	*/
 	private HashMap<User, PrivateKey> users;
 	private ArrayList<User> revoked;
-    
+	
 }
