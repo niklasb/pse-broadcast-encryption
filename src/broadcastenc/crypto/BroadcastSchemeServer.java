@@ -6,6 +6,6 @@ class Identity {
 }
 
 public interface BroadcastSchemeServer<T, U> {
-  public void revoke(Identity i);
-  public Collection<? extends Share<T, U>> getShares();
+    public void revoke(Identity i);
+    public Collection<? extends Share<T, U>> getShares();
 }
