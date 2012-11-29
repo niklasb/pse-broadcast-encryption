@@ -4,6 +4,14 @@ package broadcastenc.transport;
  * channel.
  */
 public class MessageInChannel {
+	/**
+	 * Creates a MessageInChannel which wraps the given inner channel.
+	 * @param inner the wrapped channel
+	 */
     public MessageInChannel(InChannel inner) { }
+   /**
+	 * Receives bytes via the channel.
+	 * @return the received bytes
+	 */
     public byte[] recv() { }
 }
