@@ -1,28 +1,22 @@
 package broadcastenc.transport;
 
-import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 
 /**
- * This class implements Channel-based communication via TCP. 
+ * This class implements channel-based communication via TCP. 
  */
-class TCPChannel extends MultiOutChannel {
+class SocketMulticastServer implements OutChannel  {
 
     /**
-     * Creates a TCP Channel which connects to the given ip.
-     * @param ip ip to connect to
-     * @param port port to use
+     * Creates a multicast server which uses the given socket.
+     * @param socket server socket
      */
-	public TCPChannel(InetAddress ip, int port) { };
-	
-	/**
-	 * Receives bytes via the channel.
-	 * @return the received bytes
-	 */
-    public ByteBuffer recv() {return null;}
+    public SocketMulticastServer(ServerSocket socket) { };
+
     /**
-	 * Sends bytes via the channel.
-	 * @param data the data to send
-	 */
+     * Sends bytes via the channel.
+     * @param data the data to send
+     */
     public void send(ByteBuffer data) { }
 }

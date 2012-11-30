@@ -1,9 +1,9 @@
 package broadcastenc.transport;
 
 import java.nio.ByteBuffer;
-import java.nio.channels.WritableByteChannel;
 
-/** Multiplexes several OutChannels so that they can be used as a single
+/** 
+ * Multiplexes several OutChannels so that they can be used as a single
  * destination.
  */
 public class MultiOutChannel implements OutChannel {
@@ -11,12 +11,12 @@ public class MultiOutChannel implements OutChannel {
      * Adds the given channel to the list of receivers.
      * @param channel the channel to add
      */
-    public void addChannel(WritableByteChannel channel) { }
+    public void addChannel(OutChannel channel) { }
     /**
      * Removes the given channel from the list of receivers.
      * @param channel the channel to remove
      */
-    public void removeChannel(WritableByteChannel channel) { }
+    public void removeChannel(OutChannel channel) { }
     
     
     @Override
