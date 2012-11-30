@@ -1,22 +1,24 @@
 package broadcastenc.transport;
 
+import java.nio.ByteBuffer;
+import java.nio.channels.WritableByteChannel;
+
 /** Multiplexes several OutChannels so that they can be used as a single
  * destination.
  */
 public class MultiOutChannel implements OutChannel {
     /**
-     * Sends the given data to all stored channels.
-     * @param data the data to send
-     */
-    public void send(byte[] data) { }
-    /**
      * Adds the given channel to the list of receivers.
      * @param channel the channel to add
      */
-    public void addChannel(OutChannel channel) { }
+    public void addChannel(WritableByteChannel channel) { }
     /**
      * Removes the given channel from the list of receivers.
      * @param channel the channel to remove
      */
-    public void removeChannel(OutChannel channel) { }
+    public void removeChannel(WritableByteChannel channel) { }
+    
+    
+    @Override
+    public void send(ByteBuffer data) { }
 }

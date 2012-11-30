@@ -1,9 +1,12 @@
 package broadcastenc.transport;
 
+import java.net.InetAddress;
+import java.nio.ByteBuffer;
+
 /**
  * This class implements Channel-based communication via TCP. 
  */
-class TCPChannel extends MulitOutChannel {
+class TCPChannel extends MultiOutChannel {
 
     /**
      * Creates a TCP Channel which connects to the given ip.
@@ -16,10 +19,10 @@ class TCPChannel extends MulitOutChannel {
 	 * Receives bytes via the channel.
 	 * @return the received bytes
 	 */
-    public byte[] recv() { }
+    public ByteBuffer recv() {return null;}
     /**
 	 * Sends bytes via the channel.
 	 * @param data the data to send
 	 */
-    public void send(byte[] data) { }
+    public void send(ByteBuffer data) { }
 }

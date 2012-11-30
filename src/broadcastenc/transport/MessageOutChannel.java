@@ -1,5 +1,7 @@
 package broadcastenc.transport;
 
+import java.nio.ByteBuffer;
+
 /** Wraps a byte-based OutChannel and allows to use it as a message-based
  * channel.
  */
@@ -11,15 +13,8 @@ class MessageOutChannel {
     public MessageOutChannel(OutChannel inner) { }
     
     /**
-	 * Sends the given message via the channel.
-	 * @param data the data to send
-	 */
-    public void send(Message message) { }
-    
-    /**
-     * Packetizes the given Message as byte array to send it via a channel.
-     * @param message the message to packetize
-     * @return the packetized message
+     * Sends the given message via the channel.
+     * @param data the data to send
      */
-    private byte[] packetize(Message message) { }
+    public void send(ByteBuffer bytes) { }
 }
