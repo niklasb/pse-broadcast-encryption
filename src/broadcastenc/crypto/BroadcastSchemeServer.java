@@ -2,10 +2,9 @@ package broadcastenc.crypto;
 
 import java.util.Collection;
 
-class Identity {
-}
+class Identity { }
 
-public interface BroadcastSchemeServer<T, U> {
+public interface BroadcastSchemeServer<T, U extends Share<T>> {
     public void revoke(Identity i);
-    public Collection<? extends Share<T, U>> getShares();
+    public Collection<U> getShares();
 }

@@ -2,7 +2,7 @@ package broadcastenc.crypto;
 
 class PersonalKey { }
 
-public abstract class BroadcastSchemeClient<T, U> {
+public abstract class BroadcastSchemeClient<T, U extends Share<T>> {
     public BroadcastSchemeClient(PersonalKey key) { }
-    protected abstract Share<T, U> getPrivateShare();
+    protected abstract U getPrivateShare();
 }

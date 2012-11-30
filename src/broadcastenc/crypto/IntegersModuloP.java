@@ -2,8 +2,15 @@ package broadcastenc.crypto;
 
 import java.math.BigInteger;
 
+/**
+ * The field $Z/Zp$ of integers modulo a prime $p$
+ */
 public class IntegersModuloP extends Field<BigInteger> {
-    public IntegersModuloP(int p) {}
+    /**
+     * Initializes the field
+     * @param p A prime number
+     */
+    public IntegersModuloP(BigInteger p) {}
 
     public BigInteger add(BigInteger a, BigInteger b) { return null; }
     public BigInteger multiply(BigInteger a, BigInteger b) { return null; }
