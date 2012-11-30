@@ -15,7 +15,6 @@ public class Controller {
      * @param amtRevocable The amount of user which can be revoked.
      * @param amtPrivateKeys The amount of private keys which are produced.
      * @param keyDir The directory to which the keys are saved.
-     * @return true if the keys could be generated, else false
      */
     public void handleKeyGen(int amtRevocable, int amtPrivateKeys, File keyDir) {
 
@@ -24,7 +23,6 @@ public class Controller {
     /**
      * Adds a new user and assigns a private key to that user.
      * @param user The user that is added.
-     * @return true if the user was added, false else
      */
     public void handleAddUser(User user) {
         
@@ -33,7 +31,6 @@ public class Controller {
     /**
      * Bans a user from the stream by adding it to list of revoked users
      * @param user The user that is revoked.
-     * @return true if the user was revoked, false else
      */
     public void handleRevokeUser(User user) {
         
@@ -42,7 +39,6 @@ public class Controller {
     /**
      * Starts the data stream 
      * @param data The file from which the data is read
-     * @return true if the stream is started successfull, false else
      */
     public void handleStream(File data) {
     }

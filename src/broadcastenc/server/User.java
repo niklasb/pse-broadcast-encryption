@@ -7,17 +7,16 @@ class User {
 	//User's name.
     private String name;
     
-    /** Creates a User with the given name. */
+    /** Creates a User with the given name.
+     * @param name name of the user
+     */
     public User(String name) { 
         this.name = name;
     }
     
-    /** Sets the name of this User. */
-    public void setName(String name) {
-        
-    }
-    
-    /** Returns this User's name. */
+    /**
+     * @return Returns the name of this user.
+     */
     public String getName() {
 		return name; 
 	}
