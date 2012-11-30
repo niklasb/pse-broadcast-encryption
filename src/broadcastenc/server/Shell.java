@@ -44,6 +44,7 @@ public class Shell extends CommandLineInterface implements Observer {
 	 * @return the String from the in-stream
 	 */
 	private String askString(String print) {
+        return null;
 		
 	}
 

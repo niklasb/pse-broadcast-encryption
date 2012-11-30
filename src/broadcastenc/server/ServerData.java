@@ -1,12 +1,14 @@
 package broadcastenc.server;
 
+import java.io.File;
 import java.io.Serializable;
+import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Map;
 
 /** Contains the data which is changed by Controller and presented by View
  */
-public class CryptographyData implements Serializable {
+public class ServerData implements Serializable {
 
     /** Saves the mapping of Users to PrivateKeys */
     private Map<User, PrivateKey> users;
@@ -20,7 +22,7 @@ public class CryptographyData implements Serializable {
      * @param privateKey The assigned private key.
      * @return true if the user was added, false else
      */
-    public boolean mapAddUser(User user, PrivateKey privateKey) {
+    public void mapAddUser(User user, PrivateKey privateKey) {
         
     }
     
@@ -30,6 +32,7 @@ public class CryptographyData implements Serializable {
      * @return true if the user is revoked, false if not
      */
     public boolean isRevoked(User user) {
+        return false;
         
     }
 }

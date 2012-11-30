@@ -7,5 +7,5 @@ import java.util.Observable;
  */
 public class StreamServer extends Observable {
     
-    private CryptographyData data;
+    private ServerData data;
 }
