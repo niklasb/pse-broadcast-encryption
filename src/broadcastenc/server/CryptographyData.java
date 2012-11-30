@@ -1,15 +1,18 @@
 package broadcastenc.server;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
 
 /** Contains the data which is changed by Controller and presented by View
  */
 public class CryptographyData implements Serializable {
 
-    /** Saves the mapping of Users to PrivateKeys
-     */
-    private HashMap<User, PrivateKey> users;
-    private ArrayList<User> revoked;
+    /** Saves the mapping of Users to PrivateKeys */
+    private Map<User, PrivateKey> users;
+    private Collection<User> revokedUsers;
+    private File streamData;
+    private StreamServer streamServer;
     
     /**
      * Adds a new user and its private key to the map

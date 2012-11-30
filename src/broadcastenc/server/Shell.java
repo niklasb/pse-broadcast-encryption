@@ -1,14 +1,17 @@
 package broadcastenc.server;
 
 import java.io.PrintStream;
+import java.util.Observable;
+import java.util.Observer;
 
 import broadcastenc.util.CommandLineInterface;
 
 /** Gets the arguments from the command line and deals with illegal input.
  */
-public class Shell extends CommandLineInterface {
-	
+public class Shell extends CommandLineInterface implements Observer {
+    
 	private String prompt;
+	private Controller control;
 	
 	/**
 	 * Creates a new Shell object with the given parameters.
@@ -28,6 +31,14 @@ public class Shell extends CommandLineInterface {
 	}
 	
 	/**
+	 * Sends a command to this Shells controller in order to get a certain job done.
+	 * @param tokens Contains the information what should be done.
+	 */
+	private void sendCommand(String[] tokens) {
+	    
+	}
+	
+	/**
 	 * Prints a String to the out-stream and waits for input in form of a String from the in-stream.
 	 * @param print Message to be printed
 	 * @return the String from the in-stream
@@ -35,5 +46,11 @@ public class Shell extends CommandLineInterface {
 	private String askString(String print) {
 		
 	}
+
+    @Override
+    public void update(Observable arg0, Object arg1) {
+        // TODO Auto-generated method stub
+        
+    }
     
 }
