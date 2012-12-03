@@ -18,6 +18,5 @@ public class MultiOutChannel implements OutChannel {
      */
     public void removeChannel(OutChannel channel) { }
 
-    @Override
     public void send(ByteBuffer data) { }
 }
