@@ -23,9 +23,9 @@ public class Class
     
     public String scope;
 
-    public String superClass;
+    public TypeInfo superClass;
 
-    public String[] interfaces;
+    public TypeInfo[] interfaces;
 
     public Constructor[] constructors;
 

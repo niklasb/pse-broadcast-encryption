@@ -5,6 +5,8 @@ import xml.etree.ElementTree as ET
 visibility = {'public':0, 'private':1, 'protected':2};
 inheritance = {'pure-virtual':0, 'virtual':1, 'non-virtual':2}
 
+boilerplate_classes = ['java.lang.Object']
+
 def parse_html_color(s):
     return tuple(int(s[i:i+2], 16)/255.0 for i in (1,3,5))
 
@@ -30,9 +32,14 @@ def text_or(el, default=""):
     return el.text if el is not None else default
 
 def transform_type(typ, simple=True):
-    res = typ.find("qualifiedName").text + (typ.find("dimension").text or "")
-    if simple: res = res.split(".")[-1]
-    return res
+    dim = typ.find("dimension").text or ""
+    gen = ""
+    typevars = typ.find("generics")
+    if typevars is not None: typevars = typevars.find("typeArguments")
+    if typevars is not None:
+        gen = "<%s>" % ", ".join(transform_type(t) for t in typevars.iter("type"))
+    res = typ.find("qualifiedName").text + gen + dim
+    return res.split(".")[-1] if simple else res
 
 def transform_param(param, vararg=False):
     dim = "[]" if vararg else ""
@@ -74,6 +81,13 @@ def add_class(cls, layer):
     layer.add_object(o)
     return o
 
+def create_stub_class(name, layer):
+    o, _, _ = dia.get_object_type("UML - Class").create(0,0)
+    o.properties["name"] = name
+    o.properties["fill_colour"] = default_color
+    layer.add_object(o)
+    return o
+
 def add_extends(child, parent, layer):
     con, h1, h2 = dia.get_object_type("UML - Generalization").create(0,0)
     layer.add_object(con)
@@ -87,11 +101,13 @@ def import_javadoc(obj, layer):
     for cls, obj in objects.values():
         bases = []
         ifaces = cls.find('interfaces')
-        if ifaces is not None: bases += [i.text for i in ifaces.iter("string")]
+        if ifaces is not None: bases += [transform_type(i,simple=False) for i in ifaces]
         supclass = cls.find("superClass")
-        if supclass is not None: bases.append(supclass.text)
+        if supclass is not None: bases.append(transform_type(supclass, simple=False))
         for base in bases:
-            if base not in objects: continue
+            if base in boilerplate_classes: continue
+            if base not in objects:
+                objects[base] = ({}, create_stub_class(base, layer))
             _, parent = objects[base]
             add_extends(obj, parent, layer)
     layer.update_extents()

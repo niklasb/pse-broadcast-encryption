@@ -146,20 +146,20 @@ public class Parser
         Type superClassType = docClass.superclassType();
         if(superClassType != null)
         {
-            xmlClass.superClass = superClassType.qualifiedTypeName();
+            xmlClass.superClass = ParseType(superClassType);
         }
 
         Type[] interfaces = docClass.interfaceTypes();
 
-        ArrayList<String> interfaceTypeNames = new ArrayList<String>();
+        ArrayList<TypeInfo> interfaceTypeNames = new ArrayList<TypeInfo>();
         if(interfaces != null && interfaces.length > 0)
         {
             for(Type interfaceType : interfaces)
             {
-                interfaceTypeNames.add(interfaceType.qualifiedTypeName());
+                interfaceTypeNames.add(ParseType(interfaceType));
             }
             
-            xmlClass.interfaces = interfaceTypeNames.toArray(new String[] {});
+            xmlClass.interfaces = interfaceTypeNames.toArray(new TypeInfo[] {});
         }
 
         ConstructorDoc[] constructors = docClass.constructors();
