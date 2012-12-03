@@ -3,7 +3,7 @@ package broadcastenc.crypto;
 /** Implements a strategy to merge multiple Shares into a single share with
  * more information.
  */
-public class ShareCombinator<T, U extends Share<T>> {
+public interface ShareCombinator<T, U extends Share<T>> {
   /**
    * Combines two shares.
    * @param a The first share
