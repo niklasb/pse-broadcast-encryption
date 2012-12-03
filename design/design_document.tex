@@ -1,6 +1,5 @@
 \documentclass[a4paper,10pt]{scrartcl}
 \usepackage[utf8]{inputenc}
-\usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{booktabs}
 \usepackage{xspace}
@@ -17,26 +16,26 @@
 % this is needed for forms and links within the text
 \usepackage{hyperref}
 
-% glossary, see http://en.wikibooks.org/wiki/LaTeX/Glossary
-% has to be loaded AFTER hyperref so that entries are clickable
-\usepackage[nonumberlist]{glossaries}
-
-\makeglossary
-
 % Variables
-\newcommand{\authors}{
+\newcommand{\authorName}{
    Mohammed~Abu~Jayyab,
    Niklas~Baumstark,
+   Tobias~Gräf,
    Christoph~Michel,
-   Amrei~Loose\xspace
+   Amrei~Loose,
 }
-\newcommand{\authorName}{ \authors, Tobias~Gräf }
-\newcommand{\authorNameEmph}{ \authors, \textbf{Tobias~Gräf} }
+\newcommand{\authorNameEmph}{
+   Mohammed~Abu~Jayyab,
+   Niklas~Baumstark,
+   \textbf{Tobias~Gräf},
+   Christoph~Michel,
+   Amrei~Loose,
+}
 
 \newcommand{\dateFirstVersion}{\today}
-\newcommand{\customer}{Karlsruher Institut für Technologie}
-\newcommand{\contractor}{Eine Firma}
-\newcommand{\projectName}{Broadcast-Verschlüsselung\xspace}
+\newcommand{\customer}{Karlsruher Institute of Technology}
+\newcommand{\contractor}{A company}
+\newcommand{\projectName}{Broadcast Encryption\xspace}
 \newcommand{\tags}{
    \authorName,
    Entwurf,
@@ -45,8 +44,7 @@
    PSE,
    Broadcast-Verschlüsselung
 }
-\newcommand{\glossarName}{Glossar}
-\newcommand{\doctitle}{\projectName (Entwurf)}
+\newcommand{\doctitle}{\projectName (Design document)}
 \title{\doctitle}
 \author{\authorName}
 \date{\today}
@@ -59,22 +57,15 @@
 \tableofcontents
 \clearpage
 
-\section{Einleitung}
+\section{Introduction}
 
-\section{Aufbau}
-\subsection{Architektur}
-\subsection{Klassendiagramm}
+\section{Structure}
+\subsection{Architecture}
+\subsection{Class description}
 
+\section{Sequences}
 
-\section{Klassenbeschreibung}
-
-\section{Abläufe}
-
-
-
-\input{glossary}
-
-\bibliography{../bibtex/references}{}
-\bibliographystyle{plain}
+%\bibliography{../bibtex/references}{}
+%\bibliographystyle{plain}
 
 \end{document}
