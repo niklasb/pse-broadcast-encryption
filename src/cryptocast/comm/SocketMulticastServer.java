@@ -1,4 +1,4 @@
-package cryptocast.transport;
+package cryptocast.comm;
 
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
