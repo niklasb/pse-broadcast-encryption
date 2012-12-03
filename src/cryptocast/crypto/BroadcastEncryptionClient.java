@@ -5,15 +5,20 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 
-/** The server side of a broadcast encryption scheme.
- * @param ID The type of the identities
+/**
+ * The client side of a broadcast encryption scheme.
  */
 public class BroadcastEncryptionClient implements InChannel {
+    /**
+     * Initializes a broadcast encryption client.
+     * @param inner The message-based underlying communication channel.
+     * @param dec The decryption context
+     */
     public BroadcastEncryptionClient(MessageInChannel inner,
-                                     BroadcastSchemeClientContext<BigInteger> context) { }
+                                     Decryptor<BigInteger> dec) { }
 
     /**
-     * Receive plaintext data from the channel.
+     * Receive data from the channel. It is decrypted on the fly.
      * @param size amount of bytes to receive
      */
     public ByteBuffer recv(int size) { return null; }
