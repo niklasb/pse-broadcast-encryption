@@ -3,10 +3,10 @@ package broadcastenc.transport;
 import java.nio.ByteBuffer;
 
 public interface InChannel {
-    /** 
+    /**
      * Receives data.
      * @param size maximum amount of bytes to read
-     * @return data the received data
+     * @return the received data
      */
     public ByteBuffer recv(int size);
 }

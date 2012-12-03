@@ -2,7 +2,7 @@ package broadcastenc.transport;
 
 import java.nio.ByteBuffer;
 
-/** 
+/**
  * Multiplexes several OutChannels so that they can be used as a single
  * destination.
  */
@@ -17,8 +17,7 @@ public class MultiOutChannel implements OutChannel {
      * @param channel the channel to remove
      */
     public void removeChannel(OutChannel channel) { }
-    
-    
+
     @Override
     public void send(ByteBuffer data) { }
 }

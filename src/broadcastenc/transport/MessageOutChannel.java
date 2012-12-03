@@ -2,7 +2,7 @@ package broadcastenc.transport;
 
 import java.nio.ByteBuffer;
 
-/** 
+/**
  * Wraps a byte-based OutChannel and allows to use it as a message-based
  * channel.
  */
@@ -12,10 +12,10 @@ class MessageOutChannel {
      * @param inner the OutChannel which will be wrapped
      */
     public MessageOutChannel(OutChannel inner) { }
-    
+
     /**
      * Sends the given message via the channel.
      * @param data the data to send
      */
-    public void send(ByteBuffer bytes) { }
+    public void sendMessage(ByteBuffer bytes) { }
 }
