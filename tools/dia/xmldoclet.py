@@ -67,9 +67,17 @@ def transform_method(meth, abstract=False):
             [transform_param(params[i], varargs and i == len(params)-1) for i in xrange(len(params))],
             )
 
-def add_class(cls, layer):
+def create_stub_class(name, layer):
     o, _, _ = dia.get_object_type("UML - Class").create(0,0)
-    o.properties["name"] = fix_kerning(cls.find("name").text)
+    o.properties["name"] = fix_kerning(name)
+    if any(x in name for x in ["<T", "<Secret", "<ID"]):
+        o.properties["stereotype"] = "generic"
+    o.properties["fill_colour"] = default_color
+    layer.add_object(o)
+    return o
+
+def add_class(cls, layer):
+    o = create_stub_class(cls.find("name").text, layer)
     abstr = cls.find("isAbstract")
     interface = abstr is None # if this isn't present, cls is an interface
     abstract = interface or parse_bool(abstr.text)
@@ -77,13 +85,6 @@ def add_class(cls, layer):
     #o.properties["attributes"] = [transform_field(name=k, **v)
                                   #for k, v in cls["fields"].items()]
     o.properties["operations"] = [transform_method(m, interface) for m in cls.iter("method")]
-    o.properties["fill_colour"] = default_color
-    layer.add_object(o)
-    return o
-
-def create_stub_class(name, layer):
-    o, _, _ = dia.get_object_type("UML - Class").create(0,0)
-    o.properties["name"] = name
     o.properties["fill_colour"] = default_color
     layer.add_object(o)
     return o
