@@ -9,4 +9,5 @@
 *.bbl
 *.blg
 *.class
-javadoc-data.json
+.svn
+javadoc.xml

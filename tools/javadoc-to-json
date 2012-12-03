@@ -1,5 +1,0 @@
-#!/bin/sh
-JSON_DOCLET=$(dirname $0)/../3rd_party/json-doclet
-find "$@" -name "*.java" -print0 | xargs -0 \
-  javadoc -quiet -doclet it.dexy.jsondoclet.Doclet \
-          -docletpath $JSON_DOCLET/build/json-doclet-0.3.2.jar:$JSON_DOCLET/lib/json_simple-1.1.jar:$JSON_DOCLET/lib/antlr-3.3-complete.jar:$JSON_DOCLET/lib/LaTeXlet.jar
