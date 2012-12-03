@@ -1,10 +1,12 @@
-package broadcastenc.util;
+package cryptocast.util;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 
 /** Common base class for command line programs. */
 public abstract class CommandLineInterface {
-	
     /** Signals the exit of the application. */
     protected class Exit extends Throwable {
         private int status;
@@ -20,14 +22,17 @@ public abstract class CommandLineInterface {
     }
 
     // the program's output streams
+    protected BufferedReader in;
     protected PrintStream out;
     protected PrintStream err;
 
     /** Initializes a new Cli instance
+     * @param in The stream for program input
      * @param out The stream for program output
      * @param err The stream for error output
      */
-    public CommandLineInterface(PrintStream out, PrintStream err) {
+    public CommandLineInterface(InputStream in, PrintStream out, PrintStream err) {
+        this.in = new BufferedReader(new InputStreamReader(in));
         this.out = out;
         this.err = err;
     }
@@ -51,12 +56,34 @@ public abstract class CommandLineInterface {
      */
     protected abstract void start(String[] args) throws Exit;
 
+    /** Prints a string to the output stream
+     * @param format The string to print (printf format string)
+     * @param args The printf arguments
+     */
+    protected void printf(String format, Object... args) { out.printf(format, args); }
+
+    /** Prints a string to the output stream
+     * @param str The string to print
+     */
+    protected void print(String str) { out.print(str); }
+
+    /** Prints a string to the output stream after appending a newline
+     * @param str The string to print
+     */
+    protected void println(String str) { out.println(str); }
+
+    /** @return the string format to use for writing error messages to the
+     * screen.
+     */
+    protected String getErrorFormat() { return "[!] %s"; }
+
     /** Prints an error and exits
-     * @param msg The error message
+     * @param format The error message (printf format string)
+     * @param args The printf arguments
      * @throws Exit with an exit code of 2
      */
-    protected void error(String msg) throws Exit {
-        err.println(msg);
+    protected void fatalError(String format, Object... args) throws Exit {
+        err.println(String.format(getErrorFormat(), String.format(format, args)));
         exit(2);
     }
 

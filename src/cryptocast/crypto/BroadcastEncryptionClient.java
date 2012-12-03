@@ -1,6 +1,6 @@
 package cryptocast.crypto;
 
-import cryptocast.transport.*;
+import cryptocast.comm.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Collection;

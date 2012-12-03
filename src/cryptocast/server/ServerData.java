@@ -1,38 +1,37 @@
 package cryptocast.server;
 
 import cryptocast.crypto.*;
-import java.io.File;
+
+import com.google.common.base.Optional;
 import java.io.Serializable;
 import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Observable;
 
-/** Contains the data which is changed by Controller and presented by View
- */
-public class ServerData<T, ID> extends Observable implements Serializable {
+/** Contains the data which is changed by Controller and presented by View */
+public class ServerData<ID> implements Serializable {
+    private Map<String, User> user_by_name;
+    private Map<ID, User> user_by_id;
+    private BroadcastSchemeUserManager<ID> users;
+    private BroadcastSchemeKeyManager<ID> keys;
 
-    /** Saves the mapping of Users to identities */
-    private Map<User, ID> user_to_id;
-    private Map<ID, User> id_to_user;
-    private BroadcastSchemeServerContext<T, ID> context;
-    
     /**
-     * Adds a new user and its private key to the map
-     * @param user The user that is added.
-     * @param privateKey The assigned private key.
+     * Creates and saves a new user by name.
+     * @param name The user's name
      */
-    public void mapAddUser(User user, ID identity) {
-        
-    }
-    
+    public Optional<User> createNewUser(String name) { return null; }
+
     /**
-     * Checks if the given user is on the revoked list
-     * @param user the user that is checked
-     * @return true if the user is revoked, false if not
+     * Retrieves a user by name
+     * @param name The user's name
+     * @return A user instance, if it was found, or absent otherwise
      */
-    public boolean isRevoked(User user) {
-        return false;
-        
-    }
+    public Optional<User> getUserByName(String name) { return null; }
+
+    /**
+     * Retrieves a user's personal key
+     * @param user The user object
+     * @return The private key
+     */
+    public PrivateKey getPersonalKey(User user) { return null; }
 }
