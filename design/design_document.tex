@@ -51,6 +51,16 @@
 \clearpage
 
 \section{Introduction}
+The software CryptoCast will provide a service for sending crypted data from a server to certain
+amount of people.  This will be implemented as an unidirectional connection that makes it possible for the server
+to send data without knowing how many people are receiving it and without the amount of traffic caused
+by a bidirectional connection.  Also the type of the sent data will not be determined by the software. So it can be
+used for all sorts of data exchange. For demonstration purposes we will implement a simple audio or video stream.
+
+The server will be able to register new users and revoke specific persons if they are not allowed to receive the cast anymore. 
+The client is an app on an Android smart phone that is used for receiving, decoding and displaying the data. 
+The transport 
+
 
 \section{Structure}
 \subsection{Architecture}

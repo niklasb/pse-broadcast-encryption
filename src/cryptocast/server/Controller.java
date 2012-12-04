@@ -2,24 +2,34 @@ package cryptocast.server;
 
 import java.io.File;
 
+import cryptocast.crypto.BroadcastEncryptionServer;
+
 
 /** Deals with user-interactions and therefore changes data in Model if necessary.
  */
-public class Controller {
+public class Controller<ID> {
 
     private ServerData data;
     private Shell shell;
-    //private crypto server
+    private BroadcastEncryptionServer<ID> encServer;
     
     /**
      * Initializes a new controller with the given arguments.
      * @param data The data administrated by this controller.
      * @param shell The operator interface from which this controller gets its input.
+     * @param encServer The server to which the data is send.
      */
-    public Controller(ServerData data, Shell shell) {
+    public Controller(ServerData data, Shell shell, BroadcastEncryptionServer<ID> encServer) {
         super();
         this.data = data;
         this.shell = shell;
+    }
+    
+    /**
+     * Initializes the server on start by loading data from a file.
+     */
+    public void init() {
+        
     }
 	
     /**
@@ -41,10 +51,18 @@ public class Controller {
     }
         
     /**
-     * Bans a user from the stream by adding it to list of revoked users.
+     * Bans a user from the stream by adding it to the list of revoked users.
      * @param user The user that is revoked.
      */
     public void revokeUser(User user) {
+        
+    }
+    
+    /**
+     * Authorizes a user to watch the stream by removing it from the list of revoked users.
+     * @param user The user that is unbanned.
+     */
+    public void authorizeUser(User user) {
         
     }
 
@@ -60,6 +78,20 @@ public class Controller {
      */
     public void showStatistics() {
         
+    }
+    
+    /**
+     * Prints users and the keys assigned to them.
+     */
+    public void showUsers() {
+        
+    }
+    
+    /**
+     * Prints information about the data which is currently sent.
+     */
+    public void showInfo() {
+        //prints directory, time sending amount of revoked users/registered users...?!
     }
 
 }

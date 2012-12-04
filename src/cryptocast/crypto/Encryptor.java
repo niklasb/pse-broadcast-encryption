@@ -4,12 +4,12 @@ import java.nio.ByteBuffer;
 
 /**
  * A strategy to encrypt a single secret
- * @param Secret the type of the secret
+ * @param <S> the type of the secret
  */
-public interface Encryptor<Secret> {
+public interface Encryptor<S> {
     /**
      * @param secret the secret
      * @return The cipher text
      */
-    public ByteBuffer encrypt(Secret secret);
+    public ByteBuffer encrypt(S secret);
 }

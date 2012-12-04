@@ -3,8 +3,8 @@ package cryptocast.crypto;
 import java.lang.ArithmeticException;
 
 /**
- * Defines a field over the values of type T
- * @param T The values we work on
+ * Represents a field over values of type T
+ * @param <T> The values we work on
  */
 public abstract class Field<T> {
     /**
