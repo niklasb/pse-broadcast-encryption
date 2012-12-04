@@ -25,11 +25,10 @@ public class Shell extends InteractiveCommandLineInterface {
     @Override
     protected void performCommand(String cmd, String[] args) throws CommandError {
     }
-       
+
     /**
      * Prints all commands this shell can perform with information about how to use them.
      */
     private void help() {
-        
     }
 }

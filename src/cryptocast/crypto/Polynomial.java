@@ -2,8 +2,7 @@ package cryptocast.crypto;
 
 /**
  * A polynomial $P$ over a field
- * @param T The type of the field's elements
- * @param U The field implementation
+ * @param <T> The type of the field's elements
  */
 public class Polynomial<T> {
     /**
