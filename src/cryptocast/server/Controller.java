@@ -2,21 +2,24 @@ package cryptocast.server;
 
 import java.io.File;
 
+import cryptocast.crypto.BroadcastEncryptionServer;
+
 
 /** Deals with user-interactions and therefore changes data in Model if necessary.
  */
-public class Controller {
+public class Controller<ID> {
 
     private ServerData data;
     private Shell shell;
-    //private crypto server
+    private BroadcastEncryptionServer<ID> encServer;
     
     /**
      * Initializes a new controller with the given arguments.
      * @param data The data administrated by this controller.
      * @param shell The operator interface from which this controller gets its input.
+     * @param encServer The server to which the data is send.
      */
-    public Controller(ServerData data, Shell shell) {
+    public Controller(ServerData data, Shell shell, BroadcastEncryptionServer<ID> encServer) {
         super();
         this.data = data;
         this.shell = shell;
