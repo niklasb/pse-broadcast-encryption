@@ -12,7 +12,7 @@ import cryptocast.util.InteractiveCommandLineInterface;
 public class Shell extends InteractiveCommandLineInterface {
     private Controller control;
     private enum Commands {};
-    private EnumMap<Commands,String> description;
+    //private EnumMap<Commands,String> description;
 
     /**
      * Creates a new Shell object with the given parameters.

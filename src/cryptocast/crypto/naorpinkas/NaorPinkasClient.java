@@ -4,6 +4,9 @@ import cryptocast.crypto.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
+/**
+ * A client in the Naor-Pinkas broadcast encryption scheme.
+ */
 public class NaorPinkasClient implements Decryptor<BigInteger> {
   /**
    * Initializes a Naor-Pinkas broadcast client
