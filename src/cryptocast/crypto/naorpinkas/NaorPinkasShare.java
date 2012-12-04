@@ -1,4 +1,4 @@
-package cryptocast.crypto;
+package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
 import java.math.BigInteger;
