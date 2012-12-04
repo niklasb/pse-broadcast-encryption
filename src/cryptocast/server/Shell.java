@@ -2,8 +2,6 @@ package cryptocast.server;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Observable;
-import java.util.Observer;
 
 import cryptocast.util.InteractiveCommandLineInterface;
 

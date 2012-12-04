@@ -44,10 +44,18 @@ public class Controller<ID> {
     }
         
     /**
-     * Bans a user from the stream by adding it to list of revoked users.
+     * Bans a user from the stream by adding it to the list of revoked users.
      * @param user The user that is revoked.
      */
     public void revokeUser(User user) {
+        
+    }
+    
+    /**
+     * Unbans a user from the stream by by removing it from the list of revoked users.
+     * @param user The user that is unbanned.
+     */
+    public void deRevokeUser(User user) {
         
     }
 
@@ -63,6 +71,13 @@ public class Controller<ID> {
      */
     public void showStatistics() {
         
+    }
+    
+    /**
+     * Prints information about the data which is currently sent.
+     */
+    public void showInfo() {
+        //prints directory, time sending amount of revoked users/registered users...?!
     }
 
 }
