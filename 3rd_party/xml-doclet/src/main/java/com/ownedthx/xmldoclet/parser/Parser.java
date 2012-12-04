@@ -547,6 +547,8 @@ public class Parser
   
         xmlConstructor.name = docConstructor.name();
         xmlConstructor.comment = docConstructor.commentText();
+        xmlConstructor.scope = DetermineScope(docConstructor);
+        xmlConstructor.isVarArgs = docConstructor.isVarArgs();
 
         Parameter[] parameters = docConstructor.parameters();
 
