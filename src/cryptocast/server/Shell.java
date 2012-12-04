@@ -8,9 +8,10 @@ import cryptocast.util.InteractiveCommandLineInterface;
 
 /**
  * Gets the arguments from the command line and deals with illegal input.
+ * @param <ID> The type of the user identities.
  */
-public class Shell extends InteractiveCommandLineInterface {
-    private Controller control;
+public class Shell<ID> extends InteractiveCommandLineInterface {
+    private Controller<ID> control;
 
     /**
      * Creates a new Shell object with the given parameters.

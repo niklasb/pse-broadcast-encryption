@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.security.PrivateKey;
 import java.util.Map;
 
-/** Contains the data which is changed by Controller and presented by View */
+/** Contains the data which is changed by Controller and presented by View 
+ * @param <ID> The type of the user identities
+ */
 public class ServerData<ID> implements Serializable {
     private File streamDir;
     private Map<String, User> user_by_name;
