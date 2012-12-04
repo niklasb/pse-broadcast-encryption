@@ -18,4 +18,12 @@ public class StreamViewerActivity {
 	public void processStream(InputStream inputStream) {
 		
 	}
+	
+	/**
+	 * Saves the data stream
+	 * @param inputStream the data stream
+	 */
+	public void saveStream(InputStream inputStream) {
+		
+	}
 }

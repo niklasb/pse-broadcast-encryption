@@ -10,7 +10,7 @@ public class Command {
     protected static final Command[] commands = 
             { new Command("addUser", "addUser 'name' tries to add a user to the stream", "")};
     
-    //argument description? can this class check arguments of a command?
+    //argument description? syntax
     private String cmd;
     private String shortDescription;
     private String longDescription;
