@@ -24,6 +24,13 @@ public class Controller<ID> {
         this.data = data;
         this.shell = shell;
     }
+    
+    /**
+     * Initializes the server on start by loading data from a file.
+     */
+    public void init() {
+        
+    }
 	
     /**
      * Tries to start a new group to which data can be sent by generating private keys.
@@ -52,10 +59,10 @@ public class Controller<ID> {
     }
     
     /**
-     * Unbans a user from the stream by by removing it from the list of revoked users.
+     * Authorizes a user to watch the stream by removing it from the list of revoked users.
      * @param user The user that is unbanned.
      */
-    public void deRevokeUser(User user) {
+    public void authorizeUser(User user) {
         
     }
 
@@ -70,6 +77,13 @@ public class Controller<ID> {
      * Prints information about traffic
      */
     public void showStatistics() {
+        
+    }
+    
+    /**
+     * Prints users and the keys assigned to them.
+     */
+    public void showUsers() {
         
     }
     
