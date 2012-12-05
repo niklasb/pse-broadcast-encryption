@@ -3,7 +3,7 @@ package cryptocast.crypto;
 import java.math.BigInteger;
 
 /**
- * The field $Z/Zp$ of integers modulo a prime $p$
+ * The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$
  */
 public class IntegersModuloPrime extends Field<BigInteger> {
     /**

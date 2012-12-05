@@ -23,12 +23,20 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
         public String getMessage() { return msg; }
     }
 
-    /** {@inheritDoc} */
+    /** Initializes a new interactive CLI instance
+     * @param in The stream for program input
+     * @param out The stream for program output
+     * @param err The stream for error output
+     */
     public InteractiveCommandLineInterface(InputStream in, PrintStream out, PrintStream err) {
         super(in, out, err);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * The main program logic. This method just starts the main loop.
+     * @param args The command line arguments (ignored by default)
+     * @throws Exit if the program finishes early
+     */
     @Override
     protected void start(String[] args) throws CommandLineInterface.Exit {
         mainloop();
@@ -71,6 +79,8 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
     /**
      * Helper function to trigger an error withing a command's execution and break out to
      * the main loop.
+     * @param format The format string
+     * @param args The format string arguments
      */
     protected void error(String format, Object... args) throws CommandError {
         throw new CommandError(String.format(format, args));

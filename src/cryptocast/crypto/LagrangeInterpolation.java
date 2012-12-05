@@ -2,6 +2,7 @@ package cryptocast.crypto;
 
 /**
  * Performs a lagrange interpolation of a polynomial
+ * @param <T> The type of items of the polynomial's field
  */
 public class LagrangeInterpolation<T> {
     /**

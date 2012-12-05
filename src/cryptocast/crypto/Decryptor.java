@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
  */
 public interface Decryptor<S> {
     /**
+     * Decrypts a secret.
      * @param cipher The encrypted secret
      * @return The decrypted secret
      */

@@ -16,14 +16,30 @@ public class NaorPinkasServer
                  BroadcastSchemeKeyManager<NaorPinkasIdentity>,
                  Serializable,
                  Encryptor<BigInteger> {
-    /** {@inheritDoc} */
+    /**
+     * Encrypts a secret
+     * @param secret the secret
+     * @return The cipher text
+     */
     public ByteBuffer encrypt(BigInteger secret) {return null;}
-    /** {@inheritDoc} */
+    /**
+     * @param i An index
+     * @return The identity with the given index
+     */
     public NaorPinkasIdentity getIdentity(int i) {return null;}
-    /** {@inheritDoc} */
+    /**
+     * Revokes a user
+     * @param id The identity of the user
+     */
     public void revoke(NaorPinkasIdentity x) {}
-    /** {@inheritDoc} */
+    /**
+     * @param id The identity of the user
+     * @return whether the user is revoked
+     */
     public boolean isRevoked(NaorPinkasIdentity id) {return false;}
-    /** {@inheritDoc} */
+    /**
+     * @param id The identity to look up
+     * @return The private key of the user
+     */
     public NaorPinkasPersonalKey getPersonalKey(NaorPinkasIdentity id) {return null;}
 }

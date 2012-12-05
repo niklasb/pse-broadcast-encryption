@@ -17,5 +17,5 @@ public class MessageOutChannel {
      * Sends the given message via the channel.
      * @param data the data to send
      */
-    public void sendMessage(ByteBuffer bytes) { }
+    public void sendMessage(ByteBuffer data) { }
 }
