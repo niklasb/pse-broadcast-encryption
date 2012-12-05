@@ -18,7 +18,7 @@ public class StatisticalInChannel implements InChannel {
     public ByteBuffer recv(int size) {return null;}
 
     /**
-     * @return the number of received byte
+     * @return the number of received bytes
      */
     public int getReceivedBytes() {return 0;}
 }

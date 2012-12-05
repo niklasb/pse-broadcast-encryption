@@ -7,7 +7,6 @@ import java.nio.ByteBuffer;
  * This class implements channel-based communication via TCP.
  */
 class SocketMulticastServer implements OutChannel  {
-
     /**
      * Creates a multicast server which uses the given socket.
      * @param socket server socket
