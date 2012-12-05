@@ -1,29 +1,26 @@
 package cryptocast.client;
 
-import java.io.InputStream;
-
+import cryptocast.comm.InChannel;
 
 /**
  * This activity is responsible for decrypting the received data
- * stream and viewing it. 
+ * stream and viewing it.
  */
 public class StreamViewerActivity {
+    /**
+     * Initializes a viewer
+     * @param inputStream the data stream
+     */
+    public StreamViewerActivity(InChannel inputStream) {}
 
-	
-	
-	/**
-	 * Processes the input stream of data
-	 * @param inputStream the data stream
-	 */
-	public void processStream(InputStream inputStream) {
-		
-	}
-	
-	/**
-	 * Saves the data stream
-	 * @param inputStream the data stream
-	 */
-	public void saveStream(InputStream inputStream) {
-		
-	}
+    /**
+     * Toggle playback play/pause. Will pause if in play mode and continue if
+     * in pause mode.
+     */
+    public void togglePlay() { }
+
+    /**
+     * @return whether the player is in playing mode
+     */
+    public boolean isPlaying() { return false; }
 }

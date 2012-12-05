@@ -2,6 +2,9 @@ package cryptocast.comm;
 
 import java.nio.ByteBuffer;
 
+/**
+ * A byte-based communication channel from which data can be received.
+ */
 public interface InChannel {
     /**
      * Receives data.

@@ -15,17 +15,14 @@ public class ServerHistory {
     private Map<String, File> servers;
 
     /**
-     * Constructor for this class
-     */
-    public ServerHistory() { }
-
-    /**
      * @return the servers
      */
     public Map<String, File> getServers() { return servers; }
 
     /**
-     * @param servers the servers to set
+     * Adds a server to the collection.
+     * @param hostname The server's hostname
+     * @param keyfile The keyfile the user has chosen for this server
      */
-    public void setServers(Map<String, File> servers) { this.servers = servers; }
+    public void addServer(String hostname, File keyfile) {}
 }
