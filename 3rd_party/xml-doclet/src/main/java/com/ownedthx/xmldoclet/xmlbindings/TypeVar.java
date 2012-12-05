@@ -4,6 +4,6 @@ package com.ownedthx.xmldoclet.xmlbindings;
 public class TypeVar
 {
     public String name;
-    
+    public String comment;
     public String[] bounds;
 }

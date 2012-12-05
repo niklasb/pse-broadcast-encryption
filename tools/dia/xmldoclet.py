@@ -28,6 +28,13 @@ def parse_bool(s):
             #field["static"],
             #)
 
+def class_name(cls):
+    name = cls.find("name").text
+    typevars = cls.find("typeVariables")
+    if typevars is not None:
+        name += "<%s>" % ", ".join(x.text for x in typevars.iter("name"))
+    return name
+
 def text_or(el, default=""):
     return el.text if el is not None else default
 
@@ -70,14 +77,14 @@ def transform_method(meth, abstract=False):
 def create_stub_class(name, layer):
     o, _, _ = dia.get_object_type("UML - Class").create(0,0)
     o.properties["name"] = fix_kerning(name)
-    if any(x in name for x in ["<T", "<Secret", "<ID"]):
+    if any(x in name for x in ["<T", "<S", "<ID", "<U", "<V"]):
         o.properties["stereotype"] = "generic"
     o.properties["fill_colour"] = default_color
     layer.add_object(o)
     return o
 
 def add_class(cls, layer):
-    o = create_stub_class(cls.find("name").text, layer)
+    o = create_stub_class(class_name(cls), layer)
     abstr = cls.find("isAbstract")
     interface = abstr is None # if this isn't present, cls is an interface
     abstract = interface or parse_bool(abstr.text)
@@ -86,14 +93,13 @@ def add_class(cls, layer):
                                   #for k, v in cls["fields"].items()]
     o.properties["operations"] = [transform_method(m, interface) for m in cls.iter("method")]
     o.properties["fill_colour"] = default_color
-    layer.add_object(o)
     return o
 
 def add_extends(child, parent, layer):
     con, h1, h2 = dia.get_object_type("UML - Generalization").create(0,0)
-    layer.add_object(con)
     h1.connect(parent.connections[6])
     h2.connect(child.connections[1])
+    layer.add_object(con)
 
 def import_javadoc(obj, layer):
     classes = list(obj.iter("class")) + list(obj.iter("interface"))
@@ -108,7 +114,7 @@ def import_javadoc(obj, layer):
         for base in bases:
             if base in boilerplate_classes: continue
             if base not in objects:
-                objects[base] = ({}, create_stub_class(base, layer))
+                objects[base] = ({}, create_stub_class(base.split(".")[-1], layer))
             _, parent = objects[base]
             add_extends(obj, parent, layer)
     layer.update_extents()

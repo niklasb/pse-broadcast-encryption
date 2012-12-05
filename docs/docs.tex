@@ -1,0 +1,1637 @@
+\subsection{Package \lstinline!cryptocast.util!}
+\subsubsection{Class \lstinline|CommandLineInterface|}
+Common base class for command line programs. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|CommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\
+Initializes a new Cli instance
+\begin{itemize}
+\item \lstinline|in|: The stream for program input
+\item \lstinline|out|: The stream for program output
+\item \lstinline|err|: The stream for error output
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public int| \lstinline|run|\lstinline|(String[] args)|\\
+Runs the application.
+\begin{itemize}
+\item \lstinline|args|: The command line arguments
+\end{itemize}
+
+Returns: The exit code
+
+\item \lstinline|protected abstract void| \lstinline|start|\lstinline|(String[] args)|\\
+The main program logic (must be overridden by subclasses)
+\begin{itemize}
+\item \lstinline|args|: The command line arguments
+\end{itemize}
+
+
+
+\item \lstinline|protected void| \lstinline|printf|\lstinline|(String format, Object[] args...)|\\
+Prints a string to the output stream
+\begin{itemize}
+\item \lstinline|format|: The string to print (printf format string)
+\item \lstinline|args|: The printf arguments
+\end{itemize}
+
+
+
+\item \lstinline|protected void| \lstinline|print|\lstinline|(String str)|\\
+Prints a string to the output stream
+\begin{itemize}
+\item \lstinline|str|: The string to print
+\end{itemize}
+
+
+
+\item \lstinline|protected void| \lstinline|println|\lstinline|(String str)|\\
+Prints a string to the output stream after appending a newline
+\begin{itemize}
+\item \lstinline|str|: The string to print
+\end{itemize}
+
+
+
+\item \lstinline|protected String| \lstinline|getErrorFormat|\lstinline|()|\\
+Returns: the string format to use for writing error messages to the
+ screen.
+
+
+
+\item \lstinline|protected void| \lstinline|fatalError|\lstinline|(String format, Object[] args...)|\\
+Prints an error and exits
+\begin{itemize}
+\item \lstinline|format|: The error message (printf format string)
+\item \lstinline|args|: The printf arguments
+\end{itemize}
+
+
+
+\item \lstinline|protected void| \lstinline|exit|\lstinline|(int status)|\\
+Exits the application
+\begin{itemize}
+\item \lstinline|status|: The exit code
+\end{itemize}
+
+
+
+\item \lstinline|protected void| \lstinline|usage|\lstinline|()|\\
+Prints usage information
+
+
+
+\item \lstinline|protected String| \lstinline|getBasicUsage|\lstinline|()|\\
+Returns: basic usage information for the program (should be overridden)
+
+
+
+\item \lstinline|protected void| \lstinline|printAdditionalUsage|\lstinline|()|\\
+Prints additional usage information (may be overridden)
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|CommandLineInterface.Exit|}
+Signals the exit of the application. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.lang.Throwable|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|CommandLineInterface.Exit|\lstinline|(int status)|\\
+Initializes a new Exit instance
+\begin{itemize}
+\item \lstinline|status|: The exit code
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public int| \lstinline|getStatus|\lstinline|()|\\
+Returns: the exit code
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|InteractiveCommandLineInterface|}
+A framework class to implement interactive command-line interfaces. The class implements
+ a read-parse-execute main loop and provides hooks for subclasses to implement the missing
+ functionality. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.util.CommandLineInterface|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|InteractiveCommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\
+{@inheritDoc}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|protected void| \lstinline|start|\lstinline|(String[] args)|\\
+{@inheritDoc}
+
+
+
+\item \lstinline|protected void| \lstinline|mainloop|\lstinline|()|\\
+Starts the interactive Prompt-Read-Evaluate main loop.
+
+
+
+\item \lstinline|protected abstract void| \lstinline|performCommand|\lstinline|(String cmd, String[] args)|\\
+Executes the given command with the given arguments. Must be implemented by subclasses.
+\begin{itemize}
+\item \lstinline|cmd|: The command name
+\item \lstinline|args|: The command arguments
+\end{itemize}
+
+
+
+\item \lstinline|protected void| \lstinline|error|\lstinline|(String format, Object[] args...)|\\
+Helper function to trigger an error withing a command's execution and break out to
+ the main loop.
+
+
+
+\item \lstinline|protected String| \lstinline|getPrompt|\lstinline|()|\\
+Returns: The input prompt
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|InteractiveCommandLineInterface.CommandError|}
+An error within one of the commands. Will be caught by the main loop \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.lang.Throwable|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|InteractiveCommandLineInterface.CommandError|\lstinline|(String msg)|\\
+Initializes the error
+\begin{itemize}
+\item \lstinline|msg|: The error message
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public String| \lstinline|getMessage|\lstinline|()|\\
+Returns: The associated error message
+
+
+
+\end{itemize}
+
+
+\subsection{Package \lstinline!cryptocast.comm!}
+\subsubsection{Class \lstinline|SocketMulticastServer|}
+This class implements channel-based communication via TCP. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|SocketMulticastServer|\lstinline|(ServerSocket socket)|\\
+Creates a multicast server which uses the given socket.
+\begin{itemize}
+\item \lstinline|socket|: server socket
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|\\
+Sends bytes via the channel.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MessageInChannel|}
+Wraps a byte-based InChannel and allows to use it as a message-based
+ channel. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MessageInChannel|\lstinline|(InChannel inner)|\\
+Creates a MessageInChannel which wraps the given inner channel.
+\begin{itemize}
+\item \lstinline|inner|: the wrapped channel
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ByteBuffer| \lstinline|recvMessage|\lstinline|()|\\
+Receives a message via the channel.
+
+Returns: the received bytes
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MessageOutChannel|}
+Wraps a byte-based OutChannel and allows to use it as a message-based
+ channel. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MessageOutChannel|\lstinline|(OutChannel inner)|\\
+Creates a new MessageOutChannel with the given OutChannel as inner channel.
+\begin{itemize}
+\item \lstinline|inner|: the OutChannel which will be wrapped
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(ByteBuffer bytes)|\\
+Sends the given message via the channel.
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MultiOutChannel|}
+Multiplexes several OutChannels so that they can be used as a single
+ destination. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MultiOutChannel|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|addChannel|\lstinline|(OutChannel channel)|\\
+Adds the given channel to the list of receivers.
+\begin{itemize}
+\item \lstinline|channel|: the channel to add
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|removeChannel|\lstinline|(OutChannel channel)|\\
+Removes the given channel from the list of receivers.
+\begin{itemize}
+\item \lstinline|channel|: the channel to remove
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|
+
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|InChannel|}
+None \\
+
+
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ByteBuffer| \lstinline|recv|\lstinline|(int size)|\\
+Receives data.
+\begin{itemize}
+\item \lstinline|size|: maximum amount of bytes to read
+\end{itemize}
+
+Returns: the received data
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|OutChannel|}
+None \\
+
+
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|\\
+Sends the given data.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\subsection{Package \lstinline!cryptocast.crypto!}
+\subsubsection{Class \lstinline|Share.InsufficientInformationException|}
+An exception that is thrown when a secret cannot be restored because
+ of missing information. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.lang.Exception|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Share.InsufficientInformationException|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\subsubsection{Class \lstinline|LagrangeInterpolation<T>|}
+Performs a lagrange interpolation of a polynomial \\
+
+
+\begin{itemize}
+\item \lstinline|<T>|: 
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|LagrangeInterpolation|\lstinline|(Polynomial<T> poly)|\\
+Initializes the algorithm
+\begin{itemize}
+\item \lstinline|poly|: The polynomial to interpolate
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public T[]| \lstinline|computeCoefficients|\lstinline|()|\\
+Returns: The lagrange coefficients of the associated polynomial
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|IntegersModuloPrime|}
+The field $Z/Zp$ of integers modulo a prime $p$ \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.Field<BigInteger>|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|IntegersModuloPrime|\lstinline|(BigInteger p)|\\
+Initializes the field
+\begin{itemize}
+\item \lstinline|p|: A prime number
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public BigInteger| \lstinline|add|\lstinline|(BigInteger a, BigInteger b)|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|multiply|\lstinline|(BigInteger a, BigInteger b)|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|negate|\lstinline|(BigInteger a)|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|invert|\lstinline|(BigInteger a)|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|zero|\lstinline|()|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|one|\lstinline|()|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|randomElement|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Polynomial<T>|}
+A polynomial $P$ over a field \\
+
+
+\begin{itemize}
+\item \lstinline|<T>|: The type of the field's elements
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Polynomial|\lstinline|(Field<T> field, T[] coefficients)|\\
+Initializes a polynomial
+\begin{itemize}
+\item \lstinline|field|: An instance of the field over which the polynomial is formed
+\item \lstinline|coefficients|: The coefficients $c_i$ of the polynomial ($0 <= i <= n$).
+ The polynomial is defined as $P(x) := sum_{i=0}^n c_i x^i = c_0 + c_1
+ x + ... + c_n x^n$
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public Field<T>| \lstinline|getField|\lstinline|()|\\
+Returns: The field associated with this polynomial
+
+
+
+\item \lstinline|public T| \lstinline|evaluate|\lstinline|(T x)|\\
+Evaluates the polynomial at a single point.
+\begin{itemize}
+\item \lstinline|x|: The point
+\end{itemize}
+
+Returns: P(x)
+
+\item \lstinline|public T[]| \lstinline|evaluateMulti|\lstinline|(T[] xs)|\\
+Evaluates the polynomial at multiple points in $O\left(n \cdot \log
+ n\right)$
+\begin{itemize}
+\item \lstinline|xs|: The points $x_i$ to evaluate
+\end{itemize}
+
+Returns: The array a defined by $a_i := P(x_i)$
+
+\item \lstinline|public T| \lstinline|getCoefficient|\lstinline|(int i)|\\
+Returns: $c_i$
+
+
+
+\item \lstinline|public static Polynomial<T>| \lstinline|createRandomPolynomial|\lstinline|(Field<T> field, int degree)|\\
+Generates a random polynomial over the field
+\begin{itemize}
+\item \lstinline|field|: An instance of the field over which the polynomial is formed
+\item \lstinline|degree|: The degree of the generated polynomial
+\end{itemize}
+
+Returns: The generated polynomial
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Field<T>|}
+Represents a field over values of type T \\
+
+
+\begin{itemize}
+\item \lstinline|<T>|: The values we work on
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Field|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public abstract T| \lstinline|add|\lstinline|(T a, T b)|\\
+Adds two elements of the field
+\begin{itemize}
+\item \lstinline|a|: first element
+\item \lstinline|b|: second element
+\end{itemize}
+
+Returns: The value $a + b$
+
+\item \lstinline|public abstract T| \lstinline|multiply|\lstinline|(T a, T b)|\\
+Multiplies two elements of the field
+\begin{itemize}
+\item \lstinline|a|: first element
+\item \lstinline|b|: second element
+\end{itemize}
+
+Returns: The value $a \cdot b$
+
+\item \lstinline|public abstract T| \lstinline|negate|\lstinline|(T a)|\\
+Returns: The additive inverse $-a$ of $a$
+\begin{itemize}
+\item \lstinline|a|: An element of the field
+\end{itemize}
+
+
+
+\item \lstinline|public abstract T| \lstinline|invert|\lstinline|(T a)|\\
+Returns: The multiplicative inverse $a^{-1}$ of $a$
+\begin{itemize}
+\item \lstinline|a|: An element of the field
+\end{itemize}
+
+
+
+\item \lstinline|public abstract T| \lstinline|zero|\lstinline|()|\\
+Returns: The zero element of the field
+
+
+
+\item \lstinline|public abstract T| \lstinline|one|\lstinline|()|\\
+Returns: The one element of the field
+
+
+
+\item \lstinline|public abstract T| \lstinline|randomElement|\lstinline|()|\\
+Returns: A random element of the field
+
+
+
+\item \lstinline|public T| \lstinline|subtract|\lstinline|(T a, T b)|\\
+Subtracts two elements of the field
+\begin{itemize}
+\item \lstinline|a|: first element
+\item \lstinline|b|: second element
+\end{itemize}
+
+Returns: The value $a - b$
+
+\item \lstinline|public T| \lstinline|divide|\lstinline|(T a, T b)|\\
+Divides two elements of the field
+\begin{itemize}
+\item \lstinline|a|: first element
+\item \lstinline|b|: second element
+\end{itemize}
+
+Returns: The value $\frac{a}{b}$
+
+\item \lstinline|public T| \lstinline|pow|\lstinline|(T a, int e)|\\
+Raises an element of the field to an integer power
+\begin{itemize}
+\item \lstinline|a|: The element of the field
+\item \lstinline|e|: The exponent
+\end{itemize}
+
+Returns: The value $a^e$
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|BroadcastEncryptionServer<ID>|}
+The server side of a broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\item \lstinline|java.lang.Runnable|
+\end{itemize}
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the identities
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|BroadcastEncryptionServer|\lstinline|(MessageOutChannel inner, BroadcastSchemeUserManager<ID> context, Encryptor<BigInteger> enc)|\\
+Initializes a broadcast encryption server.
+\begin{itemize}
+\item \lstinline|inner|: The message-based communication channel to send outgoing data to
+\item \lstinline|context|: The user management context
+\item \lstinline|enc|: The encryption context
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|run|\lstinline|()|\\
+Run the worker that handles periodic group key broadcasts and sends
+ queued data packages.
+
+
+
+\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|\\
+Send plaintext data to the channel. It will be encryted and broadcasted
+ on the fly.
+\begin{itemize}
+\item \lstinline|data|: The data to send
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(ID id)|\\
+Revoke a user.
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|BroadcastEncryptionClient|}
+The client side of a broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.InChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|BroadcastEncryptionClient|\lstinline|(MessageInChannel inner, Decryptor<BigInteger> dec)|\\
+Initializes a broadcast encryption client.
+\begin{itemize}
+\item \lstinline|inner|: The message-based underlying communication channel.
+\item \lstinline|dec|: The decryption context
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ByteBuffer| \lstinline|recv|\lstinline|(int size)|\\
+Receive data from the channel. It is decrypted on the fly.
+\begin{itemize}
+\item \lstinline|size|: amount of bytes to receive
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|Decryptor<S>|}
+A strategy to decrypt a single secret \\
+
+
+\begin{itemize}
+\item \lstinline|<S>|: the type of the secret
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public S| \lstinline|decrypt|\lstinline|(ByteBuffer cipher)|\\
+Returns: The decrypted secret
+\begin{itemize}
+\item \lstinline|cipher|: The encrypted secret
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|Share<S>|}
+Represents a possibly incomplete piece of information to restore a secret value. \\
+
+
+\begin{itemize}
+\item \lstinline|<S>|: the type of secret.
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public boolean| \lstinline|isComplete|\lstinline|()|\\
+Returns: whether the share is complete and can be used to restore
+ the value.
+
+
+
+\item \lstinline|public S| \lstinline|restore|\lstinline|()|\\
+Restore the value represented by this share.
+
+Returns: The restored value
+
+\item \lstinline|public byte[]| \lstinline|pack|\lstinline|()|\\
+Returns: A binary representation of the share
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|BroadcastSchemeUserManager<ID>|}
+Manages a set of user identites \\
+
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the identities
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ID| \lstinline|getIdentity|\lstinline|(int i)|\\
+Returns: The identity with the given index
+\begin{itemize}
+\item \lstinline|i|: An index
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(ID id)|\\
+Revokes a user
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+
+
+\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(ID id)|\\
+Returns: whether the user is revoked
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|Encryptor<S>|}
+A strategy to encrypt a single secret \\
+
+
+\begin{itemize}
+\item \lstinline|<S>|: the type of the secret
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ByteBuffer| \lstinline|encrypt|\lstinline|(S secret)|\\
+Returns: The cipher text
+\begin{itemize}
+\item \lstinline|secret|: the secret
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|BroadcastSchemeKeyManager<ID>|}
+Manages the private keys of a set of users. \\
+
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public PrivateKey| \lstinline|getPersonalKey|\lstinline|(ID id)|\\
+Returns: The private key of the user
+\begin{itemize}
+\item \lstinline|id|: The identity to look up
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|ShareCombinator<S, T>|}
+Implements a strategy to merge multiple Shares into a single share with
+ more information. \\
+
+
+\begin{itemize}
+\item \lstinline|<S>|: The type of the secret
+\item \lstinline|<T>|: The type of the shares
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public T| \lstinline|combine|\lstinline|(T a, T b)|\\
+Combines two shares.
+\begin{itemize}
+\item \lstinline|a|: The first share
+\item \lstinline|b|: The second share
+\end{itemize}
+
+Returns: a new share containing the information from both a and b.
+
+\end{itemize}
+
+
+\subsection{Package \lstinline!cryptocast.client!}
+\subsubsection{Class \lstinline|StreamViewerActivity|}
+This activity is responsible for decrypting the received data
+ stream and viewing it. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|StreamViewerActivity|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|processStream|\lstinline|(InputStream inputStream)|\\
+Processes the input stream of data
+\begin{itemize}
+\item \lstinline|inputStream|: the data stream
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|saveStream|\lstinline|(InputStream inputStream)|\\
+Saves the data stream
+\begin{itemize}
+\item \lstinline|inputStream|: the data stream
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServerLoginActivity|}
+This class represents the activity to connect to the server.
+ Before connecting this activity start the {@link KeyChoiceActivity} to 
+ let the user choose an encryption key file. When the client receives a 
+ data stream the {@link StreamViewerActivity} is started to process the 
+ stream and show its contents. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.InChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServerLoginActivity|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|connectToServer|\lstinline|(String serverAddress)|\\
+Connects to server
+\begin{itemize}
+\item \lstinline|serverAddress|: the server address
+\end{itemize}
+
+
+
+\item \lstinline|private void| \lstinline|checkValidAddress|\lstinline|(String address)|\\
+Checks if server address is valid
+\begin{itemize}
+\item \lstinline|address|: the server address
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|chooseKeyFile|\lstinline|()|\\
+Shows activity to choose key file
+
+
+
+\item \lstinline|public void| \lstinline|saveServer|\lstinline|(String serverAddress, File file)|\\
+Saves servers and their corresponding key files.
+\begin{itemize}
+\item \lstinline|serverAddress|: the server address
+\item \lstinline|file|: the key file
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|showStream|\lstinline|()|\\
+Shows activity to view downloaded stream
+
+
+
+\item \lstinline|public void| \lstinline|processError|\lstinline|()|\\
+Processes any errors
+
+
+
+\item \lstinline|public ByteBuffer| \lstinline|recv|\lstinline|(int size)|\\
+Receives data from the channel. It is decrypted on the fly.
+\begin{itemize}
+\item \lstinline|size|: the amount of bytes to receive
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Traffics|}
+This class is for showing the received traffics. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Traffics|\lstinline|()|\\
+Constructor for this class
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public long| \lstinline|getReceivedTraffics|\lstinline|()|\\
+Returns: the receivedTraffics
+
+
+
+\item \lstinline|public void| \lstinline|setReceivedTraffics|\lstinline|(long receivedTraffics)|
+
+\begin{itemize}
+\item \lstinline|receivedTraffics|: the receivedTraffics to set
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|KeyChoiceActivity|}
+This activity lets a user choose an encryption key file 
+ which is then sent to the server for authentication. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|KeyChoiceActivity|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|chooseKeyFile|\lstinline|(File file)|\\
+Chooses a key file
+\begin{itemize}
+\item \lstinline|file|: the key file
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServerHistroy|}
+This class is responsible for saving the last selected servers
+ and their corresponding key files. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServerHistroy|\lstinline|()|\\
+Constructor for this class
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public Map<String, File>| \lstinline|getServers|\lstinline|()|\\
+Returns: the servers
+
+
+
+\item \lstinline|public void| \lstinline|setServers|\lstinline|(Map<String, File> servers)|
+
+\begin{itemize}
+\item \lstinline|servers|: the servers to set
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\subsection{Package \lstinline!cryptocast.server!}
+\subsubsection{Class \lstinline|Command|}
+This class represents a command and saves all legal commands. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|private| \lstinline|Command|\lstinline|(String cmd, String shortDescription, String longDescription)|\\
+Creates a new Command with the given values
+\begin{itemize}
+\item \lstinline|cmd|: None
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\subsubsection{Class \lstinline|Controller<ID>|}
+Deals with user-interactions and therefore changes data in Model if necessary. \\
+
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Controller|\lstinline|(ServerData data, Shell shell, BroadcastEncryptionServer<ID> encServer)|\\
+Initializes a new controller with the given arguments.
+\begin{itemize}
+\item \lstinline|data|: The data administrated by this controller.
+\item \lstinline|shell|: The operator interface from which this controller gets its input.
+\item \lstinline|encServer|: The server to which the data is send.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|init|\lstinline|()|\\
+Initializes the server on start by loading data from a file.
+
+
+
+\item \lstinline|public void| \lstinline|keyGen|\lstinline|(int amtRevocable, int amtPrivateKeys, File keyDir)|\\
+Tries to start a new group to which data can be sent by generating private keys.
+\begin{itemize}
+\item \lstinline|amtRevocable|: The amount of user which can be revoked.
+\item \lstinline|amtPrivateKeys|: The amount of private keys which are produced.
+\item \lstinline|keyDir|: The directory to save the keyfiles in.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|addUser|\lstinline|(User user)|\\
+Adds a new user and assigns a private key to that user.
+\begin{itemize}
+\item \lstinline|user|: The user that is added.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|revokeUser|\lstinline|(User user)|\\
+Bans a user from the stream by adding it to the list of revoked users.
+\begin{itemize}
+\item \lstinline|user|: The user that is revoked.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|authorizeUser|\lstinline|(User user)|\\
+Authorizes a user to watch the stream by removing it from the list of revoked users.
+\begin{itemize}
+\item \lstinline|user|: The user that is unbanned.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|stream|\lstinline|(File data)|\\
+Starts the data stream
+\begin{itemize}
+\item \lstinline|data|: The file from which the data is read
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|showStatistics|\lstinline|()|\\
+Prints information about traffic
+
+
+
+\item \lstinline|public void| \lstinline|showUsers|\lstinline|()|\\
+Prints users and the keys assigned to them.
+
+
+
+\item \lstinline|public void| \lstinline|showInfo|\lstinline|()|\\
+Prints information about the data which is currently sent.
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|User<ID>|}
+This Class represents an User. \\
+
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|User|\lstinline|(String name, ID id)|\\
+Creates a User with the given name.
+\begin{itemize}
+\item \lstinline|name|: name of the user
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public String| \lstinline|getName|\lstinline|()|\\
+Returns: the name of this user.
+
+
+
+\item \lstinline|public ID| \lstinline|getIdentity|\lstinline|()|\\
+Returns: the id of this user.
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Shell<ID>|}
+Gets the arguments from the command line and deals with illegal input. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.util.InteractiveCommandLineInterface|
+\end{itemize}
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities.
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Shell|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\
+Creates a new Shell object with the given parameters.
+\begin{itemize}
+\item \lstinline|in|: The input stream
+\item \lstinline|out|: Stream to write normal output to.
+\item \lstinline|err|: Stream to write error messages to.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|protected void| \lstinline|performCommand|\lstinline|(String cmd, String[] args)|
+
+
+
+
+\item \lstinline|private void| \lstinline|help|\lstinline|()|\\
+Prints all commands this shell can perform with information about how to use them.
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServerData<ID>|}
+Contains the data which is changed by Controller and presented on CLI. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServerData|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public <any>| \lstinline|createNewUser|\lstinline|(String name)|\\
+Creates and saves a new user by name.
+\begin{itemize}
+\item \lstinline|name|: The user's name
+\end{itemize}
+
+
+
+\item \lstinline|public <any>| \lstinline|getUserByName|\lstinline|(String name)|\\
+Retrieves a user by name
+\begin{itemize}
+\item \lstinline|name|: The user's name
+\end{itemize}
+
+Returns: A user instance, if it was found, or absent otherwise
+
+\item \lstinline|public <any>| \lstinline|getPersonalKey|\lstinline|(User user)|\\
+Retrieves a user's personal key
+\begin{itemize}
+\item \lstinline|user|: The user object
+\end{itemize}
+
+Returns: The private key
+
+\item \lstinline|public <any>| \lstinline|getStreamDir|\lstinline|()|\\
+Returns: Returns the directory from which is currently streamed.
+
+
+
+\item \lstinline|public <any>| \lstinline|setStreamDir|\lstinline|(File streamDir)|\\
+Saves the directory from which is streamed.
+\begin{itemize}
+\item \lstinline|streamDir|: The directory from which is streamed.
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Main|}
+The main method to start the server \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Main|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public static void| \lstinline|main|\lstinline|(String[] args)|
+
+\begin{itemize}
+\item \lstinline|args|: command line arguments
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\subsection{Package \lstinline!cryptocast.crypto.naorpinkas!}
+\subsubsection{Class \lstinline|NaorPinkasClient|}
+A client in the Naor-Pinkas broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.Decryptor<BigInteger>|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasClient|\lstinline|(NaorPinkasPersonalKey key)|\\
+Initializes a Naor-Pinkas broadcast client
+\begin{itemize}
+\item \lstinline|key|: The personal key used to reconstruct a secret from the stream
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public BigInteger| \lstinline|decrypt|\lstinline|(ByteBuffer cipher)|\\
+{@inheritDoc}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasServer|}
+A server in the Naor-Pinkas broadcast encryption scheme. This server is special in that it knows
+ the entire polynomial and therefore all the private keys of its users. This makes the implementation
+ of the interpolation algorithm a bit more efficient. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.BroadcastSchemeKeyManager<NaorPinkasIdentity>|
+\item \lstinline|cryptocast.crypto.BroadcastSchemeUserManager<NaorPinkasIdentity>|
+\item \lstinline|cryptocast.crypto.Encryptor<BigInteger>|
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasServer|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ByteBuffer| \lstinline|encrypt|\lstinline|(BigInteger secret)|\\
+{@inheritDoc}
+
+
+
+\item \lstinline|public NaorPinkasIdentity| \lstinline|getIdentity|\lstinline|(int i)|\\
+{@inheritDoc}
+
+
+
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(NaorPinkasIdentity x)|\\
+{@inheritDoc}
+
+
+
+\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(NaorPinkasIdentity id)|\\
+{@inheritDoc}
+
+
+
+\item \lstinline|public NaorPinkasPersonalKey| \lstinline|getPersonalKey|\lstinline|(NaorPinkasIdentity id)|\\
+{@inheritDoc}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasPersonalKey|}
+A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.security.PrivateKey|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasPersonalKey|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public String| \lstinline|getAlgorithm|\lstinline|()|
+
+
+
+
+\item \lstinline|public byte[]| \lstinline|getEncoded|\lstinline|()|
+
+
+
+
+\item \lstinline|public String| \lstinline|getFormat|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasShare|}
+A share in the Naor-Pinkas broadcast encryption scheme. It consists of a tuple
+ $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
+ value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.Share<BigInteger>|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasShare|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public boolean| \lstinline|isComplete|\lstinline|()|\\
+{@inheritDoc}
+
+
+
+\item \lstinline|public byte[]| \lstinline|pack|\lstinline|()|\\
+{@inheritDoc}
+
+
+
+\item \lstinline|public BigInteger| \lstinline|restore|\lstinline|()|\\
+{@inheritDoc}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasIdentity|}
+An identity in the Naor-Pinkas broadcast encryption scheme \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|private| \lstinline|NaorPinkasIdentity|\lstinline|(BigInteger id)|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|private BigInteger| \lstinline|getId|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+

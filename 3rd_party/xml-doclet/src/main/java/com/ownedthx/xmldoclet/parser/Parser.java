@@ -142,7 +142,8 @@ public class Parser
         xmlClass.comment = docClass.commentText();
         xmlClass.scope = DetermineScope(docClass);
         xmlClass.isIncluded = docClass.isIncluded();
-        xmlClass.typeVariables = ParseTypeVariables(docClass.typeParameters());
+        xmlClass.typeVariables = ParseTypeVariables(docClass.typeParameters(),
+                                                    docClass.typeParamTags());
         Type superClassType = docClass.superclassType();
         if(superClassType != null)
         {
@@ -244,7 +245,8 @@ public class Parser
      * @param variables
      * @return
      */
-    protected static TypeVar[] ParseTypeVariables(TypeVariable[] variables)
+    protected static TypeVar[] ParseTypeVariables(TypeVariable[] variables,
+                                                  ParamTag[] tags)
     {
         TypeVar[] vars = null;
 
@@ -268,6 +270,9 @@ public class Parser
 
                     var.bounds = list.toArray(new String[] {});
                 }
+                for (ParamTag tag : tags)
+                    if (tag.parameterName().equals(var.name))
+                        var.comment = tag.parameterComment();
 
                 varsList.add(var);
             }
@@ -397,7 +402,8 @@ public class Parser
         xmlInterface.comment = docClass.commentText();
         xmlInterface.isIncluded = docClass.isIncluded();
         xmlInterface.scope = DetermineScope( docClass );
-        xmlInterface.typeVariables = ParseTypeVariables( docClass.typeParameters() );
+        xmlInterface.typeVariables = ParseTypeVariables(docClass.typeParameters(),
+                                                        docClass.typeParamTags());
 
         Type[] interfaces = docClass.interfaceTypes();
 
@@ -541,6 +547,8 @@ public class Parser
   
         xmlConstructor.name = docConstructor.name();
         xmlConstructor.comment = docConstructor.commentText();
+        xmlConstructor.scope = DetermineScope(docConstructor);
+        xmlConstructor.isVarArgs = docConstructor.isVarArgs();
 
         Parameter[] parameters = docConstructor.parameters();
 

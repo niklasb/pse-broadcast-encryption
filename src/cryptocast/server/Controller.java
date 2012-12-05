@@ -6,9 +6,9 @@ import cryptocast.crypto.BroadcastEncryptionServer;
 
 
 /** Deals with user-interactions and therefore changes data in Model if necessary.
+ * @param <ID> The type of the user identities
  */
 public class Controller<ID> {
-
     private ServerData data;
     private Shell shell;
     private BroadcastEncryptionServer<ID> encServer;

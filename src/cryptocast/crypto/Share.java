@@ -1,12 +1,16 @@
 package cryptocast.crypto;
 
-class InsufficientInformationException extends Exception {}
-
 /**
- * Represents a possibly incomplete piece of information to build a value
- * @param T the type of the partial value
+ * Represents a possibly incomplete piece of information to restore a secret value.
+ * @param <S> the type of secret.
  */
-public interface Share<T> {
+public interface Share<S> {
+    /**
+     * An exception that is thrown when a secret cannot be restored because
+     * of missing information.
+     */
+    class InsufficientInformationException extends Exception {}
+
     /**
      * @return whether the share is complete and can be used to restore
      * the value.
@@ -17,7 +21,7 @@ public interface Share<T> {
      * @throws InsufficientInformationException if the share is incomplete
      * @return The restored value
      */
-    public T restore() throws InsufficientInformationException;
+    public S restore() throws InsufficientInformationException;
     /**
      * @return A binary representation of the share
      */

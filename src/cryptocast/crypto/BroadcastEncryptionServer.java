@@ -7,7 +7,7 @@ import java.util.Collection;
 
 /**
  * The server side of a broadcast encryption scheme.
- * @param ID The type of the identities
+ * @param <ID> The type of the identities
  */
 public class BroadcastEncryptionServer<ID> implements OutChannel, Runnable {
     /**
