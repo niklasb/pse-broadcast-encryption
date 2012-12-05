@@ -1,6 +1,7 @@
 package cryptocast.comm;
 
-import java.nio.WritableByteChannel;
+import java.nio.ByteBuffer;
+import java.nio.channels.WritableByteChannel;
 
 /**
  * Adapter to use a WritableByteChannel (for example, a socket instance) as an OutChannel.
@@ -12,6 +13,9 @@ public class WritableByteChannelAdapter implements OutChannel {
      */
     public WritableByteChannelAdapter(WritableByteChannel inner) { }
 
-    /** {@inheritDoc} */
+    /**
+     * Sends the given data.
+     * @param data the data to send
+     */
     public void send(ByteBuffer data) { }
 }

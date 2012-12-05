@@ -1,6 +1,687 @@
+\subsection{Package \lstinline!cryptocast.comm!}
+\subsubsection{Class \lstinline|WritableByteChannelAdapter|}
+Adapter to use a WritableByteChannel (for example, a socket instance) as an OutChannel. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|WritableByteChannelAdapter|\lstinline|(WritableByteChannel inner)|\\
+Initializes the adapter
+\begin{itemize}
+\item \lstinline|inner|: The wrapped instance
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|\\
+Sends the given data.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|SocketMulticastServer|}
+This class implements channel-based communication via TCP. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|SocketMulticastServer|\lstinline|(ServerSocket socket)|\\
+Creates a multicast server which uses the given socket.
+\begin{itemize}
+\item \lstinline|socket|: server socket
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|\\
+Sends bytes via the channel.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MessageInChannel|}
+Wraps a byte-based InChannel and allows to use it as a message-based
+ channel. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MessageInChannel|\lstinline|(InChannel inner)|\\
+Creates a MessageInChannel which wraps the given inner channel.
+\begin{itemize}
+\item \lstinline|inner|: the wrapped channel
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ByteBuffer| \lstinline|recvMessage|\lstinline|()|\\
+Receives a message via the channel.
+
+Returns: the received bytes
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MessageOutChannel|}
+Wraps a byte-based OutChannel and allows to use it as a message-based
+ channel. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MessageOutChannel|\lstinline|(OutChannel inner)|\\
+Creates a new MessageOutChannel with the given OutChannel as inner channel.
+\begin{itemize}
+\item \lstinline|inner|: the OutChannel which will be wrapped
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(ByteBuffer data)|\\
+Sends the given message via the channel.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ReadableByteChannelAdapter|}
+Adapter to use a ReadableByteChannel (for example, a socket instance) as an InChannel. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.InChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ReadableByteChannelAdapter|\lstinline|(ReadableByteChannel inner)|\\
+Initializes the adapter
+\begin{itemize}
+\item \lstinline|inner|: The wrapped instance
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ByteBuffer| \lstinline|recv|\lstinline|(int size)|\\
+Receives data.
+\begin{itemize}
+\item \lstinline|size|: maximum amount of bytes to read
+\end{itemize}
+
+Returns: the received data
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MultiOutChannel|}
+Multiplexes several OutChannels so that they can be used as a single
+ destination. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MultiOutChannel|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|addChannel|\lstinline|(OutChannel channel)|\\
+Adds the given channel to the list of receivers.
+\begin{itemize}
+\item \lstinline|channel|: the channel to add
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|removeChannel|\lstinline|(OutChannel channel)|\\
+Removes the given channel from the list of receivers.
+\begin{itemize}
+\item \lstinline|channel|: the channel to remove
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|
+
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|InChannel|}
+None \\
+
+
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ByteBuffer| \lstinline|recv|\lstinline|(int size)|\\
+Receives data.
+\begin{itemize}
+\item \lstinline|size|: maximum amount of bytes to read
+\end{itemize}
+
+Returns: the received data
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|OutChannel|}
+A byte-based communication channel where data can be sent to. \\
+
+
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|\\
+Sends the given data.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\subsection{Package \lstinline!cryptocast.crypto.naorpinkas!}
+\subsubsection{Class \lstinline|NaorPinkasClient|}
+A client in the Naor-Pinkas broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.Decryptor<BigInteger>|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasClient|\lstinline|(NaorPinkasPersonalKey key)|\\
+Initializes a Naor-Pinkas broadcast client
+\begin{itemize}
+\item \lstinline|key|: The personal key used to reconstruct a secret from the stream
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public BigInteger| \lstinline|decrypt|\lstinline|(ByteBuffer cipher)|\\
+Decrypts a secret.
+\begin{itemize}
+\item \lstinline|cipher|: The encrypted secret
+\end{itemize}
+
+Returns: The decrypted secret
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasServer|}
+A server in the Naor-Pinkas broadcast encryption scheme. This server is special in that it knows
+ the entire polynomial and therefore all the private keys of its users. This makes the implementation
+ of the interpolation algorithm a bit more efficient. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.BroadcastSchemeKeyManager<NaorPinkasIdentity>|
+\item \lstinline|cryptocast.crypto.BroadcastSchemeUserManager<NaorPinkasIdentity>|
+\item \lstinline|cryptocast.crypto.Encryptor<BigInteger>|
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasServer|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ByteBuffer| \lstinline|encrypt|\lstinline|(BigInteger secret)|\\
+Encrypts a secret
+\begin{itemize}
+\item \lstinline|secret|: the secret
+\end{itemize}
+
+Returns: The cipher text
+
+\item \lstinline|public NaorPinkasIdentity| \lstinline|getIdentity|\lstinline|(int i)|\\
+Returns: The identity with the given index
+\begin{itemize}
+\item \lstinline|i|: An index
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(NaorPinkasIdentity x)|\\
+Revokes a user
+
+
+
+\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(NaorPinkasIdentity id)|\\
+Returns: whether the user is revoked
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+
+
+\item \lstinline|public NaorPinkasPersonalKey| \lstinline|getPersonalKey|\lstinline|(NaorPinkasIdentity id)|\\
+Returns: The private key of the user
+\begin{itemize}
+\item \lstinline|id|: The identity to look up
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasPersonalKey|}
+A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.security.PrivateKey|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasPersonalKey|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public String| \lstinline|getAlgorithm|\lstinline|()|
+
+
+
+
+\item \lstinline|public byte[]| \lstinline|getEncoded|\lstinline|()|
+
+
+
+
+\item \lstinline|public String| \lstinline|getFormat|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasShare|}
+A share in the Naor-Pinkas broadcast encryption scheme. It consists of a tuple
+ $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
+ value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.Share<BigInteger>|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasShare|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public boolean| \lstinline|isComplete|\lstinline|()|\\
+Returns: whether the share is complete and can be used to restore
+ the value.
+
+
+
+\item \lstinline|public byte[]| \lstinline|pack|\lstinline|()|\\
+Returns: A binary representation of the share
+
+
+
+\item \lstinline|public BigInteger| \lstinline|restore|\lstinline|()|\\
+Restore the value represented by this share.
+
+Returns: The restored value
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasIdentity|}
+An identity in the Naor-Pinkas broadcast encryption scheme \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|private| \lstinline|NaorPinkasIdentity|\lstinline|(BigInteger id)|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|private BigInteger| \lstinline|getId|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\subsection{Package \lstinline!cryptocast.client!}
+\subsubsection{Class \lstinline|StreamViewerActivity|}
+This activity is responsible for decrypting the received data
+ stream and viewing it. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|StreamViewerActivity|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|processStream|\lstinline|(InputStream inputStream)|\\
+Processes the input stream of data
+\begin{itemize}
+\item \lstinline|inputStream|: the data stream
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|saveStream|\lstinline|(InputStream inputStream)|\\
+Saves the data stream
+\begin{itemize}
+\item \lstinline|inputStream|: the data stream
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServerHistory|}
+This class is responsible for saving recently selected servers
+ and their corresponding key files. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServerHistory|\lstinline|()|\\
+Constructor for this class
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public Map<String, File>| \lstinline|getServers|\lstinline|()|\\
+Returns: the servers
+
+
+
+\item \lstinline|public void| \lstinline|setServers|\lstinline|(Map<String, File> servers)|
+
+\begin{itemize}
+\item \lstinline|servers|: the servers to set
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServerLoginActivity|}
+This class represents the activity to connect to the server.
+ Before connecting this activity start the {@link KeyChoiceActivity} to 
+ let the user choose an encryption key file. When the client receives a 
+ data stream the {@link StreamViewerActivity} is started to process the 
+ stream and show its contents. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.InChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServerLoginActivity|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|connectToServer|\lstinline|(String serverAddress)|\\
+Connects to server
+\begin{itemize}
+\item \lstinline|serverAddress|: the server address
+\end{itemize}
+
+
+
+\item \lstinline|private void| \lstinline|checkValidAddress|\lstinline|(String address)|\\
+Checks if server address is valid
+\begin{itemize}
+\item \lstinline|address|: the server address
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|chooseKeyFile|\lstinline|()|\\
+Shows activity to choose key file
+
+
+
+\item \lstinline|public void| \lstinline|saveServer|\lstinline|(String serverAddress, File file)|\\
+Saves servers and their corresponding key files.
+\begin{itemize}
+\item \lstinline|serverAddress|: the server address
+\item \lstinline|file|: the key file
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|showStream|\lstinline|()|\\
+Shows activity to view downloaded stream
+
+
+
+\item \lstinline|public void| \lstinline|processError|\lstinline|()|\\
+Processes any errors
+
+
+
+\item \lstinline|public ByteBuffer| \lstinline|recv|\lstinline|(int size)|\\
+Receives data from the channel. It is decrypted on the fly.
+\begin{itemize}
+\item \lstinline|size|: the amount of bytes to receive
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Traffics|}
+This class is for showing the received traffics. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Traffics|\lstinline|()|\\
+Constructor for this class
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public long| \lstinline|getReceivedTraffics|\lstinline|()|\\
+Returns: the receivedTraffics
+
+
+
+\item \lstinline|public void| \lstinline|setReceivedTraffics|\lstinline|(long receivedTraffics)|
+
+\begin{itemize}
+\item \lstinline|receivedTraffics|: the receivedTraffics to set
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|KeyChoiceActivity|}
+This activity lets a user choose an encryption key file 
+ which is then sent to the server for authentication. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|KeyChoiceActivity|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|chooseKeyFile|\lstinline|(File file)|\\
+Chooses a key file
+\begin{itemize}
+\item \lstinline|file|: the key file
+\end{itemize}
+
+
+
+\end{itemize}
+
+
 \subsection{Package \lstinline!cryptocast.util!}
 \subsubsection{Class \lstinline|CommandLineInterface|}
-Common base class for command line programs. \\
+A simple framework for command line programs. \\
 
 
 
@@ -8,7 +689,7 @@ Common base class for command line programs. \\
 \textbf{Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|CommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\
-Initializes a new Cli instance
+Initializes a new CLI instance
 \begin{itemize}
 \item \lstinline|in|: The stream for program input
 \item \lstinline|out|: The stream for program output
@@ -152,7 +833,12 @@ A framework class to implement interactive command-line interfaces. The class im
 \textbf{Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|InteractiveCommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\
-{@inheritDoc}
+Initializes a new interactive CLI instance
+\begin{itemize}
+\item \lstinline|in|: The stream for program input
+\item \lstinline|out|: The stream for program output
+\item \lstinline|err|: The stream for error output
+\end{itemize}
 
 
 
@@ -162,7 +848,10 @@ A framework class to implement interactive command-line interfaces. The class im
 \textbf{Methods}
 \begin{itemize}
 \item \lstinline|protected void| \lstinline|start|\lstinline|(String[] args)|\\
-{@inheritDoc}
+The main program logic. This method just starts the main loop.
+\begin{itemize}
+\item \lstinline|args|: The command line arguments (ignored by default)
+\end{itemize}
 
 
 
@@ -183,6 +872,10 @@ Executes the given command with the given arguments. Must be implemented by subc
 \item \lstinline|protected void| \lstinline|error|\lstinline|(String format, Object[] args...)|\\
 Helper function to trigger an error withing a command's execution and break out to
  the main loop.
+\begin{itemize}
+\item \lstinline|format|: The format string
+\item \lstinline|args|: The format string arguments
+\end{itemize}
 
 
 
@@ -227,187 +920,6 @@ Returns: The associated error message
 \end{itemize}
 
 
-\subsection{Package \lstinline!cryptocast.comm!}
-\subsubsection{Class \lstinline|SocketMulticastServer|}
-This class implements channel-based communication via TCP. \\
-
-
-\textbf{Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|cryptocast.comm.OutChannel|
-\end{itemize}
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|SocketMulticastServer|\lstinline|(ServerSocket socket)|\\
-Creates a multicast server which uses the given socket.
-\begin{itemize}
-\item \lstinline|socket|: server socket
-\end{itemize}
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|\\
-Sends bytes via the channel.
-\begin{itemize}
-\item \lstinline|data|: the data to send
-\end{itemize}
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|MessageInChannel|}
-Wraps a byte-based InChannel and allows to use it as a message-based
- channel. \\
-
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|MessageInChannel|\lstinline|(InChannel inner)|\\
-Creates a MessageInChannel which wraps the given inner channel.
-\begin{itemize}
-\item \lstinline|inner|: the wrapped channel
-\end{itemize}
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public ByteBuffer| \lstinline|recvMessage|\lstinline|()|\\
-Receives a message via the channel.
-
-Returns: the received bytes
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|MessageOutChannel|}
-Wraps a byte-based OutChannel and allows to use it as a message-based
- channel. \\
-
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|MessageOutChannel|\lstinline|(OutChannel inner)|\\
-Creates a new MessageOutChannel with the given OutChannel as inner channel.
-\begin{itemize}
-\item \lstinline|inner|: the OutChannel which will be wrapped
-\end{itemize}
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(ByteBuffer bytes)|\\
-Sends the given message via the channel.
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|MultiOutChannel|}
-Multiplexes several OutChannels so that they can be used as a single
- destination. \\
-
-
-\textbf{Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|cryptocast.comm.OutChannel|
-\end{itemize}
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|MultiOutChannel|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|addChannel|\lstinline|(OutChannel channel)|\\
-Adds the given channel to the list of receivers.
-\begin{itemize}
-\item \lstinline|channel|: the channel to add
-\end{itemize}
-
-
-
-\item \lstinline|public void| \lstinline|removeChannel|\lstinline|(OutChannel channel)|\\
-Removes the given channel from the list of receivers.
-\begin{itemize}
-\item \lstinline|channel|: the channel to remove
-\end{itemize}
-
-
-
-\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|
-
-
-
-
-\end{itemize}
-
-\subsubsection{Interface \lstinline|InChannel|}
-None \\
-
-
-
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public ByteBuffer| \lstinline|recv|\lstinline|(int size)|\\
-Receives data.
-\begin{itemize}
-\item \lstinline|size|: maximum amount of bytes to read
-\end{itemize}
-
-Returns: the received data
-
-\end{itemize}
-
-\subsubsection{Interface \lstinline|OutChannel|}
-None \\
-
-
-
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(ByteBuffer data)|\\
-Sends the given data.
-\begin{itemize}
-\item \lstinline|data|: the data to send
-\end{itemize}
-
-
-
-\end{itemize}
-
-
 \subsection{Package \lstinline!cryptocast.crypto!}
 \subsubsection{Class \lstinline|Share.InsufficientInformationException|}
 An exception that is thrown when a secret cannot be restored because
@@ -436,7 +948,7 @@ Performs a lagrange interpolation of a polynomial \\
 
 
 \begin{itemize}
-\item \lstinline|<T>|: 
+\item \lstinline|<T>|: The type of items of the polynomial's field
 \end{itemize}
 
 
@@ -463,7 +975,7 @@ Returns: The lagrange coefficients of the associated polynomial
 \end{itemize}
 
 \subsubsection{Class \lstinline|IntegersModuloPrime|}
-The field $Z/Zp$ of integers modulo a prime $p$ \\
+The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$ \\
 
 
 \textbf{Superclasses and Interfaces}
@@ -540,8 +1052,8 @@ A polynomial $P$ over a field \\
 Initializes a polynomial
 \begin{itemize}
 \item \lstinline|field|: An instance of the field over which the polynomial is formed
-\item \lstinline|coefficients|: The coefficients $c_i$ of the polynomial ($0 <= i <= n$).
- The polynomial is defined as $P(x) := sum_{i=0}^n c_i x^i = c_0 + c_1
+\item \lstinline|coefficients|: The coefficients $c_i$ of the polynomial ($0 \leq i \leq n$).
+ The polynomial is defined as $P(x) := \sum_{i=0}^n c_i x^i = c_0 + c_1
  x + ... + c_n x^n$
 \end{itemize}
 
@@ -558,16 +1070,16 @@ Returns: The field associated with this polynomial
 
 
 \item \lstinline|public T| \lstinline|evaluate|\lstinline|(T x)|\\
-Evaluates the polynomial at a single point.
+Evaluates the polynomial at a single point x.
 \begin{itemize}
-\item \lstinline|x|: The point
+\item \lstinline|x|: The
 \end{itemize}
 
 Returns: P(x)
 
 \item \lstinline|public T[]| \lstinline|evaluateMulti|\lstinline|(T[] xs)|\\
-Evaluates the polynomial at multiple points in $O\left(n \cdot \log
- n\right)$
+Evaluates the polynomial at multiple points in time complexity $\Theta(n\cdot\log
+ n)$ where $n$ is the degree of the polynomial
 \begin{itemize}
 \item \lstinline|xs|: The points $x_i$ to evaluate
 \end{itemize}
@@ -576,6 +1088,15 @@ Returns: The array a defined by $a_i := P(x_i)$
 
 \item \lstinline|public T| \lstinline|getCoefficient|\lstinline|(int i)|\\
 Returns: $c_i$
+\begin{itemize}
+\item \lstinline|i|: The index of the coefficient to get ($0 \leq i \leq n$), where
+          $n$ is the degree of the polynomial
+\end{itemize}
+
+
+
+\item \lstinline|public int| \lstinline|getDegree|\lstinline|()|\\
+Returns: The degree of the polynomial
 
 
 
@@ -796,12 +1317,12 @@ A strategy to decrypt a single secret \\
 \textbf{Methods}
 \begin{itemize}
 \item \lstinline|public S| \lstinline|decrypt|\lstinline|(ByteBuffer cipher)|\\
-Returns: The decrypted secret
+Decrypts a secret.
 \begin{itemize}
 \item \lstinline|cipher|: The encrypted secret
 \end{itemize}
 
-
+Returns: The decrypted secret
 
 \end{itemize}
 
@@ -886,12 +1407,12 @@ A strategy to encrypt a single secret \\
 \textbf{Methods}
 \begin{itemize}
 \item \lstinline|public ByteBuffer| \lstinline|encrypt|\lstinline|(S secret)|\\
-Returns: The cipher text
+Encrypts a secret
 \begin{itemize}
 \item \lstinline|secret|: the secret
 \end{itemize}
 
-
+Returns: The cipher text
 
 \end{itemize}
 
@@ -939,218 +1460,6 @@ Combines two shares.
 \end{itemize}
 
 Returns: a new share containing the information from both a and b.
-
-\end{itemize}
-
-
-\subsection{Package \lstinline!cryptocast.client!}
-\subsubsection{Class \lstinline|StreamViewerActivity|}
-This activity is responsible for decrypting the received data
- stream and viewing it. \\
-
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|StreamViewerActivity|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|processStream|\lstinline|(InputStream inputStream)|\\
-Processes the input stream of data
-\begin{itemize}
-\item \lstinline|inputStream|: the data stream
-\end{itemize}
-
-
-
-\item \lstinline|public void| \lstinline|saveStream|\lstinline|(InputStream inputStream)|\\
-Saves the data stream
-\begin{itemize}
-\item \lstinline|inputStream|: the data stream
-\end{itemize}
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|ServerLoginActivity|}
-This class represents the activity to connect to the server.
- Before connecting this activity start the {@link KeyChoiceActivity} to 
- let the user choose an encryption key file. When the client receives a 
- data stream the {@link StreamViewerActivity} is started to process the 
- stream and show its contents. \\
-
-
-\textbf{Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|cryptocast.comm.InChannel|
-\end{itemize}
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|ServerLoginActivity|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|connectToServer|\lstinline|(String serverAddress)|\\
-Connects to server
-\begin{itemize}
-\item \lstinline|serverAddress|: the server address
-\end{itemize}
-
-
-
-\item \lstinline|private void| \lstinline|checkValidAddress|\lstinline|(String address)|\\
-Checks if server address is valid
-\begin{itemize}
-\item \lstinline|address|: the server address
-\end{itemize}
-
-
-
-\item \lstinline|public void| \lstinline|chooseKeyFile|\lstinline|()|\\
-Shows activity to choose key file
-
-
-
-\item \lstinline|public void| \lstinline|saveServer|\lstinline|(String serverAddress, File file)|\\
-Saves servers and their corresponding key files.
-\begin{itemize}
-\item \lstinline|serverAddress|: the server address
-\item \lstinline|file|: the key file
-\end{itemize}
-
-
-
-\item \lstinline|public void| \lstinline|showStream|\lstinline|()|\\
-Shows activity to view downloaded stream
-
-
-
-\item \lstinline|public void| \lstinline|processError|\lstinline|()|\\
-Processes any errors
-
-
-
-\item \lstinline|public ByteBuffer| \lstinline|recv|\lstinline|(int size)|\\
-Receives data from the channel. It is decrypted on the fly.
-\begin{itemize}
-\item \lstinline|size|: the amount of bytes to receive
-\end{itemize}
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|Traffics|}
-This class is for showing the received traffics. \\
-
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|Traffics|\lstinline|()|\\
-Constructor for this class
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public long| \lstinline|getReceivedTraffics|\lstinline|()|\\
-Returns: the receivedTraffics
-
-
-
-\item \lstinline|public void| \lstinline|setReceivedTraffics|\lstinline|(long receivedTraffics)|
-
-\begin{itemize}
-\item \lstinline|receivedTraffics|: the receivedTraffics to set
-\end{itemize}
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|KeyChoiceActivity|}
-This activity lets a user choose an encryption key file 
- which is then sent to the server for authentication. \\
-
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|KeyChoiceActivity|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|chooseKeyFile|\lstinline|(File file)|\\
-Chooses a key file
-\begin{itemize}
-\item \lstinline|file|: the key file
-\end{itemize}
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|ServerHistroy|}
-This class is responsible for saving the last selected servers
- and their corresponding key files. \\
-
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|ServerHistroy|\lstinline|()|\\
-Constructor for this class
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public Map<String, File>| \lstinline|getServers|\lstinline|()|\\
-Returns: the servers
-
-
-
-\item \lstinline|public void| \lstinline|setServers|\lstinline|(Map<String, File> servers)|
-
-\begin{itemize}
-\item \lstinline|servers|: the servers to set
-\end{itemize}
-
-
 
 \end{itemize}
 
@@ -1432,203 +1741,6 @@ The main method to start the server \\
 \begin{itemize}
 \item \lstinline|args|: command line arguments
 \end{itemize}
-
-
-
-\end{itemize}
-
-
-\subsection{Package \lstinline!cryptocast.crypto.naorpinkas!}
-\subsubsection{Class \lstinline|NaorPinkasClient|}
-A client in the Naor-Pinkas broadcast encryption scheme. \\
-
-
-\textbf{Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|cryptocast.crypto.Decryptor<BigInteger>|
-\end{itemize}
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasClient|\lstinline|(NaorPinkasPersonalKey key)|\\
-Initializes a Naor-Pinkas broadcast client
-\begin{itemize}
-\item \lstinline|key|: The personal key used to reconstruct a secret from the stream
-\end{itemize}
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public BigInteger| \lstinline|decrypt|\lstinline|(ByteBuffer cipher)|\\
-{@inheritDoc}
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|NaorPinkasServer|}
-A server in the Naor-Pinkas broadcast encryption scheme. This server is special in that it knows
- the entire polynomial and therefore all the private keys of its users. This makes the implementation
- of the interpolation algorithm a bit more efficient. \\
-
-
-\textbf{Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|cryptocast.crypto.BroadcastSchemeKeyManager<NaorPinkasIdentity>|
-\item \lstinline|cryptocast.crypto.BroadcastSchemeUserManager<NaorPinkasIdentity>|
-\item \lstinline|cryptocast.crypto.Encryptor<BigInteger>|
-\item \lstinline|java.io.Serializable|
-\end{itemize}
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasServer|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public ByteBuffer| \lstinline|encrypt|\lstinline|(BigInteger secret)|\\
-{@inheritDoc}
-
-
-
-\item \lstinline|public NaorPinkasIdentity| \lstinline|getIdentity|\lstinline|(int i)|\\
-{@inheritDoc}
-
-
-
-\item \lstinline|public void| \lstinline|revoke|\lstinline|(NaorPinkasIdentity x)|\\
-{@inheritDoc}
-
-
-
-\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(NaorPinkasIdentity id)|\\
-{@inheritDoc}
-
-
-
-\item \lstinline|public NaorPinkasPersonalKey| \lstinline|getPersonalKey|\lstinline|(NaorPinkasIdentity id)|\\
-{@inheritDoc}
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|NaorPinkasPersonalKey|}
-A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
-
-
-\textbf{Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|java.security.PrivateKey|
-\end{itemize}
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasPersonalKey|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public String| \lstinline|getAlgorithm|\lstinline|()|
-
-
-
-
-\item \lstinline|public byte[]| \lstinline|getEncoded|\lstinline|()|
-
-
-
-
-\item \lstinline|public String| \lstinline|getFormat|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|NaorPinkasShare|}
-A share in the Naor-Pinkas broadcast encryption scheme. It consists of a tuple
- $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
- value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$. \\
-
-
-\textbf{Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|cryptocast.crypto.Share<BigInteger>|
-\end{itemize}
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasShare|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public boolean| \lstinline|isComplete|\lstinline|()|\\
-{@inheritDoc}
-
-
-
-\item \lstinline|public byte[]| \lstinline|pack|\lstinline|()|\\
-{@inheritDoc}
-
-
-
-\item \lstinline|public BigInteger| \lstinline|restore|\lstinline|()|\\
-{@inheritDoc}
-
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|NaorPinkasIdentity|}
-An identity in the Naor-Pinkas broadcast encryption scheme \\
-
-
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|private| \lstinline|NaorPinkasIdentity|\lstinline|(BigInteger id)|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|private BigInteger| \lstinline|getId|\lstinline|()|
-
 
 
 

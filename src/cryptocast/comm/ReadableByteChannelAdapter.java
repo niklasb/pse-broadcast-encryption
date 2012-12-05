@@ -1,6 +1,7 @@
 package cryptocast.comm;
 
-import java.nio.ReadableByteChannel;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
 
 /**
  * Adapter to use a ReadableByteChannel (for example, a socket instance) as an InChannel.
@@ -12,6 +13,10 @@ public class ReadableByteChannelAdapter implements InChannel {
      */
     public ReadableByteChannelAdapter(ReadableByteChannel inner) { }
 
-    /** {@inheritDoc} */
+    /**
+     * Receives data.
+     * @param size maximum amount of bytes to read
+     * @return the received data
+     */
     public ByteBuffer recv(int size) { return null; }
 }

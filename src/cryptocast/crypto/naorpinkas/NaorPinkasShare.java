@@ -9,11 +9,20 @@ import java.math.BigInteger;
  * value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$.
  */
 public class NaorPinkasShare implements Share<BigInteger> {
-    /** {@inheritDoc} */
+    /**
+     * @return whether the share is complete and can be used to restore
+     * the value.
+     */
     public boolean isComplete() { return false; }
-    /** {@inheritDoc} */
+    /**
+     * @return A binary representation of the share
+     */
     public byte[] pack() { return null; }
-    /** {@inheritDoc} */
+    /**
+     * Restore the value represented by this share.
+     * @throws InsufficientInformationException if the share is incomplete
+     * @return The restored value
+     */
     public BigInteger restore() throws InsufficientInformationException { return null; }
 }
 

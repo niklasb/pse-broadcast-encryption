@@ -5,17 +5,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
-/** Common base class for command line programs. */
+/**
+ * A simple framework for command line programs.
+ */
 public abstract class CommandLineInterface {
-    /** Signals the exit of the application. */
+    /**
+     * Signals the exit of the application.
+     */
     protected class Exit extends Throwable {
         private int status;
-        /** Initializes a new Exit instance
+        /**
+         * Initializes a new Exit instance
          * @param status The exit code
          */
         public Exit(int status) { this.status = status; }
 
-        /** @return the exit code */
+        /**
+         * @return the exit code
+         */
         public int getStatus() { return status; }
 
         private static final long serialVersionUID = 1;
@@ -26,7 +33,8 @@ public abstract class CommandLineInterface {
     protected PrintStream out;
     protected PrintStream err;
 
-    /** Initializes a new Cli instance
+    /**
+     * Initializes a new CLI instance
      * @param in The stream for program input
      * @param out The stream for program output
      * @param err The stream for error output
@@ -37,7 +45,8 @@ public abstract class CommandLineInterface {
         this.err = err;
     }
 
-    /** Runs the application.
+    /**
+     * Runs the application.
      * @param args The command line arguments
      * @return The exit code
      */
@@ -50,34 +59,40 @@ public abstract class CommandLineInterface {
         }
     }
 
-    /** The main program logic (must be overridden by subclasses)
+    /**
+     * The main program logic (must be overridden by subclasses)
      * @param args The command line arguments
      * @throws Exit if the program finishes early
      */
     protected abstract void start(String[] args) throws Exit;
 
-    /** Prints a string to the output stream
+    /**
+     * Prints a string to the output stream
      * @param format The string to print (printf format string)
      * @param args The printf arguments
      */
     protected void printf(String format, Object... args) { out.printf(format, args); }
 
-    /** Prints a string to the output stream
+    /**
+     * Prints a string to the output stream
      * @param str The string to print
      */
     protected void print(String str) { out.print(str); }
 
-    /** Prints a string to the output stream after appending a newline
+    /**
+     * Prints a string to the output stream after appending a newline
      * @param str The string to print
      */
     protected void println(String str) { out.println(str); }
 
-    /** @return the string format to use for writing error messages to the
+    /**
+     * @return the string format to use for writing error messages to the
      * screen.
      */
     protected String getErrorFormat() { return "[!] %s"; }
 
-    /** Prints an error and exits
+    /**
+     * Prints an error and exits
      * @param format The error message (printf format string)
      * @param args The printf arguments
      * @throws Exit with an exit code of 2
@@ -87,7 +102,8 @@ public abstract class CommandLineInterface {
         exit(2);
     }
 
-    /** Exits the application
+    /**
+     * Exits the application
      * @param status The exit code
      * @throws Exit with the given exit code
      */
@@ -95,17 +111,23 @@ public abstract class CommandLineInterface {
         throw new Exit(status);
     }
 
-    /** Prints usage information */
+    /**
+     * Prints usage information
+     */
     protected void usage() {
         err.println("Usage: " + getBasicUsage());
         printAdditionalUsage();
     }
 
-    /** @return basic usage information for the program (should be overridden) */
+    /**
+     * @return basic usage information for the program (should be overridden)
+     */
     protected String getBasicUsage() {
         return "java [program] [arguments]";
     }
 
-    /** Prints additional usage information (may be overridden) */
+    /**
+     * Prints additional usage information (may be overridden)
+     */
     protected void printAdditionalUsage() { }
 }
