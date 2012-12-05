@@ -1,26 +1,27 @@
 package cryptocast.server;
 
 import java.io.File;
-
-import cryptocast.crypto.BroadcastEncryptionServer;
+import cryptocast.comm.InChannel;
 
 
 /** Deals with user-interactions and therefore changes data in Model if necessary.
  * @param <ID> The type of the user identities
  */
 public class Controller<ID> {
+
     private ServerData data;
     private Shell shell;
-    private BroadcastEncryptionServer<ID> encServer;
+    private InChannel inChannel;
     
     /**
      * Initializes a new controller with the given arguments.
      * @param data The data administrated by this controller.
      * @param shell The operator interface from which this controller gets its input.
-     * @param encServer The server to which the data is send.
+     * @param inChannel The channel to which the data is send.
      */
-    public Controller(ServerData data, Shell shell, BroadcastEncryptionServer<ID> encServer) {
+    public Controller(ServerData data, Shell shell, InChannel inChannel) {
         super();
+        this.inChannel = inChannel;
         this.data = data;
         this.shell = shell;
     }
