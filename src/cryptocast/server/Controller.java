@@ -1,7 +1,7 @@
 package cryptocast.server;
 
 import java.io.File;
-import cryptocast.comm.InChannel;
+import cryptocast.comm.OutChannel;
 
 
 /** Deals with user-interactions and therefore changes data in Model if necessary.
@@ -11,7 +11,7 @@ public class Controller<ID> {
 
     private ServerData data;
     private Shell shell;
-    private InChannel inChannel;
+    private OutChannel outChannel;
     
     /**
      * Initializes a new controller with the given arguments.
@@ -19,9 +19,9 @@ public class Controller<ID> {
      * @param shell The operator interface from which this controller gets its input.
      * @param inChannel The channel to which the data is send.
      */
-    public Controller(ServerData data, Shell shell, InChannel inChannel) {
+    public Controller(ServerData data, Shell shell, OutChannel outChannel) {
         super();
-        this.inChannel = inChannel;
+        this.outChannel = outChannel;
         this.data = data;
         this.shell = shell;
     }
