@@ -2,6 +2,8 @@ package cryptocast.client;
 
 import java.io.File;
 import java.nio.ByteBuffer;
+
+import android.view.View;
 import cryptocast.comm.InChannel;
 
  /**
@@ -14,9 +16,9 @@ import cryptocast.comm.InChannel;
 public class ServerLoginActivity {
     /**
      * Connects to server
-     * @param serverAddress the server address
+     * @param view the view(android activity) from which this method was called.
      */
-    public void connectToServer(String serverAddress) {
+    public void connectToServer(View view) {
     }
 
     /**
