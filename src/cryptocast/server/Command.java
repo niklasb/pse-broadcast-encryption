@@ -6,9 +6,11 @@ import java.util.Map;
  * This enum represents the commands available in the
  */
 public enum Command {
-    ADD_USER    ("addUser",       "addUser <name>",
+    ADD_USER    ("addUser",
+                     "addUser <name>",
                      "adds a new user to the group of recipients"),
-    REVOKE_USER ("revokeUser",    "revokeUser <name>",
+    REVOKE_USER ("revokeUser",
+                     "revokeUser <name>",
                      "revokes a user"),
     ;
 
