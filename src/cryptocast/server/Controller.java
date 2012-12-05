@@ -17,7 +17,7 @@ public class Controller<ID> {
      * Initializes a new controller with the given arguments.
      * @param data The data administrated by this controller.
      * @param shell The operator interface from which this controller gets its input.
-     * @param inChannel The channel to which the data is send.
+     * @param outChannel The channel to which the data is send.
      */
     public Controller(ServerData data, Shell shell, OutChannel outChannel) {
         super();

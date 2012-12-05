@@ -10,7 +10,7 @@ public final class Command {
     protected static final Command[] COMMANDS = 
             { new Command("addUser", "addUser <name>", "addUser 'name' tries to add a user to the stream", "")};
     
-    //argument description? syntax
+    //argument description?
     private String cmd;
     private String syntax;
     private String shortDescription;
