@@ -3,7 +3,7 @@ package cryptocast.server;
 import java.util.Map;
 
 /**
- * This enum represents the commands available in the
+ * This enum represents the commands available in the shell
  */
 public enum Command {
     ADD_USER    ("addUser",
