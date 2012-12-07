@@ -1,10 +1,7 @@
 package cryptocast.client;
 
-import java.io.File;
-import java.nio.ByteBuffer;
+import android.support.v4.app.FragmentActivity;
 
-import android.view.View;
-import cryptocast.comm.InChannel;
 
  /**
  * This class represents the activity to connect to the server.
@@ -13,10 +10,10 @@ import cryptocast.comm.InChannel;
  * data stream the {@link StreamViewerActivity} is started to process the
  * stream and show its contents.
  */
-public class ServerLoginActivity {
+public class ServerLoginActivity extends FragmentActivity {
     /**
      * Connects to server
-     * @param view the view(android activity) from which this method was called.
+     * @param view The view from which this method was called.
      */
     public void connectToServer(View view) {
     }

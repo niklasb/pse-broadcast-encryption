@@ -1,12 +1,13 @@
 package cryptocast.client;
 
+import android.support.v4.app.FragmentActivity;
 import cryptocast.comm.InChannel;
 
 /**
  * This activity is responsible for decrypting the received data
  * stream and viewing it.
  */
-public class StreamViewerActivity {
+public class StreamViewerActivity extends FragmentActivity {
     /**
      * Initializes a viewer
      * @param inputStream the data stream
