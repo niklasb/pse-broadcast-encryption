@@ -13,11 +13,12 @@ public enum Command {
                      "revokeUser <name>",
                      "revokes a user"),
     ;
-
-    public static Map<String, Command> commands;
+    
+        public static Map<String, Command> commands;
     static {
-        for (Command cmd : Command.class.getEnumConstants())
-            commands.put(cmd.getName(), cmd);
+        for (Command cmd : Command.class.getEnumConstants()) {
+            commands.put(cmd.getName(), cmd);           
+        }
     }
 
     private String name;

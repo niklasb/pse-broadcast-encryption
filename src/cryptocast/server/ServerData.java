@@ -22,20 +22,20 @@ public class ServerData<ID> implements Serializable {
      * @param name The user's name
      * @return The new user if he has been added successfully, else absent is returned.
      */
-    public Optional<User> createNewUser(String name) { return null; }
+    public Optional<User<ID>> createNewUser(String name) { return null; }
 
     /**
      * Retrieves a user by name
      * @param name The user's name
      * @return A user instance, if it was found, or absent otherwise
      */
-    public Optional<User> getUserByName(String name) { return null; }
+    public Optional<User<ID>> getUserByName(String name) { return null; }
 
     /**
      * Retrieves a user's personal key
      * @param user The user object
      * @return The private key
      */
-    public Optional<PrivateKey> getPersonalKey(User user) { return null; }  
+    public Optional<PrivateKey> getPersonalKey(User<ID> user) { return null; }  
     
 }

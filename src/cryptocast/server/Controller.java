@@ -9,8 +9,8 @@ import cryptocast.comm.OutChannel;
  */
 public class Controller<ID> {
 
-    private ServerData data;
-    private Shell shell;
+    private ServerData<ID> data;
+    private Shell<ID> shell;
     private OutChannel outChannel;
     
     /**
@@ -19,7 +19,7 @@ public class Controller<ID> {
      * @param shell The operator interface from which this controller gets its input.
      * @param outChannel The channel to which the data is send.
      */
-    public Controller(ServerData data, Shell shell, OutChannel outChannel) {
+    public Controller(ServerData<ID> data, Shell<ID> shell, OutChannel outChannel) {
         super();
         this.outChannel = outChannel;
         this.data = data;
@@ -47,7 +47,7 @@ public class Controller<ID> {
      * Adds a new user and assigns a private key to that user.
      * @param user The user that is added.
      */
-    public void addUser(User user) {
+    public void addUser(User<ID> user) {
         
     }
         
@@ -55,7 +55,7 @@ public class Controller<ID> {
      * Bans a user from the stream by adding it to the list of revoked users.
      * @param user The user that is revoked.
      */
-    public void revokeUser(User user) {
+    public void revokeUser(User<ID> user) {
         
     }
     
@@ -63,7 +63,7 @@ public class Controller<ID> {
      * Authorizes a user to watch the stream by removing it from the list of revoked users.
      * @param user The user that is unbanned.
      */
-    public void authorizeUser(User user) {
+    public void authorizeUser(User<ID> user) {
         
     }
 
@@ -92,7 +92,7 @@ public class Controller<ID> {
      * Prints information about the data which is currently sent.
      */
     public void showInfo() {
-        //prints directory, time sending amount of revoked users/registered users...?!
+        //prints directory, time sending amount of revoked users/registered users...
     }
 
 }

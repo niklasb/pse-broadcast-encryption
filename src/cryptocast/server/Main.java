@@ -3,7 +3,10 @@ package cryptocast.server;
 /**
  * The main method to start the server
  */
-public class Main {
+public final class Main {
+    
+    private Main() { }
+    
     /**
      * @param args command line arguments
      */

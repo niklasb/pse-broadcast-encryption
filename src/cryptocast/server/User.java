@@ -9,8 +9,9 @@ class User<ID> {
     private String name;
     private ID id;
 
-    /** Creates a User with the given name.
-     * @param name name of the user
+    /** Creates a User with the given attributes.
+     * @param name The name of this user.
+     * @param id The ID of this user.
      */
     public User(String name, ID id) {
         this.name = name;
