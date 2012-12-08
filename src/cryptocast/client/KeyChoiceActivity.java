@@ -3,6 +3,7 @@ package cryptocast.client;
 import java.io.File;
 
 import cryptocast.client.fileChooser.FileChooser;
+import cryptocast.client.fileChooser.ListElement;
 
 import android.support.v4.app.FragmentActivity;
 
@@ -13,12 +14,9 @@ import android.support.v4.app.FragmentActivity;
  */
 public class KeyChoiceActivity extends FileChooser {
     private File chosenFile;
-
-    /**
-     * Chooses a key file
-     * @param view The view from which this method was called.
-     */
-    public void chooseKeyFile(View view) {
-        //chosenFile = file;
+    
+    @Override
+    private void onFileClick(ListElement o) {
+        
     }
 }

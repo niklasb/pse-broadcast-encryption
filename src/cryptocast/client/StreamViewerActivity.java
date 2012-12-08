@@ -12,7 +12,13 @@ public class StreamViewerActivity extends FragmentActivity {
      * Initializes a viewer
      * @param inputStream the data stream
      */
-    public StreamViewerActivity(InChannel inputStream) {}
+    public StreamViewerActivity(InChannel inputStream) { }
+    
+    //handles the bottom menu button clicks.
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        
+    }
 
     /**
      * Toggle playback play/pause. Will pause if in play mode and continue if

@@ -10,12 +10,18 @@ import android.support.v4.app.FragmentActivity;
  * data stream the {@link StreamViewerActivity} is started to process the
  * stream and show its contents.
  */
-public class ServerLoginActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity {
     /**
      * Connects to server
      * @param view The view from which this method was called.
      */
     public void connectToServer(View view) {
+    }
+    
+    //handles the bottom menu button clicks.
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        
     }
 
     /**
