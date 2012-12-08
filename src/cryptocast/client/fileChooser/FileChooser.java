@@ -1,5 +1,8 @@
 package cryptocast.client.fileChooser;
 
+/**
+ * This class allows you to browse the files and folders of the SD card an choose one file.
+ */
 public abstract class FileChooser extends ListActivity {
 
     @Override
