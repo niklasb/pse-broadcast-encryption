@@ -1,0 +1,29 @@
+\begin{illustration}{3-tier architecture of the server}
+
+\tikzset{
+  rect/.style={draw,fill=green!15,minimum height=0.8cm,rectangle},
+  box/.style={
+    draw=blue!50!white,
+    line width=1pt,
+    dash pattern=on 1pt off 4pt on 6pt off 4pt,
+    inner sep=4mm, rectangle, rounded corners
+  },
+}
+
+\begin{tikzpicture}[auto,node distance=1.5cm]
+
+\node[rect,minimum width=6cm](shell) {\textbf{Shell}};
+\node[rect,minimum width=3cm,xshift=-1.5cm,below of=shell](control) {Controller};;
+\node[rect,minimum width=3cm,below of=control](data) {ServerData};
+\node[rect,minimum width=2cm,xshift=2cm, right of=data](cmd) {Command};
+
+\draw [<->]  (shell.south) --  (control.north)
+;
+\draw [->]  (shell.south) --  (cmd.north)
+  ;
+\draw [->]  (control.south) --  (data.north)
+  ;
+
+\end{tikzpicture}
+
+\end{illustration}

@@ -11,17 +11,14 @@ public class Controller<ID> {
 
     private ServerData<ID> data;
     private Shell<ID> shell;
-    private OutChannel outChannel;
     
     /**
      * Initializes a new controller with the given arguments.
      * @param data The data administrated by this controller.
      * @param shell The operator interface from which this controller gets its input.
-     * @param outChannel The channel to which the data is send.
      */
-    public Controller(ServerData<ID> data, Shell<ID> shell, OutChannel outChannel) {
+    public Controller(ServerData<ID> data, Shell<ID> shell) {
         super();
-        this.outChannel = outChannel;
         this.data = data;
         this.shell = shell;
     }
@@ -45,25 +42,25 @@ public class Controller<ID> {
         
     /**
      * Adds a new user and assigns a private key to that user.
-     * @param user The user that is added.
+     * @param name The name of the user who is added.
      */
-    public void addUser(User<ID> user) {
+    public void addUser(String name) {
         
     }
         
     /**
      * Bans a user from the stream by adding it to the list of revoked users.
-     * @param user The user that is revoked.
+     * @param name The name of the user that is revoked.
      */
-    public void revokeUser(User<ID> user) {
+    public void revokeUser(String name) {
         
     }
     
     /**
      * Authorizes a user to watch the stream by removing it from the list of revoked users.
-     * @param user The user that is unbanned.
+     * @param name The name of the user who is unbanned.
      */
-    public void authorizeUser(User<ID> user) {
+    public void authorizeUser(String name) {
         
     }
 
