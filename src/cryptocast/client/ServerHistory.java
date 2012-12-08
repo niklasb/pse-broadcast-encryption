@@ -1,6 +1,7 @@
 package cryptocast.client;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Map;
  * and their corresponding key files.
  *
  */
-public class ServerHistory {
+public class ServerHistory implements Serializable {
     /**
      * A map for servers and their corresponding key files
      */
@@ -24,5 +25,5 @@ public class ServerHistory {
      * @param hostname The server's hostname
      * @param keyfile The keyfile the user has chosen for this server
      */
-    public void addServer(String hostname, File keyfile) {}
+    public void addServer(String hostname, File keyfile) { }
 }
