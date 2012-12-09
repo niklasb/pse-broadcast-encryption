@@ -1,5 +1,7 @@
 package cryptocast.comm;
 
+import java.nio.ByteBuffer;
+
 /**
  * Wrapper around an InChannel that counts incoming bytes
  */

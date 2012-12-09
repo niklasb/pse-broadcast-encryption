@@ -1,17 +1,19 @@
 package cryptocast.crypto;
 
+import java.util.Collection;
+import com.google.common.base.Optional;
+
 /**
- * Implements a strategy to merge multiple Shares into a single share with
- * more information.
+ * Implements a strategy to restore a secret from a number of shares.
  * @param <S> The type of the secret
  * @param <T> The type of the shares
  */
-public interface ShareCombinator<S, T extends Share<S>> {
+public interface ShareCombinator<S, T> {
   /**
-   * Combines two shares.
-   * @param a The first share
-   * @param b The second share
-   * @return a new share containing the information from both a and b.
+   * Restores a secret from several shares.
+   * @param share The shares
+   * @return The reconstructed secret or absent if the information represented
+   * by the given shares is insufficient to restore it.
    */
-  public T combine(T a, T b);
+  public Optional<S> restore(Collection<T> shares);
 }
