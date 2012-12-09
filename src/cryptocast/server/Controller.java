@@ -29,7 +29,7 @@ public class Controller<ID> {
     public void init() {
         
     }
-	
+
     /**
      * Tries to start a new group to which data can be sent by generating private keys.
      * @param amtRevocable The amount of user which can be revoked.

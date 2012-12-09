@@ -36,6 +36,5 @@ public class ServerData<ID> implements Serializable {
      * @param user The user object
      * @return The private key
      */
-    public Optional<PrivateKey> getPersonalKey(User<ID> user) { return null; }  
-    
+    public Optional<PrivateKey> getPersonalKey(User<ID> user) { return null; }
 }
