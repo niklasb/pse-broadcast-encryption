@@ -10,9 +10,7 @@ import java.util.Map;
  *
  */
 public class ServerHistory implements Serializable {
-    /**
-     * A map for servers and their corresponding key files
-     */
+    // A map for servers and their corresponding key files
     private Map<String, File> servers;
 
     /**

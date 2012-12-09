@@ -10,9 +10,8 @@ import android.support.v4.app.DialogFragment;
  * This class is used to pop up an error message.
  */
 public class ErrorFragment extends DialogFragment {
-    
     private String message;
-    
+
     /**
      * Creates a new ErrorFragment which can be used to print the given error message.
      * @param message Error message describing the error which occured before this fragment pops up.
@@ -21,7 +20,7 @@ public class ErrorFragment extends DialogFragment {
         super();
         this.message = message;
     }
-    
+
 //    @Override
 //    public Dialog onCreateDialog(Bundle savedInstanceState) {
 //        // Use the Builder class for convenient dialog construction
@@ -35,5 +34,4 @@ public class ErrorFragment extends DialogFragment {
 //        // Create the AlertDialog object and return it
 //        return builder.create();
 //    }
-
 }

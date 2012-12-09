@@ -2,7 +2,6 @@ package cryptocast.client;
 
 import android.support.v4.app.FragmentActivity;
 
-
  /**
  * This class represents the activity to connect to the server.
  * Before connecting this activity start the {@link KeyChoiceActivity} to
@@ -17,11 +16,12 @@ public class MainActivity extends FragmentActivity {
      */
     public void connectToServer(View view) {
     }
-    
-    //handles the bottom menu button clicks.
+
+    /** Handles a click on the main menu.
+     * @param item The clicked item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        
     }
 
     /**

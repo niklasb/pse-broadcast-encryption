@@ -13,11 +13,12 @@ public class StreamViewerActivity extends FragmentActivity {
      * @param inputStream the data stream
      */
     public StreamViewerActivity(InChannel inputStream) { }
-    
-    //handles the bottom menu button clicks.
+
+    /** Handles a click on the bottom menu.
+     * @param item The clicked menu item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        
     }
 
     /**
