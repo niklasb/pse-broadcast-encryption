@@ -63,9 +63,11 @@ The server will be able to register new users and revoke specific persons if the
 The client is an app on an Android smart phone that is used for receiving, decoding and displaying the data. 
 The transport between them will be implemented with TCP but that can be replaced by another transport protocoll.
 
-The implemented encryption algorithm will be the the one by Moni Naor and Benny Pinkas, but later every other fitting the
-interface can be used. This is important because there might be another more effective algorithm 
+The implemented encryption algorithm will be the one by Moni Naor and Benny Pinkas, but later every other fitting the
+interface can be used. This is important because there might be another more effective algorithm that can replace the implemented one.
 
+In our design we will therefore focuse on modularity and encapsulation to enable substitution for parts of the programm without having to 
+change a lot of their enviroment.
 
 \section{Structure}
 \subsection{Architecture}
@@ -94,6 +96,7 @@ Every error is displayed by using a simple pop up window defined by the class Er
 %\bibliographystyle{plain}
 
 \section{GUI design}
+The GUI should be user-friendly and intuitional. Therefore its design is very minimalistic, foccusing on its main purpose. 
 The following images show prototypes of the graphical user interface.
 
 \begin{illustration}{The main screen which is shown on program start. (The empty space is used for the logo later on))}
