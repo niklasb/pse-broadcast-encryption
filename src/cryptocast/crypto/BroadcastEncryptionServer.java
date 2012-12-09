@@ -2,7 +2,6 @@ package cryptocast.crypto;
 
 import cryptocast.comm.*;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.util.Collection;
 
 /**
@@ -31,7 +30,7 @@ public class BroadcastEncryptionServer<ID> implements OutChannel, Runnable {
      * on the fly.
      * @param data The data to send
      */
-    public void send(ByteBuffer data) {}
+    public void send(byte[] data) {}
 
     /**
      * Revoke a user.

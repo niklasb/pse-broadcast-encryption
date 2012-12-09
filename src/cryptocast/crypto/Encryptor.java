@@ -1,7 +1,5 @@
 package cryptocast.crypto;
 
-import java.nio.ByteBuffer;
-
 /**
  * A strategy to encrypt a single secret
  * @param <S> the type of the secret
@@ -12,5 +10,5 @@ public interface Encryptor<S> {
      * @param secret the secret
      * @return The cipher text
      */
-    public ByteBuffer encrypt(S secret);
+    public byte[] encrypt(S secret);
 }

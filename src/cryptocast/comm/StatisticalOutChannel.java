@@ -1,7 +1,5 @@
 package cryptocast.comm;
 
-import java.nio.ByteBuffer;
-
 /**
  * Wrapper around an OutChannel that counts outgoing bytes
  */
@@ -16,7 +14,7 @@ public class StatisticalOutChannel implements OutChannel {
      * Sends the given data.
      * @param data the data to send
      */
-    public void send(ByteBuffer data) {}
+    public void send(byte[] data) {}
 
     /**
      * @return the number of sent bytes

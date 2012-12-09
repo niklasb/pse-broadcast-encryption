@@ -1,7 +1,5 @@
 package cryptocast.comm;
 
-import java.nio.ByteBuffer;
-
 /**
  * Wraps a byte-based InChannel and allows to use it as a message-based
  * channel.
@@ -14,7 +12,7 @@ public class MessageInChannel {
     public MessageInChannel(InChannel inner) { }
    /**
     * Receives a message via the channel.
-    * @return the received bytes
+    * @return the received data
     */
-    public ByteBuffer recvMessage() {return null;}
+    public byte[] recvMessage() {return null;}
 }

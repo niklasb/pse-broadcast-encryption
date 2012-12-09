@@ -2,7 +2,6 @@ package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
 import java.io.Serializable;
-import java.nio.ByteBuffer;
 import java.math.BigInteger;
 import java.util.Collection;
 
@@ -21,7 +20,7 @@ public class NaorPinkasServer
      * @param secret the secret
      * @return The cipher text
      */
-    public ByteBuffer encrypt(BigInteger secret) {return null;}
+    public byte[] encrypt(BigInteger secret) {return null;}
     /**
      * @param i An index
      * @return The identity with the given index

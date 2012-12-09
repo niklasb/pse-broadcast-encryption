@@ -1,6 +1,5 @@
 package cryptocast.comm;
 
-import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
 
 /**
@@ -17,5 +16,5 @@ public class WritableByteChannelAdapter implements OutChannel {
      * Sends the given data.
      * @param data the data to send
      */
-    public void send(ByteBuffer data) { }
+    public void send(byte[] data) { }
 }

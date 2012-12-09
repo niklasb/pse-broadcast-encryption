@@ -1,7 +1,5 @@
 package cryptocast.comm;
 
-import java.nio.ByteBuffer;
-
 /**
  * Multiplexes several OutChannels so that they can be used as a single
  * destination.
@@ -18,5 +16,9 @@ public class MultiOutChannel implements OutChannel {
      */
     public void removeChannel(OutChannel channel) { }
 
-    public void send(ByteBuffer data) { }
+    /**
+     * Sends the given data.
+     * @param data the data to send
+     */
+    public void send(byte[] data) { }
 }

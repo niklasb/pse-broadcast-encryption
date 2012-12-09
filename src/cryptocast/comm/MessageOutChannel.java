@@ -1,7 +1,5 @@
 package cryptocast.comm;
 
-import java.nio.ByteBuffer;
-
 /**
  * Wraps a byte-based OutChannel and allows to use it as a message-based
  * channel.
@@ -17,5 +15,5 @@ public class MessageOutChannel {
      * Sends the given message via the channel.
      * @param data the data to send
      */
-    public void sendMessage(ByteBuffer data) { }
+    public void sendMessage(byte[] data) { }
 }

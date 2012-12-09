@@ -2,7 +2,6 @@ package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 
 /**
  * A client in the Naor-Pinkas broadcast encryption scheme.
@@ -19,5 +18,5 @@ public class NaorPinkasClient implements Decryptor<BigInteger> {
       * @param cipher The encrypted secret
       * @return The decrypted secret
       */
-    public BigInteger decrypt(ByteBuffer cipher) { return null; }
+    public BigInteger decrypt(byte[] cipher) { return null; }
 }

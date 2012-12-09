@@ -2,7 +2,6 @@ package cryptocast.crypto;
 
 import cryptocast.comm.*;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.util.Collection;
 
 /**
@@ -20,6 +19,7 @@ public class BroadcastEncryptionClient implements InChannel {
     /**
      * Receive data from the channel. It is decrypted on the fly.
      * @param size amount of bytes to receive
+     * @param buffer the target buffer
      */
-    public ByteBuffer recv(int size) { return null; }
+    public void recv(int size, byte[] buffer) { }
 }

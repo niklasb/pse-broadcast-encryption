@@ -1,6 +1,5 @@
 package cryptocast.comm;
 
-import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
 /**
@@ -16,7 +15,7 @@ public class ReadableByteChannelAdapter implements InChannel {
     /**
      * Receives data.
      * @param size maximum amount of bytes to read
-     * @return the received data
+     * @param buffer the target buffer
      */
-    public ByteBuffer recv(int size) { return null; }
+    public void recv(int size, byte[] buffer) {}
 }

@@ -1,7 +1,5 @@
 package cryptocast.comm;
 
-import java.nio.ByteBuffer;
-
 /**
  * Wrapper around an InChannel that counts incoming bytes
  */
@@ -15,9 +13,9 @@ public class StatisticalInChannel implements InChannel {
     /**
      * Receives data.
      * @param size maximum amount of bytes to read
-     * @return the received data
+     * @param buffer the target buffer
      */
-    public ByteBuffer recv(int size) {return null;}
+    public void recv(int size, byte[] buffer) {}
 
     /**
      * @return the number of received bytes

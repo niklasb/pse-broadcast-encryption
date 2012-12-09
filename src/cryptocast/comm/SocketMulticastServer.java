@@ -1,7 +1,6 @@
 package cryptocast.comm;
 
 import java.net.ServerSocket;
-import java.nio.ByteBuffer;
 
 /**
  * This class implements channel-based communication via TCP.
@@ -17,5 +16,5 @@ class SocketMulticastServer implements OutChannel  {
      * Sends bytes via the channel.
      * @param data the data to send
      */
-    public void send(ByteBuffer data) { }
+    public void send(byte[] data) { }
 }
