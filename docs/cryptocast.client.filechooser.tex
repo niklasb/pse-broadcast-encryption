@@ -52,7 +52,7 @@ An adapter between the ListElements and the view showing them. \\
 \umlclass[]{FileArrayAdapter}{
 
 }{
-+ getItem() : ListElement \\ + getView() : View
++ getItem(position : int) : ListElement \\ + getView(position : int, convertView : View, parent : ViewGroup) : View
 }
 \end{tikzpicture}
 
@@ -106,7 +106,7 @@ A UI element that allows the user to browse the files and folders of the SD card
 \umlclass[type=abstract]{FileChooser}{
 
 }{
-\umlvirt{+ onCreate()} \\ \umlvirt{\# onListItemClick()} \\ \umlvirt{-- fill()} \\ \umlvirt{-- onFileClick()}
++ onCreate(savedInstanceState : Bundle) \\ \# onListItemClick(lst : ListView, view : View, position : int, id : long) \\ -- fill(f : File) \\ \umlvirt{-- onFileClick(o : ListElement)}
 }
 \end{tikzpicture}
 

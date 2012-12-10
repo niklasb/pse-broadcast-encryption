@@ -83,7 +83,12 @@ def render_method(meth):
                     sep="\\\\" if description.strip() else "",
                     )
 
+def render_tikz_param(param, varargs=False):
+    dim = "..." if varargs else ""
+    return "%s : %s%s" % (param.find("name").text, transform_type(param.find("type")), dim)
+
 def render_tikz_method(meth, abstract=False):
+    varargs = parse_bool(meth.find("isVarArgs").text)
     rettype = ""
     res = meth.find("result")
     if res != None:
@@ -91,8 +96,10 @@ def render_tikz_method(meth, abstract=False):
         if typ != "void":
             rettype = " : " + typ
     access = {"public":"+", "protected":"\\#", "private":"--"}[meth.find("scope").text]
-    params = ""
-    txt = "%s %s(%s)%s" % (access, meth.find("name").text, params, rettype)
+    params = list(meth.iter("parameter"))
+    paramstxt = ", ".join(render_tikz_param(params[i], varargs and i == len(params)-1)
+                          for i in xrange(len(params)))
+    txt = "%s %s(%s)%s" % (access, meth.find("name").text, paramstxt, rettype)
     if parse_bool(meth.find("isStatic").text):
         txt = "\\umlstatic{%s}"%txt
     if parse_bool(meth.find("isAbstract").text) or abstract:
@@ -100,11 +107,13 @@ def render_tikz_method(meth, abstract=False):
     return txt
 
 def render_class_diagram(cls):
-    abstr = parse_bool(text_or(cls.find("isAbstract"), "true"))
+    abstr = cls.find("isAbstract")
+    interface = abstr is None # if this isn't present, cls is an interface
+    isAbstr = parse_bool(text_or(abstr, "true"))
     methodsel = cls.find("methods")
     methods = ""
     if methodsel is not None:
-        methods = " \\\\ ".join(render_tikz_method(m, abstr) for m in methodsel.iter("method"))
+        methods = " \\\\ ".join(render_tikz_method(m, interface) for m in methodsel.iter("method"))
     return dedent("""\
         \\begin{{tikzpicture}}
         \\umlclass[{classparams}]{{{classname}}}{{
@@ -114,7 +123,7 @@ def render_class_diagram(cls):
         }}
         \\end{{tikzpicture}}
         """).format(classname=class_name(cls),
-                    classparams=("type=abstract" if abstr else ""),
+                    classparams=("type=abstract" if isAbstr else ""),
                     fields="",
                     methods=methods,
                     )

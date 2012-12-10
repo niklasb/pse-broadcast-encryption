@@ -45,7 +45,7 @@ The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$ \\
 \umlclass[]{IntegersModuloPrime}{
 
 }{
-+ add() : BigInteger \\ + multiply() : BigInteger \\ + negate() : BigInteger \\ + invert() : BigInteger \\ + zero() : BigInteger \\ + one() : BigInteger \\ + randomElement() : BigInteger
++ add(a : BigInteger, b : BigInteger) : BigInteger \\ + multiply(a : BigInteger, b : BigInteger) : BigInteger \\ + negate(a : BigInteger) : BigInteger \\ + invert(a : BigInteger) : BigInteger \\ + zero() : BigInteger \\ + one() : BigInteger \\ + randomElement() : BigInteger
 }
 \end{tikzpicture}
 
@@ -116,7 +116,7 @@ A polynomial $P$ over a field \\
 \umlclass[]{Polynomial<T>}{
 
 }{
-+ getField() : Field<T> \\ + evaluate() : T \\ + evaluateMulti() : T[] \\ + getCoefficient() : T \\ + getDegree() : int \\ \umlstatic{+ createRandomPolynomial() : Polynomial<T>}
++ getField() : Field<T> \\ + evaluate(x : T) : T \\ + evaluateMulti(xs : T[]) : T[] \\ + getCoefficient(i : int) : T \\ + getDegree() : int \\ \umlstatic{+ createRandomPolynomial(field : Field<T>, degree : int) : Polynomial<T>}
 }
 \end{tikzpicture}
 
@@ -198,7 +198,7 @@ Represents a field over values of type T \\
 \umlclass[type=abstract]{Field<T>}{
 
 }{
-\umlvirt{+ add() : T} \\ \umlvirt{+ multiply() : T} \\ \umlvirt{+ negate() : T} \\ \umlvirt{+ invert() : T} \\ \umlvirt{+ zero() : T} \\ \umlvirt{+ one() : T} \\ \umlvirt{+ randomElement() : T} \\ \umlvirt{+ subtract() : T} \\ \umlvirt{+ divide() : T} \\ \umlvirt{+ pow() : T}
+\umlvirt{+ add(a : T, b : T) : T} \\ \umlvirt{+ multiply(a : T, b : T) : T} \\ \umlvirt{+ negate(a : T) : T} \\ \umlvirt{+ invert(a : T) : T} \\ \umlvirt{+ zero() : T} \\ \umlvirt{+ one() : T} \\ \umlvirt{+ randomElement() : T} \\ + subtract(a : T, b : T) : T \\ + divide(a : T, b : T) : T \\ + pow(a : T, e : int) : T
 }
 \end{tikzpicture}
 
@@ -305,7 +305,7 @@ The server side of a broadcast encryption scheme. \\
 \umlclass[]{BroadcastEncryptionServer<ID>}{
 
 }{
-+ run() \\ + send() \\ + revoke()
++ run() \\ + send(data : byte[]) \\ + revoke(id : ID)
 }
 \end{tikzpicture}
 
@@ -370,7 +370,7 @@ The client side of a broadcast encryption scheme. \\
 \umlclass[]{BroadcastEncryptionClient}{
 
 }{
-+ recv()
++ recv(size : int, buffer : byte[])
 }
 \end{tikzpicture}
 
@@ -416,7 +416,7 @@ A strategy to decrypt a single secret \\
 \umlclass[type=abstract]{Decryptor<S>}{
 
 }{
-\umlvirt{+ decrypt() : S}
+\umlvirt{+ decrypt(cipher : byte[]) : S}
 }
 \end{tikzpicture}
 
@@ -446,7 +446,7 @@ Manages a set of user identites \\
 \umlclass[type=abstract]{BroadcastSchemeUserManager<ID>}{
 
 }{
-\umlvirt{+ getIdentity() : ID} \\ \umlvirt{+ revoke()} \\ \umlvirt{+ isRevoked() : boolean}
+\umlvirt{+ getIdentity(i : int) : ID} \\ \umlvirt{+ revoke(id : ID)} \\ \umlvirt{+ isRevoked(id : ID) : boolean}
 }
 \end{tikzpicture}
 
@@ -492,7 +492,7 @@ A strategy to encrypt a single secret \\
 \umlclass[type=abstract]{Encryptor<S>}{
 
 }{
-\umlvirt{+ encrypt() : byte[]}
+\umlvirt{+ encrypt(secret : S) : byte[]}
 }
 \end{tikzpicture}
 
@@ -522,7 +522,7 @@ Manages the private keys of a set of users. \\
 \umlclass[type=abstract]{BroadcastSchemeKeyManager<ID>}{
 
 }{
-\umlvirt{+ getPersonalKey() : PrivateKey}
+\umlvirt{+ getPersonalKey(id : ID) : PrivateKey}
 }
 \end{tikzpicture}
 
@@ -552,7 +552,7 @@ Implements a strategy to restore a secret from a number of shares. \\
 \umlclass[type=abstract]{ShareCombinator<S, T>}{
 
 }{
-\umlvirt{+ restore() : Optional<S>}
+\umlvirt{+ restore(shares : Collection<T>) : Optional<S>}
 }
 \end{tikzpicture}
 

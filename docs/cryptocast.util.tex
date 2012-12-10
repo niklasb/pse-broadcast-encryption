@@ -6,7 +6,7 @@ A simple framework for command line programs. \\
 \umlclass[type=abstract]{CommandLineInterface}{
 
 }{
-\umlvirt{+ run() : int} \\ \umlvirt{\# start()} \\ \umlvirt{\# printf()} \\ \umlvirt{\# print()} \\ \umlvirt{\# println()} \\ \umlvirt{\# getErrorFormat() : String} \\ \umlvirt{\# fatalError()} \\ \umlvirt{\# exit()} \\ \umlvirt{\# usage()} \\ \umlvirt{\# getBasicUsage() : String} \\ \umlvirt{\# printAdditionalUsage()}
++ run(args : String[]) : int \\ \umlvirt{\# start(args : String[])} \\ \# printf(format : String, args : Object[]...) \\ \# print(str : String) \\ \# println(str : String) \\ \# getErrorFormat() : String \\ \# fatalError(format : String, args : Object[]...) \\ \# exit(status : int) \\ \# usage() \\ \# getBasicUsage() : String \\ \# printAdditionalUsage()
 }
 \end{tikzpicture}
 
@@ -161,7 +161,7 @@ A framework class to implement interactive command-line interfaces. The class im
 \umlclass[type=abstract]{InteractiveCommandLineInterface}{
 
 }{
-\umlvirt{\# start()} \\ \umlvirt{\# mainloop()} \\ \umlvirt{\# performCommand()} \\ \umlvirt{\# error()} \\ \umlvirt{\# getPrompt() : String}
+\# start(args : String[]) \\ \# mainloop() \\ \umlvirt{\# performCommand(cmd : String, args : String[])} \\ \# error(format : String, args : Object[]...) \\ \# getPrompt() : String
 }
 \end{tikzpicture}
 

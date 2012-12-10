@@ -7,7 +7,7 @@ Adapter to use a \lstinline|WritableByteChannel| (for example, a file or socket 
 \umlclass[]{WritableByteChannelAdapter}{
 
 }{
-+ send()
++ send(data : byte[])
 }
 \end{tikzpicture}
 
@@ -51,7 +51,7 @@ Wrapper around an \lstinline|OutChannel| that counts outgoing bytes. \\
 \umlclass[]{StatisticalOutChannel}{
 
 }{
-+ send() \\ + getSentBytes() : int
++ send(data : byte[]) \\ + getSentBytes() : int
 }
 \end{tikzpicture}
 
@@ -100,7 +100,7 @@ This class implements channel-based communication via TCP. \\
 \umlclass[]{SocketMulticastServer}{
 
 }{
-+ send()
++ send(data : byte[])
 }
 \end{tikzpicture}
 
@@ -182,7 +182,7 @@ Wraps a byte-based OutChannel and allows to use it as a message-based
 \umlclass[]{MessageOutChannel}{
 
 }{
-+ sendMessage()
++ sendMessage(data : byte[])
 }
 \end{tikzpicture}
 
@@ -221,7 +221,7 @@ Wrapper around an \lstinline|InChannel| that counts incoming bytes \\
 \umlclass[]{StatisticalInChannel}{
 
 }{
-+ recv() \\ + getReceivedBytes() : int
++ recv(size : int, buffer : byte[]) \\ + getReceivedBytes() : int
 }
 \end{tikzpicture}
 
@@ -272,7 +272,7 @@ Adapter to use a \lstinline|ReadableByteChannel| (for example, a file or socket 
 \umlclass[]{ReadableByteChannelAdapter}{
 
 }{
-+ recv()
++ recv(size : int, buffer : byte[])
 }
 \end{tikzpicture}
 
@@ -318,7 +318,7 @@ Multiplexes several \lstinline|OutChannel|s so that they can be used as a single
 \umlclass[]{MultiOutChannel}{
 
 }{
-+ addChannel() \\ + removeChannel() \\ + send()
++ addChannel(channel : OutChannel) \\ + removeChannel(channel : OutChannel) \\ + send(data : byte[])
 }
 \end{tikzpicture}
 
@@ -375,7 +375,7 @@ A byte-based communication channel from which data can be received. \\
 \umlclass[type=abstract]{InChannel}{
 
 }{
-\umlvirt{+ recv()}
+\umlvirt{+ recv(size : int, buffer : byte[])}
 }
 \end{tikzpicture}
 
@@ -403,7 +403,7 @@ A byte-based communication channel where data can be sent to. \\
 \umlclass[type=abstract]{OutChannel}{
 
 }{
-\umlvirt{+ send()}
+\umlvirt{+ send(data : byte[])}
 }
 \end{tikzpicture}
 

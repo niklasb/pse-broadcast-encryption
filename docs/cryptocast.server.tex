@@ -6,7 +6,7 @@ Deals with user-interactions and therefore changes data in Model if necessary. \
 \umlclass[]{Controller<ID>}{
 
 }{
-+ init() \\ + keyGen() \\ + addUser() \\ + revokeUser() \\ + authorizeUser() \\ + stream() \\ + showStatistics() \\ + showUsers() \\ + showInfo()
++ init() \\ + keyGen(amtRevocable : int, amtPrivateKeys : int, keyDir : File) \\ + addUser(name : String) \\ + revokeUser(name : String) \\ + authorizeUser(name : String) \\ + stream(data : InputStream) \\ + showStatistics() \\ + showUsers() \\ + showInfo()
 }
 \end{tikzpicture}
 
@@ -148,7 +148,7 @@ Gets the arguments from the command line and deals with illegal input. \\
 \umlclass[]{Shell<ID>}{
 
 }{
-\# performCommand() \\ -- help()
+\# performCommand(cmd : String, args : String[]) \\ -- help()
 }
 \end{tikzpicture}
 
@@ -199,7 +199,7 @@ Contains the data which is managed by the controller and presented by the view. 
 \umlclass[]{ServerData<ID>}{
 
 }{
-+ createNewUser() : Optional<User<ID>, ID> \\ + getUserByName() : Optional<User<ID>, ID> \\ + getPersonalKey() : Optional<PrivateKey>
++ createNewUser(name : String) : Optional<User<ID>, ID> \\ + getUserByName(name : String) : Optional<User<ID>, ID> \\ + getPersonalKey(user : User<ID>) : Optional<PrivateKey>
 }
 \end{tikzpicture}
 
@@ -259,7 +259,7 @@ The main method to start the server \\
 \umlclass[]{Main}{
 
 }{
-\umlstatic{+ main()}
+\umlstatic{+ main(args : String[])}
 }
 \end{tikzpicture}
 

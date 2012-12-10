@@ -10,7 +10,7 @@ This activity is responsible for decrypting the received data
 \umlclass[]{StreamViewerActivity}{
 
 }{
-+ onOptionsItemSelected() : boolean \\ + togglePlay() \\ + isPlaying() : boolean
++ onOptionsItemSelected(item : MenuItem) : boolean \\ + togglePlay() \\ + isPlaying() : boolean
 }
 \end{tikzpicture}
 
@@ -66,7 +66,7 @@ This class is responsible for saving recently selected servers
 \umlclass[]{ServerHistory}{
 
 }{
-+ getServers() : Map<String, File> \\ + addServer()
++ getServers() : Map<String, File> \\ + addServer(hostname : String, keyfile : File)
 }
 \end{tikzpicture}
 
@@ -117,7 +117,7 @@ This class represents the activity to connect to the server.
 \umlclass[]{MainActivity}{
 
 }{
-+ connectToServer() \\ + onOptionsItemSelected() : boolean
++ connectToServer(view : View) \\ + onOptionsItemSelected(item : MenuItem) : boolean
 }
 \end{tikzpicture}
 
@@ -166,7 +166,7 @@ The option screen. \\
 \umlclass[]{OptionsActivity}{
 
 }{
-\# onCreate() \\ + onCreateOptionsMenu() : boolean
+\# onCreate(savedInstanceState : Bundle) \\ + onCreateOptionsMenu(menu : Menu) : boolean
 }
 \end{tikzpicture}
 
@@ -216,7 +216,7 @@ This activity lets a user choose an encryption key file
 \umlclass[]{KeyChoiceActivity}{
 
 }{
-+ getChosenFile() : Optional<File> \\ + onFileClick()
++ getChosenFile() : Optional<File> \\ + onFileClick(item : ListElement)
 }
 \end{tikzpicture}
 

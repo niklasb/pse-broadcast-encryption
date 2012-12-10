@@ -6,7 +6,7 @@ A client in the Naor-Pinkas broadcast encryption scheme. \\
 \umlclass[]{NaorPinkasClient}{
 
 }{
-+ decrypt() : BigInteger
++ decrypt(cipher : byte[]) : BigInteger
 }
 \end{tikzpicture}
 
@@ -52,7 +52,7 @@ A server in the Naor-Pinkas broadcast encryption scheme. This server is special 
 \umlclass[]{NaorPinkasServer}{
 
 }{
-+ encrypt() : byte[] \\ + getIdentity() : NaorPinkasIdentity \\ + revoke() \\ + isRevoked() : boolean \\ + getPersonalKey() : NaorPinkasPersonalKey
++ encrypt(secret : BigInteger) : byte[] \\ + getIdentity(i : int) : NaorPinkasIdentity \\ + revoke(x : NaorPinkasIdentity) \\ + isRevoked(id : NaorPinkasIdentity) : boolean \\ + getPersonalKey(id : NaorPinkasIdentity) : NaorPinkasPersonalKey
 }
 \end{tikzpicture}
 
@@ -173,7 +173,7 @@ Allows to restore a number from a sufficient number of Naor-Pinkas shares \\
 \umlclass[]{NaorPinkasShareCombinator}{
 
 }{
-+ restore() : Optional<BigInteger>
++ restore(shares : Collection<NaorPinkasShare>) : Optional<BigInteger>
 }
 \end{tikzpicture}
 
