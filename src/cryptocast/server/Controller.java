@@ -68,7 +68,7 @@ public class Controller<ID> {
      * Starts the data stream 
      * @param data The file from which the data is read
      */
-    public void stream(File data) {
+    public void stream(InputStream data) {
     }
     
     /**
