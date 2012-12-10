@@ -1,0 +1,200 @@
+\subsection{Package \lstinline!cryptocast.client.filechooser!}
+
+\subsubsection{Class \lstinline|FileListElement|}
+A list element in our file chooser, representing a file. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.client.filechooser.ListElement|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|FileListElement|\lstinline|(Path path)|\\
+Creates a new instance.
+\begin{itemize}
+\item \lstinline|path|: The path of the file
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public Path| \lstinline|getPath|\lstinline|()|\\
+Returns: the path of the element
+
+
+
+\item \lstinline|public Resource| \lstinline|getIcon|\lstinline|()|\\
+Returns: The icon associated with this element
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|FileArrayAdapter|}
+An adapter between the ListElements and the view showing them. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|<any>|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|FileArrayAdapter|\lstinline|(Context context, int textViewResourceId, <any> objects)|\\
+Constructs a new instance with the given attributes.
+\begin{itemize}
+\item \lstinline|context|: The context in which this adapter is used.
+\item \lstinline|textViewResourceId|: The view showing the data.
+\item \lstinline|objects|: List with all elements which will be shown by the view.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ListElement| \lstinline|getItem|\lstinline|(int position)|\\
+Returns: the list element at the given position in the list.
+
+
+
+\item \lstinline|public View| \lstinline|getView|\lstinline|(int position, View convertView, ViewGroup parent)|\\
+Returns: a custom view of a list element at the given position in the list.
+\begin{itemize}
+\item \lstinline|position|: Position of the element in the list.
+\item \lstinline|convertView|: View which should be converted.
+\item \lstinline|parent|: The parent view group.
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|FileChooser|}
+A UI element that allows the user to browse the files and folders of the SD card and
+ choose one file. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|ListActivity|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|FileChooser|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|onCreate|\lstinline|(Bundle savedInstanceState)|\\
+Initialize the instance
+\begin{itemize}
+\item \lstinline|savedInstanceState|: the stored state
+\end{itemize}
+
+
+
+\item \lstinline|protected void| \lstinline|onListItemClick|\lstinline|(ListView lst, View view, int position, long id)|\\
+Handles a click onto a list item.
+\begin{itemize}
+\item \lstinline|lst|: The list
+\item \lstinline|view|: The view
+\item \lstinline|position|: The index of the list item
+\item \lstinline|id|: The ID of the list item
+\end{itemize}
+
+
+
+\item \lstinline|private void| \lstinline|fill|\lstinline|(File f)|
+
+
+
+
+\item \lstinline|private abstract void| \lstinline|onFileClick|\lstinline|(ListElement o)|
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|DirectoryListElement|}
+A list element in our file chooser, representing a directory. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.client.filechooser.ListElement|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|DirectoryListElement|\lstinline|(Path path)|\\
+Creates a new instance.
+\begin{itemize}
+\item \lstinline|path|: The path of the directory
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public Path| \lstinline|getPath|\lstinline|()|\\
+Returns: the path of the element
+
+
+
+\item \lstinline|public Resource| \lstinline|getIcon|\lstinline|()|\\
+Returns: The icon associated with this element
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|ListElement|}
+A list element in our file chooser, representing an element on the file system. \\
+
+
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public Path| \lstinline|getPath|\lstinline|()|\\
+Returns: the path of the element
+
+
+
+\item \lstinline|public Resource| \lstinline|getIcon|\lstinline|()|\\
+Returns: The icon associated with this element
+
+
+
+\end{itemize}
+
+

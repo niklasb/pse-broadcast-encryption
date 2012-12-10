@@ -1,0 +1,490 @@
+\subsection{Package \lstinline!cryptocast.crypto!}
+
+\subsubsection{Class \lstinline|LagrangeInterpolation<T>|}
+Performs a lagrange interpolation of a polynomial \\
+
+
+\begin{itemize}
+\item \lstinline|<T>|: The type of items of the polynomial's field
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|LagrangeInterpolation|\lstinline|(Polynomial<T> poly)|\\
+Initializes the algorithm
+\begin{itemize}
+\item \lstinline|poly|: The polynomial to interpolate
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public T[]| \lstinline|computeCoefficients|\lstinline|()|\\
+Returns: The lagrange coefficients of the associated polynomial
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|IntegersModuloPrime|}
+The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$ \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.Field<BigInteger>|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|IntegersModuloPrime|\lstinline|(BigInteger p)|\\
+Initializes the field
+\begin{itemize}
+\item \lstinline|p|: A prime number
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public BigInteger| \lstinline|add|\lstinline|(BigInteger a, BigInteger b)|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|multiply|\lstinline|(BigInteger a, BigInteger b)|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|negate|\lstinline|(BigInteger a)|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|invert|\lstinline|(BigInteger a)|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|zero|\lstinline|()|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|one|\lstinline|()|
+
+
+
+
+\item \lstinline|public BigInteger| \lstinline|randomElement|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Polynomial<T>|}
+A polynomial $P$ over a field \\
+
+
+\begin{itemize}
+\item \lstinline|<T>|: The type of the field's elements
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Polynomial|\lstinline|(Field<T> field, T[] coefficients)|\\
+Initializes a polynomial
+\begin{itemize}
+\item \lstinline|field|: An instance of the field over which the polynomial is formed
+\item \lstinline|coefficients|: The coefficients $c_i$ of the polynomial ($0 \leq i \leq n$).
+ The polynomial is defined as $P(x) := \sum_{i=0}^n c_i x^i = c_0 + c_1
+ x + ... + c_n x^n$
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public Field<T>| \lstinline|getField|\lstinline|()|\\
+Returns: The field associated with this polynomial
+
+
+
+\item \lstinline|public T| \lstinline|evaluate|\lstinline|(T x)|\\
+Evaluates the polynomial at a single point x.
+\begin{itemize}
+\item \lstinline|x|: The
+\end{itemize}
+
+Returns: P(x)
+
+\item \lstinline|public T[]| \lstinline|evaluateMulti|\lstinline|(T[] xs)|\\
+Evaluates the polynomial at multiple points in time complexity $\Theta(n\cdot\log
+ n)$ where $n$ is the degree of the polynomial
+\begin{itemize}
+\item \lstinline|xs|: The points $x_i$ to evaluate
+\end{itemize}
+
+Returns: The array a defined by $a_i := P(x_i)$
+
+\item \lstinline|public T| \lstinline|getCoefficient|\lstinline|(int i)|\\
+Returns: $c_i$
+\begin{itemize}
+\item \lstinline|i|: The index of the coefficient to get ($0 \leq i \leq n$), where
+          $n$ is the degree of the polynomial
+\end{itemize}
+
+
+
+\item \lstinline|public int| \lstinline|getDegree|\lstinline|()|\\
+Returns: The degree of the polynomial
+
+
+
+\item \lstinline|public static Polynomial<T>| \lstinline|createRandomPolynomial|\lstinline|(Field<T> field, int degree)|\\
+Generates a random polynomial over the field
+\begin{itemize}
+\item \lstinline|field|: An instance of the field over which the polynomial is formed
+\item \lstinline|degree|: The degree of the generated polynomial
+\end{itemize}
+
+Returns: The generated polynomial
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Field<T>|}
+Represents a field over values of type T \\
+
+
+\begin{itemize}
+\item \lstinline|<T>|: The values we work on
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Field|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public abstract T| \lstinline|add|\lstinline|(T a, T b)|\\
+Adds two elements of the field
+\begin{itemize}
+\item \lstinline|a|: first element
+\item \lstinline|b|: second element
+\end{itemize}
+
+Returns: The value $a + b$
+
+\item \lstinline|public abstract T| \lstinline|multiply|\lstinline|(T a, T b)|\\
+Multiplies two elements of the field
+\begin{itemize}
+\item \lstinline|a|: first element
+\item \lstinline|b|: second element
+\end{itemize}
+
+Returns: The value $a \cdot b$
+
+\item \lstinline|public abstract T| \lstinline|negate|\lstinline|(T a)|\\
+Returns: The additive inverse $-a$ of $a$
+\begin{itemize}
+\item \lstinline|a|: An element of the field
+\end{itemize}
+
+
+
+\item \lstinline|public abstract T| \lstinline|invert|\lstinline|(T a)|\\
+Returns: The multiplicative inverse $a^{-1}$ of $a$
+\begin{itemize}
+\item \lstinline|a|: An element of the field
+\end{itemize}
+
+
+
+\item \lstinline|public abstract T| \lstinline|zero|\lstinline|()|\\
+Returns: The zero element of the field
+
+
+
+\item \lstinline|public abstract T| \lstinline|one|\lstinline|()|\\
+Returns: The one element of the field
+
+
+
+\item \lstinline|public abstract T| \lstinline|randomElement|\lstinline|()|\\
+Returns: A random element of the field
+
+
+
+\item \lstinline|public T| \lstinline|subtract|\lstinline|(T a, T b)|\\
+Subtracts two elements of the field
+\begin{itemize}
+\item \lstinline|a|: first element
+\item \lstinline|b|: second element
+\end{itemize}
+
+Returns: The value $a - b$
+
+\item \lstinline|public T| \lstinline|divide|\lstinline|(T a, T b)|\\
+Divides two elements of the field
+\begin{itemize}
+\item \lstinline|a|: first element
+\item \lstinline|b|: second element
+\end{itemize}
+
+Returns: The value $\frac{a}{b}$
+
+\item \lstinline|public T| \lstinline|pow|\lstinline|(T a, int e)|\\
+Raises an element of the field to an integer power
+\begin{itemize}
+\item \lstinline|a|: The element of the field
+\item \lstinline|e|: The exponent
+\end{itemize}
+
+Returns: The value $a^e$
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|BroadcastEncryptionServer<ID>|}
+The server side of a broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\item \lstinline|java.lang.Runnable|
+\end{itemize}
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the identities
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|BroadcastEncryptionServer|\lstinline|(MessageOutChannel inner, BroadcastSchemeUserManager<ID> context, Encryptor<BigInteger> enc)|\\
+Initializes a broadcast encryption server.
+\begin{itemize}
+\item \lstinline|inner|: The message-based communication channel to send outgoing data to
+\item \lstinline|context|: The user management context
+\item \lstinline|enc|: The encryption context
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|run|\lstinline|()|\\
+Run the worker that handles periodic group key broadcasts and sends
+ queued data packages.
+
+
+
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+Send plaintext data to the channel. It will be encryted and broadcasted
+ on the fly.
+\begin{itemize}
+\item \lstinline|data|: The data to send
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(ID id)|\\
+Revoke a user.
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|BroadcastEncryptionClient|}
+The client side of a broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.InChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|BroadcastEncryptionClient|\lstinline|(MessageInChannel inner, Decryptor<BigInteger> dec)|\\
+Initializes a broadcast encryption client.
+\begin{itemize}
+\item \lstinline|inner|: The message-based underlying communication channel.
+\item \lstinline|dec|: The decryption context
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\
+Receive data from the channel. It is decrypted on the fly.
+\begin{itemize}
+\item \lstinline|size|: amount of bytes to receive
+\item \lstinline|buffer|: the target buffer
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|Decryptor<S>|}
+A strategy to decrypt a single secret \\
+
+
+\begin{itemize}
+\item \lstinline|<S>|: the type of the secret
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public S| \lstinline|decrypt|\lstinline|(byte[] cipher)|\\
+Decrypts a secret.
+\begin{itemize}
+\item \lstinline|cipher|: The encrypted secret
+\end{itemize}
+
+Returns: The decrypted secret
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|BroadcastSchemeUserManager<ID>|}
+Manages a set of user identites \\
+
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the identities
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public ID| \lstinline|getIdentity|\lstinline|(int i)|\\
+Returns: The identity with the given index
+\begin{itemize}
+\item \lstinline|i|: An index
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(ID id)|\\
+Revokes a user
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+
+
+\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(ID id)|\\
+Returns: whether the user is revoked
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|Encryptor<S>|}
+A strategy to encrypt a single secret \\
+
+
+\begin{itemize}
+\item \lstinline|<S>|: the type of the secret
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(S secret)|\\
+Encrypts a secret
+\begin{itemize}
+\item \lstinline|secret|: the secret
+\end{itemize}
+
+Returns: The cipher text
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|BroadcastSchemeKeyManager<ID>|}
+Manages the private keys of a set of users. \\
+
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public PrivateKey| \lstinline|getPersonalKey|\lstinline|(ID id)|\\
+Returns: The private key of the user
+\begin{itemize}
+\item \lstinline|id|: The identity to look up
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|ShareCombinator<S, T>|}
+Implements a strategy to restore a secret from a number of shares. \\
+
+
+\begin{itemize}
+\item \lstinline|<S>|: The type of the secret
+\item \lstinline|<T>|: The type of the shares
+\end{itemize}
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public <any>| \lstinline|restore|\lstinline|(Collection<T> shares)|\\
+Restores a secret from several shares.
+
+Returns: The reconstructed secret or absent if the information represented
+ by the given shares is insufficient to restore it.
+
+\end{itemize}
+
+

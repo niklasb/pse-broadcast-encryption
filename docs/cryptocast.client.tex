@@ -1,0 +1,243 @@
+\subsection{Package \lstinline!cryptocast.client!}
+The client uses a \lstinline|FileChooser|, which can be used to select a file from the SD card of your android gadget.
+ As a private key is necessary to encrypt data received from a server the \lstinline|FileChooser| is used to select a keyfile.
+ All servers and responding keyfiles are saved in the \lstinline|ServerHistory| and therefore can be saved and reused after closing the client.
+ Every error is displayed by using a simple pop up window defined by the class \lstinline|ErrorFragment|.
+\subsubsection{Class \lstinline|StreamViewerActivity|}
+This activity is responsible for decrypting the received data
+ stream and viewing it. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|FragmentActivity|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|StreamViewerActivity|\lstinline|(InChannel inputStream)|\\
+Initializes a viewer
+\begin{itemize}
+\item \lstinline|inputStream|: the data stream
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public boolean| \lstinline|onOptionsItemSelected|\lstinline|(MenuItem item)|\\
+Handles a click on the bottom menu.
+\begin{itemize}
+\item \lstinline|item|: The clicked menu item
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|togglePlay|\lstinline|()|\\
+Toggle playback play/pause. Will pause if in play mode and continue if
+ in pause mode.
+
+
+
+\item \lstinline|public boolean| \lstinline|isPlaying|\lstinline|()|\\
+Returns: whether the player is in playing mode
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServerHistory|}
+This class is responsible for saving recently selected servers
+ and their corresponding key files. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServerHistory|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public Map<String, File>| \lstinline|getServers|\lstinline|()|\\
+Returns: the servers
+
+
+
+\item \lstinline|public void| \lstinline|addServer|\lstinline|(String hostname, File keyfile)|\\
+Adds a server to the collection.
+\begin{itemize}
+\item \lstinline|hostname|: The server's hostname
+\item \lstinline|keyfile|: The keyfile the user has chosen for this server
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MainActivity|}
+This class represents the activity to connect to the server.
+ Before connecting this activity start the \lstinline|KeyChoiceActivity| to
+ let the user choose an encryption key file. When the client receives a
+ data stream the \lstinline|StreamViewerActivity| is started to process the
+ stream and show its contents. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|FragmentActivity|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MainActivity|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|connectToServer|\lstinline|(View view)|\\
+Connects to server
+\begin{itemize}
+\item \lstinline|view|: The view from which this method was called.
+\end{itemize}
+
+
+
+\item \lstinline|public boolean| \lstinline|onOptionsItemSelected|\lstinline|(MenuItem item)|\\
+Handles a click on the main menu.
+\begin{itemize}
+\item \lstinline|item|: The clicked item
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|OptionsActivity|}
+The option screen. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|Activity|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|OptionsActivity|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle savedInstanceState)|\\
+Receives the saved option state.
+\begin{itemize}
+\item \lstinline|savedInstanceState|: the old state
+\end{itemize}
+
+
+
+\item \lstinline|public boolean| \lstinline|onCreateOptionsMenu|\lstinline|(Menu menu)|\\
+Inflates the option menu.
+\begin{itemize}
+\item \lstinline|menu|: The menu
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|KeyChoiceActivity|}
+This activity lets a user choose an encryption key file
+ which is then sent to the server for authentication. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|FileChooser|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|KeyChoiceActivity|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public <any>| \lstinline|getChosenFile|\lstinline|()|\\
+Returns: The chosen file or absent on abort.
+
+
+
+\item \lstinline|public void| \lstinline|onFileClick|\lstinline|(ListElement item)|\\
+Calld when the user clicks a file in the list.
+\begin{itemize}
+\item \lstinline|item|: The clicked list item.
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ErrorFragment|}
+This class is used to pop up an error message. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|DialogFragment|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ErrorFragment|\lstinline|(String message)|\\
+Creates a new ErrorFragment which can be used to print the given error message.
+\begin{itemize}
+\item \lstinline|message|: Error message describing the error which occured before this fragment pops up.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+

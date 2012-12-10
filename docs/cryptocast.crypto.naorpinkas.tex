@@ -1,0 +1,220 @@
+\subsection{Package \lstinline!cryptocast.crypto.naorpinkas!}
+
+\subsubsection{Class \lstinline|NaorPinkasClient|}
+A client in the Naor-Pinkas broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.Decryptor<BigInteger>|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasClient|\lstinline|(NaorPinkasPersonalKey key)|\\
+Initializes a Naor-Pinkas broadcast client
+\begin{itemize}
+\item \lstinline|key|: The personal key used to reconstruct a secret from the stream
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public BigInteger| \lstinline|decrypt|\lstinline|(byte[] cipher)|\\
+Decrypts a secret.
+\begin{itemize}
+\item \lstinline|cipher|: The encrypted secret
+\end{itemize}
+
+Returns: The decrypted secret
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasServer|}
+A server in the Naor-Pinkas broadcast encryption scheme. This server is special in that it knows
+ the entire polynomial and therefore all the private keys of its users. This makes the implementation
+ of the interpolation algorithm a bit more efficient. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.BroadcastSchemeKeyManager<NaorPinkasIdentity>|
+\item \lstinline|cryptocast.crypto.BroadcastSchemeUserManager<NaorPinkasIdentity>|
+\item \lstinline|cryptocast.crypto.Encryptor<BigInteger>|
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasServer|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(BigInteger secret)|\\
+Encrypts a secret
+\begin{itemize}
+\item \lstinline|secret|: the secret
+\end{itemize}
+
+Returns: The cipher text
+
+\item \lstinline|public NaorPinkasIdentity| \lstinline|getIdentity|\lstinline|(int i)|\\
+Returns: The identity with the given index
+\begin{itemize}
+\item \lstinline|i|: An index
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(NaorPinkasIdentity x)|\\
+Revokes a user
+
+
+
+\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(NaorPinkasIdentity id)|\\
+Returns: whether the user is revoked
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+
+
+\item \lstinline|public NaorPinkasPersonalKey| \lstinline|getPersonalKey|\lstinline|(NaorPinkasIdentity id)|\\
+Returns: The private key of the user
+\begin{itemize}
+\item \lstinline|id|: The identity to look up
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasPersonalKey|}
+A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.security.PrivateKey|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasPersonalKey|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public String| \lstinline|getAlgorithm|\lstinline|()|
+
+
+
+
+\item \lstinline|public byte[]| \lstinline|getEncoded|\lstinline|()|
+
+
+
+
+\item \lstinline|public String| \lstinline|getFormat|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasShareCombinator|}
+Allows to restore a number from a sufficient number of Naor-Pinkas shares \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.ShareCombinator<BigInteger, NaorPinkasShare>|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasShareCombinator|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public <any>| \lstinline|restore|\lstinline|(Collection<NaorPinkasShare> shares)|\\
+Restores a secret from several Naor-Pinkas shares.
+
+Returns: The reconstructed secret or absent if the information represented
+ by the given shares is insufficient to restore it.
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NaorPinkasShare|}
+A share in the Naor-Pinkas broadcast encryption scheme. It consists of a tuple
+ $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
+ value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasShare|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\subsubsection{Class \lstinline|NaorPinkasIdentity|}
+An identity in the Naor-Pinkas broadcast encryption scheme \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|private| \lstinline|NaorPinkasIdentity|\lstinline|(BigInteger id)|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|private BigInteger| \lstinline|getId|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+

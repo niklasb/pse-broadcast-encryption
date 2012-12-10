@@ -1,6 +1,7 @@
 from textwrap import dedent
 import xml.etree.ElementTree as ET
 import sys
+import re
 
 boilerplate_classes = ['java.lang.Object']
 
@@ -26,6 +27,9 @@ def transform_type(typ, simple=True):
         gen = "<%s>" % ", ".join(transform_type(t) for t in typevars.iter("type"))
     res = typ.find("qualifiedName").text + gen + dim
     return res.split(".")[-1] if simple else res
+
+def replace_links(txt):
+    return re.sub(r"{@link\s+([^}]*)}", r"\lstinline|\1|", txt)
 
 def render_param(param, varargs=False):
     dim = "..." if varargs else ""
@@ -91,7 +95,7 @@ def render_class(cls, indent=2):
             \\end{{itemize}}
             """).format(items="\n".join("\\item \\lstinline|<%s>|: %s" % (
                                             t.find("name").text, text_or(t.find("comment")))
-                                        for t in typevars.iter("com.ownedthx.xmldoclet.xmlbindings.TypeVar")))
+                                        for t in typevars.iter("typeVar")))
     constructortxt = methodtxt = ""
     constructorsel = cls.find("constructors")
     bases = []
@@ -146,13 +150,15 @@ def render_class(cls, indent=2):
 
 def render_package(pkg, indent=1):
     classes = list(pkg.iter("class")) + list(pkg.iter("interface"))
-    return dedent("""\
+    return replace_links(dedent("""\
            \\{sub}section{{Package \\lstinline!{pkgname}!}}
+           {comment}
            {classes}
            """).format(pkgname=pkg.find("name").text,
                       classes="".join(render_class(cls, indent+1)
                                         for cls in classes),
-                      sub="sub"*indent)
+                      sub="sub"*indent,
+                      comment=text_or(pkg.find("comment"))))
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -160,6 +166,13 @@ if __name__ == "__main__":
         sys.exit(1)
     doc = ET.parse(sys.argv[1]).getroot()
     outdir = sys.argv[2]
-    with open(outdir + "/docs.tex", "w") as f:
-        for p in doc.iter("package"):
+    tex_files = []
+    for p in doc.iter("package"):
+        print p.find("name").text
+        fn = "%s.tex"  % p.find("name").text
+        tex_files.append(fn)
+        with open(outdir + "/" + fn, "w") as f:
             f.write(render_package(p))
+    with open(outdir + "/all.tex", "w") as f:
+        for other in tex_files:
+            f.write("\\input{%s}\n" % other)

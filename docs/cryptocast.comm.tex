@@ -1,0 +1,347 @@
+\subsection{Package \lstinline!cryptocast.comm!}
+
+\subsubsection{Class \lstinline|WritableByteChannelAdapter|}
+Adapter to use a \lstinline|WritableByteChannel| (for example, a file or socket instance) as
+ an \lstinline|OutChannel|. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|WritableByteChannelAdapter|\lstinline|(WritableByteChannel inner)|\\
+Initializes the adapter
+\begin{itemize}
+\item \lstinline|inner|: The wrapped instance
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+Sends the given data.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|StatisticalOutChannel|}
+Wrapper around an OutChannel that counts outgoing bytes \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|StatisticalOutChannel|\lstinline|(OutChannel inner)|\\
+Outitializes the proxy
+\begin{itemize}
+\item \lstinline|inner|: the wrapped channel
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+Sends the given data.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\item \lstinline|public int| \lstinline|getSentBytes|\lstinline|()|\\
+Returns: the number of sent bytes
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|SocketMulticastServer|}
+This class implements channel-based communication via TCP. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|SocketMulticastServer|\lstinline|(ServerSocket socket)|\\
+Creates a multicast server which uses the given socket.
+\begin{itemize}
+\item \lstinline|socket|: server socket
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+Sends bytes via the channel.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MessageInChannel|}
+Wraps a byte-based InChannel and allows to use it as a message-based
+ channel. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MessageInChannel|\lstinline|(InChannel inner)|\\
+Creates a MessageInChannel which wraps the given inner channel.
+\begin{itemize}
+\item \lstinline|inner|: the wrapped channel
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public byte[]| \lstinline|recvMessage|\lstinline|()|\\
+Receives a message via the channel.
+
+Returns: the received data
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MessageOutChannel|}
+Wraps a byte-based OutChannel and allows to use it as a message-based
+ channel. \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MessageOutChannel|\lstinline|(OutChannel inner)|\\
+Creates a new MessageOutChannel with the given OutChannel as inner channel.
+\begin{itemize}
+\item \lstinline|inner|: the OutChannel which will be wrapped
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(byte[] data)|\\
+Sends the given message via the channel.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|StatisticalInChannel|}
+Wrapper around an InChannel that counts incoming bytes \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.InChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|StatisticalInChannel|\lstinline|(InChannel inner)|\\
+Initializes the proxy
+\begin{itemize}
+\item \lstinline|inner|: the wrapped channel
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\
+Receives data.
+\begin{itemize}
+\item \lstinline|size|: maximum amount of bytes to read
+\item \lstinline|buffer|: the target buffer
+\end{itemize}
+
+
+
+\item \lstinline|public int| \lstinline|getReceivedBytes|\lstinline|()|\\
+Returns: the number of received bytes
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ReadableByteChannelAdapter|}
+Adapter to use a \lstinline|ReadableByteChannel| (for example, a file or socket instance) as an
+ \lstinline|InChannel|. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.InChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ReadableByteChannelAdapter|\lstinline|(ReadableByteChannel inner)|\\
+Initializes the adapter
+\begin{itemize}
+\item \lstinline|inner|: The wrapped instance
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\
+Receives data.
+\begin{itemize}
+\item \lstinline|size|: maximum amount of bytes to read
+\item \lstinline|buffer|: the target buffer
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MultiOutChannel|}
+Multiplexes several OutChannels so that they can be used as a single
+ destination. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.OutChannel|
+\end{itemize}
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MultiOutChannel|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|addChannel|\lstinline|(OutChannel channel)|\\
+Adds the given channel to the list of receivers.
+\begin{itemize}
+\item \lstinline|channel|: the channel to add
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|removeChannel|\lstinline|(OutChannel channel)|\\
+Removes the given channel from the list of receivers.
+\begin{itemize}
+\item \lstinline|channel|: the channel to remove
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+Sends the given data.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|InChannel|}
+A byte-based communication channel from which data can be received. \\
+
+
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\
+Receives data.
+\begin{itemize}
+\item \lstinline|size|: maximum amount of bytes to read
+\item \lstinline|buffer|: The target buffer
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|OutChannel|}
+A byte-based communication channel where data can be sent to. \\
+
+
+
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+Sends the given data.
+\begin{itemize}
+\item \lstinline|data|: the data to send
+\end{itemize}
+
+
+
+\end{itemize}
+
+

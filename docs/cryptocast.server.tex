@@ -1,0 +1,252 @@
+\subsection{Package \lstinline!cryptocast.server!}
+
+\subsubsection{Class \lstinline|Controller<ID>|}
+Deals with user-interactions and therefore changes data in Model if necessary. \\
+
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Controller|\lstinline|(ServerData<ID> data, Shell<ID> shell)|\\
+Initializes a new controller with the given arguments.
+\begin{itemize}
+\item \lstinline|data|: The data administrated by this controller.
+\item \lstinline|shell|: The operator interface from which this controller gets its input.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|init|\lstinline|()|\\
+Initializes the server on start by loading data from a file.
+
+
+
+\item \lstinline|public void| \lstinline|keyGen|\lstinline|(int amtRevocable, int amtPrivateKeys, File keyDir)|\\
+Tries to start a new group to which data can be sent by generating private keys.
+\begin{itemize}
+\item \lstinline|amtRevocable|: The amount of user which can be revoked.
+\item \lstinline|amtPrivateKeys|: The amount of private keys which are produced.
+\item \lstinline|keyDir|: The directory to save the keyfiles in.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|addUser|\lstinline|(String name)|\\
+Adds a new user and assigns a private key to that user.
+\begin{itemize}
+\item \lstinline|name|: The name of the user who is added.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|revokeUser|\lstinline|(String name)|\\
+Bans a user from the stream by adding it to the list of revoked users.
+\begin{itemize}
+\item \lstinline|name|: The name of the user that is revoked.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|authorizeUser|\lstinline|(String name)|\\
+Authorizes a user to watch the stream by removing it from the list of revoked users.
+\begin{itemize}
+\item \lstinline|name|: The name of the user who is unbanned.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|stream|\lstinline|(File data)|\\
+Starts the data stream
+\begin{itemize}
+\item \lstinline|data|: The file from which the data is read
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|showStatistics|\lstinline|()|\\
+Prints information about traffic
+
+
+
+\item \lstinline|public void| \lstinline|showUsers|\lstinline|()|\\
+Prints users and the keys assigned to them.
+
+
+
+\item \lstinline|public void| \lstinline|showInfo|\lstinline|()|\\
+Prints information about the data which is currently sent.
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|User<ID>|}
+This Class represents an User. \\
+
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|User|\lstinline|(String name, ID id)|\\
+Creates a User with the given attributes.
+\begin{itemize}
+\item \lstinline|name|: The name of this user.
+\item \lstinline|id|: The ID of this user.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public String| \lstinline|getName|\lstinline|()|\\
+Returns: the name of this user.
+
+
+
+\item \lstinline|public ID| \lstinline|getIdentity|\lstinline|()|\\
+Returns: the id of this user.
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Shell<ID>|}
+Gets the arguments from the command line and deals with illegal input. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.util.InteractiveCommandLineInterface|
+\end{itemize}
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities.
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Shell|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\
+Creates a new Shell object with the given parameters.
+\begin{itemize}
+\item \lstinline|in|: The input stream
+\item \lstinline|out|: Stream to write normal output to.
+\item \lstinline|err|: Stream to write error messages to.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|protected void| \lstinline|performCommand|\lstinline|(String cmd, String[] args)|
+
+
+
+
+\item \lstinline|private void| \lstinline|help|\lstinline|()|\\
+Prints all commands this shell can perform with information about how to use them.
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServerData<ID>|}
+Contains the data which is changed by Controller and presented on CLI. \\
+
+
+\textbf{Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+\begin{itemize}
+\item \lstinline|<ID>|: The type of the user identities
+\end{itemize}
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServerData|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public <any>| \lstinline|createNewUser|\lstinline|(String name)|\\
+Creates and saves a new user by name.
+\begin{itemize}
+\item \lstinline|name|: The user's name
+\end{itemize}
+
+Returns: The new user if he has been added successfully, else absent is returned.
+
+\item \lstinline|public <any>| \lstinline|getUserByName|\lstinline|(String name)|\\
+Retrieves a user by name
+\begin{itemize}
+\item \lstinline|name|: The user's name
+\end{itemize}
+
+Returns: A user instance, if it was found, or absent otherwise
+
+\item \lstinline|public <any>| \lstinline|getPersonalKey|\lstinline|(User<ID> user)|\\
+Retrieves a user's personal key
+\begin{itemize}
+\item \lstinline|user|: The user object
+\end{itemize}
+
+Returns: The private key
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Main|}
+The main method to start the server \\
+
+
+
+
+\textbf{Constructors}
+\begin{itemize}
+\item \lstinline|private| \lstinline|Main|\lstinline|()|
+
+
+
+
+\end{itemize}
+
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public static void| \lstinline|main|\lstinline|(String[] args)|
+
+\begin{itemize}
+\item \lstinline|args|: command line arguments
+\end{itemize}
+
+
+
+\end{itemize}
+
+
