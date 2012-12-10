@@ -60,14 +60,14 @@ An adapter between the ListElements and the view showing them. \\
 
 \textbf{Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|<any>|
+\item \lstinline|android.widget.ArrayAdapter<ListElement>|
 \end{itemize}
 
 
 
 \textbf{Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|FileArrayAdapter|\lstinline|(Context context, int textViewResourceId, <any> objects)|\\
+\item \lstinline|public| \lstinline|FileArrayAdapter|\lstinline|(Context context, int textViewResourceId, List<ListElement> objects)|\\
 Constructs a new instance with the given attributes.
 \begin{itemize}
 \item \lstinline|context|: The context in which this adapter is used.
@@ -106,7 +106,7 @@ A UI element that allows the user to browse the files and folders of the SD card
 \umlclass[type=abstract]{FileChooser}{
 
 }{
-+ onCreate() : void \\ \# onListItemClick() : void \\ -- fill() : void \\ -- onFileClick() : void
+\umlvirt{+ onCreate()} \\ \umlvirt{\# onListItemClick()} \\ \umlvirt{-- fill()} \\ \umlvirt{-- onFileClick()}
 }
 \end{tikzpicture}
 
@@ -214,7 +214,7 @@ A list element in our file chooser, representing an element on the file system. 
 \umlclass[type=abstract]{ListElement}{
 
 }{
-+ getPath() : Path \\ + getIcon() : Resource
+\umlvirt{+ getPath() : Path} \\ \umlvirt{+ getIcon() : Resource}
 }
 \end{tikzpicture}
 

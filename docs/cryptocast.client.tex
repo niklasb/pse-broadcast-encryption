@@ -10,7 +10,7 @@ This activity is responsible for decrypting the received data
 \umlclass[]{StreamViewerActivity}{
 
 }{
-+ onOptionsItemSelected() : boolean \\ + togglePlay() : void \\ + isPlaying() : boolean
++ onOptionsItemSelected() : boolean \\ + togglePlay() \\ + isPlaying() : boolean
 }
 \end{tikzpicture}
 
@@ -66,7 +66,7 @@ This class is responsible for saving recently selected servers
 \umlclass[]{ServerHistory}{
 
 }{
-+ getServers() : Map<String, File> \\ + addServer() : void
++ getServers() : Map<String, File> \\ + addServer()
 }
 \end{tikzpicture}
 
@@ -117,7 +117,7 @@ This class represents the activity to connect to the server.
 \umlclass[]{MainActivity}{
 
 }{
-+ connectToServer() : void \\ + onOptionsItemSelected() : boolean
++ connectToServer() \\ + onOptionsItemSelected() : boolean
 }
 \end{tikzpicture}
 
@@ -166,7 +166,7 @@ The option screen. \\
 \umlclass[]{OptionsActivity}{
 
 }{
-\# onCreate() : void \\ + onCreateOptionsMenu() : boolean
+\# onCreate() \\ + onCreateOptionsMenu() : boolean
 }
 \end{tikzpicture}
 
@@ -174,7 +174,7 @@ The option screen. \\
 
 \textbf{Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|Activity|
+\item \lstinline|android.app.Activity|
 \end{itemize}
 
 
@@ -216,7 +216,7 @@ This activity lets a user choose an encryption key file
 \umlclass[]{KeyChoiceActivity}{
 
 }{
-+ getChosenFile() : <any> \\ + onFileClick() : void
++ getChosenFile() : Optional<File> \\ + onFileClick()
 }
 \end{tikzpicture}
 
@@ -241,13 +241,13 @@ This activity lets a user choose an encryption key file
 
 \textbf{Methods}
 \begin{itemize}
-\item \lstinline|public <any>| \lstinline|getChosenFile|\lstinline|()|\\
+\item \lstinline|public Optional<File>| \lstinline|getChosenFile|\lstinline|()|\\
 Returns: The chosen file or absent on abort.
 
 
 
 \item \lstinline|public void| \lstinline|onFileClick|\lstinline|(ListElement item)|\\
-Calld when the user clicks a file in the list.
+Called when the user clicks a file in the list.
 \begin{itemize}
 \item \lstinline|item|: The clicked list item.
 \end{itemize}
@@ -262,7 +262,7 @@ This class is used to pop up an error message. \\
 \umlclass[]{ErrorFragment}{
 
 }{
-
++ getMessage() : String
 }
 \end{tikzpicture}
 
@@ -287,5 +287,14 @@ Creates a new ErrorFragment which can be used to print the given error message.
 
 \end{itemize}
 
+
+\textbf{Methods}
+\begin{itemize}
+\item \lstinline|public String| \lstinline|getMessage|\lstinline|()|\\
+Returns: The error message
+
+
+
+\end{itemize}
 
 

@@ -7,7 +7,7 @@ Adapter to use a \lstinline|WritableByteChannel| (for example, a file or socket 
 \umlclass[]{WritableByteChannelAdapter}{
 
 }{
-+ send() : void
++ send()
 }
 \end{tikzpicture}
 
@@ -46,12 +46,12 @@ Sends the given data.
 \end{itemize}
 
 \subsubsection{Class \lstinline|StatisticalOutChannel|}
-Wrapper around an OutChannel that counts outgoing bytes \\
+Wrapper around an \lstinline|OutChannel| that counts outgoing bytes. \\
 \begin{tikzpicture}
 \umlclass[]{StatisticalOutChannel}{
 
 }{
-+ send() : void \\ + getSentBytes() : int
++ send() \\ + getSentBytes() : int
 }
 \end{tikzpicture}
 
@@ -100,7 +100,7 @@ This class implements channel-based communication via TCP. \\
 \umlclass[]{SocketMulticastServer}{
 
 }{
-+ send() : void
++ send()
 }
 \end{tikzpicture}
 
@@ -182,7 +182,7 @@ Wraps a byte-based OutChannel and allows to use it as a message-based
 \umlclass[]{MessageOutChannel}{
 
 }{
-+ sendMessage() : void
++ sendMessage()
 }
 \end{tikzpicture}
 
@@ -216,12 +216,12 @@ Sends the given message via the channel.
 \end{itemize}
 
 \subsubsection{Class \lstinline|StatisticalInChannel|}
-Wrapper around an InChannel that counts incoming bytes \\
+Wrapper around an \lstinline|InChannel| that counts incoming bytes \\
 \begin{tikzpicture}
 \umlclass[]{StatisticalInChannel}{
 
 }{
-+ recv() : void \\ + getReceivedBytes() : int
++ recv() \\ + getReceivedBytes() : int
 }
 \end{tikzpicture}
 
@@ -272,7 +272,7 @@ Adapter to use a \lstinline|ReadableByteChannel| (for example, a file or socket 
 \umlclass[]{ReadableByteChannelAdapter}{
 
 }{
-+ recv() : void
++ recv()
 }
 \end{tikzpicture}
 
@@ -312,13 +312,13 @@ Receives data.
 \end{itemize}
 
 \subsubsection{Class \lstinline|MultiOutChannel|}
-Multiplexes several OutChannels so that they can be used as a single
+Multiplexes several \lstinline|OutChannel|s so that they can be used as a single
  destination. \\
 \begin{tikzpicture}
 \umlclass[]{MultiOutChannel}{
 
 }{
-+ addChannel() : void \\ + removeChannel() : void \\ + send() : void
++ addChannel() \\ + removeChannel() \\ + send()
 }
 \end{tikzpicture}
 
@@ -375,7 +375,7 @@ A byte-based communication channel from which data can be received. \\
 \umlclass[type=abstract]{InChannel}{
 
 }{
-+ recv() : void
+\umlvirt{+ recv()}
 }
 \end{tikzpicture}
 
@@ -403,7 +403,7 @@ A byte-based communication channel where data can be sent to. \\
 \umlclass[type=abstract]{OutChannel}{
 
 }{
-+ send() : void
+\umlvirt{+ send()}
 }
 \end{tikzpicture}
 

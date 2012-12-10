@@ -6,7 +6,7 @@ Deals with user-interactions and therefore changes data in Model if necessary. \
 \umlclass[]{Controller<ID>}{
 
 }{
-+ init() : void \\ + keyGen() : void \\ + addUser() : void \\ + revokeUser() : void \\ + authorizeUser() : void \\ + stream() : void \\ + showStatistics() : void \\ + showUsers() : void \\ + showInfo() : void
++ init() \\ + keyGen() \\ + addUser() \\ + revokeUser() \\ + authorizeUser() \\ + stream() \\ + showStatistics() \\ + showUsers() \\ + showInfo()
 }
 \end{tikzpicture}
 
@@ -72,7 +72,7 @@ Authorizes a user to watch the stream by removing it from the list of revoked us
 
 
 
-\item \lstinline|public void| \lstinline|stream|\lstinline|(File data)|\\
+\item \lstinline|public void| \lstinline|stream|\lstinline|(InputStream data)|\\
 Starts the data stream
 \begin{itemize}
 \item \lstinline|data|: The file from which the data is read
@@ -98,7 +98,7 @@ Prints information about the data which is currently sent.
 \end{itemize}
 
 \subsubsection{Class \lstinline|User<ID>|}
-This Class represents an User. \\
+Represents a user in our application. \\
 \begin{tikzpicture}
 \umlclass[]{User<ID>}{
 
@@ -148,7 +148,7 @@ Gets the arguments from the command line and deals with illegal input. \\
 \umlclass[]{Shell<ID>}{
 
 }{
-\# performCommand() : void \\ -- help() : void
+\# performCommand() \\ -- help()
 }
 \end{tikzpicture}
 
@@ -194,12 +194,12 @@ Prints all commands this shell can perform with information about how to use the
 \end{itemize}
 
 \subsubsection{Class \lstinline|ServerData<ID>|}
-Contains the data which is changed by Controller and presented on CLI. \\
+Contains the data which is managed by the controller and presented by the view. \\
 \begin{tikzpicture}
 \umlclass[]{ServerData<ID>}{
 
 }{
-+ createNewUser() : <any> \\ + getUserByName() : <any> \\ + getPersonalKey() : <any>
++ createNewUser() : Optional<User<ID>, ID> \\ + getUserByName() : Optional<User<ID>, ID> \\ + getPersonalKey() : Optional<PrivateKey>
 }
 \end{tikzpicture}
 
@@ -227,7 +227,7 @@ Contains the data which is changed by Controller and presented on CLI. \\
 
 \textbf{Methods}
 \begin{itemize}
-\item \lstinline|public <any>| \lstinline|createNewUser|\lstinline|(String name)|\\
+\item \lstinline|public Optional<User<ID>, ID>| \lstinline|createNewUser|\lstinline|(String name)|\\
 Creates and saves a new user by name.
 \begin{itemize}
 \item \lstinline|name|: The user's name
@@ -235,7 +235,7 @@ Creates and saves a new user by name.
 
 Returns: The new user if he has been added successfully, else absent is returned.
 
-\item \lstinline|public <any>| \lstinline|getUserByName|\lstinline|(String name)|\\
+\item \lstinline|public Optional<User<ID>, ID>| \lstinline|getUserByName|\lstinline|(String name)|\\
 Retrieves a user by name
 \begin{itemize}
 \item \lstinline|name|: The user's name
@@ -243,7 +243,7 @@ Retrieves a user by name
 
 Returns: A user instance, if it was found, or absent otherwise
 
-\item \lstinline|public <any>| \lstinline|getPersonalKey|\lstinline|(User<ID> user)|\\
+\item \lstinline|public Optional<PrivateKey>| \lstinline|getPersonalKey|\lstinline|(User<ID> user)|\\
 Retrieves a user's personal key
 \begin{itemize}
 \item \lstinline|user|: The user object
@@ -259,7 +259,7 @@ The main method to start the server \\
 \umlclass[]{Main}{
 
 }{
-+ main() : void
+\umlstatic{+ main()}
 }
 \end{tikzpicture}
 

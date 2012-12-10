@@ -86,11 +86,18 @@ def render_method(meth):
 def render_tikz_method(meth, abstract=False):
     rettype = ""
     res = meth.find("result")
-    if res != None and res.find("type").text != "void":
-        rettype = " : " + transform_type(res.find("type"))
+    if res != None:
+        typ = transform_type(res.find("type"))
+        if typ != "void":
+            rettype = " : " + typ
     access = {"public":"+", "protected":"\\#", "private":"--"}[meth.find("scope").text]
     params = ""
-    return "%s %s(%s)%s" % (access, meth.find("name").text, params, rettype)
+    txt = "%s %s(%s)%s" % (access, meth.find("name").text, params, rettype)
+    if parse_bool(meth.find("isStatic").text):
+        txt = "\\umlstatic{%s}"%txt
+    if parse_bool(meth.find("isAbstract").text) or abstract:
+        txt = "\\umlvirt{%s}"%txt
+    return txt
 
 def render_class_diagram(cls):
     abstr = parse_bool(text_or(cls.find("isAbstract"), "true"))

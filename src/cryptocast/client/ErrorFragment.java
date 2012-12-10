@@ -21,6 +21,9 @@ public class ErrorFragment extends DialogFragment {
         this.message = message;
     }
 
+    /** @return The error message */
+    public String getMessage() { return message; }
+
 //    @Override
 //    public Dialog onCreateDialog(Bundle savedInstanceState) {
 //        // Use the Builder class for convenient dialog construction

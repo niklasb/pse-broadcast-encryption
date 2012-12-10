@@ -20,7 +20,7 @@ public class KeyChoiceActivity extends FileChooser {
     public Optional<File> getChosenFile() {
     }
 
-    /** Calld when the user clicks a file in the list.
+    /** Called when the user clicks a file in the list.
      * @param item The clicked list item.
      */
     @Override

@@ -1,5 +1,5 @@
 #!/bin/sh
 cd $(dirname $0)/..
 ROOT=$(pwd)
-CLASSPATH=$ROOT/3rd_party/guava*.jar
+CLASSPATH=$ROOT/3rd_party/guava-13.0.1.jar:$ROOT/3rd_party/android.jar
 sh $ROOT/3rd_party/xml-doclet/target/appassembler/bin/xmldoclet -cp $CLASSPATH:. -sp $ROOT/src -sub cryptocast

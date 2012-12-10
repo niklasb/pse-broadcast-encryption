@@ -6,7 +6,7 @@ A simple framework for command line programs. \\
 \umlclass[type=abstract]{CommandLineInterface}{
 
 }{
-+ run() : int \\ \# start() : void \\ \# printf() : void \\ \# print() : void \\ \# println() : void \\ \# getErrorFormat() : String \\ \# fatalError() : void \\ \# exit() : void \\ \# usage() : void \\ \# getBasicUsage() : String \\ \# printAdditionalUsage() : void
+\umlvirt{+ run() : int} \\ \umlvirt{\# start()} \\ \umlvirt{\# printf()} \\ \umlvirt{\# print()} \\ \umlvirt{\# println()} \\ \umlvirt{\# getErrorFormat() : String} \\ \umlvirt{\# fatalError()} \\ \umlvirt{\# exit()} \\ \umlvirt{\# usage()} \\ \umlvirt{\# getBasicUsage() : String} \\ \umlvirt{\# printAdditionalUsage()}
 }
 \end{tikzpicture}
 
@@ -161,7 +161,7 @@ A framework class to implement interactive command-line interfaces. The class im
 \umlclass[type=abstract]{InteractiveCommandLineInterface}{
 
 }{
-\# start() : void \\ \# mainloop() : void \\ \# performCommand() : void \\ \# error() : void \\ \# getPrompt() : String
+\umlvirt{\# start()} \\ \umlvirt{\# mainloop()} \\ \umlvirt{\# performCommand()} \\ \umlvirt{\# error()} \\ \umlvirt{\# getPrompt() : String}
 }
 \end{tikzpicture}
 

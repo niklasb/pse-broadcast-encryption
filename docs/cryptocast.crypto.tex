@@ -116,7 +116,7 @@ A polynomial $P$ over a field \\
 \umlclass[]{Polynomial<T>}{
 
 }{
-+ getField() : Field<T> \\ + evaluate() : T \\ + evaluateMulti() : T[] \\ + getCoefficient() : T \\ + getDegree() : int \\ + createRandomPolynomial() : Polynomial<T>
++ getField() : Field<T> \\ + evaluate() : T \\ + evaluateMulti() : T[] \\ + getCoefficient() : T \\ + getDegree() : int \\ \umlstatic{+ createRandomPolynomial() : Polynomial<T>}
 }
 \end{tikzpicture}
 
@@ -198,7 +198,7 @@ Represents a field over values of type T \\
 \umlclass[type=abstract]{Field<T>}{
 
 }{
-+ add() : T \\ + multiply() : T \\ + negate() : T \\ + invert() : T \\ + zero() : T \\ + one() : T \\ + randomElement() : T \\ + subtract() : T \\ + divide() : T \\ + pow() : T
+\umlvirt{+ add() : T} \\ \umlvirt{+ multiply() : T} \\ \umlvirt{+ negate() : T} \\ \umlvirt{+ invert() : T} \\ \umlvirt{+ zero() : T} \\ \umlvirt{+ one() : T} \\ \umlvirt{+ randomElement() : T} \\ \umlvirt{+ subtract() : T} \\ \umlvirt{+ divide() : T} \\ \umlvirt{+ pow() : T}
 }
 \end{tikzpicture}
 
@@ -305,7 +305,7 @@ The server side of a broadcast encryption scheme. \\
 \umlclass[]{BroadcastEncryptionServer<ID>}{
 
 }{
-+ run() : void \\ + send() : void \\ + revoke() : void
++ run() \\ + send() \\ + revoke()
 }
 \end{tikzpicture}
 
@@ -370,7 +370,7 @@ The client side of a broadcast encryption scheme. \\
 \umlclass[]{BroadcastEncryptionClient}{
 
 }{
-+ recv() : void
++ recv()
 }
 \end{tikzpicture}
 
@@ -416,7 +416,7 @@ A strategy to decrypt a single secret \\
 \umlclass[type=abstract]{Decryptor<S>}{
 
 }{
-+ decrypt() : S
+\umlvirt{+ decrypt() : S}
 }
 \end{tikzpicture}
 
@@ -446,7 +446,7 @@ Manages a set of user identites \\
 \umlclass[type=abstract]{BroadcastSchemeUserManager<ID>}{
 
 }{
-+ getIdentity() : ID \\ + revoke() : void \\ + isRevoked() : boolean
+\umlvirt{+ getIdentity() : ID} \\ \umlvirt{+ revoke()} \\ \umlvirt{+ isRevoked() : boolean}
 }
 \end{tikzpicture}
 
@@ -492,7 +492,7 @@ A strategy to encrypt a single secret \\
 \umlclass[type=abstract]{Encryptor<S>}{
 
 }{
-+ encrypt() : byte[]
+\umlvirt{+ encrypt() : byte[]}
 }
 \end{tikzpicture}
 
@@ -522,7 +522,7 @@ Manages the private keys of a set of users. \\
 \umlclass[type=abstract]{BroadcastSchemeKeyManager<ID>}{
 
 }{
-+ getPersonalKey() : PrivateKey
+\umlvirt{+ getPersonalKey() : PrivateKey}
 }
 \end{tikzpicture}
 
@@ -552,7 +552,7 @@ Implements a strategy to restore a secret from a number of shares. \\
 \umlclass[type=abstract]{ShareCombinator<S, T>}{
 
 }{
-+ restore() : <any>
+\umlvirt{+ restore() : Optional<S>}
 }
 \end{tikzpicture}
 
@@ -567,7 +567,7 @@ Implements a strategy to restore a secret from a number of shares. \\
 
 \textbf{Methods}
 \begin{itemize}
-\item \lstinline|public <any>| \lstinline|restore|\lstinline|(Collection<T> shares)|\\
+\item \lstinline|public Optional<S>| \lstinline|restore|\lstinline|(Collection<T> shares)|\\
 Restores a secret from several shares.
 
 Returns: The reconstructed secret or absent if the information represented

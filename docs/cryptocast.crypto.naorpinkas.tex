@@ -52,7 +52,7 @@ A server in the Naor-Pinkas broadcast encryption scheme. This server is special 
 \umlclass[]{NaorPinkasServer}{
 
 }{
-+ encrypt() : byte[] \\ + getIdentity() : NaorPinkasIdentity \\ + revoke() : void \\ + isRevoked() : boolean \\ + getPersonalKey() : NaorPinkasPersonalKey
++ encrypt() : byte[] \\ + getIdentity() : NaorPinkasIdentity \\ + revoke() \\ + isRevoked() : boolean \\ + getPersonalKey() : NaorPinkasPersonalKey
 }
 \end{tikzpicture}
 
@@ -173,7 +173,7 @@ Allows to restore a number from a sufficient number of Naor-Pinkas shares \\
 \umlclass[]{NaorPinkasShareCombinator}{
 
 }{
-+ restore() : <any>
++ restore() : Optional<BigInteger>
 }
 \end{tikzpicture}
 
@@ -198,7 +198,7 @@ Allows to restore a number from a sufficient number of Naor-Pinkas shares \\
 
 \textbf{Methods}
 \begin{itemize}
-\item \lstinline|public <any>| \lstinline|restore|\lstinline|(Collection<NaorPinkasShare> shares)|\\
+\item \lstinline|public Optional<BigInteger>| \lstinline|restore|\lstinline|(Collection<NaorPinkasShare> shares)|\\
 Restores a secret from several Naor-Pinkas shares.
 
 Returns: The reconstructed secret or absent if the information represented
