@@ -3,7 +3,8 @@ package cryptocast.comm;
 import java.nio.channels.WritableByteChannel;
 
 /**
- * Adapter to use a WritableByteChannel (for example, a socket instance) as an OutChannel.
+ * Adapter to use a {@link WritableByteChannel} (for example, a file or socket instance) as
+ * an {@link OutChannel}.
  */
 public class WritableByteChannelAdapter implements OutChannel {
     /**

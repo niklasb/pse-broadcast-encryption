@@ -3,7 +3,8 @@ package cryptocast.comm;
 import java.nio.channels.ReadableByteChannel;
 
 /**
- * Adapter to use a ReadableByteChannel (for example, a socket instance) as an InChannel.
+ * Adapter to use a {@link ReadableByteChannel} (for example, a file or socket instance) as an
+ * {@link InChannel}.
  */
 public class ReadableByteChannelAdapter implements InChannel {
     /**

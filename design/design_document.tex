@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{booktabs}
+\usepackage{import}
 \usepackage{xspace}
 \usepackage{enumitem}
 \usepackage{cite}
@@ -53,7 +54,13 @@
 \clearpage
 
 \section{Introduction}
-The software CryptoCast will provide a service for sending crypted data from a server to certain
+CryptoCast is a piece of software that provides a service to send contents from a central server to a given
+group of recipients. Transmission happens via a unidirectional communication channel like IP multicast.
+The traffic duplication that would be required for commonly used transport protocols is therefore avoided.
+
+It enables access control through a specific form of encryption that is based on the Naor-Pinkas broadcast
+encryption scheme. The advantage of this scheme is the 
+The software CryptoCast will provide a service for sending encrypted data from a server to certain
 amount of people.  This will be implemented as an unidirectional connection that makes it possible for the server
 to send data without knowing how many people are receiving it and without the amount of traffic caused
 by a bidirectional connection.  Also the type of the sent data will not be determined by the software. So it can be
@@ -74,18 +81,7 @@ change a lot of their enviroment.
 \input{figures/architecture_server/architectServer}
 
 \section{Package descriptions}
-\subsection{Client}
-The client uses a FileChooser, which can be used to select a file from the SD card of your android gadget.
-As a private key is necessary to encrypt data received from a server the FileChooser is used to select a keyfile.
-All servers and responding keyfiles are saved in the ServerHistory and therefore can be saved and reused after closing the client.
-Every error is displayed by using a simple pop up window defined by the class ErrorFragment.
-\subsection{Server}
-\subsection{Communication}
-\subsection{Crypto}
-
-
-\section{API design}
-\input{../docs/docs.tex}
+\subimport{../docs/}{all.tex}
 
 \section{Sequences}
 \begin{illustration}{Sequence diagram of a command perfomed by the Server.}
