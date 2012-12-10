@@ -6,6 +6,14 @@ The client uses a \lstinline|FileChooser|, which can be used to select a file fr
 \subsubsection{Class \lstinline|StreamViewerActivity|}
 This activity is responsible for decrypting the received data
  stream and viewing it. \\
+\begin{tikzpicture}
+\umlclass[]{StreamViewerActivity}{
+
+}{
++ onOptionsItemSelected() : boolean \\ + togglePlay() : void \\ + isPlaying() : boolean
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -54,6 +62,14 @@ Returns: whether the player is in playing mode
 \subsubsection{Class \lstinline|ServerHistory|}
 This class is responsible for saving recently selected servers
  and their corresponding key files. \\
+\begin{tikzpicture}
+\umlclass[]{ServerHistory}{
+
+}{
++ getServers() : Map<String, File> \\ + addServer() : void
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -97,6 +113,14 @@ This class represents the activity to connect to the server.
  let the user choose an encryption key file. When the client receives a
  data stream the \lstinline|StreamViewerActivity| is started to process the
  stream and show its contents. \\
+\begin{tikzpicture}
+\umlclass[]{MainActivity}{
+
+}{
++ connectToServer() : void \\ + onOptionsItemSelected() : boolean
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -138,6 +162,14 @@ Handles a click on the main menu.
 
 \subsubsection{Class \lstinline|OptionsActivity|}
 The option screen. \\
+\begin{tikzpicture}
+\umlclass[]{OptionsActivity}{
+
+}{
+\# onCreate() : void \\ + onCreateOptionsMenu() : boolean
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -180,6 +212,14 @@ Inflates the option menu.
 \subsubsection{Class \lstinline|KeyChoiceActivity|}
 This activity lets a user choose an encryption key file
  which is then sent to the server for authentication. \\
+\begin{tikzpicture}
+\umlclass[]{KeyChoiceActivity}{
+
+}{
++ getChosenFile() : <any> \\ + onFileClick() : void
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -218,6 +258,14 @@ Calld when the user clicks a file in the list.
 
 \subsubsection{Class \lstinline|ErrorFragment|}
 This class is used to pop up an error message. \\
+\begin{tikzpicture}
+\umlclass[]{ErrorFragment}{
+
+}{
+
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}

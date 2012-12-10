@@ -83,6 +83,35 @@ def render_method(meth):
                     sep="\\\\" if description.strip() else "",
                     )
 
+def render_tikz_method(meth, abstract=False):
+    rettype = ""
+    res = meth.find("result")
+    if res != None and res.find("type").text != "void":
+        rettype = " : " + transform_type(res.find("type"))
+    access = {"public":"+", "protected":"\\#", "private":"--"}[meth.find("scope").text]
+    params = ""
+    return "%s %s(%s)%s" % (access, meth.find("name").text, params, rettype)
+
+def render_class_diagram(cls):
+    abstr = parse_bool(text_or(cls.find("isAbstract"), "true"))
+    methodsel = cls.find("methods")
+    methods = ""
+    if methodsel is not None:
+        methods = " \\\\ ".join(render_tikz_method(m, abstr) for m in methodsel.iter("method"))
+    return dedent("""\
+        \\begin{{tikzpicture}}
+        \\umlclass[{classparams}]{{{classname}}}{{
+        {fields}
+        }}{{
+        {methods}
+        }}
+        \\end{{tikzpicture}}
+        """).format(classname=class_name(cls),
+                    classparams=("type=abstract" if abstr else ""),
+                    fields="",
+                    methods=methods,
+                    )
+
 def render_class(cls, indent=2):
     abstr = cls.find("isAbstract")
     interface = abstr is None # if this isn't present, cls is an interface
@@ -134,12 +163,14 @@ def render_class(cls, indent=2):
     return dedent("""\
            \\{sub}section{{{classtype} \\lstinline|{classname}|}}
            {description} \\\\
+           {diagram}
 
            {basestxt}
            {typevars}
            {constructortxt}
            {methodtxt}
            """).format(classtype=("Interface" if interface else "Class"),
+                       diagram=render_class_diagram(cls),
                        classname=class_name(cls),
                        description=cls.find("comment").text,
                        typevars=typevarstxt,

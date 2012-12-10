@@ -3,6 +3,14 @@
 \subsubsection{Class \lstinline|WritableByteChannelAdapter|}
 Adapter to use a \lstinline|WritableByteChannel| (for example, a file or socket instance) as
  an \lstinline|OutChannel|. \\
+\begin{tikzpicture}
+\umlclass[]{WritableByteChannelAdapter}{
+
+}{
++ send() : void
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -39,6 +47,14 @@ Sends the given data.
 
 \subsubsection{Class \lstinline|StatisticalOutChannel|}
 Wrapper around an OutChannel that counts outgoing bytes \\
+\begin{tikzpicture}
+\umlclass[]{StatisticalOutChannel}{
+
+}{
++ send() : void \\ + getSentBytes() : int
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -80,6 +96,14 @@ Returns: the number of sent bytes
 
 \subsubsection{Class \lstinline|SocketMulticastServer|}
 This class implements channel-based communication via TCP. \\
+\begin{tikzpicture}
+\umlclass[]{SocketMulticastServer}{
+
+}{
++ send() : void
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -117,6 +141,14 @@ Sends bytes via the channel.
 \subsubsection{Class \lstinline|MessageInChannel|}
 Wraps a byte-based InChannel and allows to use it as a message-based
  channel. \\
+\begin{tikzpicture}
+\umlclass[]{MessageInChannel}{
+
+}{
++ recvMessage() : byte[]
+}
+\end{tikzpicture}
+
 
 
 
@@ -146,6 +178,14 @@ Returns: the received data
 \subsubsection{Class \lstinline|MessageOutChannel|}
 Wraps a byte-based OutChannel and allows to use it as a message-based
  channel. \\
+\begin{tikzpicture}
+\umlclass[]{MessageOutChannel}{
+
+}{
++ sendMessage() : void
+}
+\end{tikzpicture}
+
 
 
 
@@ -177,6 +217,14 @@ Sends the given message via the channel.
 
 \subsubsection{Class \lstinline|StatisticalInChannel|}
 Wrapper around an InChannel that counts incoming bytes \\
+\begin{tikzpicture}
+\umlclass[]{StatisticalInChannel}{
+
+}{
++ recv() : void \\ + getReceivedBytes() : int
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -220,6 +268,14 @@ Returns: the number of received bytes
 \subsubsection{Class \lstinline|ReadableByteChannelAdapter|}
 Adapter to use a \lstinline|ReadableByteChannel| (for example, a file or socket instance) as an
  \lstinline|InChannel|. \\
+\begin{tikzpicture}
+\umlclass[]{ReadableByteChannelAdapter}{
+
+}{
++ recv() : void
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -258,6 +314,14 @@ Receives data.
 \subsubsection{Class \lstinline|MultiOutChannel|}
 Multiplexes several OutChannels so that they can be used as a single
  destination. \\
+\begin{tikzpicture}
+\umlclass[]{MultiOutChannel}{
+
+}{
++ addChannel() : void \\ + removeChannel() : void \\ + send() : void
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -307,6 +371,14 @@ Sends the given data.
 
 \subsubsection{Interface \lstinline|InChannel|}
 A byte-based communication channel from which data can be received. \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{InChannel}{
+
+}{
++ recv() : void
+}
+\end{tikzpicture}
+
 
 
 
@@ -327,6 +399,14 @@ Receives data.
 
 \subsubsection{Interface \lstinline|OutChannel|}
 A byte-based communication channel where data can be sent to. \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{OutChannel}{
+
+}{
++ send() : void
+}
+\end{tikzpicture}
+
 
 
 

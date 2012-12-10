@@ -2,6 +2,14 @@
 
 \subsubsection{Class \lstinline|LagrangeInterpolation<T>|}
 Performs a lagrange interpolation of a polynomial \\
+\begin{tikzpicture}
+\umlclass[]{LagrangeInterpolation<T>}{
+
+}{
++ computeCoefficients() : T[]
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}
@@ -33,6 +41,14 @@ Returns: The lagrange coefficients of the associated polynomial
 
 \subsubsection{Class \lstinline|IntegersModuloPrime|}
 The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$ \\
+\begin{tikzpicture}
+\umlclass[]{IntegersModuloPrime}{
+
+}{
++ add() : BigInteger \\ + multiply() : BigInteger \\ + negate() : BigInteger \\ + invert() : BigInteger \\ + zero() : BigInteger \\ + one() : BigInteger \\ + randomElement() : BigInteger
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -96,6 +112,14 @@ Initializes the field
 
 \subsubsection{Class \lstinline|Polynomial<T>|}
 A polynomial $P$ over a field \\
+\begin{tikzpicture}
+\umlclass[]{Polynomial<T>}{
+
+}{
++ getField() : Field<T> \\ + evaluate() : T \\ + evaluateMulti() : T[] \\ + getCoefficient() : T \\ + getDegree() : int \\ + createRandomPolynomial() : Polynomial<T>
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}
@@ -170,6 +194,14 @@ Returns: The generated polynomial
 
 \subsubsection{Class \lstinline|Field<T>|}
 Represents a field over values of type T \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{Field<T>}{
+
+}{
++ add() : T \\ + multiply() : T \\ + negate() : T \\ + invert() : T \\ + zero() : T \\ + one() : T \\ + randomElement() : T \\ + subtract() : T \\ + divide() : T \\ + pow() : T
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}
@@ -269,6 +301,14 @@ Returns: The value $a^e$
 
 \subsubsection{Class \lstinline|BroadcastEncryptionServer<ID>|}
 The server side of a broadcast encryption scheme. \\
+\begin{tikzpicture}
+\umlclass[]{BroadcastEncryptionServer<ID>}{
+
+}{
++ run() : void \\ + send() : void \\ + revoke() : void
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -326,6 +366,14 @@ Revoke a user.
 
 \subsubsection{Class \lstinline|BroadcastEncryptionClient|}
 The client side of a broadcast encryption scheme. \\
+\begin{tikzpicture}
+\umlclass[]{BroadcastEncryptionClient}{
+
+}{
++ recv() : void
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -364,6 +412,14 @@ Receive data from the channel. It is decrypted on the fly.
 
 \subsubsection{Interface \lstinline|Decryptor<S>|}
 A strategy to decrypt a single secret \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{Decryptor<S>}{
+
+}{
++ decrypt() : S
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}
@@ -386,6 +442,14 @@ Returns: The decrypted secret
 
 \subsubsection{Interface \lstinline|BroadcastSchemeUserManager<ID>|}
 Manages a set of user identites \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{BroadcastSchemeUserManager<ID>}{
+
+}{
++ getIdentity() : ID \\ + revoke() : void \\ + isRevoked() : boolean
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}
@@ -424,6 +488,14 @@ Returns: whether the user is revoked
 
 \subsubsection{Interface \lstinline|Encryptor<S>|}
 A strategy to encrypt a single secret \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{Encryptor<S>}{
+
+}{
++ encrypt() : byte[]
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}
@@ -446,6 +518,14 @@ Returns: The cipher text
 
 \subsubsection{Interface \lstinline|BroadcastSchemeKeyManager<ID>|}
 Manages the private keys of a set of users. \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{BroadcastSchemeKeyManager<ID>}{
+
+}{
++ getPersonalKey() : PrivateKey
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}
@@ -468,6 +548,14 @@ Returns: The private key of the user
 
 \subsubsection{Interface \lstinline|ShareCombinator<S, T>|}
 Implements a strategy to restore a secret from a number of shares. \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{ShareCombinator<S, T>}{
+
+}{
++ restore() : <any>
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}

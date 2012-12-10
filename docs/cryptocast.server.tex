@@ -2,6 +2,14 @@
 
 \subsubsection{Class \lstinline|Controller<ID>|}
 Deals with user-interactions and therefore changes data in Model if necessary. \\
+\begin{tikzpicture}
+\umlclass[]{Controller<ID>}{
+
+}{
++ init() : void \\ + keyGen() : void \\ + addUser() : void \\ + revokeUser() : void \\ + authorizeUser() : void \\ + stream() : void \\ + showStatistics() : void \\ + showUsers() : void \\ + showInfo() : void
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}
@@ -91,6 +99,14 @@ Prints information about the data which is currently sent.
 
 \subsubsection{Class \lstinline|User<ID>|}
 This Class represents an User. \\
+\begin{tikzpicture}
+\umlclass[]{User<ID>}{
+
+}{
++ getName() : String \\ + getIdentity() : ID
+}
+\end{tikzpicture}
+
 
 
 \begin{itemize}
@@ -128,6 +144,14 @@ Returns: the id of this user.
 
 \subsubsection{Class \lstinline|Shell<ID>|}
 Gets the arguments from the command line and deals with illegal input. \\
+\begin{tikzpicture}
+\umlclass[]{Shell<ID>}{
+
+}{
+\# performCommand() : void \\ -- help() : void
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -171,6 +195,14 @@ Prints all commands this shell can perform with information about how to use the
 
 \subsubsection{Class \lstinline|ServerData<ID>|}
 Contains the data which is changed by Controller and presented on CLI. \\
+\begin{tikzpicture}
+\umlclass[]{ServerData<ID>}{
+
+}{
++ createNewUser() : <any> \\ + getUserByName() : <any> \\ + getPersonalKey() : <any>
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -223,6 +255,14 @@ Returns: The private key
 
 \subsubsection{Class \lstinline|Main|}
 The main method to start the server \\
+\begin{tikzpicture}
+\umlclass[]{Main}{
+
+}{
++ main() : void
+}
+\end{tikzpicture}
+
 
 
 

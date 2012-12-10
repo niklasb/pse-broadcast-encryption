@@ -2,6 +2,14 @@
 Utility classes that are not specific to CryptoCast and don't fit any of the other packages.
 \subsubsection{Class \lstinline|CommandLineInterface|}
 A simple framework for command line programs. \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{CommandLineInterface}{
+
+}{
++ run() : int \\ \# start() : void \\ \# printf() : void \\ \# print() : void \\ \# println() : void \\ \# getErrorFormat() : String \\ \# fatalError() : void \\ \# exit() : void \\ \# usage() : void \\ \# getBasicUsage() : String \\ \# printAdditionalUsage() : void
+}
+\end{tikzpicture}
+
 
 
 
@@ -106,6 +114,14 @@ Prints additional usage information (may be overridden)
 
 \subsubsection{Class \lstinline|CommandLineInterface.Exit|}
 Signals the exit of the application. \\
+\begin{tikzpicture}
+\umlclass[]{CommandLineInterface.Exit}{
+
+}{
++ getStatus() : int
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -141,6 +157,14 @@ Returns: the exit code
 A framework class to implement interactive command-line interfaces. The class implements
  a read-parse-execute main loop and provides hooks for subclasses to implement the missing
  functionality. \\
+\begin{tikzpicture}
+\umlclass[type=abstract]{InteractiveCommandLineInterface}{
+
+}{
+\# start() : void \\ \# mainloop() : void \\ \# performCommand() : void \\ \# error() : void \\ \# getPrompt() : String
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
@@ -208,6 +232,14 @@ Returns: The input prompt
 
 \subsubsection{Class \lstinline|InteractiveCommandLineInterface.CommandError|}
 An error within one of the commands. Will be caught by the main loop \\
+\begin{tikzpicture}
+\umlclass[]{InteractiveCommandLineInterface.CommandError}{
+
+}{
++ getMessage() : String
+}
+\end{tikzpicture}
+
 
 
 \textbf{Superclasses and Interfaces}
