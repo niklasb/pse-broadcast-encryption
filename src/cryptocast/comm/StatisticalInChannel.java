@@ -1,7 +1,7 @@
 package cryptocast.comm;
 
 /**
- * Wrapper around an InChannel that counts incoming bytes
+ * Wrapper around an {@link InChannel} that counts incoming bytes
  */
 public class StatisticalInChannel implements InChannel {
     /**

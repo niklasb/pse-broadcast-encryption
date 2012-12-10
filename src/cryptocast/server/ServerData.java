@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.security.PrivateKey;
 import java.util.Map;
 
-/** Contains the data which is changed by Controller and presented on CLI.
+/** Contains the data which is managed by the controller and presented by the view.
  * @param <ID> The type of the user identities
  */
 public class ServerData<ID> implements Serializable {

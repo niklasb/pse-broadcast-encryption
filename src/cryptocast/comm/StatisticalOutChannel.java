@@ -1,7 +1,7 @@
 package cryptocast.comm;
 
 /**
- * Wrapper around an OutChannel that counts outgoing bytes
+ * Wrapper around an {@link OutChannel} that counts outgoing bytes.
  */
 public class StatisticalOutChannel implements OutChannel {
     /**

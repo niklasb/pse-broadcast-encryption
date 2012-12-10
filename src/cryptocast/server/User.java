@@ -1,7 +1,7 @@
 package cryptocast.server;
 
 /**
- * This Class represents an User.
+ * Represents a user in our application.
  * @param <ID> The type of the user identities
  */
 class User<ID> {
