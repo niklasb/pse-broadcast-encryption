@@ -10,8 +10,7 @@ public class FileListElement implements ListElement {
      * Creates a new instance.
      * @param path The path of the file
      */
-    public ListElement(Path path) {
-    }
+    public FileListElement(Path path) { }
 
     /**
      * @return the path of the element

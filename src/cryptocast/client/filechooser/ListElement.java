@@ -9,10 +9,10 @@ public interface ListElement {
     /**
      * @return the path of the element
      */
-    public Path getPath() { return null; }
+    public Path getPath();
 
     /**
      * @return The icon associated with this element
      */
-    public Resource getIcon() { return null; }
+    public Resource getIcon();
 }

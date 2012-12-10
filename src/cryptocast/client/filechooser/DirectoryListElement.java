@@ -10,8 +10,7 @@ public class DirectoryListElement implements ListElement {
      * Creates a new instance.
      * @param path The path of the directory
      */
-    public ListElement(Path path) {
-    }
+    public DirectoryListElement(Path path) { }
 
     /**
      * @return the path of the element
