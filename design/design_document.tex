@@ -88,9 +88,15 @@ the presentation layer is presented by the shell, the application layer consists
 
 \input{figures/architecture_server/architectServer}
 
-\section{Package descriptions}
+\section{Package description}
 
-\subimport{../docs/}{all.tex}
+\input{../docs/cryptocast.comm.tex}
+\input{../docs/cryptocast.crypto.tex}
+\input{../docs/cryptocast.crypto.naorpinkas.tex}
+\input{../docs/cryptocast.util.tex}
+\input{../docs/cryptocast.server.tex}
+\input{../docs/cryptocast.client.tex}
+\input{../docs/cryptocast.client.filechooser.tex}
 
 \section{Sequences}
 \begin{illustration}{Sequence diagram of a command perfomed by the Server.}
@@ -100,10 +106,11 @@ the presentation layer is presented by the shell, the application layer consists
 \includegraphics [width=400px] {figures/sequence_diagram_client/sequence_client.png}
 \end{illustration}
 
-
-
-%\bibliography{../bibtex/references}{}
-%\bibliographystyle{plain}
+\begin{landscape}
+\begin{illustration}{Passing a piece of plaintext data through to the clients (Server side)}
+\includegraphics [width=700px] {figures/sequence_diagram_comm1_server/output.pdf}
+\end{illustration}
+\end{landscape}
 
 \section{GUI design}
 The GUI should be user-friendly and intuitional. Therefore its design is very minimalistic, foccusing on its main purpose. 

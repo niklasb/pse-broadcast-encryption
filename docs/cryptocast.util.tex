@@ -2,6 +2,9 @@
 Utility classes that are not specific to CryptoCast and don't fit any of the other packages.
 \subsubsection{Class \lstinline|CommandLineInterface|}
 A simple framework for command line programs. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{CommandLineInterface}{
 
@@ -9,14 +12,15 @@ A simple framework for command line programs. \\
 + run(args : String[]) : int \\ \umlvirt{\# start(args : String[])} \\ \# printf(format : String, args : Object[]...) \\ \# print(str : String) \\ \# println(str : String) \\ \# getErrorFormat() : String \\ \# fatalError(format : String, args : Object[]...) \\ \# exit(status : int) \\ \# usage() \\ \# getBasicUsage() : String \\ \# printAdditionalUsage()
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|CommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\
+\item \lstinline|public| \lstinline|CommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\ \\[-0.6em]
 Initializes a new CLI instance
 \begin{itemize}
 \item \lstinline|in|: The stream for program input
@@ -29,17 +33,17 @@ Initializes a new CLI instance
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public int| \lstinline|run|\lstinline|(String[] args)|\\
+\item \lstinline|public int| \lstinline|run|\lstinline|(String[] args)|\\ \\[-0.6em]
 Runs the application.
 \begin{itemize}
 \item \lstinline|args|: The command line arguments
 \end{itemize}
 
-Returns: The exit code
+\emph{Returns:} The exit code
 
-\item \lstinline|protected abstract void| \lstinline|start|\lstinline|(String[] args)|\\
+\item \lstinline|protected abstract void| \lstinline|start|\lstinline|(String[] args)|\\ \\[-0.6em]
 The main program logic (must be overridden by subclasses)
 \begin{itemize}
 \item \lstinline|args|: The command line arguments
@@ -47,7 +51,7 @@ The main program logic (must be overridden by subclasses)
 
 
 
-\item \lstinline|protected void| \lstinline|printf|\lstinline|(String format, Object[] args...)|\\
+\item \lstinline|protected void| \lstinline|printf|\lstinline|(String format, Object[] args...)|\\ \\[-0.6em]
 Prints a string to the output stream
 \begin{itemize}
 \item \lstinline|format|: The string to print (printf format string)
@@ -56,7 +60,7 @@ Prints a string to the output stream
 
 
 
-\item \lstinline|protected void| \lstinline|print|\lstinline|(String str)|\\
+\item \lstinline|protected void| \lstinline|print|\lstinline|(String str)|\\ \\[-0.6em]
 Prints a string to the output stream
 \begin{itemize}
 \item \lstinline|str|: The string to print
@@ -64,7 +68,7 @@ Prints a string to the output stream
 
 
 
-\item \lstinline|protected void| \lstinline|println|\lstinline|(String str)|\\
+\item \lstinline|protected void| \lstinline|println|\lstinline|(String str)|\\ \\[-0.6em]
 Prints a string to the output stream after appending a newline
 \begin{itemize}
 \item \lstinline|str|: The string to print
@@ -72,13 +76,13 @@ Prints a string to the output stream after appending a newline
 
 
 
-\item \lstinline|protected String| \lstinline|getErrorFormat|\lstinline|()|\\
-Returns: the string format to use for writing error messages to the
+\item \lstinline|protected String| \lstinline|getErrorFormat|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the string format to use for writing error messages to the
  screen.
 
 
 
-\item \lstinline|protected void| \lstinline|fatalError|\lstinline|(String format, Object[] args...)|\\
+\item \lstinline|protected void| \lstinline|fatalError|\lstinline|(String format, Object[] args...)|\\ \\[-0.6em]
 Prints an error and exits
 \begin{itemize}
 \item \lstinline|format|: The error message (printf format string)
@@ -87,7 +91,7 @@ Prints an error and exits
 
 
 
-\item \lstinline|protected void| \lstinline|exit|\lstinline|(int status)|\\
+\item \lstinline|protected void| \lstinline|exit|\lstinline|(int status)|\\ \\[-0.6em]
 Exits the application
 \begin{itemize}
 \item \lstinline|status|: The exit code
@@ -95,17 +99,17 @@ Exits the application
 
 
 
-\item \lstinline|protected void| \lstinline|usage|\lstinline|()|\\
+\item \lstinline|protected void| \lstinline|usage|\lstinline|()|\\ \\[-0.6em]
 Prints usage information
 
 
 
-\item \lstinline|protected String| \lstinline|getBasicUsage|\lstinline|()|\\
-Returns: basic usage information for the program (should be overridden)
+\item \lstinline|protected String| \lstinline|getBasicUsage|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} basic usage information for the program (should be overridden)
 
 
 
-\item \lstinline|protected void| \lstinline|printAdditionalUsage|\lstinline|()|\\
+\item \lstinline|protected void| \lstinline|printAdditionalUsage|\lstinline|()|\\ \\[-0.6em]
 Prints additional usage information (may be overridden)
 
 
@@ -114,6 +118,9 @@ Prints additional usage information (may be overridden)
 
 \subsubsection{Class \lstinline|CommandLineInterface.Exit|}
 Signals the exit of the application. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{CommandLineInterface.Exit}{
 
@@ -121,19 +128,20 @@ Signals the exit of the application. \\
 + getStatus() : int
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|java.lang.Throwable|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|CommandLineInterface.Exit|\lstinline|(int status)|\\
+\item \lstinline|public| \lstinline|CommandLineInterface.Exit|\lstinline|(int status)|\\ \\[-0.6em]
 Initializes a new Exit instance
 \begin{itemize}
 \item \lstinline|status|: The exit code
@@ -144,10 +152,10 @@ Initializes a new Exit instance
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public int| \lstinline|getStatus|\lstinline|()|\\
-Returns: the exit code
+\item \lstinline|public int| \lstinline|getStatus|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the exit code
 
 
 
@@ -157,6 +165,9 @@ Returns: the exit code
 A framework class to implement interactive command-line interfaces. The class implements
  a read-parse-execute main loop and provides hooks for subclasses to implement the missing
  functionality. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{InteractiveCommandLineInterface}{
 
@@ -164,19 +175,20 @@ A framework class to implement interactive command-line interfaces. The class im
 \# start(args : String[]) \\ \# mainloop() \\ \umlvirt{\# performCommand(cmd : String, args : String[])} \\ \# error(format : String, args : Object[]...) \\ \# getPrompt() : String
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.util.CommandLineInterface|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|InteractiveCommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\
+\item \lstinline|public| \lstinline|InteractiveCommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\ \\[-0.6em]
 Initializes a new interactive CLI instance
 \begin{itemize}
 \item \lstinline|in|: The stream for program input
@@ -189,9 +201,9 @@ Initializes a new interactive CLI instance
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|protected void| \lstinline|start|\lstinline|(String[] args)|\\
+\item \lstinline|protected void| \lstinline|start|\lstinline|(String[] args)|\\ \\[-0.6em]
 The main program logic. This method just starts the main loop.
 \begin{itemize}
 \item \lstinline|args|: The command line arguments (ignored by default)
@@ -199,12 +211,12 @@ The main program logic. This method just starts the main loop.
 
 
 
-\item \lstinline|protected void| \lstinline|mainloop|\lstinline|()|\\
+\item \lstinline|protected void| \lstinline|mainloop|\lstinline|()|\\ \\[-0.6em]
 Starts the interactive Prompt-Read-Evaluate main loop.
 
 
 
-\item \lstinline|protected abstract void| \lstinline|performCommand|\lstinline|(String cmd, String[] args)|\\
+\item \lstinline|protected abstract void| \lstinline|performCommand|\lstinline|(String cmd, String[] args)|\\ \\[-0.6em]
 Executes the given command with the given arguments. Must be implemented by subclasses.
 \begin{itemize}
 \item \lstinline|cmd|: The command name
@@ -213,7 +225,7 @@ Executes the given command with the given arguments. Must be implemented by subc
 
 
 
-\item \lstinline|protected void| \lstinline|error|\lstinline|(String format, Object[] args...)|\\
+\item \lstinline|protected void| \lstinline|error|\lstinline|(String format, Object[] args...)|\\ \\[-0.6em]
 Helper function to trigger an error withing a command's execution and break out to
  the main loop.
 \begin{itemize}
@@ -223,8 +235,8 @@ Helper function to trigger an error withing a command's execution and break out 
 
 
 
-\item \lstinline|protected String| \lstinline|getPrompt|\lstinline|()|\\
-Returns: The input prompt
+\item \lstinline|protected String| \lstinline|getPrompt|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The input prompt
 
 
 
@@ -232,6 +244,9 @@ Returns: The input prompt
 
 \subsubsection{Class \lstinline|InteractiveCommandLineInterface.CommandError|}
 An error within one of the commands. Will be caught by the main loop \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{InteractiveCommandLineInterface.CommandError}{
 
@@ -239,19 +254,20 @@ An error within one of the commands. Will be caught by the main loop \\
 + getMessage() : String
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|java.lang.Throwable|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|InteractiveCommandLineInterface.CommandError|\lstinline|(String msg)|\\
+\item \lstinline|public| \lstinline|InteractiveCommandLineInterface.CommandError|\lstinline|(String msg)|\\ \\[-0.6em]
 Initializes the error
 \begin{itemize}
 \item \lstinline|msg|: The error message
@@ -262,10 +278,10 @@ Initializes the error
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public String| \lstinline|getMessage|\lstinline|()|\\
-Returns: The associated error message
+\item \lstinline|public String| \lstinline|getMessage|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The associated error message
 
 
 

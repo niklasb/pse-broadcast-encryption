@@ -3,6 +3,9 @@
 \subsubsection{Class \lstinline|WritableByteChannelAdapter|}
 Adapter to use a \lstinline|WritableByteChannel| (for example, a file or socket instance) as
  an \lstinline|OutChannel|. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{WritableByteChannelAdapter}{
 
@@ -10,19 +13,20 @@ Adapter to use a \lstinline|WritableByteChannel| (for example, a file or socket 
 + send(data : byte[])
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.comm.OutChannel|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|WritableByteChannelAdapter|\lstinline|(WritableByteChannel inner)|\\
+\item \lstinline|public| \lstinline|WritableByteChannelAdapter|\lstinline|(WritableByteChannel inner)|\\ \\[-0.6em]
 Initializes the adapter
 \begin{itemize}
 \item \lstinline|inner|: The wrapped instance
@@ -33,9 +37,9 @@ Initializes the adapter
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given data.
 \begin{itemize}
 \item \lstinline|data|: the data to send
@@ -47,6 +51,9 @@ Sends the given data.
 
 \subsubsection{Class \lstinline|StatisticalOutChannel|}
 Wrapper around an \lstinline|OutChannel| that counts outgoing bytes. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{StatisticalOutChannel}{
 
@@ -54,20 +61,21 @@ Wrapper around an \lstinline|OutChannel| that counts outgoing bytes. \\
 + send(data : byte[]) \\ + getSentBytes() : int
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.comm.OutChannel|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|StatisticalOutChannel|\lstinline|(OutChannel inner)|\\
-Outitializes the proxy
+\item \lstinline|public| \lstinline|StatisticalOutChannel|\lstinline|(OutChannel inner)|\\ \\[-0.6em]
+Initializes the proxy
 \begin{itemize}
 \item \lstinline|inner|: the wrapped channel
 \end{itemize}
@@ -77,9 +85,9 @@ Outitializes the proxy
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given data.
 \begin{itemize}
 \item \lstinline|data|: the data to send
@@ -87,8 +95,8 @@ Sends the given data.
 
 
 
-\item \lstinline|public int| \lstinline|getSentBytes|\lstinline|()|\\
-Returns: the number of sent bytes
+\item \lstinline|public int| \lstinline|getSentBytes|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the number of sent bytes
 
 
 
@@ -96,6 +104,9 @@ Returns: the number of sent bytes
 
 \subsubsection{Class \lstinline|SocketMulticastServer|}
 This class implements channel-based communication via TCP. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{SocketMulticastServer}{
 
@@ -103,19 +114,20 @@ This class implements channel-based communication via TCP. \\
 + send(data : byte[])
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.comm.OutChannel|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|SocketMulticastServer|\lstinline|(ServerSocket socket)|\\
+\item \lstinline|public| \lstinline|SocketMulticastServer|\lstinline|(ServerSocket socket)|\\ \\[-0.6em]
 Creates a multicast server which uses the given socket.
 \begin{itemize}
 \item \lstinline|socket|: server socket
@@ -126,9 +138,9 @@ Creates a multicast server which uses the given socket.
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends bytes via the channel.
 \begin{itemize}
 \item \lstinline|data|: the data to send
@@ -141,6 +153,9 @@ Sends bytes via the channel.
 \subsubsection{Class \lstinline|MessageInChannel|}
 Wraps a byte-based InChannel and allows to use it as a message-based
  channel. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{MessageInChannel}{
 
@@ -148,14 +163,15 @@ Wraps a byte-based InChannel and allows to use it as a message-based
 + recvMessage() : byte[]
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|MessageInChannel|\lstinline|(InChannel inner)|\\
+\item \lstinline|public| \lstinline|MessageInChannel|\lstinline|(InChannel inner)|\\ \\[-0.6em]
 Creates a MessageInChannel which wraps the given inner channel.
 \begin{itemize}
 \item \lstinline|inner|: the wrapped channel
@@ -166,18 +182,21 @@ Creates a MessageInChannel which wraps the given inner channel.
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public byte[]| \lstinline|recvMessage|\lstinline|()|\\
+\item \lstinline|public byte[]| \lstinline|recvMessage|\lstinline|()|\\ \\[-0.6em]
 Receives a message via the channel.
 
-Returns: the received data
+\emph{Returns:} the received data
 
 \end{itemize}
 
 \subsubsection{Class \lstinline|MessageOutChannel|}
 Wraps a byte-based OutChannel and allows to use it as a message-based
  channel. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{MessageOutChannel}{
 
@@ -185,14 +204,15 @@ Wraps a byte-based OutChannel and allows to use it as a message-based
 + sendMessage(data : byte[])
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|MessageOutChannel|\lstinline|(OutChannel inner)|\\
+\item \lstinline|public| \lstinline|MessageOutChannel|\lstinline|(OutChannel inner)|\\ \\[-0.6em]
 Creates a new MessageOutChannel with the given OutChannel as inner channel.
 \begin{itemize}
 \item \lstinline|inner|: the OutChannel which will be wrapped
@@ -203,9 +223,9 @@ Creates a new MessageOutChannel with the given OutChannel as inner channel.
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(byte[] data)|\\
+\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given message via the channel.
 \begin{itemize}
 \item \lstinline|data|: the data to send
@@ -217,6 +237,9 @@ Sends the given message via the channel.
 
 \subsubsection{Class \lstinline|StatisticalInChannel|}
 Wrapper around an \lstinline|InChannel| that counts incoming bytes \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{StatisticalInChannel}{
 
@@ -224,19 +247,20 @@ Wrapper around an \lstinline|InChannel| that counts incoming bytes \\
 + recv(size : int, buffer : byte[]) \\ + getReceivedBytes() : int
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.comm.InChannel|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|StatisticalInChannel|\lstinline|(InChannel inner)|\\
+\item \lstinline|public| \lstinline|StatisticalInChannel|\lstinline|(InChannel inner)|\\ \\[-0.6em]
 Initializes the proxy
 \begin{itemize}
 \item \lstinline|inner|: the wrapped channel
@@ -247,9 +271,9 @@ Initializes the proxy
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\
+\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
 Receives data.
 \begin{itemize}
 \item \lstinline|size|: maximum amount of bytes to read
@@ -258,8 +282,8 @@ Receives data.
 
 
 
-\item \lstinline|public int| \lstinline|getReceivedBytes|\lstinline|()|\\
-Returns: the number of received bytes
+\item \lstinline|public int| \lstinline|getReceivedBytes|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the number of received bytes
 
 
 
@@ -268,6 +292,9 @@ Returns: the number of received bytes
 \subsubsection{Class \lstinline|ReadableByteChannelAdapter|}
 Adapter to use a \lstinline|ReadableByteChannel| (for example, a file or socket instance) as an
  \lstinline|InChannel|. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{ReadableByteChannelAdapter}{
 
@@ -275,19 +302,20 @@ Adapter to use a \lstinline|ReadableByteChannel| (for example, a file or socket 
 + recv(size : int, buffer : byte[])
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.comm.InChannel|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|ReadableByteChannelAdapter|\lstinline|(ReadableByteChannel inner)|\\
+\item \lstinline|public| \lstinline|ReadableByteChannelAdapter|\lstinline|(ReadableByteChannel inner)|\\ \\[-0.6em]
 Initializes the adapter
 \begin{itemize}
 \item \lstinline|inner|: The wrapped instance
@@ -298,9 +326,9 @@ Initializes the adapter
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\
+\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
 Receives data.
 \begin{itemize}
 \item \lstinline|size|: maximum amount of bytes to read
@@ -314,6 +342,9 @@ Receives data.
 \subsubsection{Class \lstinline|MultiOutChannel|}
 Multiplexes several \lstinline|OutChannel|s so that they can be used as a single
  destination. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{MultiOutChannel}{
 
@@ -321,29 +352,21 @@ Multiplexes several \lstinline|OutChannel|s so that they can be used as a single
 + addChannel(channel : OutChannel) \\ + removeChannel(channel : OutChannel) \\ + send(data : byte[])
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.comm.OutChannel|
 \end{itemize}
 
 
 
-\textbf{Constructors}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|MultiOutChannel|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|addChannel|\lstinline|(OutChannel channel)|\\
+\item \lstinline|public void| \lstinline|addChannel|\lstinline|(OutChannel channel)|\\ \\[-0.6em]
 Adds the given channel to the list of receivers.
 \begin{itemize}
 \item \lstinline|channel|: the channel to add
@@ -351,7 +374,7 @@ Adds the given channel to the list of receivers.
 
 
 
-\item \lstinline|public void| \lstinline|removeChannel|\lstinline|(OutChannel channel)|\\
+\item \lstinline|public void| \lstinline|removeChannel|\lstinline|(OutChannel channel)|\\ \\[-0.6em]
 Removes the given channel from the list of receivers.
 \begin{itemize}
 \item \lstinline|channel|: the channel to remove
@@ -359,7 +382,7 @@ Removes the given channel from the list of receivers.
 
 
 
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given data.
 \begin{itemize}
 \item \lstinline|data|: the data to send
@@ -371,6 +394,9 @@ Sends the given data.
 
 \subsubsection{Interface \lstinline|InChannel|}
 A byte-based communication channel from which data can be received. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{InChannel}{
 
@@ -378,15 +404,16 @@ A byte-based communication channel from which data can be received. \\
 \umlvirt{+ recv(size : int, buffer : byte[])}
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
 
 
-
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\
+\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
 Receives data.
 \begin{itemize}
 \item \lstinline|size|: maximum amount of bytes to read
@@ -399,6 +426,9 @@ Receives data.
 
 \subsubsection{Interface \lstinline|OutChannel|}
 A byte-based communication channel where data can be sent to. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{OutChannel}{
 
@@ -406,15 +436,16 @@ A byte-based communication channel where data can be sent to. \\
 \umlvirt{+ send(data : byte[])}
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
 
 
-
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given data.
 \begin{itemize}
 \item \lstinline|data|: the data to send

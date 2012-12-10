@@ -2,6 +2,9 @@
 
 \subsubsection{Class \lstinline|NaorPinkasClient|}
 A client in the Naor-Pinkas broadcast encryption scheme. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{NaorPinkasClient}{
 
@@ -9,19 +12,20 @@ A client in the Naor-Pinkas broadcast encryption scheme. \\
 + decrypt(cipher : byte[]) : BigInteger
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.crypto.Decryptor<BigInteger>|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasClient|\lstinline|(NaorPinkasPersonalKey key)|\\
+\item \lstinline|public| \lstinline|NaorPinkasClient|\lstinline|(NaorPinkasPersonalKey key)|\\ \\[-0.6em]
 Initializes a Naor-Pinkas broadcast client
 \begin{itemize}
 \item \lstinline|key|: The personal key used to reconstruct a secret from the stream
@@ -32,15 +36,15 @@ Initializes a Naor-Pinkas broadcast client
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public BigInteger| \lstinline|decrypt|\lstinline|(byte[] cipher)|\\
+\item \lstinline|public BigInteger| \lstinline|decrypt|\lstinline|(byte[] cipher)|\\ \\[-0.6em]
 Decrypts a secret.
 \begin{itemize}
 \item \lstinline|cipher|: The encrypted secret
 \end{itemize}
 
-Returns: The decrypted secret
+\emph{Returns:} The decrypted secret
 
 \end{itemize}
 
@@ -48,6 +52,9 @@ Returns: The decrypted secret
 A server in the Naor-Pinkas broadcast encryption scheme. This server is special in that it knows
  the entire polynomial and therefore all the private keys of its users. This makes the implementation
  of the interpolation algorithm a bit more efficient. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{NaorPinkasServer}{
 
@@ -55,10 +62,12 @@ A server in the Naor-Pinkas broadcast encryption scheme. This server is special 
 + encrypt(secret : BigInteger) : byte[] \\ + getIdentity(i : int) : NaorPinkasIdentity \\ + revoke(x : NaorPinkasIdentity) \\ + isRevoked(id : NaorPinkasIdentity) : boolean \\ + getPersonalKey(id : NaorPinkasIdentity) : NaorPinkasPersonalKey
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.crypto.BroadcastSchemeKeyManager<NaorPinkasIdentity>|
 \item \lstinline|cryptocast.crypto.BroadcastSchemeUserManager<NaorPinkasIdentity>|
@@ -68,49 +77,39 @@ A server in the Naor-Pinkas broadcast encryption scheme. This server is special 
 
 
 
-\textbf{Constructors}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasServer|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(BigInteger secret)|\\
+\item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(BigInteger secret)|\\ \\[-0.6em]
 Encrypts a secret
 \begin{itemize}
 \item \lstinline|secret|: the secret
 \end{itemize}
 
-Returns: The cipher text
+\emph{Returns:} The cipher text
 
-\item \lstinline|public NaorPinkasIdentity| \lstinline|getIdentity|\lstinline|(int i)|\\
-Returns: The identity with the given index
+\item \lstinline|public NaorPinkasIdentity| \lstinline|getIdentity|\lstinline|(int i)|\\ \\[-0.6em]
+\emph{Returns:} The identity with the given index
 \begin{itemize}
 \item \lstinline|i|: An index
 \end{itemize}
 
 
 
-\item \lstinline|public void| \lstinline|revoke|\lstinline|(NaorPinkasIdentity x)|\\
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(NaorPinkasIdentity x)|\\ \\[-0.6em]
 Revokes a user
 
 
 
-\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(NaorPinkasIdentity id)|\\
-Returns: whether the user is revoked
+\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(NaorPinkasIdentity id)|\\ \\[-0.6em]
+\emph{Returns:} whether the user is revoked
 \begin{itemize}
 \item \lstinline|id|: The identity of the user
 \end{itemize}
 
 
 
-\item \lstinline|public NaorPinkasPersonalKey| \lstinline|getPersonalKey|\lstinline|(NaorPinkasIdentity id)|\\
-Returns: The private key of the user
+\item \lstinline|public NaorPinkasPersonalKey| \lstinline|getPersonalKey|\lstinline|(NaorPinkasIdentity id)|\\ \\[-0.6em]
+\emph{Returns:} The private key of the user
 \begin{itemize}
 \item \lstinline|id|: The identity to look up
 \end{itemize}
@@ -121,6 +120,9 @@ Returns: The private key of the user
 
 \subsubsection{Class \lstinline|NaorPinkasPersonalKey|}
 A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{NaorPinkasPersonalKey}{
 
@@ -128,39 +130,31 @@ A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
 + getAlgorithm() : String \\ + getEncoded() : byte[] \\ + getFormat() : String
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|java.security.PrivateKey|
 \end{itemize}
 
 
 
-\textbf{Constructors}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasPersonalKey|\lstinline|()|
+\item \lstinline|public String| \lstinline|getAlgorithm|\lstinline|()| \\[-0.6em]
 
 
 
 
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public String| \lstinline|getAlgorithm|\lstinline|()|
+\item \lstinline|public byte[]| \lstinline|getEncoded|\lstinline|()| \\[-0.6em]
 
 
 
 
-\item \lstinline|public byte[]| \lstinline|getEncoded|\lstinline|()|
-
-
-
-
-\item \lstinline|public String| \lstinline|getFormat|\lstinline|()|
+\item \lstinline|public String| \lstinline|getFormat|\lstinline|()| \\[-0.6em]
 
 
 
@@ -169,6 +163,9 @@ A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
 
 \subsubsection{Class \lstinline|NaorPinkasShareCombinator|}
 Allows to restore a number from a sufficient number of Naor-Pinkas shares \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{NaorPinkasShareCombinator}{
 
@@ -176,32 +173,24 @@ Allows to restore a number from a sufficient number of Naor-Pinkas shares \\
 + restore(shares : Collection<NaorPinkasShare>) : Optional<BigInteger>
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.crypto.ShareCombinator<BigInteger, NaorPinkasShare>|
 \end{itemize}
 
 
 
-\textbf{Constructors}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasShareCombinator|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public Optional<BigInteger>| \lstinline|restore|\lstinline|(Collection<NaorPinkasShare> shares)|\\
+\item \lstinline|public Optional<BigInteger>| \lstinline|restore|\lstinline|(Collection<NaorPinkasShare> shares)|\\ \\[-0.6em]
 Restores a secret from several Naor-Pinkas shares.
 
-Returns: The reconstructed secret or absent if the information represented
+\emph{Returns:} The reconstructed secret or absent if the information represented
  by the given shares is insufficient to restore it.
 
 \end{itemize}
@@ -210,6 +199,9 @@ Returns: The reconstructed secret or absent if the information represented
 A share in the Naor-Pinkas broadcast encryption scheme. It consists of a tuple
  $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
  value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{NaorPinkasShare}{
 
@@ -217,23 +209,18 @@ A share in the Naor-Pinkas broadcast encryption scheme. It consists of a tuple
 
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-
-
-\textbf{Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasShare|\lstinline|()|
-
-
-
-
-\end{itemize}
 
 
 \subsubsection{Class \lstinline|NaorPinkasIdentity|}
 An identity in the Naor-Pinkas broadcast encryption scheme \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{NaorPinkasIdentity}{
 
@@ -241,14 +228,15 @@ An identity in the Naor-Pinkas broadcast encryption scheme \\
 -- getId() : BigInteger
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|private| \lstinline|NaorPinkasIdentity|\lstinline|(BigInteger id)|
+\item \lstinline|private| \lstinline|NaorPinkasIdentity|\lstinline|(BigInteger id)| \\[-0.6em]
 
 
 
@@ -256,9 +244,9 @@ An identity in the Naor-Pinkas broadcast encryption scheme \\
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|private BigInteger| \lstinline|getId|\lstinline|()|
+\item \lstinline|private BigInteger| \lstinline|getId|\lstinline|()| \\[-0.6em]
 
 
 

@@ -5,7 +5,7 @@ package cryptocast.comm;
  */
 public class StatisticalOutChannel implements OutChannel {
     /**
-     * Outitializes the proxy
+     * Initializes the proxy
      * @param inner the wrapped channel
      */
     public StatisticalOutChannel(OutChannel inner) { }

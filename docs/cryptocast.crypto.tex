@@ -2,6 +2,9 @@
 
 \subsubsection{Class \lstinline|LagrangeInterpolation<T>|}
 Performs a lagrange interpolation of a polynomial \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{LagrangeInterpolation<T>}{
 
@@ -9,17 +12,18 @@ Performs a lagrange interpolation of a polynomial \\
 + computeCoefficients() : T[]
 }
 \end{tikzpicture}
-
-
+\vspace{0.3em}
+\end{minipage}
 
 \begin{itemize}
 \item \lstinline|<T>|: The type of items of the polynomial's field
 \end{itemize}
 
 
-\textbf{Constructors}
+
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|LagrangeInterpolation|\lstinline|(Polynomial<T> poly)|\\
+\item \lstinline|public| \lstinline|LagrangeInterpolation|\lstinline|(Polynomial<T> poly)|\\ \\[-0.6em]
 Initializes the algorithm
 \begin{itemize}
 \item \lstinline|poly|: The polynomial to interpolate
@@ -30,10 +34,10 @@ Initializes the algorithm
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public T[]| \lstinline|computeCoefficients|\lstinline|()|\\
-Returns: The lagrange coefficients of the associated polynomial
+\item \lstinline|public T[]| \lstinline|computeCoefficients|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The lagrange coefficients of the associated polynomial
 
 
 
@@ -41,6 +45,9 @@ Returns: The lagrange coefficients of the associated polynomial
 
 \subsubsection{Class \lstinline|IntegersModuloPrime|}
 The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{IntegersModuloPrime}{
 
@@ -48,19 +55,20 @@ The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$ \\
 + add(a : BigInteger, b : BigInteger) : BigInteger \\ + multiply(a : BigInteger, b : BigInteger) : BigInteger \\ + negate(a : BigInteger) : BigInteger \\ + invert(a : BigInteger) : BigInteger \\ + zero() : BigInteger \\ + one() : BigInteger \\ + randomElement() : BigInteger
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.crypto.Field<BigInteger>|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|IntegersModuloPrime|\lstinline|(BigInteger p)|\\
+\item \lstinline|public| \lstinline|IntegersModuloPrime|\lstinline|(BigInteger p)|\\ \\[-0.6em]
 Initializes the field
 \begin{itemize}
 \item \lstinline|p|: A prime number
@@ -71,39 +79,39 @@ Initializes the field
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public BigInteger| \lstinline|add|\lstinline|(BigInteger a, BigInteger b)|
+\item \lstinline|public BigInteger| \lstinline|add|\lstinline|(BigInteger a, BigInteger b)| \\[-0.6em]
 
 
 
 
-\item \lstinline|public BigInteger| \lstinline|multiply|\lstinline|(BigInteger a, BigInteger b)|
+\item \lstinline|public BigInteger| \lstinline|multiply|\lstinline|(BigInteger a, BigInteger b)| \\[-0.6em]
 
 
 
 
-\item \lstinline|public BigInteger| \lstinline|negate|\lstinline|(BigInteger a)|
+\item \lstinline|public BigInteger| \lstinline|negate|\lstinline|(BigInteger a)| \\[-0.6em]
 
 
 
 
-\item \lstinline|public BigInteger| \lstinline|invert|\lstinline|(BigInteger a)|
+\item \lstinline|public BigInteger| \lstinline|invert|\lstinline|(BigInteger a)| \\[-0.6em]
 
 
 
 
-\item \lstinline|public BigInteger| \lstinline|zero|\lstinline|()|
+\item \lstinline|public BigInteger| \lstinline|zero|\lstinline|()| \\[-0.6em]
 
 
 
 
-\item \lstinline|public BigInteger| \lstinline|one|\lstinline|()|
+\item \lstinline|public BigInteger| \lstinline|one|\lstinline|()| \\[-0.6em]
 
 
 
 
-\item \lstinline|public BigInteger| \lstinline|randomElement|\lstinline|()|
+\item \lstinline|public BigInteger| \lstinline|randomElement|\lstinline|()| \\[-0.6em]
 
 
 
@@ -112,6 +120,9 @@ Initializes the field
 
 \subsubsection{Class \lstinline|Polynomial<T>|}
 A polynomial $P$ over a field \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{Polynomial<T>}{
 
@@ -119,17 +130,18 @@ A polynomial $P$ over a field \\
 + getField() : Field<T> \\ + evaluate(x : T) : T \\ + evaluateMulti(xs : T[]) : T[] \\ + getCoefficient(i : int) : T \\ + getDegree() : int \\ \umlstatic{+ createRandomPolynomial(field : Field<T>, degree : int) : Polynomial<T>}
 }
 \end{tikzpicture}
-
-
+\vspace{0.3em}
+\end{minipage}
 
 \begin{itemize}
 \item \lstinline|<T>|: The type of the field's elements
 \end{itemize}
 
 
-\textbf{Constructors}
+
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|Polynomial|\lstinline|(Field<T> field, T[] coefficients)|\\
+\item \lstinline|public| \lstinline|Polynomial|\lstinline|(Field<T> field, T[] coefficients)|\\ \\[-0.6em]
 Initializes a polynomial
 \begin{itemize}
 \item \lstinline|field|: An instance of the field over which the polynomial is formed
@@ -143,32 +155,32 @@ Initializes a polynomial
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public Field<T>| \lstinline|getField|\lstinline|()|\\
-Returns: The field associated with this polynomial
+\item \lstinline|public Field<T>| \lstinline|getField|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The field associated with this polynomial
 
 
 
-\item \lstinline|public T| \lstinline|evaluate|\lstinline|(T x)|\\
+\item \lstinline|public T| \lstinline|evaluate|\lstinline|(T x)|\\ \\[-0.6em]
 Evaluates the polynomial at a single point x.
 \begin{itemize}
 \item \lstinline|x|: The
 \end{itemize}
 
-Returns: P(x)
+\emph{Returns:} P(x)
 
-\item \lstinline|public T[]| \lstinline|evaluateMulti|\lstinline|(T[] xs)|\\
+\item \lstinline|public T[]| \lstinline|evaluateMulti|\lstinline|(T[] xs)|\\ \\[-0.6em]
 Evaluates the polynomial at multiple points in time complexity $\Theta(n\cdot\log
  n)$ where $n$ is the degree of the polynomial
 \begin{itemize}
 \item \lstinline|xs|: The points $x_i$ to evaluate
 \end{itemize}
 
-Returns: The array a defined by $a_i := P(x_i)$
+\emph{Returns:} The array a defined by $a_i := P(x_i)$
 
-\item \lstinline|public T| \lstinline|getCoefficient|\lstinline|(int i)|\\
-Returns: $c_i$
+\item \lstinline|public T| \lstinline|getCoefficient|\lstinline|(int i)|\\ \\[-0.6em]
+\emph{Returns:} $c_i$
 \begin{itemize}
 \item \lstinline|i|: The index of the coefficient to get ($0 \leq i \leq n$), where
           $n$ is the degree of the polynomial
@@ -176,24 +188,27 @@ Returns: $c_i$
 
 
 
-\item \lstinline|public int| \lstinline|getDegree|\lstinline|()|\\
-Returns: The degree of the polynomial
+\item \lstinline|public int| \lstinline|getDegree|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The degree of the polynomial
 
 
 
-\item \lstinline|public static Polynomial<T>| \lstinline|createRandomPolynomial|\lstinline|(Field<T> field, int degree)|\\
+\item \lstinline|public static Polynomial<T>| \lstinline|createRandomPolynomial|\lstinline|(Field<T> field, int degree)|\\ \\[-0.6em]
 Generates a random polynomial over the field
 \begin{itemize}
 \item \lstinline|field|: An instance of the field over which the polynomial is formed
 \item \lstinline|degree|: The degree of the generated polynomial
 \end{itemize}
 
-Returns: The generated polynomial
+\emph{Returns:} The generated polynomial
 
 \end{itemize}
 
 \subsubsection{Class \lstinline|Field<T>|}
 Represents a field over values of type T \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{Field<T>}{
 
@@ -201,106 +216,101 @@ Represents a field over values of type T \\
 \umlvirt{+ add(a : T, b : T) : T} \\ \umlvirt{+ multiply(a : T, b : T) : T} \\ \umlvirt{+ negate(a : T) : T} \\ \umlvirt{+ invert(a : T) : T} \\ \umlvirt{+ zero() : T} \\ \umlvirt{+ one() : T} \\ \umlvirt{+ randomElement() : T} \\ + subtract(a : T, b : T) : T \\ + divide(a : T, b : T) : T \\ + pow(a : T, e : int) : T
 }
 \end{tikzpicture}
-
-
+\vspace{0.3em}
+\end{minipage}
 
 \begin{itemize}
 \item \lstinline|<T>|: The values we work on
 \end{itemize}
 
 
-\textbf{Constructors}
+
+
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|Field|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public abstract T| \lstinline|add|\lstinline|(T a, T b)|\\
+\item \lstinline|public abstract T| \lstinline|add|\lstinline|(T a, T b)|\\ \\[-0.6em]
 Adds two elements of the field
 \begin{itemize}
 \item \lstinline|a|: first element
 \item \lstinline|b|: second element
 \end{itemize}
 
-Returns: The value $a + b$
+\emph{Returns:} The value $a + b$
 
-\item \lstinline|public abstract T| \lstinline|multiply|\lstinline|(T a, T b)|\\
+\item \lstinline|public abstract T| \lstinline|multiply|\lstinline|(T a, T b)|\\ \\[-0.6em]
 Multiplies two elements of the field
 \begin{itemize}
 \item \lstinline|a|: first element
 \item \lstinline|b|: second element
 \end{itemize}
 
-Returns: The value $a \cdot b$
+\emph{Returns:} The value $a \cdot b$
 
-\item \lstinline|public abstract T| \lstinline|negate|\lstinline|(T a)|\\
-Returns: The additive inverse $-a$ of $a$
+\item \lstinline|public abstract T| \lstinline|negate|\lstinline|(T a)|\\ \\[-0.6em]
+\emph{Returns:} The additive inverse $-a$ of $a$
 \begin{itemize}
 \item \lstinline|a|: An element of the field
 \end{itemize}
 
 
 
-\item \lstinline|public abstract T| \lstinline|invert|\lstinline|(T a)|\\
-Returns: The multiplicative inverse $a^{-1}$ of $a$
+\item \lstinline|public abstract T| \lstinline|invert|\lstinline|(T a)|\\ \\[-0.6em]
+\emph{Returns:} The multiplicative inverse $a^{-1}$ of $a$
 \begin{itemize}
 \item \lstinline|a|: An element of the field
 \end{itemize}
 
 
 
-\item \lstinline|public abstract T| \lstinline|zero|\lstinline|()|\\
-Returns: The zero element of the field
+\item \lstinline|public abstract T| \lstinline|zero|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The zero element of the field
 
 
 
-\item \lstinline|public abstract T| \lstinline|one|\lstinline|()|\\
-Returns: The one element of the field
+\item \lstinline|public abstract T| \lstinline|one|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The one element of the field
 
 
 
-\item \lstinline|public abstract T| \lstinline|randomElement|\lstinline|()|\\
-Returns: A random element of the field
+\item \lstinline|public abstract T| \lstinline|randomElement|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} A random element of the field
 
 
 
-\item \lstinline|public T| \lstinline|subtract|\lstinline|(T a, T b)|\\
+\item \lstinline|public T| \lstinline|subtract|\lstinline|(T a, T b)|\\ \\[-0.6em]
 Subtracts two elements of the field
 \begin{itemize}
 \item \lstinline|a|: first element
 \item \lstinline|b|: second element
 \end{itemize}
 
-Returns: The value $a - b$
+\emph{Returns:} The value $a - b$
 
-\item \lstinline|public T| \lstinline|divide|\lstinline|(T a, T b)|\\
+\item \lstinline|public T| \lstinline|divide|\lstinline|(T a, T b)|\\ \\[-0.6em]
 Divides two elements of the field
 \begin{itemize}
 \item \lstinline|a|: first element
 \item \lstinline|b|: second element
 \end{itemize}
 
-Returns: The value $\frac{a}{b}$
+\emph{Returns:} The value $\frac{a}{b}$
 
-\item \lstinline|public T| \lstinline|pow|\lstinline|(T a, int e)|\\
+\item \lstinline|public T| \lstinline|pow|\lstinline|(T a, int e)|\\ \\[-0.6em]
 Raises an element of the field to an integer power
 \begin{itemize}
 \item \lstinline|a|: The element of the field
 \item \lstinline|e|: The exponent
 \end{itemize}
 
-Returns: The value $a^e$
+\emph{Returns:} The value $a^e$
 
 \end{itemize}
 
 \subsubsection{Class \lstinline|BroadcastEncryptionServer<ID>|}
 The server side of a broadcast encryption scheme. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{BroadcastEncryptionServer<ID>}{
 
@@ -308,23 +318,24 @@ The server side of a broadcast encryption scheme. \\
 + run() \\ + send(data : byte[]) \\ + revoke(id : ID)
 }
 \end{tikzpicture}
-
-
-
-\textbf{Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|cryptocast.comm.OutChannel|
-\item \lstinline|java.lang.Runnable|
-\end{itemize}
+\vspace{0.3em}
+\end{minipage}
 
 \begin{itemize}
 \item \lstinline|<ID>|: The type of the identities
 \end{itemize}
 
 
-\textbf{Constructors}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|public| \lstinline|BroadcastEncryptionServer|\lstinline|(MessageOutChannel inner, BroadcastSchemeUserManager<ID> context, Encryptor<BigInteger> enc)|\\
+\item \lstinline|cryptocast.comm.OutChannel|
+\item \lstinline|java.lang.Runnable|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|BroadcastEncryptionServer|\lstinline|(MessageOutChannel inner, BroadcastSchemeUserManager<ID> context, Encryptor<BigInteger> enc)|\\ \\[-0.6em]
 Initializes a broadcast encryption server.
 \begin{itemize}
 \item \lstinline|inner|: The message-based communication channel to send outgoing data to
@@ -337,15 +348,15 @@ Initializes a broadcast encryption server.
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|run|\lstinline|()|\\
+\item \lstinline|public void| \lstinline|run|\lstinline|()|\\ \\[-0.6em]
 Run the worker that handles periodic group key broadcasts and sends
  queued data packages.
 
 
 
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\
+\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Send plaintext data to the channel. It will be encryted and broadcasted
  on the fly.
 \begin{itemize}
@@ -354,7 +365,7 @@ Send plaintext data to the channel. It will be encryted and broadcasted
 
 
 
-\item \lstinline|public void| \lstinline|revoke|\lstinline|(ID id)|\\
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(ID id)|\\ \\[-0.6em]
 Revoke a user.
 \begin{itemize}
 \item \lstinline|id|: The identity of the user
@@ -366,6 +377,9 @@ Revoke a user.
 
 \subsubsection{Class \lstinline|BroadcastEncryptionClient|}
 The client side of a broadcast encryption scheme. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[]{BroadcastEncryptionClient}{
 
@@ -373,19 +387,20 @@ The client side of a broadcast encryption scheme. \\
 + recv(size : int, buffer : byte[])
 }
 \end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
-\textbf{Superclasses and Interfaces}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.comm.InChannel|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|BroadcastEncryptionClient|\lstinline|(MessageInChannel inner, Decryptor<BigInteger> dec)|\\
+\item \lstinline|public| \lstinline|BroadcastEncryptionClient|\lstinline|(MessageInChannel inner, Decryptor<BigInteger> dec)|\\ \\[-0.6em]
 Initializes a broadcast encryption client.
 \begin{itemize}
 \item \lstinline|inner|: The message-based underlying communication channel.
@@ -397,9 +412,9 @@ Initializes a broadcast encryption client.
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\
+\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
 Receive data from the channel. It is decrypted on the fly.
 \begin{itemize}
 \item \lstinline|size|: amount of bytes to receive
@@ -412,6 +427,9 @@ Receive data from the channel. It is decrypted on the fly.
 
 \subsubsection{Interface \lstinline|Decryptor<S>|}
 A strategy to decrypt a single secret \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{Decryptor<S>}{
 
@@ -419,8 +437,8 @@ A strategy to decrypt a single secret \\
 \umlvirt{+ decrypt(cipher : byte[]) : S}
 }
 \end{tikzpicture}
-
-
+\vspace{0.3em}
+\end{minipage}
 
 \begin{itemize}
 \item \lstinline|<S>|: the type of the secret
@@ -428,20 +446,24 @@ A strategy to decrypt a single secret \\
 
 
 
-\textbf{Methods}
+
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public S| \lstinline|decrypt|\lstinline|(byte[] cipher)|\\
+\item \lstinline|public S| \lstinline|decrypt|\lstinline|(byte[] cipher)|\\ \\[-0.6em]
 Decrypts a secret.
 \begin{itemize}
 \item \lstinline|cipher|: The encrypted secret
 \end{itemize}
 
-Returns: The decrypted secret
+\emph{Returns:} The decrypted secret
 
 \end{itemize}
 
 \subsubsection{Interface \lstinline|BroadcastSchemeUserManager<ID>|}
 Manages a set of user identites \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{BroadcastSchemeUserManager<ID>}{
 
@@ -449,8 +471,8 @@ Manages a set of user identites \\
 \umlvirt{+ getIdentity(i : int) : ID} \\ \umlvirt{+ revoke(id : ID)} \\ \umlvirt{+ isRevoked(id : ID) : boolean}
 }
 \end{tikzpicture}
-
-
+\vspace{0.3em}
+\end{minipage}
 
 \begin{itemize}
 \item \lstinline|<ID>|: The type of the identities
@@ -458,17 +480,18 @@ Manages a set of user identites \\
 
 
 
-\textbf{Methods}
+
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public ID| \lstinline|getIdentity|\lstinline|(int i)|\\
-Returns: The identity with the given index
+\item \lstinline|public ID| \lstinline|getIdentity|\lstinline|(int i)|\\ \\[-0.6em]
+\emph{Returns:} The identity with the given index
 \begin{itemize}
 \item \lstinline|i|: An index
 \end{itemize}
 
 
 
-\item \lstinline|public void| \lstinline|revoke|\lstinline|(ID id)|\\
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(ID id)|\\ \\[-0.6em]
 Revokes a user
 \begin{itemize}
 \item \lstinline|id|: The identity of the user
@@ -476,8 +499,8 @@ Revokes a user
 
 
 
-\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(ID id)|\\
-Returns: whether the user is revoked
+\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(ID id)|\\ \\[-0.6em]
+\emph{Returns:} whether the user is revoked
 \begin{itemize}
 \item \lstinline|id|: The identity of the user
 \end{itemize}
@@ -488,6 +511,9 @@ Returns: whether the user is revoked
 
 \subsubsection{Interface \lstinline|Encryptor<S>|}
 A strategy to encrypt a single secret \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{Encryptor<S>}{
 
@@ -495,8 +521,8 @@ A strategy to encrypt a single secret \\
 \umlvirt{+ encrypt(secret : S) : byte[]}
 }
 \end{tikzpicture}
-
-
+\vspace{0.3em}
+\end{minipage}
 
 \begin{itemize}
 \item \lstinline|<S>|: the type of the secret
@@ -504,20 +530,24 @@ A strategy to encrypt a single secret \\
 
 
 
-\textbf{Methods}
+
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(S secret)|\\
+\item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(S secret)|\\ \\[-0.6em]
 Encrypts a secret
 \begin{itemize}
 \item \lstinline|secret|: the secret
 \end{itemize}
 
-Returns: The cipher text
+\emph{Returns:} The cipher text
 
 \end{itemize}
 
 \subsubsection{Interface \lstinline|BroadcastSchemeKeyManager<ID>|}
 Manages the private keys of a set of users. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{BroadcastSchemeKeyManager<ID>}{
 
@@ -525,8 +555,8 @@ Manages the private keys of a set of users. \\
 \umlvirt{+ getPersonalKey(id : ID) : PrivateKey}
 }
 \end{tikzpicture}
-
-
+\vspace{0.3em}
+\end{minipage}
 
 \begin{itemize}
 \item \lstinline|<ID>|: The type of the user identities
@@ -534,10 +564,11 @@ Manages the private keys of a set of users. \\
 
 
 
-\textbf{Methods}
+
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public PrivateKey| \lstinline|getPersonalKey|\lstinline|(ID id)|\\
-Returns: The private key of the user
+\item \lstinline|public PrivateKey| \lstinline|getPersonalKey|\lstinline|(ID id)|\\ \\[-0.6em]
+\emph{Returns:} The private key of the user
 \begin{itemize}
 \item \lstinline|id|: The identity to look up
 \end{itemize}
@@ -548,6 +579,9 @@ Returns: The private key of the user
 
 \subsubsection{Interface \lstinline|ShareCombinator<S, T>|}
 Implements a strategy to restore a secret from a number of shares. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
 \begin{tikzpicture}
 \umlclass[type=abstract]{ShareCombinator<S, T>}{
 
@@ -555,8 +589,8 @@ Implements a strategy to restore a secret from a number of shares. \\
 \umlvirt{+ restore(shares : Collection<T>) : Optional<S>}
 }
 \end{tikzpicture}
-
-
+\vspace{0.3em}
+\end{minipage}
 
 \begin{itemize}
 \item \lstinline|<S>|: The type of the secret
@@ -565,12 +599,13 @@ Implements a strategy to restore a secret from a number of shares. \\
 
 
 
-\textbf{Methods}
+
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public Optional<S>| \lstinline|restore|\lstinline|(Collection<T> shares)|\\
+\item \lstinline|public Optional<S>| \lstinline|restore|\lstinline|(Collection<T> shares)|\\ \\[-0.6em]
 Restores a secret from several shares.
 
-Returns: The reconstructed secret or absent if the information represented
+\emph{Returns:} The reconstructed secret or absent if the information represented
  by the given shares is insufficient to restore it.
 
 \end{itemize}

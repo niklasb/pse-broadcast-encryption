@@ -3,6 +3,8 @@ package com.ownedthx.xmldoclet.xmlbindings;
 /** Coments on Constructor */
 public class Constructor
 {
+    public boolean isDefault;
+
     public String name;
 
     public String comment;

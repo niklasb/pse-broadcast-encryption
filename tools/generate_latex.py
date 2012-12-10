@@ -59,7 +59,7 @@ def render_method(meth):
                                         for p in paramscom))
     returntxt = ""
     if res != None and res.find("comment") != None:
-        returntxt = "Returns: %s" % res.find("comment").text
+        returntxt = "\emph{Returns:} %s" % res.find("comment").text
 
     description = text_or(meth.find("comment"))
     if not description.strip() and returntxt.strip():
@@ -67,7 +67,7 @@ def render_method(meth):
         returntxt = ""
 
     return dedent("""\
-        \\lstinline|{attr}{rettype}| \\lstinline|{name}|\\lstinline|({params})|{sep}
+        \\lstinline|{attr}{rettype}| \\lstinline|{name}|\\lstinline|({params})|{sep} \\\\[-0.6em]
         {description}
         {paramtxt}
         {returntxt}
@@ -115,6 +115,9 @@ def render_class_diagram(cls):
     if methodsel is not None:
         methods = " \\\\ ".join(render_tikz_method(m, interface) for m in methodsel.iter("method"))
     return dedent("""\
+        \\noindent\\begin{{minipage}}[t]{{5cm}}
+        \\vspace{{0.3em}}
+        \\hspace*{{2em}}
         \\begin{{tikzpicture}}
         \\umlclass[{classparams}]{{{classname}}}{{
         {fields}
@@ -122,11 +125,16 @@ def render_class_diagram(cls):
         {methods}
         }}
         \\end{{tikzpicture}}
+        \\vspace{{0.3em}}
+        \\end{{minipage}}
         """).format(classname=class_name(cls),
                     classparams=("type=abstract" if isAbstr else ""),
                     fields="",
                     methods=methods,
                     )
+
+def captionize(txt):
+    return "\\textbf{\\sffamily %s}" % txt
 
 def render_class(cls, indent=2):
     abstr = cls.find("isAbstract")
@@ -153,36 +161,41 @@ def render_class(cls, indent=2):
     if bases:
         basestxt = dedent("""\
 
-            \\textbf{{Superclasses and Interfaces}}
+            {caption}
             \\begin{{itemize}}
             {items}
             \\end{{itemize}}
-            """).format(items="\n".join("\\item \\lstinline|%s|" % b for b in bases))
+            """).format(caption=captionize("Superclasses and Interfaces"),
+                        items="\n".join("\\item \\lstinline|%s|" % b for b in bases))
 
     if constructorsel is not None:
-        constructortxt = dedent("""\
+        constr = [m for m in constructorsel.iter("constructor") if not parse_bool(m.find("isDefault").text)]
+        if constr:
+            constructortxt = dedent("""\
 
-            \\textbf{{Constructors}}
+            {caption}
             \\begin{{itemize}}
             {items}
             \\end{{itemize}}
-            """).format(items="\n".join("\\item %s" % render_method(m) for m in constructorsel.iter("constructor")))
+            """).format(caption=captionize("Constructors"),
+                        items="\n".join("\\item %s" % render_method(m) for m in constr))
     methodsel = cls.find("methods")
     if methodsel is not None:
         methodtxt = dedent("""\
 
-            \\textbf{{Methods}}
+            {caption}
             \\begin{{itemize}}
             {items}
             \\end{{itemize}}
-            """).format(items="\n".join("\\item %s" % render_method(m) for m in methodsel.iter("method")))
+            """).format(caption=captionize("Methods"),
+                        items="\n".join("\\item %s" % render_method(m)
+                                        for m in methodsel.iter("method")))
     return dedent("""\
            \\{sub}section{{{classtype} \\lstinline|{classname}|}}
            {description} \\\\
            {diagram}
-
-           {basestxt}
            {typevars}
+           {basestxt}
            {constructortxt}
            {methodtxt}
            """).format(classtype=("Interface" if interface else "Class"),
