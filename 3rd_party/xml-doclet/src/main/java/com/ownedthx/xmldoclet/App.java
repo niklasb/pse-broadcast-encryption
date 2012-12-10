@@ -9,6 +9,7 @@ import com.ownedthx.xmldoclet.xmlbindings.Param;
 import com.ownedthx.xmldoclet.xmlbindings.Package;
 import com.ownedthx.xmldoclet.xmlbindings.Class;
 import com.ownedthx.xmldoclet.xmlbindings.Enum;
+import com.ownedthx.xmldoclet.xmlbindings.TypeVar;
 import com.ownedthx.xmldoclet.parser.Parser;
 import com.ownedthx.xmldoclet.cmdline.CmdlineParser;
 import com.ownedthx.xmldoclet.xstream.CdataWrapper;
@@ -427,6 +428,7 @@ public class App
         stream.alias("type", TypeInfo.class);
         stream.alias("scope", ScopeModifier.class);
         stream.alias("return", Result.class);
+        stream.alias("typeVar", TypeVar.class);
 
         boolean outputDirExists = false;
         try
