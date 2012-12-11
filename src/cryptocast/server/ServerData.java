@@ -1,5 +1,6 @@
 package cryptocast.server;
 
+import cryptocast.comm.OutChannel;
 import cryptocast.crypto.*;
 
 import com.google.common.base.Optional;
