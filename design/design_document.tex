@@ -86,6 +86,9 @@ change a lot of their enviroment.
 
 We implement a server-client architecture with one central server sending the stream and multiple clients receiving it.
 
+\input{figures/architecture_packages/architectPackages}
+
+
 The server will be designed with a three layer architecture, containing layers for presentation, application and data. In our case 
 the presentation layer is presented by the shell, the application layer consists of the controller and the data layer contains ServerData and Command. Dividing the server into those layers makes the different parts less complex and it is possible to modify one layer without having to change the others.
 
@@ -96,7 +99,7 @@ the presentation layer is presented by the shell, the application layer consists
 \input{../docs/cryptocast.comm.tex}
 \input{../docs/cryptocast.crypto.tex}
 \input{../docs/cryptocast.crypto.naorpinkas.tex}
-\input{../docs/cryptocast.util.tex}
+\input{../docs/cryptocast.util.tex}h
 \input{../docs/cryptocast.server.tex}
 \input{../docs/cryptocast.client.tex}
 \input{../docs/cryptocast.client.filechooser.tex}
@@ -117,9 +120,11 @@ the presentation layer is presented by the shell, the application layer consists
 
 \section{GUI design}
 The GUI should be user-friendly and intuitional. Therefore its design is very minimalistic, foccusing on its main purpose. 
+
+\subsection{GUI visual examples}
 The following images show prototypes of the graphical user interface.
 
-\begin{illustration}{The main screen which is shown on program start. (The empty space is used for the logo later on))}
+\begin{illustration}{The main screen which is shown on program start.}
 \includegraphics[width=150px]{figures/images/mainscreen.png}
 \end{illustration}
 \begin{illustration}{The menu which pops up after the menu button is pressed. It allows navigation between the different screens.}
@@ -134,6 +139,12 @@ The following images show prototypes of the graphical user interface.
 \begin{illustration}{The file chooser used for selecting a private key.}
 \includegraphics[width=150px]{figures/images/fileChooser.png}
 \end{illustration}
+
+\subsection{GUI activity}
+\begin{illustration}{Activity diagram showing possible interactions with the program.}
+\includegraphics [width=500px]{figures/gui_activity_1/gui_activity_1.png}
+\end{illustration}
+
 
 \begin{landscape}
 \section{Time plan}
