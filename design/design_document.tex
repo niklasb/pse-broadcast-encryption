@@ -58,39 +58,50 @@
 \clearpage
 
 \section{Introduction}
-%CryptoCast is a piece of software that provides a service to send contents from a central server to a given
-%group of recipients. Transmission happens via a unidirectional communication channel like IP multicast.
-%The traffic duplication that would be required for commonly used transport protocols is therefore avoided.
+CryptoCast is a piece of software that provides a service to send contents from a central server to a given
+group of recipients. Transmission happens via a unidirectional communication channel.
+The traffic duplication that would be required for commonly used transport protocols is therefore avoided.
 
-%It enables access control through a specific form of encryption that is based on the Naor-Pinkas broadcast
-%encryption scheme. The advantage of this scheme is the 
+The software enables access control through a specific form of encryption that is based on the Naor-Pinkas broadcast
+encryption scheme. The advantage of this scheme is that the communication overhead necessary for session key
+management and client revocation does not depend on the total number of recipients, but only on the
+number of revoked users.
 
-The software CryptoCast will provide a service for sending encrypted data from a server to certain
-amount of people.  This will be implemented as an unidirectional connection that makes it possible for the server
-to send data without knowing how many people are receiving it and without the amount of traffic caused
-by a bidirectional connection.  Also the type of the sent data will not be determined by the software. So it can be
-used for all sorts of data exchange. For demonstration purposes we will implement a simple audio or video stream.
+The type of data that can be transmitted is not determined by the software, so it can be used for a lot
+of different sorts of distribution. For demonstration purposes we will implement a simple audio or video
+stream.
 
-The server will be able to register new users and revoke specific persons if they are not allowed to receive the cast anymore. 
-The client is an app on an Android smart phone that is used for receiving, decoding and displaying the data. 
-The transport between them will be implemented with TCP but that can be replaced by another transport protocoll.
+The server will be realized as a console application and will be able to register new users and revoke
+specific users if they are not allowed to receive the stream anymore.
 
-The implemented encryption algorithm will be the one by Moni Naor and Benny Pinkas, but later every other fitting the
-interface can be used. This is important because there might be another more effective algorithm that can replace the implemented one.
+As for the client, it will be realized as an application targetting the Android operating system for smart phones.
+It will be able to receive, decode and display the data stream.
 
-In our design we will therefore focuse on modularity and encapsulation to enable substitution for parts of the programm without having to 
-change a lot of their enviroment.
+We will use a transport protocol based on TCP for the communication between the server and its clients,
+but this implemented can easily be replaced by any other protocol that supports reliable, unidirectional
+streams (like reliable IP multicast).
+
+Since a broadcast encryption scheme is used, an important goal is to extract the common interface between our
+reference implementation of the Naor-Pinkas algorithm and other, similar broadcast encryption schemes.
+This way, a more efficient scheme might be used in the future.
+
+In conclusion, our design efforts are focused on modularity and loose coupling between the components of the
+infrastructure, so that parts of the program can be exchanged with a minimal amount of necessary changes.
 
 \section{Structure}
 \subsection{Architecture}
 
-We implement a server-client architecture with one central server sending the stream and multiple clients receiving it.
+We implement a client/server model with one central server sending the stream and multiple clients
+receiving it.
 
 \input{figures/architecture_packages/architectPackages}
 
-
-The server will be designed with a three layer architecture, containing layers for presentation, application and data. In our case 
-the presentation layer is presented by the shell, the application layer consists of the controller and the data layer contains ServerData and Command. Dividing the server into those layers makes the different parts less complex and it is possible to modify one layer without having to change the others.
+Both server and client will be based on a three layer architecture to seperate presentation, logic
+and storage of the data.
+In the case of the server, presentation is handled by the \lstinline|Shell| class, logic is
+performed by the \lstinline|Controller|, which in turn uses the \lstinline|ServerData| class
+as a data backend.
+The client will use the standard MVC model provided by the Android framework.
 
 \input{figures/architecture_server/architectServer}
 
@@ -105,46 +116,47 @@ the presentation layer is presented by the shell, the application layer consists
 \input{../docs/cryptocast.client.filechooser.tex}
 
 \section{Sequences}
-\begin{illustration}{Sequence diagram of a command perfomed by the Server.}
+\begin{illustration}{Server: A command perfomed in the shell.}
 \includegraphics [width=400px] {figures/sequence_diagram_server/Server1.pdf}
 \end{illustration}
-\begin{illustration}{Sequence diagram of playing a stream for the first time.}
+\begin{illustration}{Client: Connecting to a server for the first time.}
 \includegraphics [width=400px] {figures/sequence_diagram_client/sequence_client.pdf}
 \end{illustration}
 
 \begin{landscape}
-\begin{illustration}{Passing a piece of plaintext data through to the clients (Server side)}
+\begin{illustration}{Server: Passing a piece of plaintext data through to the client sockets}
 \includegraphics [width=700px] {figures/sequence_diagram_comm1_server/output.pdf}
 \end{illustration}
 \end{landscape}
 
 \section{GUI design}
-The GUI should be user-friendly and intuitional. Therefore its design is very minimalistic, foccusing on its main purpose. 
+The interface should be user-friendly and intuitive to use. Therefore its design is kept minimalistic, focusing
+on the main functionality and avoiding intrusive elements like an overuse of buttons.
 
 \subsection{GUI visual examples}
-The following images show prototypes of the graphical user interface.
+The following images show prototypes of the client user interface.
 
-\begin{illustration}{The main screen which is shown on program start.}
+\begin{illustration}{The main screen shown on startup.}
 \includegraphics[width=150px]{figures/images/mainscreen.png}
 \end{illustration}
-\begin{illustration}{The menu which pops up after the menu button is pressed. It allows navigation between the different screens.}
+\begin{illustration}{The menu popping up after the menu button is pressed.
+   It allows navigation between the different screens.}
 \includegraphics[width=150px]{figures/images/menu.png}
 \end{illustration}
-\begin{illustration}{The option screen which contains preferences, traffic data and a server history.}
+\begin{illustration}{The option screen which contains preferences, traffic statistics and a server history.}
 \includegraphics[width=150px]{figures/images/optionscreen.png}
 \end{illustration}
-\begin{illustration}{An example for an error message.}
+\begin{illustration}{An example of an error message.}
 \includegraphics[width=150px]{figures/images/error.png}
 \end{illustration}
-\begin{illustration}{The file chooser used for selecting a private key.}
+\begin{illustration}{The file chooser to enable the user to select a private key.}
 \includegraphics[width=150px]{figures/images/fileChooser.png}
 \end{illustration}
 
 \subsection{GUI activity}
-\begin{illustration}{Activity diagram showing possible interactions with the program.}
+\begin{illustration}{Activity diagram showing possible interactions with the client application.}
 \includegraphics [width=500px]{figures/gui_activity_1/gui_activity_1.png}
 \end{illustration}
-
 
 \section{Time plan}
    \begin{illustration}{A rough time table for the implementation phase}

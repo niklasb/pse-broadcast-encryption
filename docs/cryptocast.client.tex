@@ -1,7 +1,8 @@
 \subsection{Package \lstinline!cryptocast.client!}
-The client uses a \lstinline|FileChooser|, which can be used to select a file from the SD card of your android gadget.
- As a private key is necessary to encrypt data received from a server the \lstinline|FileChooser| is used to select a keyfile.
- All servers and responding keyfiles are saved in the \lstinline|ServerHistory| and therefore can be saved and reused after closing the client.
+The client contains a \lstinline|FileChooser|, which can be used to select any file from the SD card 
+ of an android gadget. As a private key is necessary to encrypt data received from a server the 
+ \lstinline|FileChooser| is used to select a keyfile. All servers and responding keyfiles are placed 
+ in the \lstinline|ServerHistory| and therefore can be saved and loaded after closing the client.
  Every error is displayed by using a simple pop up window defined by the class \lstinline|ErrorFragment|.
 \subsubsection{Class \lstinline|StreamViewerActivity|}
 This activity is responsible for decrypting the received data
