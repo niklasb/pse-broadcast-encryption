@@ -1,7 +1,7 @@
 package cryptocast.server;
 
 /**
- * The main method to start the server
+ * The main method to start the server.
  */
 public final class Main {
     private Main() { }

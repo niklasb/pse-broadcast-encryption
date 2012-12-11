@@ -233,6 +233,6 @@ if __name__ == "__main__":
         tex_files.append(fn)
         with open(outdir + "/" + fn, "w") as f:
             f.write(render_package(p))
-    with open(outdir + "/all.tex", "w") as f:
-        for other in tex_files:
-            f.write("\\input{%s}\n" % other)
+    #with open(outdir + "/all.tex", "w") as f:
+        #for other in tex_files:
+            #f.write("\\input{%s}\n" % other)
