@@ -16,11 +16,18 @@
 \node[rect,minimum width=3cm,xshift=-1.5cm,below of=shell](control) {Controller};;
 \node[rect,minimum width=3cm,below of=control](data) {ServerData};
 \node[rect,minimum width=2cm,xshift=2cm, right of=data](cmd) {Command};
-\node[box,fit=(data.north west) (cmd.north east) (cmd.south east) (data.south west), inner sep= 0.2cm](databox) {Data};
+\node[box,fit=(data.north west) (cmd.north east) (cmd.south east) (data.south west), inner sep= 0.2cm](databox) {};
+\node[box,fit=(shell.north west) (shell.north east) (shell.south east) (shell.south west), inner sep= 0.2cm](shellbox) {};
+\node[box,fit=(control.north west) (control.north east) (control.south east) (control.south west), inner sep= 0.2cm](controlbox) {};
 
-\draw [<->]  (shell.south) --  (control.north)
+\node[left of=shellbox,xshift=-3cm](presencaption) {\textbf{Presentation}};
+\node[left of=controlbox,xshift=-1.5cm](applicaption) {\textbf{Application}};
+\node[left of=databox,xshift=-3cm](datacaption) {\textbf{Data}};
+
+
+\draw [<->]  (-1.5,-0.4) --  (control.north)
 ;
-\draw [->]  (shell.south) --  (cmd.north)
+\draw [->]  (2,-0.4) --  (cmd.north)
   ;
 \draw [->]  (control.south) --  (data.north)
   ;
