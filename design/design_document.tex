@@ -79,6 +79,9 @@ change a lot of their enviroment.
 
 \section{Structure}
 \subsection{Architecture}
+
+We implement a server-client architecture with one central server sending the stream and multiple clients receiving it.
+
 The server will be designed with a three tier architecture, containing layers for presentation, application and data. In our case 
 the presentation layer is presented by the shell, the application layer consists of the controller and the data layer contains ServerData and Command. Dividing the server into those layers makes the different parts less complex and it is possible to modify one layer without having to change the others.
 
