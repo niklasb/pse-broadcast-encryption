@@ -1,7 +1,5 @@
 package cryptocast.crypto;
 
-import java.lang.ArithmeticException;
-
 /**
  * Represents a field over values of type T
  * @param <T> The values we work on
@@ -29,7 +27,7 @@ public abstract class Field<T> {
     /**
      * @param a An element of the field
      * @return The multiplicative inverse $a^{-1}$ of $a$
-     * @throws ArithmeticExpression if a is the zero element
+     * @throws ArithmeticException if a is the zero element
      */
     public abstract T invert(T a) throws ArithmeticException;
     /**
