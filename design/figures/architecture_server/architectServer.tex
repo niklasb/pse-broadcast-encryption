@@ -16,6 +16,7 @@
 \node[rect,minimum width=3cm,xshift=-1.5cm,below of=shell](control) {Controller};;
 \node[rect,minimum width=3cm,below of=control](data) {ServerData};
 \node[rect,minimum width=2cm,xshift=2cm, right of=data](cmd) {Command};
+\node[box,fit=(data.north west) (cmd.north east) (cmd.south east) (data.south west), inner sep= 0.2cm](databox) {Data};
 
 \draw [<->]  (shell.south) --  (control.north)
 ;
