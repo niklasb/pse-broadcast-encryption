@@ -1,5 +1,10 @@
 package cryptocast.client.filechooser;
 
+import java.util.List;
+import android.content.Context;
+import android.widget.ArrayAdapter;
+import android.view.View;
+
 /**
  * An adapter between the ListElements and the view showing them.
  */
@@ -14,17 +19,17 @@ public class FileArrayAdapter extends ArrayAdapter<ListElement> {
     }
 
     /**
-     * @return the list element at the given position in the list.
-     * @param place the position of the item is in the list.
+     * @param position The position of the item in the list.
+     * @return The list element at the given position in the list.
      */
     public ListElement getItem(int position) {
     }
 
     /**
-     * @return a custom view of a list element at the given position in the list.
      * @param position Position of the element in the list.
      * @param convertView View which should be converted.
      * @param parent The parent view group.
+     * @return A custom view of a list element at the given position in the list.
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

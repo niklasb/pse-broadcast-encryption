@@ -8,6 +8,10 @@
 \usepackage{cite}
 \usepackage{graphicx}
 \usepackage{tikz}
+\usepackage{wrapfig}
+\usepackage{tikz-uml}
+\usepackage{gantt}
+\usepackage{pdflscape}
 \usetikzlibrary{arrows}
 \usetikzlibrary{fit}
 \usetikzlibrary{calc}
@@ -87,21 +91,29 @@ the presentation layer is presented by the shell, the application layer consists
 
 \input{figures/architecture_server/architectServer}
 
-\section{Package descriptions}
-\subimport{../docs/}{all.tex}
+\section{Package description}
+
+\input{../docs/cryptocast.comm.tex}
+\input{../docs/cryptocast.crypto.tex}
+\input{../docs/cryptocast.crypto.naorpinkas.tex}
+\input{../docs/cryptocast.util.tex}
+\input{../docs/cryptocast.server.tex}
+\input{../docs/cryptocast.client.tex}
+\input{../docs/cryptocast.client.filechooser.tex}
 
 \section{Sequences}
 \begin{illustration}{Sequence diagram of a command perfomed by the Server.}
-\includegraphics [width=400px] {figures/sequence_diagramm_server/Server1.png}
+\includegraphics [width=400px] {figures/sequence_diagram_server/Server1.pdf}
 \end{illustration}
 \begin{illustration}{Sequence diagram of playing a stream for the first time.}
-\includegraphics [width=400px] {figures/sequence_digram_client/sequence_client.png}
+\includegraphics [width=400px] {figures/sequence_diagram_client/sequence_client.pdf}
 \end{illustration}
 
-
-
-%\bibliography{../bibtex/references}{}
-%\bibliographystyle{plain}
+\begin{landscape}
+\begin{illustration}{Passing a piece of plaintext data through to the clients (Server side)}
+\includegraphics [width=700px] {figures/sequence_diagram_comm1_server/output.pdf}
+\end{illustration}
+\end{landscape}
 
 \section{GUI design}
 The GUI should be user-friendly and intuitional. Therefore its design is very minimalistic, foccusing on its main purpose. 
@@ -116,5 +128,34 @@ The following images show prototypes of the graphical user interface.
 \begin{illustration}{The option screen which contains preferences, traffic data and a server history.}
 \includegraphics[width=150px]{figures/images/optionscreen.png}
 \end{illustration}
+
+\begin{landscape}
+\section{Time plan}
+   \begin{illustration}{A rough time table for the implementation phase}
+  \begin{gantt}[xunitlength=0.5cm,fontsize=\small,titlefontsize=\small,drawledgerline=true]{10}{48}
+    \begin{ganttitle}
+      \titleelement{2009}{7}
+      \numtitle{2010}{1}{2012}{12}
+      \titleelement{2013}{5}
+    \end{ganttitle}
+    \begin{ganttitle}
+      \numtitle{6}{1}{12}{1}
+      \numtitle{1}{1}{12}{1}
+      \numtitle{1}{1}{12}{1}
+      \numtitle{1}{1}{12}{1}
+      \numtitle{1}{1}{5}{1}
+    \end{ganttitle}
+    \ganttbar{task 1}{2}{17}
+    \ganttgroup{a group of tasks}{6}{18}
+    \ganttbar{task 2}{5}{10}
+    \ganttbar[pattern=crosshatch,color=blue]{task 3}{15}{3}
+    \ganttbar{task 4}{20}{3}
+    \ganttcon{15}{4}{20}{6}
+    \ganttbar{task 5}{15}{5}
+    \ganttbarcon[color=red]{task 6}{20}{5}
+    \ganttbarcon{task 7}{30}{5}
+  \end{gantt}
+  \end{illustration}
+\end{landscape}
 
 \end{document}

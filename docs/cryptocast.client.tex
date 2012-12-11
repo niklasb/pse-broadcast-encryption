@@ -6,18 +6,30 @@ The client uses a \lstinline|FileChooser|, which can be used to select a file fr
 \subsubsection{Class \lstinline|StreamViewerActivity|}
 This activity is responsible for decrypting the received data
  stream and viewing it. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{StreamViewerActivity}{
+
+}{
++ onOptionsItemSelected(item : MenuItem) : boolean \\ + togglePlay() \\ + isPlaying() : boolean
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|FragmentActivity|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|StreamViewerActivity|\lstinline|(InChannel inputStream)|\\
+\item \lstinline|public| \lstinline|StreamViewerActivity|\lstinline|(InChannel inputStream)|\\ \\[-0.6em]
 Initializes a viewer
 \begin{itemize}
 \item \lstinline|inputStream|: the data stream
@@ -28,9 +40,9 @@ Initializes a viewer
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public boolean| \lstinline|onOptionsItemSelected|\lstinline|(MenuItem item)|\\
+\item \lstinline|public boolean| \lstinline|onOptionsItemSelected|\lstinline|(MenuItem item)|\\ \\[-0.6em]
 Handles a click on the bottom menu.
 \begin{itemize}
 \item \lstinline|item|: The clicked menu item
@@ -38,14 +50,14 @@ Handles a click on the bottom menu.
 
 
 
-\item \lstinline|public void| \lstinline|togglePlay|\lstinline|()|\\
+\item \lstinline|public void| \lstinline|togglePlay|\lstinline|()|\\ \\[-0.6em]
 Toggle playback play/pause. Will pause if in play mode and continue if
  in pause mode.
 
 
 
-\item \lstinline|public boolean| \lstinline|isPlaying|\lstinline|()|\\
-Returns: whether the player is in playing mode
+\item \lstinline|public boolean| \lstinline|isPlaying|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} whether the player is in playing mode
 
 
 
@@ -54,33 +66,36 @@ Returns: whether the player is in playing mode
 \subsubsection{Class \lstinline|ServerHistory|}
 This class is responsible for saving recently selected servers
  and their corresponding key files. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{ServerHistory}{
+
+}{
++ getServers() : Map<String, File> \\ + addServer(hostname : String, keyfile : File)
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|java.io.Serializable|
 \end{itemize}
 
 
 
-\textbf{Constructors}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|ServerHistory|\lstinline|()|
+\item \lstinline|public Map<String, File>| \lstinline|getServers|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the servers
 
 
 
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public Map<String, File>| \lstinline|getServers|\lstinline|()|\\
-Returns: the servers
-
-
-
-\item \lstinline|public void| \lstinline|addServer|\lstinline|(String hostname, File keyfile)|\\
+\item \lstinline|public void| \lstinline|addServer|\lstinline|(String hostname, File keyfile)|\\ \\[-0.6em]
 Adds a server to the collection.
 \begin{itemize}
 \item \lstinline|hostname|: The server's hostname
@@ -97,28 +112,31 @@ This class represents the activity to connect to the server.
  let the user choose an encryption key file. When the client receives a
  data stream the \lstinline|StreamViewerActivity| is started to process the
  stream and show its contents. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{MainActivity}{
+
+}{
++ connectToServer(view : View) \\ + onOptionsItemSelected(item : MenuItem) : boolean
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|FragmentActivity|
 \end{itemize}
 
 
 
-\textbf{Constructors}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|MainActivity|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|connectToServer|\lstinline|(View view)|\\
+\item \lstinline|public void| \lstinline|connectToServer|\lstinline|(View view)|\\ \\[-0.6em]
 Connects to server
 \begin{itemize}
 \item \lstinline|view|: The view from which this method was called.
@@ -126,7 +144,7 @@ Connects to server
 
 
 
-\item \lstinline|public boolean| \lstinline|onOptionsItemSelected|\lstinline|(MenuItem item)|\\
+\item \lstinline|public boolean| \lstinline|onOptionsItemSelected|\lstinline|(MenuItem item)|\\ \\[-0.6em]
 Handles a click on the main menu.
 \begin{itemize}
 \item \lstinline|item|: The clicked item
@@ -138,28 +156,31 @@ Handles a click on the main menu.
 
 \subsubsection{Class \lstinline|OptionsActivity|}
 The option screen. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{OptionsActivity}{
+
+}{
+\# onCreate(savedInstanceState : Bundle) \\ + onCreateOptionsMenu(menu : Menu) : boolean
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|Activity|
+\item \lstinline|android.app.Activity|
 \end{itemize}
 
 
 
-\textbf{Constructors}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|OptionsActivity|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle savedInstanceState)|\\
+\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle savedInstanceState)|\\ \\[-0.6em]
 Receives the saved option state.
 \begin{itemize}
 \item \lstinline|savedInstanceState|: the old state
@@ -167,7 +188,7 @@ Receives the saved option state.
 
 
 
-\item \lstinline|public boolean| \lstinline|onCreateOptionsMenu|\lstinline|(Menu menu)|\\
+\item \lstinline|public boolean| \lstinline|onCreateOptionsMenu|\lstinline|(Menu menu)|\\ \\[-0.6em]
 Inflates the option menu.
 \begin{itemize}
 \item \lstinline|menu|: The menu
@@ -180,34 +201,37 @@ Inflates the option menu.
 \subsubsection{Class \lstinline|KeyChoiceActivity|}
 This activity lets a user choose an encryption key file
  which is then sent to the server for authentication. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{KeyChoiceActivity}{
+
+}{
++ getChosenFile() : Optional<File> \\ + onFileClick(item : ListElement)
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|FileChooser|
 \end{itemize}
 
 
 
-\textbf{Constructors}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|KeyChoiceActivity|\lstinline|()|
+\item \lstinline|public Optional<File>| \lstinline|getChosenFile|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The chosen file or absent on abort.
 
 
 
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public <any>| \lstinline|getChosenFile|\lstinline|()|\\
-Returns: The chosen file or absent on abort.
-
-
-
-\item \lstinline|public void| \lstinline|onFileClick|\lstinline|(ListElement item)|\\
-Calld when the user clicks a file in the list.
+\item \lstinline|public void| \lstinline|onFileClick|\lstinline|(ListElement item)|\\ \\[-0.6em]
+Called when the user clicks a file in the list.
 \begin{itemize}
 \item \lstinline|item|: The clicked list item.
 \end{itemize}
@@ -218,18 +242,30 @@ Calld when the user clicks a file in the list.
 
 \subsubsection{Class \lstinline|ErrorFragment|}
 This class is used to pop up an error message. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{ErrorFragment}{
+
+}{
++ getMessage() : String
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|DialogFragment|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|ErrorFragment|\lstinline|(String message)|\\
+\item \lstinline|public| \lstinline|ErrorFragment|\lstinline|(String message)|\\ \\[-0.6em]
 Creates a new ErrorFragment which can be used to print the given error message.
 \begin{itemize}
 \item \lstinline|message|: Error message describing the error which occured before this fragment pops up.
@@ -239,5 +275,14 @@ Creates a new ErrorFragment which can be used to print the given error message.
 
 \end{itemize}
 
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public String| \lstinline|getMessage|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The error message
+
+
+
+\end{itemize}
 
 

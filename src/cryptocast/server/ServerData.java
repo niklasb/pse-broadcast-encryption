@@ -16,6 +16,7 @@ public class ServerData<ID> implements Serializable {
     private Map<ID, User> userById;
     private BroadcastSchemeUserManager<ID> users;
     private BroadcastSchemeKeyManager<ID> keys;
+    private OutChannel server;
 
     /**
      * Creates and saves a new user by name.

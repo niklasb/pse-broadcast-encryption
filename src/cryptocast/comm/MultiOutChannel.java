@@ -1,7 +1,7 @@
 package cryptocast.comm;
 
 /**
- * Multiplexes several OutChannels so that they can be used as a single
+ * Multiplexes several {@link OutChannel}s so that they can be used as a single
  * destination.
  */
 public class MultiOutChannel implements OutChannel {
