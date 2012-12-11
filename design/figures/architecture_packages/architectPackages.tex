@@ -13,25 +13,29 @@
 \begin{tikzpicture}[auto,node distance=1.5cm]
 
 \node[rect,minimum width=3cm](util) {cryptocast.util};
-\node[rect,minimum width=3cm, below of=util](server) {cryptocast.server};
+\node[rect,minimum width=2cm, xshift=3cm, right of=util](comm) {cryptocast.comm};
+\node[rect,minimum width=3cm,xshift=3cm, right of=comm](crypto) {cryptocast.crypto};
+\node[rect,minimum width=3cm, xshift=3cm, right of=crypto](naor) {cryptocast.crypto.naorpinkas};
+\node[rect,minimum width=3cm, yshift=-2cm, below of=comm](server) {cryptocast.server};
 \node[rect,minimum width=3cm, xshift=3cm, right of=server](client) {cryptocast.client};
 \node[rect,minimum width=3cm, xshift=3cm, right of=client](file) {cryptocast.client.filechooser};
-\node[rect,minimum width=3cm, below of=server](crypto) {cryptocast.crypto};
-\node[rect,minimum width=3cm, xshift=3cm, right of=crypto](naor) {cryptocast.crypto.naorpinkas};
-\node[rect,minimum width=2cm, below of=crypto](comm) {cryptocast.comm};
 
-\draw [<-] (util.south) -- ( server.north)
-             node[pos=.5]{uses};
 
-\draw [->] (server.south) -- (crypto.north)
-             node[pos=.5]{uses};
-\draw [->] (crypto.south) -- (comm.north)
-             node[pos=.5]{uses};
-\draw [->] (crypto.east) -- (naor.west)
-             node[pos=.5]{uses};
-\draw [->] (client.east) -- (file.west)
+
+\draw [<-] (util.south east) -- ( server.north west)
              node[pos=.5]{uses};
 
+\draw [->] (server.north east) -- (crypto.south west);
+\draw [->] (server.north east) -- (naor.south west);
+\draw [->] (server.north) -- (comm.south);
+
+\draw [->] (crypto.west) -- (comm.east);
+\draw [<-] (crypto.east) -- (naor.west);
+\draw [->] (client.north east) -- (naor.south west);
+\draw [->] (client.north) -- (crypto.south);
+\draw [->] (client.north west) -- (comm.south east);
+
+\draw [->] (client.east) -- (file.west);
 \end{tikzpicture}
 
 \end{illustration}
