@@ -48,10 +48,9 @@ def transform_type(typ, simple=True):
     res = typ.find("qualifiedName").text + gen + dim
     return res.split(".")[-1] if simple else res
 
-def transform_param(param, vararg=False):
-    dim = "[]" if vararg else ""
+def transform_param(param):
     return (param.find("name").text,
-            transform_type(param.find("type")) + dim,
+            transform_type(param.find("type")),
             None,
             text_or(param.find("comment")),
             0,
@@ -61,7 +60,6 @@ def transform_method(meth, abstract=False):
     abstract = abstract or parse_bool(meth.find("isAbstract").text)
     return_type = transform_type(meth.find("result").find("type"))
     if return_type == "void": return_type = ""
-    params = list(meth.iter("parameter"))
     varargs = parse_bool(meth.find("isVarArgs").text)
     return (meth.find("name").text,
             return_type,
@@ -71,7 +69,8 @@ def transform_method(meth, abstract=False):
             inheritance["pure-virtual" if abstract else "non-virtual"],
             parse_bool(meth.find("isFinal").text),
             parse_bool(meth.find("isStatic").text),
-            [transform_param(params[i], varargs and i == len(params)-1) for i in xrange(len(params))],
+            #[transform_param(params[i], varargs and i == len(params)-1) for i in xrange(len(params))],
+            map(transform_param, meth.iter("parameter")),
             )
 
 def create_stub_class(name, layer):

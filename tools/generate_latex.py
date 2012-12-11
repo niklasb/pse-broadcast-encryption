@@ -213,6 +213,7 @@ def render_package(pkg, indent=1):
     return replace_links(dedent("""\
            \\{sub}section{{Package \\lstinline!{pkgname}!}}
            {comment}
+           \\input{{{pkgname}.custom.tex}}
            {classes}
            """).format(pkgname=pkg.find("name").text,
                       classes="".join(render_class(cls, indent+1)
@@ -226,13 +227,10 @@ if __name__ == "__main__":
         sys.exit(1)
     doc = ET.parse(sys.argv[1]).getroot()
     outdir = sys.argv[2]
-    tex_files = []
     for p in doc.iter("package"):
-        print p.find("name").text
-        fn = "%s.tex"  % p.find("name").text
-        tex_files.append(fn)
-        with open(outdir + "/" + fn, "w") as f:
+        name = p.find("name").text
+        print "Processing package %s" % name
+        with open(outdir + "/" + name + ".tex", "w") as f:
             f.write(render_package(p))
-    #with open(outdir + "/all.tex", "w") as f:
-        #for other in tex_files:
-            #f.write("\\input{%s}\n" % other)
+        with open(outdir + "/" + name + ".custom.tex", "a") as f:
+            pass
