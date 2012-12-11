@@ -11,6 +11,7 @@ public class Controller<ID> {
 
     private ServerData<ID> data;
     private Shell<ID> shell;
+    private OutChannel server;
     
     /**
      * Initializes a new controller with the given arguments.

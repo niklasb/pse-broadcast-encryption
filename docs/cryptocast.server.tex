@@ -1,5 +1,14 @@
 \subsection{Package \lstinline!cryptocast.server!}
+This package contains the server application used to send data to a specific group of people.
 
+ The server implements the MVC pattern:
+ \begin{itemize}
+ \item \lstinline|Shell| is the view
+ \item \lstinline|Controller| is the controller
+ \item \lstinline|ServerData| is the model
+ \end{itemize}
+
+ It puts together the communication, cryptography and utility packages to implement its functionality.
 \subsubsection{Class \lstinline|Controller<ID>|}
 Deals with user-interactions and therefore changes data in Model if necessary. \\
 \noindent\begin{minipage}[t]{5cm}
@@ -151,7 +160,7 @@ Creates a User with the given attributes.
 \end{itemize}
 
 \subsubsection{Class \lstinline|Shell<ID>|}
-Gets the arguments from the command line and deals with illegal input. \\
+Implements the user interface of the server as an interactive console application. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
@@ -261,7 +270,7 @@ Retrieves a user's personal key
 \end{itemize}
 
 \subsubsection{Class \lstinline|Main|}
-The main method to start the server \\
+The main method to start the server. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}

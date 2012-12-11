@@ -1,5 +1,9 @@
 \subsection{Package \lstinline!cryptocast.comm!}
-
+This package provides functionality related to communication between the different layers
+ of the network protocol and to the communication between the server and clients. This includes
+ the management of file and socket streams and abstractions of the multi-client unidirectional
+ streams that represent the core of this project.
+ Useful abstractions for layered protocols are also included.
 \subsubsection{Class \lstinline|WritableByteChannelAdapter|}
 Adapter to use a \lstinline|WritableByteChannel| (for example, a file or socket instance) as
  an \lstinline|OutChannel|. \\

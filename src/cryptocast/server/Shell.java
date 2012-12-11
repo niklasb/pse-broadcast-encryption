@@ -7,7 +7,7 @@ import java.util.List;
 import cryptocast.util.InteractiveCommandLineInterface;
 
 /**
- * Gets the arguments from the command line and deals with illegal input.
+ * Implements the user interface of the server as an interactive console application.
  * @param <ID> The type of the user identities.
  */
 public class Shell<ID> extends InteractiveCommandLineInterface {
