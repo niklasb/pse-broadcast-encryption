@@ -96,13 +96,13 @@ the presentation layer is presented by the shell, the application layer consists
 
 \section{Package description}
 
-\input{../docs/cryptocast.comm.tex}
-\input{../docs/cryptocast.crypto.tex}
-\input{../docs/cryptocast.crypto.naorpinkas.tex}
-\input{../docs/cryptocast.util.tex}h
-\input{../docs/cryptocast.server.tex}
-\input{../docs/cryptocast.client.tex}
-\input{../docs/cryptocast.client.filechooser.tex}
+%\input{../docs/cryptocast.comm.tex}
+%\input{../docs/cryptocast.crypto.tex}
+%\input{../docs/cryptocast.crypto.naorpinkas.tex}
+%\input{../docs/cryptocast.util.tex}h
+%\input{../docs/cryptocast.server.tex}
+%\input{../docs/cryptocast.client.tex}
+%\input{../docs/cryptocast.client.filechooser.tex}
 
 \section{Sequences}
 \begin{illustration}{Sequence diagram of a command perfomed by the Server.}
@@ -149,28 +149,34 @@ The following images show prototypes of the graphical user interface.
 \begin{landscape}
 \section{Time plan}
    \begin{illustration}{A rough time table for the implementation phase}
-  \begin{gantt}[xunitlength=0.5cm,fontsize=\small,titlefontsize=\small,drawledgerline=true]{10}{48}
+  \begin{gantt}[xunitlength=0.5cm,fontsize=\small,titlefontsize=\small,drawledgerline=true]{9}{23}
     \begin{ganttitle}
-      \titleelement{2009}{7}
-      \numtitle{2010}{1}{2012}{12}
-      \titleelement{2013}{5}
+      \titleelement{KW 51}{7}
+      \titleelement{KW 2}{7}
+      \titleelement{KW 3}{7}
+       \titleelement{KW 4}{2}
     \end{ganttitle}
     \begin{ganttitle}
-      \numtitle{6}{1}{12}{1}
-      \numtitle{1}{1}{12}{1}
-      \numtitle{1}{1}{12}{1}
-      \numtitle{1}{1}{12}{1}
-      \numtitle{1}{1}{5}{1}
+      \numtitle{17}{1}{23}{1}
+      \numtitle{7}{1}{22}{1}
     \end{ganttitle}
-    \ganttbar{task 1}{2}{17}
-    \ganttgroup{a group of tasks}{6}{18}
-    \ganttbar{task 2}{5}{10}
-    \ganttbar[pattern=crosshatch,color=blue]{task 3}{15}{3}
-    \ganttbar{task 4}{20}{3}
-    \ganttcon{15}{4}{20}{6}
-    \ganttbar{task 5}{15}{5}
-    \ganttbarcon[color=red]{task 6}{20}{5}
-    \ganttbarcon{task 7}{30}{5}
+    \ganttbar[color=yellow]{communication}{0}{3}
+    \ganttbar[color=green]{cryptography}{3}{19}
+    \ganttbar[color=blue]{server model}{3}{8}
+    \ganttbar[color=blue]{server shell}{11}{11}
+    \ganttbar[color=red]{client model}{3}{10}
+    \ganttbar[color=red]{client view}{13}{9}
+    \ganttbar{connect packages}{22}{1}
+
+    \ganttcon{11}{4}{11}{5}
+    \ganttcon{13}{6}{13}{7}
+
+    \ganttcon{3}{2}{3}{3}
+    \ganttcon{3}{2}{3}{4}
+    \ganttcon{3}{2}{3}{6}
+    \ganttcon{22}{3}{22}{8}
+    \ganttcon{22}{5}{22}{8}
+    \ganttcon{22}{7}{22}{8}
   \end{gantt}
   \end{illustration}
 \end{landscape}
