@@ -1,5 +1,10 @@
 package cryptocast.client.filechooser;
 
+import java.util.List;
+import android.content.Context;
+import android.widget.ArrayAdapter;
+import android.view.View;
+
 /**
  * An adapter between the ListElements and the view showing them.
  */

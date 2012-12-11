@@ -2,18 +2,30 @@
 
 \subsubsection{Class \lstinline|FileListElement|}
 A list element in our file chooser, representing a file. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{FileListElement}{
+
+}{
++ getPath() : Path \\ + getIcon() : Resource
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.client.filechooser.ListElement|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|FileListElement|\lstinline|(Path path)|\\
+\item \lstinline|public| \lstinline|FileListElement|\lstinline|(Path path)|\\ \\[-0.6em]
 Creates a new instance.
 \begin{itemize}
 \item \lstinline|path|: The path of the file
@@ -24,15 +36,15 @@ Creates a new instance.
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public Path| \lstinline|getPath|\lstinline|()|\\
-Returns: the path of the element
+\item \lstinline|public Path| \lstinline|getPath|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the path of the element
 
 
 
-\item \lstinline|public Resource| \lstinline|getIcon|\lstinline|()|\\
-Returns: The icon associated with this element
+\item \lstinline|public Resource| \lstinline|getIcon|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The icon associated with this element
 
 
 
@@ -40,18 +52,30 @@ Returns: The icon associated with this element
 
 \subsubsection{Class \lstinline|FileArrayAdapter|}
 An adapter between the ListElements and the view showing them. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{FileArrayAdapter}{
+
+}{
++ getItem(position : int) : ListElement \\ + getView(position : int, convertView : View, parent : ViewGroup) : View
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|<any>|
+\item \lstinline|android.widget.ArrayAdapter<ListElement>|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|FileArrayAdapter|\lstinline|(Context context, int textViewResourceId, <any> objects)|\\
+\item \lstinline|public| \lstinline|FileArrayAdapter|\lstinline|(Context context, int textViewResourceId, List<ListElement> objects)|\\ \\[-0.6em]
 Constructs a new instance with the given attributes.
 \begin{itemize}
 \item \lstinline|context|: The context in which this adapter is used.
@@ -64,15 +88,15 @@ Constructs a new instance with the given attributes.
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public ListElement| \lstinline|getItem|\lstinline|(int position)|\\
-Returns: the list element at the given position in the list.
+\item \lstinline|public ListElement| \lstinline|getItem|\lstinline|(int position)|\\ \\[-0.6em]
+\emph{Returns:} the list element at the given position in the list.
 
 
 
-\item \lstinline|public View| \lstinline|getView|\lstinline|(int position, View convertView, ViewGroup parent)|\\
-Returns: a custom view of a list element at the given position in the list.
+\item \lstinline|public View| \lstinline|getView|\lstinline|(int position, View convertView, ViewGroup parent)|\\ \\[-0.6em]
+\emph{Returns:} a custom view of a list element at the given position in the list.
 \begin{itemize}
 \item \lstinline|position|: Position of the element in the list.
 \item \lstinline|convertView|: View which should be converted.
@@ -86,28 +110,31 @@ Returns: a custom view of a list element at the given position in the list.
 \subsubsection{Class \lstinline|FileChooser|}
 A UI element that allows the user to browse the files and folders of the SD card and
  choose one file. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{FileChooser}{
+
+}{
++ onCreate(savedInstanceState : Bundle) \\ \# onListItemClick(lst : ListView, view : View, position : int, id : long) \\ -- fill(f : File) \\ \umlvirt{-- onFileClick(o : ListElement)}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|ListActivity|
 \end{itemize}
 
 
 
-\textbf{Constructors}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public| \lstinline|FileChooser|\lstinline|()|
-
-
-
-
-\end{itemize}
-
-
-\textbf{Methods}
-\begin{itemize}
-\item \lstinline|public void| \lstinline|onCreate|\lstinline|(Bundle savedInstanceState)|\\
+\item \lstinline|public void| \lstinline|onCreate|\lstinline|(Bundle savedInstanceState)|\\ \\[-0.6em]
 Initialize the instance
 \begin{itemize}
 \item \lstinline|savedInstanceState|: the stored state
@@ -115,7 +142,7 @@ Initialize the instance
 
 
 
-\item \lstinline|protected void| \lstinline|onListItemClick|\lstinline|(ListView lst, View view, int position, long id)|\\
+\item \lstinline|protected void| \lstinline|onListItemClick|\lstinline|(ListView lst, View view, int position, long id)|\\ \\[-0.6em]
 Handles a click onto a list item.
 \begin{itemize}
 \item \lstinline|lst|: The list
@@ -126,12 +153,12 @@ Handles a click onto a list item.
 
 
 
-\item \lstinline|private void| \lstinline|fill|\lstinline|(File f)|
+\item \lstinline|private void| \lstinline|fill|\lstinline|(File f)| \\[-0.6em]
 
 
 
 
-\item \lstinline|private abstract void| \lstinline|onFileClick|\lstinline|(ListElement o)|
+\item \lstinline|private abstract void| \lstinline|onFileClick|\lstinline|(ListElement o)| \\[-0.6em]
 
 
 
@@ -140,18 +167,30 @@ Handles a click onto a list item.
 
 \subsubsection{Class \lstinline|DirectoryListElement|}
 A list element in our file chooser, representing a directory. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{DirectoryListElement}{
+
+}{
++ getPath() : Path \\ + getIcon() : Resource
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
-\textbf{Superclasses and Interfaces}
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
 \item \lstinline|cryptocast.client.filechooser.ListElement|
 \end{itemize}
 
 
-
-\textbf{Constructors}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|DirectoryListElement|\lstinline|(Path path)|\\
+\item \lstinline|public| \lstinline|DirectoryListElement|\lstinline|(Path path)|\\ \\[-0.6em]
 Creates a new instance.
 \begin{itemize}
 \item \lstinline|path|: The path of the directory
@@ -162,15 +201,15 @@ Creates a new instance.
 \end{itemize}
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public Path| \lstinline|getPath|\lstinline|()|\\
-Returns: the path of the element
+\item \lstinline|public Path| \lstinline|getPath|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the path of the element
 
 
 
-\item \lstinline|public Resource| \lstinline|getIcon|\lstinline|()|\\
-Returns: The icon associated with this element
+\item \lstinline|public Resource| \lstinline|getIcon|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The icon associated with this element
 
 
 
@@ -178,20 +217,32 @@ Returns: The icon associated with this element
 
 \subsubsection{Interface \lstinline|ListElement|}
 A list element in our file chooser, representing an element on the file system. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{ListElement}{
+
+}{
+\umlvirt{+ getPath() : Path} \\ \umlvirt{+ getIcon() : Resource}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
 
 
 
 
 
-\textbf{Methods}
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public Path| \lstinline|getPath|\lstinline|()|\\
-Returns: the path of the element
+\item \lstinline|public Path| \lstinline|getPath|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the path of the element
 
 
 
-\item \lstinline|public Resource| \lstinline|getIcon|\lstinline|()|\\
-Returns: The icon associated with this element
+\item \lstinline|public Resource| \lstinline|getIcon|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The icon associated with this element
 
 
 
