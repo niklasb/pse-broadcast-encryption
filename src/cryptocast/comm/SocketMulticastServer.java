@@ -7,14 +7,14 @@ import java.net.ServerSocket;
  */
 class SocketMulticastServer implements OutChannel  {
     /**
-     * Creates a multicast server which uses the given socket.
-     * @param socket server socket
+     * Creates an instance of a multicast server which uses the given socket.
+     * @param socket Server socket
      */
     public SocketMulticastServer(ServerSocket socket) { };
 
     /**
      * Sends bytes via the channel.
-     * @param data the data to send
+     * @param data The data to send
      */
     public void send(byte[] data) { }
 }

@@ -6,8 +6,8 @@ package cryptocast.comm;
 public interface InChannel {
     /**
      * Receives data.
-     * @param size maximum amount of bytes to read
+     * @param size Maximum amount of bytes to read
      * @param buffer The target buffer
      */
-    public void recv(int size, byte[] buffer);
+    void recv(int size, byte[] buffer);
 }

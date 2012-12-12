@@ -43,7 +43,7 @@ public class Controller<ID> {
         
     /**
      * Adds a new user and assigns a private key to that user.
-     * @param name The name of the user who is added.
+     * @param name The name of the user which is added.
      */
     public void addUser(String name) {
         
@@ -66,14 +66,14 @@ public class Controller<ID> {
     }
 
     /**
-     * Starts the data stream 
-     * @param data The file from which the data is read
+     * Starts the data stream.
+     * @param data The file from which the data is read.
      */
     public void stream(InputStream data) {
     }
     
     /**
-     * Prints information about traffic
+     * Prints information about traffic.
      */
     public void showStatistics() {
         

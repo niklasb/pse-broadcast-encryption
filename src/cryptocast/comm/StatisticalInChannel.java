@@ -1,24 +1,24 @@
 package cryptocast.comm;
 
 /**
- * Wrapper around an {@link InChannel} that counts incoming bytes
+ * Wrapper around an instance of {@link InChannel} that counts incoming bytes.
  */
 public class StatisticalInChannel implements InChannel {
     /**
-     * Initializes the proxy
-     * @param inner the wrapped channel
+     * Initializes the proxy.
+     * @param inner The wrapped channel
      */
     public StatisticalInChannel(InChannel inner) { }
 
     /**
      * Receives data.
-     * @param size maximum amount of bytes to read
-     * @param buffer the target buffer
+     * @param size Maximum amount of bytes to read
+     * @param buffer The target buffer
      */
     public void recv(int size, byte[] buffer) {}
 
     /**
-     * @return the number of received bytes
+     * @return The number of received bytes
      */
     public int getReceivedBytes() {return 0;}
 }

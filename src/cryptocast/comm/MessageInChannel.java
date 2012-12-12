@@ -1,18 +1,20 @@
 package cryptocast.comm;
 
 /**
- * Wraps a byte-based InChannel and allows to use it as a message-based
+ * Wraps a byte-based instance of {@link InChannel} and allows to use it as a message-based
  * channel.
  */
 public class MessageInChannel {
     /**
-     * Creates a MessageInChannel which wraps the given inner channel.
-     * @param inner the wrapped channel
+     * Creates an instance of MessageInChannel which wraps the given inner channel.
+     * @param inner The wrapped channel
      */
     public MessageInChannel(InChannel inner) { }
    /**
     * Receives a message via the channel.
-    * @return the received data
+    * @return The received data
     */
-    public byte[] recvMessage() {return null;}
+    public byte[] recvMessage() {
+        return null;
+    }
 }

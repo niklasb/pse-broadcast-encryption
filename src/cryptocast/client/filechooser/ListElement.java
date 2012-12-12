@@ -7,12 +7,12 @@ import java.nio.file.Path;
  */
 public interface ListElement {
     /**
-     * @return the path of the element
+     * @return The path of the element
      */
     public Path getPath();
 
     /**
-     * @return The icon associated with this element
+     * @return The icon associated with this element.
      */
     public Resource getIcon();
 }

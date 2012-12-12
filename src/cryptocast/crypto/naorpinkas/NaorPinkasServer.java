@@ -16,7 +16,7 @@ public class NaorPinkasServer
                  Serializable,
                  Encryptor<BigInteger> {
     /**
-     * Encrypts a secret
+     * Encrypts a secret.
      * @param secret the secret
      * @return The cipher text
      */
@@ -27,13 +27,13 @@ public class NaorPinkasServer
      */
     public NaorPinkasIdentity getIdentity(int i) {return null;}
     /**
-     * Revokes a user
+     * Revokes a user.
      * @param id The identity of the user
      */
     public void revoke(NaorPinkasIdentity x) {}
     /**
      * @param id The identity of the user
-     * @return whether the user is revoked
+     * @return Whether the user is revoked.
      */
     public boolean isRevoked(NaorPinkasIdentity id) {return false;}
     /**

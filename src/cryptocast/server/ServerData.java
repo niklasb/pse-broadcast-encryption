@@ -26,14 +26,14 @@ public class ServerData<ID> implements Serializable {
     public Optional<User<ID>> createNewUser(String name) { return null; }
 
     /**
-     * Retrieves a user by name
+     * Retrieves a user by name.
      * @param name The user's name
      * @return A user instance, if it was found, or absent otherwise
      */
     public Optional<User<ID>> getUserByName(String name) { return null; }
 
     /**
-     * Retrieves a user's personal key
+     * Retrieves a user's personal key.
      * @param user The user object
      * @return The private key
      */

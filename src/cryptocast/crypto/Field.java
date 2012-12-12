@@ -1,21 +1,21 @@
 package cryptocast.crypto;
 
 /**
- * Represents a field over values of type T
- * @param <T> The values we work on
+ * Represents a field over values of type T.
+ * @param <T> The values we work on.
  */
 public abstract class Field<T> {
     /**
-     * Adds two elements of the field
-     * @param a first element
-     * @param b second element
+     * Adds two elements of the field.
+     * @param a First element
+     * @param b Second element
      * @return The value $a + b$
      */
     public abstract T add(T a, T b);
     /**
      * Multiplies two elements of the field
-     * @param a first element
-     * @param b second element
+     * @param a First element
+     * @param b Second element
      * @return The value $a \cdot b$
      */
     public abstract T multiply(T a, T b);
@@ -27,7 +27,7 @@ public abstract class Field<T> {
     /**
      * @param a An element of the field
      * @return The multiplicative inverse $a^{-1}$ of $a$
-     * @throws ArithmeticException if a is the zero element
+     * @throws ArithmeticException If a is the zero element.
      */
     public abstract T invert(T a) throws ArithmeticException;
     /**
@@ -44,9 +44,9 @@ public abstract class Field<T> {
     public abstract T randomElement();
 
     /**
-     * Subtracts two elements of the field
-     * @param a first element
-     * @param b second element
+     * Subtracts two elements of the field.
+     * @param a First element
+     * @param b Second element
      * @return The value $a - b$
      */
     public T subtract(T a, T b) {
@@ -54,15 +54,15 @@ public abstract class Field<T> {
     }
     /**
      * Divides two elements of the field
-     * @param a first element
-     * @param b second element
+     * @param a First element
+     * @param b Second element
      * @return The value $\frac{a}{b}$
      */
     public T divide(T a, T b) {
         return multiply(a, invert(b));
     }
     /**
-     * Raises an element of the field to an integer power
+     * Raises an element of the field to an integer power.
      * @param a The element of the field
      * @param e The exponent
      * @return The value $a^e$

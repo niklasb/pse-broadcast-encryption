@@ -58,12 +58,12 @@
 \clearpage
 
 \section{Introduction}
-CryptoCast is a piece of software that provides a service to send contents from a central server to a given
-group of recipients. Transmission happens via a unidirectional communication channel.
+In this project we design and implement a software calles Cryptocas. CryptoCast is a piece of software that provides a service to
+send contents from a central server to a given group of recipients. Transmission happens via a unidirectional communication channel.
 The traffic duplication that would be required for commonly used transport protocols is therefore avoided.
 
 The software enables access control through a specific form of encryption that is based on the Naor-Pinkas broadcast
-encryption scheme. The advantage of this scheme is that the communication overhead necessary for session key
+encryption scheme~\cite[Section~2.2]{Naor00}. The advantage of this scheme is that the communication overhead necessary for session key
 management and client revocation does not depend on the total number of recipients, but only on the
 number of revoked users.
 
@@ -78,7 +78,7 @@ As for the client, it will be realized as an application targetting the Android 
 It will be able to receive, decode and display the data stream.
 
 We will use a transport protocol based on TCP for the communication between the server and its clients,
-but this implemented can easily be replaced by any other protocol that supports reliable, unidirectional
+but this implementation can easily be replaced by any other protocol that supports reliable, unidirectional
 streams (like reliable IP multicast).
 
 Since a broadcast encryption scheme is used, an important goal is to extract the common interface between our
@@ -96,7 +96,7 @@ receiving it.
 
 \input{figures/architecture_packages/architectPackages}
 
-Both server and client will be based on a three layer architecture to seperate presentation, logic
+Both, server and client, will be based on a three layer architecture to seperate presentation, logic
 and storage of the data.
 In the case of the server, presentation is handled by the \lstinline|Shell| class, logic is
 performed by the \lstinline|Controller|, which in turn uses the \lstinline|ServerData| class
@@ -107,16 +107,16 @@ The client will use the standard MVC model provided by the Android framework.
 
 \section{Package description}
 
-\subimport{../docs/}{cryptocast.comm.tex}
-\subimport{../docs/}{cryptocast.crypto.tex}
-\subimport{../docs/}{cryptocast.crypto.naorpinkas.tex}
-\subimport{../docs/}{cryptocast.util.tex}
-\subimport{../docs/}{cryptocast.server.tex}
-\subimport{../docs/}{cryptocast.client.tex}
-\subimport{../docs/}{cryptocast.client.filechooser.tex}
+%\subimport{../docs/}{cryptocast.comm.tex}
+%\subimport{../docs/}{cryptocast.crypto.tex}
+%\subimport{../docs/}{cryptocast.crypto.naorpinkas.tex}
+%\subimport{../docs/}{cryptocast.util.tex}
+%\subimport{../docs/}{cryptocast.server.tex}
+%\subimport{../docs/}{cryptocast.client.tex}
+%\subimport{../docs/}{cryptocast.client.filechooser.tex}
 
 \section{Sequences}
-\begin{illustration}{Server: A command perfomed in the shell.}
+\begin{illustration}{Server: A command performed in the shell.}
 \includegraphics [width=400px] {figures/sequence_diagram_server/Server1.pdf}
 \end{illustration}
 \begin{illustration}{Client: Connecting to a server for the first time.}
@@ -124,7 +124,7 @@ The client will use the standard MVC model provided by the Android framework.
 \end{illustration}
 
 \begin{landscape}
-\begin{illustration}{Server: Passing a piece of plaintext data through to the client sockets}
+\begin{illustration}{Server: Passing a piece of plaintext data through to the client sockets.}
 \includegraphics [width=700px] {figures/sequence_diagram_comm1_server/output.pdf}
 \end{illustration}
 \end{landscape}
@@ -159,7 +159,7 @@ The following images show prototypes of the client user interface.
 \end{illustration}
 
 \section{Time plan}
-   \begin{illustration}{A rough time table for the implementation phase}
+   \begin{illustration}{A rough time table for the implementation phase.}
   \begin{gantt}[xunitlength=0.5cm,fontsize=\small,titlefontsize=\small,drawledgerline=true]{9}{23}
     \begin{ganttitle}
       \titleelement{KW 51}{7}
@@ -191,4 +191,8 @@ The following images show prototypes of the client user interface.
   \end{gantt}
   \end{illustration}
 
+\bibliography{../bibtex/references}{}
+\bibliographystyle{plain}
+
 \end{document}
+

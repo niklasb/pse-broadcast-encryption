@@ -1,7 +1,7 @@
 package cryptocast.crypto;
 
 /**
- * Manages a set of user identites
+ * Manages a set of user identities.
  * @param <ID> The type of the identities
  */
 public interface BroadcastSchemeUserManager<ID> {
@@ -11,13 +11,13 @@ public interface BroadcastSchemeUserManager<ID> {
      */
     public ID getIdentity(int i);
     /**
-     * Revokes a user
+     * Revokes a user.
      * @param id The identity of the user
      */
     public void revoke(ID id);
     /**
      * @param id The identity of the user
-     * @return whether the user is revoked
+     * @return Whether the user is revoked.
      */
     public boolean isRevoked(ID id);
 }

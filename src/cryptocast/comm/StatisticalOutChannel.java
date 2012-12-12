@@ -1,23 +1,23 @@
 package cryptocast.comm;
 
 /**
- * Wrapper around an {@link OutChannel} that counts outgoing bytes.
+ * Wrapper around an instance of {@link OutChannel} that counts outgoing bytes.
  */
 public class StatisticalOutChannel implements OutChannel {
     /**
      * Initializes the proxy
-     * @param inner the wrapped channel
+     * @param inner The wrapped channel
      */
     public StatisticalOutChannel(OutChannel inner) { }
 
     /**
      * Sends the given data.
-     * @param data the data to send
+     * @param data The data to send
      */
     public void send(byte[] data) {}
 
     /**
-     * @return the number of sent bytes
+     * @return The number of sent bytes
      */
     public int getSentBytes() {return 0;}
 }

@@ -5,12 +5,12 @@ import cryptocast.comm.InChannel;
 
 /**
  * This activity is responsible for decrypting the received data
- * stream and viewing it.
+ * and viewing it.
  */
 public class StreamViewerActivity extends FragmentActivity {
     /**
-     * Initializes a viewer
-     * @param inputStream the data stream
+     * Initializes a viewer.
+     * @param inputStream The data stream
      */
     public StreamViewerActivity(InChannel inputStream) { }
 
@@ -28,7 +28,7 @@ public class StreamViewerActivity extends FragmentActivity {
     public void togglePlay() { }
 
     /**
-     * @return whether the player is in playing mode
+     * @return Whether the player is in playing mode.
      */
     public boolean isPlaying() { return false; }
 }

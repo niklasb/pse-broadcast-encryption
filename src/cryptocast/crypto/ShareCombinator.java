@@ -11,7 +11,7 @@ import com.google.common.base.Optional;
 public interface ShareCombinator<S, T> {
   /**
    * Restores a secret from several shares.
-   * @param share The shares
+   * @param shares The shares
    * @return The reconstructed secret or absent if the information represented
    * by the given shares is insufficient to restore it.
    */

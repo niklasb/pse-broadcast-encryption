@@ -8,8 +8,8 @@ import java.math.BigInteger;
  */
 public class NaorPinkasClient implements Decryptor<BigInteger> {
     /**
-    * Initializes a Naor-Pinkas broadcast client
-    * @param key The personal key used to reconstruct a secret from the stream
+    * Initializes a Naor-Pinkas broadcast client.
+    * @param key The personal key used to reconstruct a secret from the stream.
     */
     public NaorPinkasClient(NaorPinkasPersonalKey key) { }
 

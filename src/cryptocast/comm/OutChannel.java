@@ -6,7 +6,7 @@ package cryptocast.comm;
 public interface OutChannel {
     /**
      * Sends the given data.
-     * @param data the data to send
+     * @param data The data to send
      */
     public void send(byte[] data);
 }

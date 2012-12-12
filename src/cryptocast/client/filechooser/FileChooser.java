@@ -1,4 +1,4 @@
-package cryptocast.client.filechooser;
+package cryptocast.client.fileChooser;
 
 /**
  * A UI element that allows the user to browse the files and folders of the SD card and

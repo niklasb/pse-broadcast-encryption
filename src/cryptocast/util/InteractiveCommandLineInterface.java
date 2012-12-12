@@ -10,20 +10,20 @@ import java.io.PrintStream;
  * functionality.
  */
 public abstract class InteractiveCommandLineInterface extends CommandLineInterface {
-    /** An error within one of the commands. Will be caught by the main loop */
+    /** An error within one of the commands. Will be caught by the main loop. */
     protected class CommandError extends Throwable {
         public String msg;
-        /** Initializes the error
+        /** Initializes the error.
         * @param msg The error message
         */
         public CommandError(String msg) {
             this.msg = msg;
         }
-        /** @return The associated error message */
+        /** @return The associated error message. */
         public String getMessage() { return msg; }
     }
 
-    /** Initializes a new interactive CLI instance
+    /** Initializes a new interactive CLI instance.
      * @param in The stream for program input
      * @param out The stream for program output
      * @param err The stream for error output

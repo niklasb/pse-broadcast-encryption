@@ -13,12 +13,12 @@ public class FileListElement implements ListElement {
     public FileListElement(Path path) { }
 
     /**
-     * @return the path of the element
+     * @return The path of the element
      */
     public Path getPath() { return null; }
 
     /**
-     * @return The icon associated with this element
+     * @return The icon associated with this element.
      */
     public Resource getIcon() { return null; }
 }

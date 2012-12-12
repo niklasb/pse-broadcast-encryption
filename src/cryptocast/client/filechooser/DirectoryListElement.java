@@ -1,9 +1,9 @@
-package cryptocast.client.filechooser;
+package cryptocast.client.fileChooser;
 
 import java.nio.file.Path;
 
 /**
- * A list element in our file chooser, representing a directory.
+ * A list element in our file chooser representing a directory.
  */
 public class DirectoryListElement implements ListElement {
     /**
@@ -13,12 +13,12 @@ public class DirectoryListElement implements ListElement {
     public DirectoryListElement(Path path) { }
 
     /**
-     * @return the path of the element
+     * @return The path of the element
      */
     public Path getPath() { return null; }
 
     /**
-     * @return The icon associated with this element
+     * @return The icon associated with this element.
      */
     public Resource getIcon() { return null; }
 }

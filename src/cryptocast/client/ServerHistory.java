@@ -14,14 +14,14 @@ public class ServerHistory implements Serializable {
     private Map<String, File> servers;
 
     /**
-     * @return the servers
+     * @return The servers
      */
     public Map<String, File> getServers() { return servers; }
 
     /**
-     * Adds a server to the collection.
+     * Adds a server to the list of servers.
      * @param hostname The server's hostname
-     * @param keyfile The keyfile the user has chosen for this server
+     * @param keyfile The keyfile the user has chosen for this server.
      */
     public void addServer(String hostname, File keyfile) { }
 }
