@@ -1,13 +1,13 @@
 \subsection{Package \lstinline!cryptocast.client!}
-The client contains a \lstinline|FileChooser|, which can be used to select any file from the SD card 
- of an android gadget. As a private key is necessary to encrypt data received from a server the 
+The client contains an instance of \lstinline|FileChooser|, which can be used to select any file from the SD card 
+ of an Android gadget. Since a private key is necessary to encrypt data received from a server the 
  \lstinline|FileChooser| is used to select a keyfile. All servers and responding keyfiles are placed 
- in the \lstinline|ServerHistory| and therefore can be saved and loaded after closing the client.
+ in an instance of \lstinline|ServerHistory| and therefore can be saved and loaded after closing the client.
  Every error is displayed by using a simple pop up window defined by the class \lstinline|ErrorFragment|.
 \input{cryptocast.client.custom.tex}
 \subsubsection{Class \lstinline|StreamViewerActivity|}
 This activity is responsible for decrypting the received data
- stream and viewing it. \\
+ and viewing it. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
@@ -32,9 +32,9 @@ This activity is responsible for decrypting the received data
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|StreamViewerActivity|\lstinline|(InChannel inputStream)|\\ \\[-0.6em]
-Initializes a viewer
+Initializes a viewer.
 \begin{itemize}
-\item \lstinline|inputStream|: the data stream
+\item \lstinline|inputStream|: The data stream
 \end{itemize}
 
 
@@ -59,7 +59,7 @@ Toggle playback play/pause. Will pause if in play mode and continue if
 
 
 \item \lstinline|public boolean| \lstinline|isPlaying|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} whether the player is in playing mode
+\emph{Returns:} Whether the player is in playing mode.
 
 
 
@@ -93,15 +93,15 @@ This class is responsible for saving recently selected servers
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public Map<String, File>| \lstinline|getServers|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} the servers
+\emph{Returns:} The servers
 
 
 
 \item \lstinline|public void| \lstinline|addServer|\lstinline|(String hostname, File keyfile)|\\ \\[-0.6em]
-Adds a server to the collection.
+Adds a server to the list of servers.
 \begin{itemize}
 \item \lstinline|hostname|: The server's hostname
-\item \lstinline|keyfile|: The keyfile the user has chosen for this server
+\item \lstinline|keyfile|: The keyfile the user has chosen for this server.
 \end{itemize}
 
 
@@ -110,9 +110,9 @@ Adds a server to the collection.
 
 \subsubsection{Class \lstinline|MainActivity|}
 This class represents the activity to connect to the server.
- Before connecting this activity start the \lstinline|KeyChoiceActivity| to
+ Before connecting this activity start an instance of \lstinline|KeyChoiceActivity| to
  let the user choose an encryption key file. When the client receives a
- data stream the \lstinline|StreamViewerActivity| is started to process the
+ data stream an instance of a \lstinline|StreamViewerActivity| is started to process the
  stream and show its contents. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
@@ -139,7 +139,7 @@ This class represents the activity to connect to the server.
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public void| \lstinline|connectToServer|\lstinline|(View view)|\\ \\[-0.6em]
-Connects to server
+Connects to a server.
 \begin{itemize}
 \item \lstinline|view|: The view from which this method was called.
 \end{itemize}
@@ -220,7 +220,7 @@ This activity lets a user choose an encryption key file
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|FileChooser|
+\item \lstinline|cryptocast.client.fileChooser.FileChooser|
 \end{itemize}
 
 

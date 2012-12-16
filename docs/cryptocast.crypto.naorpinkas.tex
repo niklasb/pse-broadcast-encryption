@@ -28,9 +28,9 @@ A client in the Naor-Pinkas broadcast encryption scheme. \\
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|NaorPinkasClient|\lstinline|(NaorPinkasPersonalKey key)|\\ \\[-0.6em]
-Initializes a Naor-Pinkas broadcast client
+Initializes a Naor-Pinkas broadcast client.
 \begin{itemize}
-\item \lstinline|key|: The personal key used to reconstruct a secret from the stream
+\item \lstinline|key|: The personal key used to reconstruct a secret from the stream.
 \end{itemize}
 
 
@@ -51,7 +51,7 @@ Decrypts a secret.
 \end{itemize}
 
 \subsubsection{Class \lstinline|NaorPinkasServer|}
-A server in the Naor-Pinkas broadcast encryption scheme. This server is special in that it knows
+A server in the Naor-Pinkas broadcast encryption scheme. It knows
  the entire polynomial and therefore all the private keys of its users. This makes the implementation
  of the interpolation algorithm a bit more efficient. \\
 \noindent\begin{minipage}[t]{5cm}
@@ -82,7 +82,7 @@ A server in the Naor-Pinkas broadcast encryption scheme. This server is special 
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(BigInteger secret)|\\ \\[-0.6em]
-Encrypts a secret
+Encrypts a secret.
 \begin{itemize}
 \item \lstinline|secret|: the secret
 \end{itemize}
@@ -98,12 +98,12 @@ Encrypts a secret
 
 
 \item \lstinline|public void| \lstinline|revoke|\lstinline|(NaorPinkasIdentity x)|\\ \\[-0.6em]
-Revokes a user
+Revokes a user.
 
 
 
 \item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(NaorPinkasIdentity id)|\\ \\[-0.6em]
-\emph{Returns:} whether the user is revoked
+\emph{Returns:} Whether the user is revoked.
 \begin{itemize}
 \item \lstinline|id|: The identity of the user
 \end{itemize}
@@ -164,7 +164,7 @@ A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
 \end{itemize}
 
 \subsubsection{Class \lstinline|NaorPinkasShareCombinator|}
-Allows to restore a number from a sufficient number of Naor-Pinkas shares \\
+Allows to restore a number from a sufficient number of Naor-Pinkas shares. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
@@ -191,6 +191,9 @@ Allows to restore a number from a sufficient number of Naor-Pinkas shares \\
 \begin{itemize}
 \item \lstinline|public Optional<BigInteger>| \lstinline|restore|\lstinline|(Collection<NaorPinkasShare> shares)|\\ \\[-0.6em]
 Restores a secret from several Naor-Pinkas shares.
+\begin{itemize}
+\item \lstinline|shares|: The shares
+\end{itemize}
 
 \emph{Returns:} The reconstructed secret or absent if the information represented
  by the given shares is insufficient to restore it.

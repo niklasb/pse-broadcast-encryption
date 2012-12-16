@@ -6,7 +6,7 @@ This package provides functionality related to communication between the differe
  Useful abstractions for layered protocols are also included.
 \input{cryptocast.comm.custom.tex}
 \subsubsection{Class \lstinline|WritableByteChannelAdapter|}
-Adapter to use a \lstinline|WritableByteChannel| (for example, a file or socket instance) as
+Adapter to use an instance of \lstinline|WritableByteChannel| (for example, a file or socket instance) as
  an \lstinline|OutChannel|. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
@@ -32,7 +32,7 @@ Adapter to use a \lstinline|WritableByteChannel| (for example, a file or socket 
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|WritableByteChannelAdapter|\lstinline|(WritableByteChannel inner)|\\ \\[-0.6em]
-Initializes the adapter
+Initializes the adapter.
 \begin{itemize}
 \item \lstinline|inner|: The wrapped instance
 \end{itemize}
@@ -47,7 +47,7 @@ Initializes the adapter
 \item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given data.
 \begin{itemize}
-\item \lstinline|data|: the data to send
+\item \lstinline|data|: The data to send
 \end{itemize}
 
 
@@ -55,7 +55,7 @@ Sends the given data.
 \end{itemize}
 
 \subsubsection{Class \lstinline|StatisticalOutChannel|}
-Wrapper around an \lstinline|OutChannel| that counts outgoing bytes. \\
+Wrapper around an instance of \lstinline|OutChannel| that counts outgoing bytes. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
@@ -82,7 +82,7 @@ Wrapper around an \lstinline|OutChannel| that counts outgoing bytes. \\
 \item \lstinline|public| \lstinline|StatisticalOutChannel|\lstinline|(OutChannel inner)|\\ \\[-0.6em]
 Initializes the proxy
 \begin{itemize}
-\item \lstinline|inner|: the wrapped channel
+\item \lstinline|inner|: The wrapped channel
 \end{itemize}
 
 
@@ -95,13 +95,13 @@ Initializes the proxy
 \item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given data.
 \begin{itemize}
-\item \lstinline|data|: the data to send
+\item \lstinline|data|: The data to send
 \end{itemize}
 
 
 
 \item \lstinline|public int| \lstinline|getSentBytes|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} the number of sent bytes
+\emph{Returns:} The number of sent bytes
 
 
 
@@ -133,9 +133,9 @@ This class implements channel-based communication via TCP. \\
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|SocketMulticastServer|\lstinline|(ServerSocket socket)|\\ \\[-0.6em]
-Creates a multicast server which uses the given socket.
+Creates an instance of a multicast server which uses the given socket.
 \begin{itemize}
-\item \lstinline|socket|: server socket
+\item \lstinline|socket|: Server socket
 \end{itemize}
 
 
@@ -148,7 +148,7 @@ Creates a multicast server which uses the given socket.
 \item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends bytes via the channel.
 \begin{itemize}
-\item \lstinline|data|: the data to send
+\item \lstinline|data|: The data to send
 \end{itemize}
 
 
@@ -156,7 +156,7 @@ Sends bytes via the channel.
 \end{itemize}
 
 \subsubsection{Class \lstinline|MessageInChannel|}
-Wraps a byte-based InChannel and allows to use it as a message-based
+Wraps a byte-based instance of \lstinline|InChannel| and allows to use it as a message-based
  channel. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
@@ -177,9 +177,9 @@ Wraps a byte-based InChannel and allows to use it as a message-based
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|MessageInChannel|\lstinline|(InChannel inner)|\\ \\[-0.6em]
-Creates a MessageInChannel which wraps the given inner channel.
+Creates an instance of MessageInChannel which wraps the given inner channel.
 \begin{itemize}
-\item \lstinline|inner|: the wrapped channel
+\item \lstinline|inner|: The wrapped channel
 \end{itemize}
 
 
@@ -192,12 +192,12 @@ Creates a MessageInChannel which wraps the given inner channel.
 \item \lstinline|public byte[]| \lstinline|recvMessage|\lstinline|()|\\ \\[-0.6em]
 Receives a message via the channel.
 
-\emph{Returns:} the received data
+\emph{Returns:} The received data
 
 \end{itemize}
 
 \subsubsection{Class \lstinline|MessageOutChannel|}
-Wraps a byte-based OutChannel and allows to use it as a message-based
+Wraps a byte-based instance of \lstinline|OutChannel| and allows to use it as a message-based
  channel. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
@@ -218,9 +218,9 @@ Wraps a byte-based OutChannel and allows to use it as a message-based
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|MessageOutChannel|\lstinline|(OutChannel inner)|\\ \\[-0.6em]
-Creates a new MessageOutChannel with the given OutChannel as inner channel.
+Creates a new instance of MessageOutChannel with the given OutChannel as inner channel.
 \begin{itemize}
-\item \lstinline|inner|: the OutChannel which will be wrapped
+\item \lstinline|inner|: The OutChannel which will be wrapped.
 \end{itemize}
 
 
@@ -233,7 +233,7 @@ Creates a new MessageOutChannel with the given OutChannel as inner channel.
 \item \lstinline|public void| \lstinline|sendMessage|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given message via the channel.
 \begin{itemize}
-\item \lstinline|data|: the data to send
+\item \lstinline|data|: The data to send.
 \end{itemize}
 
 
@@ -241,7 +241,7 @@ Sends the given message via the channel.
 \end{itemize}
 
 \subsubsection{Class \lstinline|StatisticalInChannel|}
-Wrapper around an \lstinline|InChannel| that counts incoming bytes \\
+Wrapper around an instance of \lstinline|InChannel| that counts incoming bytes. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
@@ -266,9 +266,9 @@ Wrapper around an \lstinline|InChannel| that counts incoming bytes \\
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|StatisticalInChannel|\lstinline|(InChannel inner)|\\ \\[-0.6em]
-Initializes the proxy
+Initializes the proxy.
 \begin{itemize}
-\item \lstinline|inner|: the wrapped channel
+\item \lstinline|inner|: The wrapped channel
 \end{itemize}
 
 
@@ -281,22 +281,22 @@ Initializes the proxy
 \item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
 Receives data.
 \begin{itemize}
-\item \lstinline|size|: maximum amount of bytes to read
-\item \lstinline|buffer|: the target buffer
+\item \lstinline|size|: Maximum amount of bytes to read
+\item \lstinline|buffer|: The target buffer
 \end{itemize}
 
 
 
 \item \lstinline|public int| \lstinline|getReceivedBytes|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} the number of received bytes
+\emph{Returns:} The number of received bytes
 
 
 
 \end{itemize}
 
 \subsubsection{Class \lstinline|ReadableByteChannelAdapter|}
-Adapter to use a \lstinline|ReadableByteChannel| (for example, a file or socket instance) as an
- \lstinline|InChannel|. \\
+Adapter to use an instance of \lstinline|ReadableByteChannel| (for example, a file or socket instance) 
+ as an \lstinline|InChannel|. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
@@ -321,7 +321,7 @@ Adapter to use a \lstinline|ReadableByteChannel| (for example, a file or socket 
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|ReadableByteChannelAdapter|\lstinline|(ReadableByteChannel inner)|\\ \\[-0.6em]
-Initializes the adapter
+Initializes the adapter.
 \begin{itemize}
 \item \lstinline|inner|: The wrapped instance
 \end{itemize}
@@ -336,8 +336,8 @@ Initializes the adapter
 \item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
 Receives data.
 \begin{itemize}
-\item \lstinline|size|: maximum amount of bytes to read
-\item \lstinline|buffer|: the target buffer
+\item \lstinline|size|: Maximum amount of bytes to read
+\item \lstinline|buffer|: The target buffer
 \end{itemize}
 
 
@@ -345,7 +345,7 @@ Receives data.
 \end{itemize}
 
 \subsubsection{Class \lstinline|MultiOutChannel|}
-Multiplexes several \lstinline|OutChannel|s so that they can be used as a single
+Multiplexes several instances  of \lstinline|OutChannel|s so that they can be used as a single
  destination. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
@@ -374,7 +374,7 @@ Multiplexes several \lstinline|OutChannel|s so that they can be used as a single
 \item \lstinline|public void| \lstinline|addChannel|\lstinline|(OutChannel channel)|\\ \\[-0.6em]
 Adds the given channel to the list of receivers.
 \begin{itemize}
-\item \lstinline|channel|: the channel to add
+\item \lstinline|channel|: The channel to add
 \end{itemize}
 
 
@@ -382,7 +382,7 @@ Adds the given channel to the list of receivers.
 \item \lstinline|public void| \lstinline|removeChannel|\lstinline|(OutChannel channel)|\\ \\[-0.6em]
 Removes the given channel from the list of receivers.
 \begin{itemize}
-\item \lstinline|channel|: the channel to remove
+\item \lstinline|channel|: The channel to remove
 \end{itemize}
 
 
@@ -390,7 +390,7 @@ Removes the given channel from the list of receivers.
 \item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given data.
 \begin{itemize}
-\item \lstinline|data|: the data to send
+\item \lstinline|data|: The data to send
 \end{itemize}
 
 
@@ -421,7 +421,7 @@ A byte-based communication channel from which data can be received. \\
 \item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
 Receives data.
 \begin{itemize}
-\item \lstinline|size|: maximum amount of bytes to read
+\item \lstinline|size|: Maximum amount of bytes to read
 \item \lstinline|buffer|: The target buffer
 \end{itemize}
 
@@ -453,7 +453,7 @@ A byte-based communication channel where data can be sent to. \\
 \item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
 Sends the given data.
 \begin{itemize}
-\item \lstinline|data|: the data to send
+\item \lstinline|data|: The data to send
 \end{itemize}
 
 

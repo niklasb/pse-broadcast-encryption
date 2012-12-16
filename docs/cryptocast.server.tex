@@ -65,7 +65,7 @@ Tries to start a new group to which data can be sent by generating private keys.
 \item \lstinline|public void| \lstinline|addUser|\lstinline|(String name)|\\ \\[-0.6em]
 Adds a new user and assigns a private key to that user.
 \begin{itemize}
-\item \lstinline|name|: The name of the user who is added.
+\item \lstinline|name|: The name of the user which is added.
 \end{itemize}
 
 
@@ -87,15 +87,15 @@ Authorizes a user to watch the stream by removing it from the list of revoked us
 
 
 \item \lstinline|public void| \lstinline|stream|\lstinline|(InputStream data)|\\ \\[-0.6em]
-Starts the data stream
+Starts the data stream.
 \begin{itemize}
-\item \lstinline|data|: The file from which the data is read
+\item \lstinline|data|: The file from which the data is read.
 \end{itemize}
 
 
 
 \item \lstinline|public void| \lstinline|showStatistics|\lstinline|()|\\ \\[-0.6em]
-Prints information about traffic
+Prints information about traffic.
 
 
 
@@ -137,8 +137,8 @@ Represents a user in our application. \\
 \item \lstinline|public| \lstinline|User|\lstinline|(String name, ID id)|\\ \\[-0.6em]
 Creates a User with the given attributes.
 \begin{itemize}
-\item \lstinline|name|: The name of this user.
-\item \lstinline|id|: The ID of this user.
+\item \lstinline|name|: The name of this user
+\item \lstinline|id|: The ID of this user
 \end{itemize}
 
 
@@ -149,12 +149,12 @@ Creates a User with the given attributes.
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public String| \lstinline|getName|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} the name of this user.
+\emph{Returns:} The name of this user
 
 
 
 \item \lstinline|public ID| \lstinline|getIdentity|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} the id of this user.
+\emph{Returns:} The id of this user
 
 
 
@@ -253,7 +253,7 @@ Creates and saves a new user by name.
 \emph{Returns:} The new user if he has been added successfully, else absent is returned.
 
 \item \lstinline|public Optional<User<ID>, ID>| \lstinline|getUserByName|\lstinline|(String name)|\\ \\[-0.6em]
-Retrieves a user by name
+Retrieves a user by name.
 \begin{itemize}
 \item \lstinline|name|: The user's name
 \end{itemize}
@@ -261,7 +261,7 @@ Retrieves a user by name
 \emph{Returns:} A user instance, if it was found, or absent otherwise
 
 \item \lstinline|public Optional<PrivateKey>| \lstinline|getPersonalKey|\lstinline|(User<ID> user)|\\ \\[-0.6em]
-Retrieves a user's personal key
+Retrieves a user's personal key.
 \begin{itemize}
 \item \lstinline|user|: The user object
 \end{itemize}

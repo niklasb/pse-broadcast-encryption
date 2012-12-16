@@ -22,7 +22,7 @@ A simple framework for command line programs. \\
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|CommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\ \\[-0.6em]
-Initializes a new CLI instance
+Initializes a new CLI instance.
 \begin{itemize}
 \item \lstinline|in|: The stream for program input
 \item \lstinline|out|: The stream for program output
@@ -53,38 +53,38 @@ The main program logic (must be overridden by subclasses)
 
 
 \item \lstinline|protected void| \lstinline|printf|\lstinline|(String format, Object[] args...)|\\ \\[-0.6em]
-Prints a string to the output stream
+Prints a string to the output stream.
 \begin{itemize}
-\item \lstinline|format|: The string to print (printf format string)
+\item \lstinline|format|: The string to print (printf format string).
 \item \lstinline|args|: The printf arguments
 \end{itemize}
 
 
 
 \item \lstinline|protected void| \lstinline|print|\lstinline|(String str)|\\ \\[-0.6em]
-Prints a string to the output stream
+Prints a string to the output stream.
 \begin{itemize}
-\item \lstinline|str|: The string to print
+\item \lstinline|str|: The string to print.
 \end{itemize}
 
 
 
 \item \lstinline|protected void| \lstinline|println|\lstinline|(String str)|\\ \\[-0.6em]
-Prints a string to the output stream after appending a newline
+Prints a string to the output stream after appending a newline.
 \begin{itemize}
-\item \lstinline|str|: The string to print
+\item \lstinline|str|: The string to print.
 \end{itemize}
 
 
 
 \item \lstinline|protected String| \lstinline|getErrorFormat|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} the string format to use for writing error messages to the
+\emph{Returns:} The string format to use for writing error messages to the
  screen.
 
 
 
 \item \lstinline|protected void| \lstinline|fatalError|\lstinline|(String format, Object[] args...)|\\ \\[-0.6em]
-Prints an error and exits
+Prints an error and exits.
 \begin{itemize}
 \item \lstinline|format|: The error message (printf format string)
 \item \lstinline|args|: The printf arguments
@@ -93,7 +93,7 @@ Prints an error and exits
 
 
 \item \lstinline|protected void| \lstinline|exit|\lstinline|(int status)|\\ \\[-0.6em]
-Exits the application
+Exits the application.
 \begin{itemize}
 \item \lstinline|status|: The exit code
 \end{itemize}
@@ -101,17 +101,17 @@ Exits the application
 
 
 \item \lstinline|protected void| \lstinline|usage|\lstinline|()|\\ \\[-0.6em]
-Prints usage information
+Prints usage information.
 
 
 
 \item \lstinline|protected String| \lstinline|getBasicUsage|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} basic usage information for the program (should be overridden)
+\emph{Returns:} basic usage information for the program (should be overridden).
 
 
 
 \item \lstinline|protected void| \lstinline|printAdditionalUsage|\lstinline|()|\\ \\[-0.6em]
-Prints additional usage information (may be overridden)
+Prints additional usage information (may be overridden).
 
 
 
@@ -143,7 +143,7 @@ Signals the exit of the application. \\
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|CommandLineInterface.Exit|\lstinline|(int status)|\\ \\[-0.6em]
-Initializes a new Exit instance
+Initializes a new Exit instance.
 \begin{itemize}
 \item \lstinline|status|: The exit code
 \end{itemize}
@@ -156,7 +156,7 @@ Initializes a new Exit instance
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public int| \lstinline|getStatus|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} the exit code
+\emph{Returns:} The exit code
 
 
 
@@ -190,7 +190,7 @@ A framework class to implement interactive command-line interfaces. The class im
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|InteractiveCommandLineInterface|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\ \\[-0.6em]
-Initializes a new interactive CLI instance
+Initializes a new interactive CLI instance.
 \begin{itemize}
 \item \lstinline|in|: The stream for program input
 \item \lstinline|out|: The stream for program output
@@ -244,7 +244,7 @@ Helper function to trigger an error withing a command's execution and break out 
 \end{itemize}
 
 \subsubsection{Class \lstinline|InteractiveCommandLineInterface.CommandError|}
-An error within one of the commands. Will be caught by the main loop \\
+An error within one of the commands. Will be caught by the main loop. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
@@ -269,7 +269,7 @@ An error within one of the commands. Will be caught by the main loop \\
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|InteractiveCommandLineInterface.CommandError|\lstinline|(String msg)|\\ \\[-0.6em]
-Initializes the error
+Initializes the error.
 \begin{itemize}
 \item \lstinline|msg|: The error message
 \end{itemize}
@@ -282,7 +282,7 @@ Initializes the error
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public String| \lstinline|getMessage|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} The associated error message
+\emph{Returns:} The associated error message.
 
 
 
