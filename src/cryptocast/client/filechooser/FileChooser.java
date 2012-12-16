@@ -1,7 +1,7 @@
 package cryptocast.client.fileChooser;
 
 /**
- * A UI element that allows the user to browse the files and folders of the SD card and
+ * An UI element that allows the user to browse the files and folders of the SD card and
  * choose one file.
  */
 public abstract class FileChooser extends ListActivity {
