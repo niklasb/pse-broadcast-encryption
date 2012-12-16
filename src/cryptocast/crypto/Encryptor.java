@@ -6,7 +6,7 @@ package cryptocast.crypto;
  */
 public interface Encryptor<S> {
     /**
-     * Encrypts a secret
+     * Encrypts a secret.
      * @param secret The secret
      * @return The cipher text
      */

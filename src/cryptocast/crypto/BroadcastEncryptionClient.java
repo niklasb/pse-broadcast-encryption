@@ -17,7 +17,7 @@ public class BroadcastEncryptionClient implements InChannel {
                                      Decryptor<BigInteger> dec) { }
 
     /**
-     * Receive data from the channel. It is decrypted on the fly.
+     * Receives data from the channel. It is decrypted on the fly.
      * @param size Amount of bytes to receive
      * @param buffer The target buffer
      */

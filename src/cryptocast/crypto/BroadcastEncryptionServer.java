@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 
 /**
- * The server side of a broadcast encryption scheme.
+ * The server side of a broadcast encryption scheme
  * @param <ID> The type of the identities
  */
 public class BroadcastEncryptionServer<ID> implements OutChannel, Runnable {
@@ -20,20 +20,20 @@ public class BroadcastEncryptionServer<ID> implements OutChannel, Runnable {
                                      Encryptor<BigInteger> enc) { }
 
     /**
-     * Run the worker that handles periodic group key broadcasts and sends
+     * Runs the worker that handles periodic group key broadcasts and sends
      * queued data packages.
      */
     public void run() {}
 
     /**
-     * Send plaintext data to the channel. It will be encryted and broadcasted
+     * Sends plaintext data to the channel. It will be encryted and broadcasted
      * on the fly.
      * @param data The data to send
      */
     public void send(byte[] data) {}
 
     /**
-     * Revoke a user.
+     * Revokes a user.
      * @param id The identity of the user
      */
     public void revoke(ID id) {}
