@@ -58,14 +58,14 @@
 \clearpage
 
 \section{Introduction}
-In this project we design and implement a software calles Cryptocast. CryptoCast is a piece of software that provides a service to
+In this project we design and implement a software called CryptoCast. CryptoCast provides a service to
 send contents from a central server to a given group of recipients. Transmission happens via a unidirectional communication channel.
 The traffic duplication that would be required for commonly used transport protocols is therefore avoided.
 
-The software enables access control through a specific form of encryption that is based on the Naor-Pinkas broadcast
-encryption scheme~\cite[Section~2.2]{Naor00}. The advantage of this scheme is that the communication overhead necessary for session key
-management and client revocation does not depend on the total number of recipients, but only on the
-number of revoked users.
+The software enables access control through a specific form of encryption that is based on the broadcast
+encryption scheme presented in~\cite[Section~2.2]{Naor00}. The advantage of this scheme is that the communication
+overhead necessary for session key management and client revocation does not depend on the total number of
+recipients, but only on the number of revoked users.
 
 The type of data that can be transmitted is not determined by the software, so it can be used for a lot
 of different sorts of distribution. For demonstration purposes we will implement a simple audio or video
@@ -74,7 +74,7 @@ stream.
 The server will be realized as a console application and will be able to register new users and revoke
 specific users if they are not allowed to receive the stream anymore.
 
-As for the client, it will be realized as an application targetting the Android operating system for smart phones.
+As for the client, it will be implemented as an application targetting the Android operating system for smartphones.
 It will be able to receive, decode and display the data stream.
 
 We will use a transport protocol based on TCP for the communication between the server and its clients,
@@ -85,8 +85,8 @@ Since a broadcast encryption scheme is used, an important goal is to extract the
 reference implementation of the Naor-Pinkas algorithm and other, similar broadcast encryption schemes.
 This way, a more efficient scheme might be used in the future.
 
-In conclusion, our design efforts are focused on modularity and loose coupling between the components of the
-infrastructure, so that parts of the program can be exchanged with a minimal amount of necessary changes.
+Our design efforts regarding the rest of the project are also focused on modularity and loose coupling between 
+the components of the infrastructure, so that parts of the program can be exchanged with a minimal amount of necessary changes.
 
 \section{Structure}
 \subsection{Architecture}
@@ -157,13 +157,16 @@ The following images show prototypes of the client user interface.
 
 
 \subsection{GUI activity}
-When starting the client app the first screen is the Homescreen. If the client already connected to a server and that server was saved, 
-the host panel is already filled out. If not, the user has to enter a host address. Once an address is entered, the connect button is enabled.
-When the connect button is pressed, the client tries to connect to the server. If it fails there is an error popup and the program goes back to 
-Homescreen. If the host address was correct and the client is able to connect, the program checks if it already connected to this server. If it 
-did, it already has the key and goes directly to the stream viewer. If the key file is missing, the file browser pops up and the user has to select 
-the necessary key. If the key is correct, the user is able to view the stream. Facing a problem like disconnection, the client shows an error and 
-goes back to Homescreen.
+When starting the client application, the home screen is the first screen presented to the user.
+If the client has already connected to a server, the text field for the hostname is already filled out.
+Otherwise, the user has to enter the name of the server he wants to connect to. Once an address is entered,
+the connect button is enabled. After the connect button has been pressed, the client tries to connect to
+the server. If it fails, an error popup will be shown and the program will return to the homescreen.
+If the host address was correct and the client is able to connect, the program checks if it already connected
+to this server. If it did, it already knows the location of the necessary secret keyfile and can start the stream viewer
+directly. Otherwise, the file browser pops up and the user has to select the necessary key. If the key is correct,
+the user is now able to view the stream. In case of a connection problem, the client will show an error and
+send the user back to the home screen.
 
 \begin{illustration}{Activity diagram showing possible interactions with the client application.}
 \includegraphics [width=500px]{figures/gui_activity_1/gui_activity_1.png}
