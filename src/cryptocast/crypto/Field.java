@@ -13,7 +13,7 @@ public abstract class Field<T> {
      */
     public abstract T add(T a, T b);
     /**
-     * Multiplies two elements of the field
+     * Multiplies two elements of the field.
      * @param a First element
      * @param b Second element
      * @return The value $a \cdot b$
@@ -53,7 +53,7 @@ public abstract class Field<T> {
         return add(a, negate(b));
     }
     /**
-     * Divides two elements of the field
+     * Divides two elements of the field.
      * @param a First element
      * @param b Second element
      * @return The value $\frac{a}{b}$
