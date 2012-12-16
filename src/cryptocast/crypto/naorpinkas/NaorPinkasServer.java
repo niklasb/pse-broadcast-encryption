@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 
 /**
- * A server in the Naor-Pinkas broadcast encryption scheme. This server is special in that it knows
+ * A server in the Naor-Pinkas broadcast encryption scheme. It knows
  * the entire polynomial and therefore all the private keys of its users. This makes the implementation
  * of the interpolation algorithm a bit more efficient.
  */

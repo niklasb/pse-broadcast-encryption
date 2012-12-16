@@ -7,7 +7,7 @@ import java.util.Collection;
 import com.google.common.base.Optional;
 
 /**
- * Allows to restore a number from a sufficient number of Naor-Pinkas shares
+ * Allows to restore a number from a sufficient number of Naor-Pinkas shares.
  */
 public class NaorPinkasShareCombinator implements ShareCombinator<BigInteger, NaorPinkasShare> {
     /**
