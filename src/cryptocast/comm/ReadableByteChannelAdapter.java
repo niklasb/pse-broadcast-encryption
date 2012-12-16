@@ -8,7 +8,7 @@ import java.nio.channels.ReadableByteChannel;
  */
 public class ReadableByteChannelAdapter implements InChannel {
     /**
-     * Initializes the adapter
+     * Initializes the adapter.
      * @param inner The wrapped instance
      */
     public ReadableByteChannelAdapter(ReadableByteChannel inner) { }
