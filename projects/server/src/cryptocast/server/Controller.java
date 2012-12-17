@@ -1,8 +1,9 @@
 package cryptocast.server;
 
 import java.io.File;
-import cryptocast.comm.OutChannel;
+import java.io.InputStream;
 
+import cryptocast.comm.OutChannel;
 
 /** Deals with user-interactions and therefore changes data in Model if necessary.
  * @param <ID> The type of the user identities
@@ -15,7 +16,7 @@ public class Controller<ID> {
     
     /**
      * Initializes a new controller with the given arguments.
-     * @param data The data administrated by this controller.
+     * @param data The data managed by this controller.
      * @param shell The operator interface from which this controller gets its input.
      */
     public Controller(ServerData<ID> data, Shell<ID> shell) {

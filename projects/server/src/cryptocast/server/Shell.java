@@ -2,7 +2,6 @@ package cryptocast.server;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.List;
 
 import cryptocast.util.InteractiveCommandLineInterface;
 
@@ -25,6 +24,7 @@ public class Shell<ID> extends InteractiveCommandLineInterface {
 
     @Override
     protected void performCommand(String cmd, String[] args) throws CommandError {
+    	System.out.println("You executed " + cmd + "!");
     }
 
     /**
