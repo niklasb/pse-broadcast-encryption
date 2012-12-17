@@ -2,12 +2,13 @@ package cryptocast.crypto;
 
 import cryptocast.comm.*;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 
 /**
  * The client side of a broadcast encryption scheme.
  */
-public class BroadcastEncryptionClient implements InChannel {
+public class BroadcastEncryptionClient extends InChannel {
     /**
      * Initializes a broadcast encryption client.
      * @param inner The message-based underlying communication channel.
@@ -17,9 +18,12 @@ public class BroadcastEncryptionClient implements InChannel {
                                      Decryptor<BigInteger> dec) { }
 
     /**
-     * Receives data from the channel. It is decrypted on the fly.
-     * @param size Amount of bytes to receive
+     * Receives data. Can read less than the remaining number of bytes.
+     * Data will be encrypted on the fly.
+     * 
      * @param buffer The target buffer
+     * @return The amount of bytes read
      */
-    public void recv(int size, byte[] buffer) { }
+    @Override
+    public int recv(ByteBuffer buffer) { return 0; }
 }

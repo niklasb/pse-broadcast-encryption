@@ -1,5 +1,8 @@
 package cryptocast.crypto;
 
+import java.math.BigInteger;
+import java.util.Random;
+
 /**
  * Represents a field over values of type T.
  * @param <T> The values we work on.
@@ -39,9 +42,10 @@ public abstract class Field<T> {
      */
     public abstract T one();
     /**
+     * @param rnd A randomness provider
      * @return A random element of the field
      */
-    public abstract T randomElement();
+    public abstract T randomElement(Random rnd);
 
     /**
      * Subtracts two elements of the field.
@@ -67,9 +71,11 @@ public abstract class Field<T> {
      * @param e The exponent
      * @return The value $a^e$
      */
-    public T pow(T a, int e) {
+    public T pow(T a, BigInteger e) {
         T result = one();
-        for (int i = 0; i < e; ++i)
+        for (BigInteger i = BigInteger.valueOf(0); 
+                i.compareTo(e) < 0; 
+                i = i.add(BigInteger.valueOf(1)))
             result = multiply(result, a);
         return result;
     }
