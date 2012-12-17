@@ -1,5 +1,7 @@
 package cryptocast.comm;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
 
 /**
@@ -7,15 +9,21 @@ import java.nio.channels.WritableByteChannel;
  * an {@link OutChannel}.
  */
 public class WritableByteChannelAdapter implements OutChannel {
+    private WritableByteChannel inner;
+
     /**
      * Initializes the adapter.
      * @param inner The wrapped instance
      */
-    public WritableByteChannelAdapter(WritableByteChannel inner) { }
+    public WritableByteChannelAdapter(WritableByteChannel inner) {
+        this.inner = inner;
+    }
 
     /**
      * Sends the given data.
      * @param data The data to send
      */
-    public void send(byte[] data) { }
+    public void send(byte[] data) throws IOException {
+        inner.write(ByteBuffer.wrap(data));
+    }
 }
