@@ -18,7 +18,7 @@ public class IntegersModuloPrime extends Field<BigInteger> {
     }
 
     /** @return $p$ */
-    public getP() {
+    public BigInteger getP() {
         return p;
     }
 
