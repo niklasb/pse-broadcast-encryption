@@ -1,0 +1,43 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/AbsoluteLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".MainActivity" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="231dp"
+        android:layout_height="331dp"
+        android:layout_x="47dp"
+        android:layout_y="-20dp"
+        android:maxHeight="200dp"
+        android:maxWidth="200dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo_transparent" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="40dp"
+        android:layout_y="278dp"
+        android:hint="@string/hostname_hint"
+        android:maxLines="1"
+        android:maxWidth="250dp"
+        android:minWidth="250dp" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="37dp"
+        android:layout_y="332dp"
+        android:minWidth="252dp"
+        android:text="@string/connect_button"
+        android:textSize="20sp" />
+
+</AbsoluteLayout>
