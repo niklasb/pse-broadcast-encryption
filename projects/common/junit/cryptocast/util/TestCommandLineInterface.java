@@ -1,0 +1,14 @@
+package cryptocast.util;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class TestCommandLineInterface {
+
+	@Test
+	public void test() {
+		fail("Not yet implemented");
+	}
+
+}
