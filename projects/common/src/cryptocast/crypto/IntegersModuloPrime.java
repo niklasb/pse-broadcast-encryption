@@ -17,6 +17,11 @@ public class IntegersModuloPrime extends Field<BigInteger> {
         this.p = p;
     }
 
+    /** @return $p$ */
+    public getP() {
+        return p;
+    }
+
     public BigInteger add(BigInteger a, BigInteger b) {
         return a.add(b).mod(p);
     }
