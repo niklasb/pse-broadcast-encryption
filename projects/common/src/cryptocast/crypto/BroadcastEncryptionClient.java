@@ -17,7 +17,7 @@ public class BroadcastEncryptionClient extends InputStream {
      * @param inner The message-based underlying communication channel.
      * @param dec The decryption context
      */
-    public BroadcastEncryptionClient(MessageInChannel inner,
+    public BroadcastEncryptionClient(RawMessageInChannel inner,
                                      Decryptor<BigInteger> dec) { }
 
     @Override
