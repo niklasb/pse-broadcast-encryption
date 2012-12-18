@@ -1,6 +1,5 @@
 package cryptocast.server;
 
-import cryptocast.comm.OutChannel;
 import cryptocast.crypto.BroadcastSchemeUserManager;
 import cryptocast.crypto.BroadcastSchemeKeyManager;
 
@@ -58,7 +57,10 @@ public class ServerData<ID> implements Serializable {
      * @return A user instance, if it was found, or absent otherwise
      */
     public Optional<User<ID>> getUserByName(String name) {
-        return null;
+        if (name == null || !userByName.containsKey(name)) {
+            return Optional.absent();
+        }
+        return Optional.of(userByName.get(name));
     }
 
     /**
