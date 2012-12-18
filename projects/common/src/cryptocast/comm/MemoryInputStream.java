@@ -21,7 +21,10 @@ public class MemoryInputStream extends InputStream {
             len--;
             received++;
         }
-        return (received > 0) ? received : -1;
+        if (received == 0 && len > 0) {
+            return -1;
+        }
+        return received;
     }
 
     @Override

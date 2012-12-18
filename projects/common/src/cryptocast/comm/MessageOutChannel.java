@@ -24,11 +24,16 @@ public class MessageOutChannel {
      * Sends the given message via the channel.
      * @param data The data to send.
      */
+    public void sendMessage(byte[] data, int offset, int len) throws IOException {
+        System.out.println("size: " + len);
+        ByteBuffer packedSize = ByteBuffer.allocate(4);
+        packedSize.order(ByteOrder.BIG_ENDIAN);
+        packedSize.putInt(len);
+        inner.write(packedSize.array());
+        inner.write(data, offset, len);
+    }
+    
     public void sendMessage(byte[] data) throws IOException {
-        ByteBuffer size = ByteBuffer.allocate(4);
-        size.order(ByteOrder.BIG_ENDIAN);
-        size.putInt(data.length);
-        inner.write(size.array());
-        inner.write(data);
+        sendMessage(data, 0, data.length);
     }
 }

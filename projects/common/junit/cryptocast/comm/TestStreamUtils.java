@@ -14,7 +14,16 @@ public class TestStreamUtils {
         InputStream in = new MemoryInputStream(expected, 2);
         int size = expected.length;
         byte[] actual = new byte[size];
-        StreamUtils.readall(in, actual, 0, size);
+        assertEquals(size, StreamUtils.readall(in, actual, 0, size));
         assertArrayEquals(expected, actual);
+    }
+    
+    @Test
+    public void recvallWorksOnEOF() throws Exception {
+        byte[] expected = str2bytes("abc");
+        InputStream in = new MemoryInputStream(expected, 2);
+        byte[] actual = new byte[4];
+        assertEquals(3, StreamUtils.readall(in, actual, 0, 4));
+        assertEquals(0, StreamUtils.readall(in, actual, 0, 4));
     }
 }

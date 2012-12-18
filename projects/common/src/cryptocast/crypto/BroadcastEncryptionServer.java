@@ -52,6 +52,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
         while (null != (action = pendingActions.poll())) {
             if (action == Action.UPDATE_KEY) {
                 
+            } else { // action == ACTION.BROADCAST_KEY
             }
         }
     }

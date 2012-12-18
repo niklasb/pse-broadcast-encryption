@@ -22,17 +22,25 @@ public class MessageInChannel {
     }
 
     /**
-     * Receives a message via the channel.
+     * Receives a message via the channel or null on EOF.
      * @return The received data
+     * @throws IOException if the message header or the message is malformed
      */
     public byte[] recvMessage() throws InterruptedException, IOException {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.order(ByteOrder.BIG_ENDIAN);
-        StreamUtils.readall(inner, buffer.array(), 0, 4);
+        int recv = StreamUtils.readall(inner, buffer.array(), 0, 4);
+        if (recv == 0) {
+            return null;
+        } else if (recv < 4) {
+            throw new IOException("Malformed message size (unexpected EOF)");
+        }
         buffer.rewind();
         int size = buffer.getInt();
         byte[] result = new byte[size];
-        StreamUtils.readall(inner, result, 0, size);
+        if (size != StreamUtils.readall(inner, result, 0, size)) {
+            throw new IOException("Malformed message (unexpected EOF)");
+        }
         return result;
     }
 }
