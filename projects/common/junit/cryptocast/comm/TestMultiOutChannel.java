@@ -20,7 +20,7 @@ public class TestMultiOutChannel {
             new MemoryOutputStream(4096),
             new MemoryOutputStream(4096),
         };
-        sut = new MultiOutputStream();
+        sut = new MultiOutputStream(MultiOutputStream.ErrorHandling.THROW);
         for (OutputStream chan : channels) {
             sut.addChannel(chan);
         }
@@ -45,5 +45,4 @@ public class TestMultiOutChannel {
             assertArrayEquals(expected, channels[i].getSentBytes());
         }
     }
-
 }

@@ -10,8 +10,18 @@ import java.util.ArrayList;
  * destination.
  */
 public class MultiOutputStream extends OutputStream {
+    enum ErrorHandling {
+        REMOVE,
+        IGNORE,
+        THROW,
+    };
     List<OutputStream> channels = new ArrayList<OutputStream>();
+    ErrorHandling errHandling;
     
+    public MultiOutputStream(ErrorHandling errHandling) {
+        this.errHandling = errHandling;
+    }
+
     /**
      * Adds the given channel to the list of receivers.
      * @param channel The channel to add
@@ -30,7 +40,15 @@ public class MultiOutputStream extends OutputStream {
     @Override
     public void write(byte[] data, int offset, int len) throws IOException {
         for (OutputStream chan : channels) {
-            chan.write(data, offset, len);
+            try {
+                chan.write(data, offset, len);
+            } catch (IOException e) {
+                if (errHandling == ErrorHandling.THROW) {
+                    throw e;
+                } else if (errHandling == ErrorHandling.REMOVE) {
+                    removeChannel(chan);
+                }
+            }
         }
     }
     
