@@ -2,7 +2,7 @@ package cryptocast.comm;
 
 import static org.junit.Assert.*;
 
-import static cryptocast.comm.BufferBackedChannel.str2bytes;
+import static cryptocast.comm.TestUtils.*;
 
 import org.junit.Test;
 
@@ -12,9 +12,11 @@ public class TestMessageChannels {
 	    byte[][] messages = new byte[][] { str2bytes("abc"),
 	                                       str2bytes("aaaaaaaaaa"),
 	                                       str2bytes("XXXXXX") };
-	    BufferBackedChannel pipe = BufferBackedChannel.createPipe(4096);
-	    MessageInChannel in = new MessageInChannel(pipe);
-	    MessageOutChannel out = new MessageOutChannel(pipe);
+	    byte[] buffer = new byte[4096];
+	    MemoryInputStream pipeIn = new MemoryInputStream(buffer, 2);
+	    MemoryOutputStream pipeOut = new MemoryOutputStream(buffer);
+	    MessageInChannel in = new MessageInChannel(pipeIn);
+	    MessageOutChannel out = new MessageOutChannel(pipeOut);
 	    for (byte[] msg : messages) {
 	        out.sendMessage(msg);
 	        assertArrayEquals(msg, in.recvMessage());

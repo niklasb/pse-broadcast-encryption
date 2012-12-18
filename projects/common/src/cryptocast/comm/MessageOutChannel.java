@@ -1,21 +1,22 @@
 package cryptocast.comm;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Wraps a byte-based instance of {@link OutChannel} and allows to use it as a message-based
+ * Wraps a byte-based instance of {@link OutputStream} and allows to use it as a message-based
  * channel.
  */
 public class MessageOutChannel {
-    private OutChannel inner;
+    private OutputStream inner;
 
     /**
      * Creates a new instance of MessageOutChannel with the given OutChannel as inner channel.
      * @param inner The OutChannel which will be wrapped.
      */
-    public MessageOutChannel(OutChannel inner) {
+    public MessageOutChannel(OutputStream inner) {
         this.inner = inner; 
     }
 
@@ -27,7 +28,7 @@ public class MessageOutChannel {
         ByteBuffer size = ByteBuffer.allocate(4);
         size.order(ByteOrder.BIG_ENDIAN);
         size.putInt(data.length);
-        inner.send(size.array());
-        inner.send(data);
+        inner.write(size.array());
+        inner.write(data);
     }
 }

@@ -1,24 +1,27 @@
 package cryptocast.comm;
 
 import static org.junit.Assert.*;
+
+import java.io.OutputStream;
+
 import org.junit.*;
 
-import static cryptocast.comm.BufferBackedChannel.str2bytes;
+import static cryptocast.comm.TestUtils.*;
 
 public class TestMultiOutChannel {
 
-    private MultiOutChannel sut;
-    private BufferBackedChannel[] channels;
+    private MultiOutputStream sut;
+    private MemoryOutputStream[] channels;
     
     @Before
     public void setUp() {
-        channels = new BufferBackedChannel[] {
-            BufferBackedChannel.createOutChannel(4096),
-            BufferBackedChannel.createOutChannel(4096),
-            BufferBackedChannel.createOutChannel(4096),
+        channels = new MemoryOutputStream[] {
+            new MemoryOutputStream(4096),
+            new MemoryOutputStream(4096),
+            new MemoryOutputStream(4096),
         };
-        sut = new MultiOutChannel();
-        for (OutChannel chan : channels) {
+        sut = new MultiOutputStream();
+        for (OutputStream chan : channels) {
             sut.addChannel(chan);
         }
     }
@@ -26,8 +29,8 @@ public class TestMultiOutChannel {
     @Test
     public void sendWorks() throws Exception {
         byte[] expected = str2bytes("abcd");
-        sut.send(expected);
-        for (BufferBackedChannel chan : channels) {
+        sut.write(expected);
+        for (MemoryOutputStream chan : channels) {
             assertArrayEquals(expected, chan.getSentBytes());
         }
     }
@@ -36,7 +39,7 @@ public class TestMultiOutChannel {
     public void removeChannelWorks() throws Exception {
         sut.removeChannel(channels[0]);
         byte[] expected = str2bytes("abcd");
-        sut.send(expected);
+        sut.write(expected);
         assertEquals(0, channels[0].getSentBytes().length);
         for (int i = 1; i < channels.length; ++i) {
             assertArrayEquals(expected, channels[i].getSentBytes());

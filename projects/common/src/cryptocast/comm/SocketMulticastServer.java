@@ -1,20 +1,21 @@
 package cryptocast.comm;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 
 /**
  * This class implements channel-based communication via TCP.
  */
-class SocketMulticastServer implements OutChannel  {
+class SocketMulticastServer extends OutputStream  {
     /**
      * Creates an instance of a multicast server which uses the given socket.
      * @param socket Server socket
      */
     public SocketMulticastServer(ServerSocket socket) { };
 
-    /**
-     * Sends bytes via the channel.
-     * @param data The data to send
-     */
-    public void send(byte[] data) { }
+    @Override
+    public void write(int b) throws IOException {
+        // TODO Auto-generated method stub
+    }
 }

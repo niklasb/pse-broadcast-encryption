@@ -1,22 +1,23 @@
 package cryptocast.comm;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Wraps a byte-based instance of {@link InChannel} and allows to use it as a
+ * Wraps a byte-based instance of {@link InputStream} and allows to use it as a
  * message-based channel.
  */
 public class MessageInChannel {
-    private InChannel inner;
+    private InputStream inner;
 
     /**
      * Creates an instance of MessageInChannel which wraps the given inner
      * channel.
      * @param inner The wrapped channel
      */
-    public MessageInChannel(InChannel inner) {
+    public MessageInChannel(InputStream inner) {
         this.inner = inner;
     }
 
@@ -27,11 +28,11 @@ public class MessageInChannel {
     public byte[] recvMessage() throws InterruptedException, IOException {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.order(ByteOrder.BIG_ENDIAN);
-        inner.recvall(buffer);
+        StreamUtils.readall(inner, buffer.array(), 0, 4);
         buffer.rewind();
         int size = buffer.getInt();
-        buffer = ByteBuffer.allocate(size);
-        inner.recvall(buffer);
-        return buffer.array();
+        byte[] result = new byte[size];
+        StreamUtils.readall(inner, result, 0, size);
+        return result;
     }
 }

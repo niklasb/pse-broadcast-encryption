@@ -1,6 +1,9 @@
 package cryptocast.crypto;
 
 import cryptocast.comm.*;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Collection;
@@ -8,7 +11,7 @@ import java.util.Collection;
 /**
  * The client side of a broadcast encryption scheme.
  */
-public class BroadcastEncryptionClient extends InChannel {
+public class BroadcastEncryptionClient extends InputStream {
     /**
      * Initializes a broadcast encryption client.
      * @param inner The message-based underlying communication channel.
@@ -17,13 +20,9 @@ public class BroadcastEncryptionClient extends InChannel {
     public BroadcastEncryptionClient(MessageInChannel inner,
                                      Decryptor<BigInteger> dec) { }
 
-    /**
-     * Receives data. Can read less than the remaining number of bytes.
-     * Data will be encrypted on the fly.
-     * 
-     * @param buffer The target buffer
-     * @return The amount of bytes read
-     */
     @Override
-    public int recv(ByteBuffer buffer) { return 0; }
+    public int read() throws IOException {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }
