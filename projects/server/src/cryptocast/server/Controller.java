@@ -3,8 +3,6 @@ package cryptocast.server;
 import java.io.File;
 import java.io.InputStream;
 
-import cryptocast.comm.OutChannel;
-
 /** Deals with user-interactions and therefore changes data in Model if necessary.
  * @param <ID> The type of the user identities
  */
