@@ -14,7 +14,6 @@ public class PacketizingOutputStream extends OutputStream {
     }
 
     public void flush() throws IOException {
-        System.out.println("flush");
         if (bufferOffset == 0) { return; }
         inner.sendMessage(messageBuffer, 0, bufferOffset);
         bufferOffset = 0;
@@ -22,10 +21,8 @@ public class PacketizingOutputStream extends OutputStream {
 
     @Override
     public void write(byte[] data, int offset, int len) throws IOException {
-        System.out.println("writing " + len + " bytes");
         while (len > 0) {
             int copy = Math.min(len, messageBuffer.length - bufferOffset);
-            System.out.println("copying " + copy);
             System.arraycopy(data, offset, messageBuffer, bufferOffset, copy);
             bufferOffset += copy;
             offset += copy;

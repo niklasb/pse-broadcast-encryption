@@ -25,7 +25,6 @@ public class MessageOutChannel {
      * @param data The data to send.
      */
     public void sendMessage(byte[] data, int offset, int len) throws IOException {
-        System.out.println("size: " + len);
         ByteBuffer packedSize = ByteBuffer.allocate(4);
         packedSize.order(ByteOrder.BIG_ENDIAN);
         packedSize.putInt(len);
