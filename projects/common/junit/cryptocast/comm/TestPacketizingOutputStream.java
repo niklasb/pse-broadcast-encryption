@@ -14,7 +14,7 @@ public class TestPacketizingOutputStream {
         RawMessageInChannel in = new RawMessageInChannel(pipeIn);
         RawMessageOutChannel out = new RawMessageOutChannel(pipeOut);
         PacketizingOutputStream sut = new PacketizingOutputStream(out, 2);
-        sut.write(str2bytes("aabbccdd"));
+        sut.write("aabbccdd".getBytes());
         assertArrayEquals(str2bytes("aa"), in.recvMessage());
         assertArrayEquals(str2bytes("bb"), in.recvMessage());
         assertArrayEquals(str2bytes("cc"), in.recvMessage());

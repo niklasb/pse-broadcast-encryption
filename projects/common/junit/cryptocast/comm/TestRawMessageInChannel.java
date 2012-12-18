@@ -16,6 +16,7 @@ public class TestRawMessageInChannel {
                 "\u0000\u0000\u0000\u0003abc\u0000\u0000\u0000\u0005defgh");
         InputStream in = new MemoryInputStream(packed, 5);
         RawMessageInChannel msg = new RawMessageInChannel(in);
+        
         assertArrayEquals(str2bytes("abc"), msg.recvMessage());
         assertArrayEquals(str2bytes("defgh"), msg.recvMessage());
     }

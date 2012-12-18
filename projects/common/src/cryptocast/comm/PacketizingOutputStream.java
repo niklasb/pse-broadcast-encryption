@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class PacketizingOutputStream extends OutputStream {
-    private RawMessageOutChannel inner;
+    private MessageOutChannel inner;
     byte[] messageBuffer;
     int bufferOffset = 0;
 
-    public PacketizingOutputStream(RawMessageOutChannel inner, 
+    public PacketizingOutputStream(MessageOutChannel inner, 
                                    int bufsize) {
         this.inner = inner;
         this.messageBuffer = new byte[bufsize];
     }
 
+    @Override
     public void flush() throws IOException {
         if (bufferOffset == 0) { return; }
         inner.sendMessage(messageBuffer, 0, bufferOffset);
