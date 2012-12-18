@@ -27,13 +27,16 @@ public class StatisticalInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
+        int b = inner.read();
+        if (b < 0) { return b; }
         receivedBytes++;
-        return inner.read();
+        return b;
     }
     
     @Override
     public int read(byte[] buffer, int offset, int len) throws IOException {
         int received = inner.read(buffer, offset, len);
+        if (received < 0) { return received; }
         receivedBytes += received;
         return received;
     }

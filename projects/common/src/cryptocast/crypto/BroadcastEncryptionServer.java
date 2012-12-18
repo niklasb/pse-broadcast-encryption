@@ -5,7 +5,6 @@ import cryptocast.comm.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
