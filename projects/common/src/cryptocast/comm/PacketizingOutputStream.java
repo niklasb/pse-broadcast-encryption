@@ -8,7 +8,8 @@ public class PacketizingOutputStream extends OutputStream {
     byte[] messageBuffer;
     int bufferOffset = 0;
 
-    public PacketizingOutputStream(MessageOutChannel inner, int bufsize) {
+    public PacketizingOutputStream(MessageOutChannel inner, 
+                                   int bufsize) {
         this.inner = inner;
         this.messageBuffer = new byte[bufsize];
     }
