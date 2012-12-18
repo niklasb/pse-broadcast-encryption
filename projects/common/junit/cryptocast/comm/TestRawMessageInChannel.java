@@ -9,30 +9,28 @@ import org.junit.Test;
 
 import static cryptocast.comm.TestUtils.*;
 
-public class TestMessageInChannel {
+public class TestRawMessageInChannel {
     @Test
     public void recvMessageWorks() throws Exception {
         byte[] packed = str2bytes(
                 "\u0000\u0000\u0000\u0003abc\u0000\u0000\u0000\u0005defgh");
         InputStream in = new MemoryInputStream(packed, 5);
-        MessageInChannel msg = new MessageInChannel(in);
+        RawMessageInChannel msg = new RawMessageInChannel(in);
         assertArrayEquals(str2bytes("abc"), msg.recvMessage());
         assertArrayEquals(str2bytes("defgh"), msg.recvMessage());
     }
     
     @Test
     public void recvMessageDetectsEOF() throws Exception {
-        byte[] packed = new byte[0];
-        InputStream in = new MemoryInputStream(packed, 1);
-        MessageInChannel msg = new MessageInChannel(in);
+        InputStream in = new MemoryInputStream(new byte[0], 1);
+        RawMessageInChannel msg = new RawMessageInChannel(in);
         assertNull(msg.recvMessage());
     }
     
     @Test(expected=IOException.class)
     public void detectsMalformedMessageSize() throws Exception {
-        byte[] packed = new byte[] { 0 };
-        InputStream in = new MemoryInputStream(packed, 1);
-        MessageInChannel msg = new MessageInChannel(in);
+        InputStream in = new MemoryInputStream(new byte[] { 0 }, 1);
+        RawMessageInChannel msg = new RawMessageInChannel(in);
         msg.recvMessage();
     }
     
@@ -40,7 +38,7 @@ public class TestMessageInChannel {
     public void detectsMalformedMessage() throws Exception {
         byte[] packed = new byte[] { 0,0,0,2,1 };
         InputStream in = new MemoryInputStream(packed, 1);
-        MessageInChannel msg = new MessageInChannel(in);
+        RawMessageInChannel msg = new RawMessageInChannel(in);
         msg.recvMessage();
     }
 }

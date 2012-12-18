@@ -21,7 +21,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
     }
 
     ConcurrentLinkedQueue<Action> pendingActions = new ConcurrentLinkedQueue<Action>();
-    private MessageOutChannel inner;
+    private RawMessageOutChannel inner;
     private BroadcastSchemeUserManager<ID> context;
     private Encryptor<BigInteger> enc;
     OutputStream outStream;
@@ -32,7 +32,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
      * @param context The user management context
      * @param enc The encryption context
      */
-    public BroadcastEncryptionServer(MessageOutChannel inner,
+    public BroadcastEncryptionServer(RawMessageOutChannel inner,
                                      BroadcastSchemeUserManager<ID> context,
                                      Encryptor<BigInteger> enc) {
         this.inner = inner;

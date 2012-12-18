@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class PacketizingOutputStream extends OutputStream {
-    private MessageOutChannel inner;
+    private RawMessageOutChannel inner;
     byte[] messageBuffer;
     int bufferOffset = 0;
 
-    public PacketizingOutputStream(MessageOutChannel inner, 
+    public PacketizingOutputStream(RawMessageOutChannel inner, 
                                    int bufsize) {
         this.inner = inner;
         this.messageBuffer = new byte[bufsize];
