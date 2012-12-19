@@ -14,5 +14,6 @@ public class TestDecoratingMessageOutChannel {
                  inner, str2bytes("abc"), str2bytes("hi"));
         sut.sendMessage(str2bytes("defg"));
         verify(inner).sendMessage(str2bytes("abcdefghi"));
+        verifyNoMoreInteractions(inner);
     }
 }
