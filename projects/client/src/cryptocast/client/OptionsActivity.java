@@ -1,5 +1,6 @@
-package pse.ccgui;
+package cryptocast.client;
 
+import cryptocast.client.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
