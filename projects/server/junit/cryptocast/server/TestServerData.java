@@ -34,5 +34,12 @@ public class TestServerData {
         assertTrue(result.isPresent());
         assertEquals(expected, result.get().getName());
     }
+    
+    @Test
+    public void getNonExistingUser() {
+        //TODO !!!!!!
+        Optional<User<NaorPinkasIdentity>> result = testData.getUserByName("bert");
+        assertFalse(result.isPresent());
+    }
 
 }
