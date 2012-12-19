@@ -2,6 +2,7 @@ package cryptocast.server;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.SortedMap;
 
 import cryptocast.util.InteractiveCommandLineInterface;
 
@@ -23,13 +24,24 @@ public class Shell<ID> extends InteractiveCommandLineInterface {
     }
 
     @Override
-    protected void performCommand(String cmd, String[] args) throws CommandError {
-    	System.out.println("You executed " + cmd + "!");
+    protected void performCommand(String cmdStr, String[] args) throws CommandError {
+        ShellCommand cmd = ShellCommand.commands.get(cmdStr);
+        if (cmd == null) {
+            error("No such command! Type `help' to get an overview of the available commands.");
+        }
+        switch (cmd) {
+        case HELP: help(); break;
+        }
     }
 
     /**
      * Prints all commands this shell can perform with information about how to use them.
      */
     private void help() {
+        println("Available commands:");
+        println();
+        for (ShellCommand cmd : ShellCommand.commands.values()) {
+            printf("%-12s %s\n", cmd.getName(), cmd.getShortDesc());
+        }
     }
 }

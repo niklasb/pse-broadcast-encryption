@@ -51,8 +51,7 @@ public class Polynomial<T> {
     }
 
     /**
-     * Evaluates the polynomial at multiple points in time complexity $\Theta(n\cdot\log
-     * n)$ where $n$ is the degree of the polynomial.
+     * Evaluates the polynomial at multiple points.
      * @param xs The points $x_i$ to evaluate
      * @return The array a defined by $a_i := P(x_i)$.
      */

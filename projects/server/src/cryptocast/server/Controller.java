@@ -2,6 +2,7 @@ package cryptocast.server;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /** Deals with user-interactions and therefore changes data in Model if necessary.
  * @param <ID> The type of the user identities
@@ -10,17 +11,17 @@ public class Controller<ID> {
 
     private ServerData<ID> data;
     private Shell<ID> shell;
-    private OutChannel server;
+    private OutputStream stream;
     
     /**
      * Initializes a new controller with the given arguments.
      * @param data The data managed by this controller.
      * @param shell The operator interface from which this controller gets its input.
      */
-    public Controller(ServerData<ID> data, Shell<ID> shell) {
-        super();
+    public Controller(ServerData<ID> data, Shell<ID> shell, OutputStream stream) {
         this.data = data;
         this.shell = shell;
+        this.stream = stream;
     }
     
     /**
@@ -32,14 +33,15 @@ public class Controller<ID> {
 
     /**
      * Tries to start a new group to which data can be sent by generating private keys.
+     * This could be a very costly operation and should be avoided when possible.
      * @param amtRevocable The amount of user which can be revoked.
      * @param amtPrivateKeys The amount of private keys which are produced.
      * @param keyDir The directory to save the keyfiles in.
      */
-    public void keyGen(int amtRevocable, int amtPrivateKeys, File keyDir) {
+    public void reinitializeCrypto(int amtRevocable, int amtPrivateKeys, File keyDir) {
 
     }
-        
+
     /**
      * Adds a new user and assigns a private key to that user.
      * @param name The name of the user which is added.
@@ -70,26 +72,4 @@ public class Controller<ID> {
      */
     public void stream(InputStream data) {
     }
-    
-    /**
-     * Prints information about traffic.
-     */
-    public void showStatistics() {
-        
-    }
-    
-    /**
-     * Prints users and the keys assigned to them.
-     */
-    public void showUsers() {
-        
-    }
-    
-    /**
-     * Prints information about the data which is currently sent.
-     */
-    public void showInfo() {
-        //prints directory, time sending amount of revoked users/registered users...
-    }
-
 }

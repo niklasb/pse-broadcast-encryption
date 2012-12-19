@@ -84,6 +84,7 @@ public abstract class CommandLineInterface {
      * @param str The string to print.
      */
     protected void println(String str) { out.println(str); }
+    protected void println() { out.println(); }
 
     /**
      * @return The string format to use for writing error messages to the

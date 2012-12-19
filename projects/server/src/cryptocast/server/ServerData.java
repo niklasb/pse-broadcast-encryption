@@ -14,21 +14,17 @@ import java.util.Map;
  * @param <ID> The type of the user identities
  */
 public class ServerData<ID> implements Serializable {
-    private Map<String, User<ID>> userByName;
-    private Map<ID, User<ID>> userById;
+    private Map<String, User<ID>> userByName = new HashMap<String, User<ID>>();
+    private Map<ID, User<ID>> userById = new HashMap<ID, User<ID>>();
     private BroadcastSchemeUserManager<ID> users;
     private BroadcastSchemeKeyManager<ID> keys;
     //the amount of all users added
-    private int addedUsers;
+    private int addedUsers = 0;
     
     //TODO
     public ServerData(BroadcastSchemeUserManager<ID> users, BroadcastSchemeKeyManager<ID> keys) {
-        super();
-        this.userByName = new HashMap<String, User<ID>>();
-        this.userById = new HashMap<ID, User<ID>>();
         this.users = users;
         this.keys = keys;
-        this.addedUsers = 0;
     }
 
     /**

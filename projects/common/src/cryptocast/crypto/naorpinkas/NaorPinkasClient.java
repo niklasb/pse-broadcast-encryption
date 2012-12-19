@@ -6,7 +6,7 @@ import java.math.BigInteger;
 /**
  * A client in the Naor-Pinkas broadcast encryption scheme.
  */
-public class NaorPinkasClient implements Decryptor<BigInteger> {
+public class NaorPinkasClient implements Decryptor<byte[]> {
     /**
     * Initializes a Naor-Pinkas broadcast client.
     * @param key The personal key used to reconstruct a secret from the stream.
