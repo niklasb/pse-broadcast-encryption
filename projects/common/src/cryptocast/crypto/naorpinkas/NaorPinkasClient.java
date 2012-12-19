@@ -18,5 +18,5 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
       * @param cipher The encrypted secret
       * @return The decrypted secret
       */
-    public BigInteger decrypt(byte[] cipher) { return null; }
+    public byte[] decrypt(byte[] cipher) { return null; }
 }
