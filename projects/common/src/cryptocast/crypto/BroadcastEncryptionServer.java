@@ -19,7 +19,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
 
     ConcurrentLinkedQueue<Action> pendingActions = new ConcurrentLinkedQueue<Action>();
     private BroadcastSchemeUserManager<ID> context;
-    private Encryptor<BigInteger> enc;
+    private Encryptor<byte[]> enc;
     private MessageOutChannel controlChannel;
     private OutputStream payloadStream;
     OutputCipherControl cipherControl;
@@ -33,7 +33,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
      * @param enc The encryption context
      */
     public BroadcastEncryptionServer(BroadcastSchemeUserManager<ID> context,
-                                     Encryptor<BigInteger> enc,
+                                     Encryptor<byte[]> enc,
                                      MessageOutChannel controlChannel,
                                      OutputStream payloadStream,
                                      OutputCipherControl cipherControl) {
@@ -44,12 +44,30 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
         this.cipherControl = cipherControl;
     }
 
-//    private MessageOutChannel createTypedChannel(MessageOutChannel inner, byte typeId) {
-//        return new DecoratingMessageOutChannel(
-//            inner, 
-//            new byte[] { typeId }, // prefix (1 byte indicating the type)
-//            new byte[0]);          // suffix (none)
-//    }
+    public static <ID> BroadcastEncryptionServer<ID> buildForMessageChannel(
+            BroadcastSchemeUserManager<ID> context,
+            Encryptor<byte[]> enc,
+            MessageOutChannel inner,
+            int bufsize,
+            int keyBits) {
+        MessageOutChannel controlChannel = createTypedChannel((byte)0, inner);
+        ControllableCipherOutputStream payloadStream = 
+                ControllableCipherOutputStream.setup(
+                    new PacketizingOutputStream(
+                        createTypedChannel((byte)1, inner),
+                        bufsize),
+                    keyBits);
+        return new BroadcastEncryptionServer<ID>(
+                context, enc, controlChannel, payloadStream, payloadStream);
+    }
+    
+    private static MessageOutChannel createTypedChannel(
+                               byte typeId, MessageOutChannel inner) {
+        return new DecoratingMessageOutChannel(
+            inner, 
+            new byte[] { typeId }, // prefix (1 byte indicating the type)
+            new byte[0]);          // suffix (none)
+    }
 
     /**
      * Runs the worker that handles periodic group key broadcasts and sends
@@ -68,10 +86,20 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
             if (action == Action.UPDATE_KEY) {
                 cipherControl.updateKey();
             }
-            controlChannel.sendMessage(cipherControl.getKey().getEncoded());
+            controlChannel.sendMessage(
+                    enc.encrypt(
+                            cipherControl.getKey().getEncoded()));
             cipherControl.reinitializeCipher();
         }
         payloadStream.write(data, offset, len);
+    }
+
+    public void scheduleKeyUpdate() {
+        pendingActions.add(Action.UPDATE_KEY);
+    }
+
+    public void scheduleKeyBroadcast() {
+        pendingActions.add(Action.BROADCAST_KEY);
     }
 
     /**
@@ -80,7 +108,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
      */
     public void revoke(ID id) {
         context.revoke(id);
-        pendingActions.add(Action.UPDATE_KEY);
+        scheduleKeyUpdate();
     }
 
     @Override

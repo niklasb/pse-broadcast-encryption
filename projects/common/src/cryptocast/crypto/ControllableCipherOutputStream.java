@@ -13,16 +13,20 @@ public class ControllableCipherOutputStream extends FilterOutputStream
          implements OutputCipherControl {
     private OutputStream inner;
     private SecretKey key;
+    private int keyBits;
 
-    private ControllableCipherOutputStream(OutputStream inner) {
+    private ControllableCipherOutputStream(OutputStream inner, 
+                                           int keyBits) {
         super(null);
         this.inner = inner;
+        this.keyBits = keyBits;
         updateKey();
         reinitializeCipher();
     }
     
-    public static ControllableCipherOutputStream create(OutputStream inner) {
-        return new ControllableCipherOutputStream(inner);
+    public static ControllableCipherOutputStream setup(OutputStream inner,
+                                                        int keyBits) {
+        return new ControllableCipherOutputStream(inner, keyBits);
     }
 
     @Override
@@ -41,7 +45,7 @@ public class ControllableCipherOutputStream extends FilterOutputStream
     }
 
     private SecretKey createNewKey() {
-        byte[] keyBytes = "1234123412341234".getBytes();
+        byte[] keyBytes = "abasdasd".getBytes();
         return new SecretKeySpec(keyBytes, "AES");
     }
     
