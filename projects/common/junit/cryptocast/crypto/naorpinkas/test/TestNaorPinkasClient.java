@@ -1,4 +1,4 @@
-package cryptocast.crypto.naorpinkas;
+package cryptocast.crypto.naorpinkas.test;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package cryptocast.comm;
+package cryptocast.comm.test;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 import org.junit.*;
 
-import static cryptocast.comm.TestUtils.*;
+import static cryptocast.util.ByteStringUtils.*;
 
 public class TestMultiOutChannel {
 

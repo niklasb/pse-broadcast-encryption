@@ -1,4 +1,4 @@
-package cryptocast.comm;
+package cryptocast.comm.test;
 
 import static org.junit.Assert.*;
 
@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
-import static cryptocast.comm.TestUtils.*;
+import static cryptocast.util.ByteStringUtils.*;
 
 public class TestRawMessageInChannel {
     @Test

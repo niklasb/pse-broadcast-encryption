@@ -1,8 +1,8 @@
-package cryptocast.comm;
+package cryptocast.util;
 
 import java.io.UnsupportedEncodingException;
 
-public class TestUtils {
+public class ByteStringUtils {
     public static byte[] str2bytes(String str) {
         try {
             return str.getBytes("ISO-8859-1");
