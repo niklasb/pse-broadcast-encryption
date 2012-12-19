@@ -1,5 +1,7 @@
 package cryptocast.server;
 
+import static com.google.common.base.Objects.*;
+
 /**
  * Represents the commands available in the shell.
  */
@@ -16,7 +18,7 @@ public class ShellCommand {
         this.name = name;
         this.syntax = syntax;
         this.shortDesc = shortDesc;
-        this.longDesc = longDesc != null ? longDesc : shortDesc;
+        this.longDesc = firstNonNull(longDesc, shortDesc);
     }
 
     /** @return The command name */
