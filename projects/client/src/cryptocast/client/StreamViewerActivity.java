@@ -1,5 +1,6 @@
 package cryptocast.client;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 
@@ -7,8 +8,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
-import cryptocast.comm.InChannel;
-import cryptocast.playbacktest.SimpleHttpStreamServer;
 
 /**
  * This activity is responsible for decrypting the received data
@@ -25,7 +24,7 @@ public class StreamViewerActivity extends FragmentActivity {
     public StreamViewerActivity(InputStream inputStream) {
     }
 
-    private void startPlayback(InputStream in) {
+    private void startPlayback(InputStream in) throws IOException {
         player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setDataSource("http://127.0.0.1:21337/");
