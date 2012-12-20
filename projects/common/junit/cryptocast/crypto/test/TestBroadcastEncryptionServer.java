@@ -2,10 +2,16 @@ package cryptocast.crypto.test;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+
 import javax.crypto.SecretKey;
 
 import org.junit.*;
 import static org.mockito.Mockito.*;
+import org.mockito.*;
 
 import cryptocast.comm.*;
 import cryptocast.crypto.*;
@@ -15,14 +21,14 @@ class Identity {
 }
 
 public class TestBroadcastEncryptionServer {
-
+    @Mock private BroadcastSchemeUserManager<Identity> userManager;
+    @Mock private OutputCipherControl cipherControl;
+    @Mock private MessageOutChannel controlChannel;
+    @Mock private Encryptor<byte[]> enc;
+    @Mock private SecretKey key;
+    private PipedOutputStream payloadStream;
+    private PipedInputStream payloadStreamIn;
     private BroadcastEncryptionServer<Identity> sut;
-    private BroadcastSchemeUserManager<Identity> userManager;
-    private MemoryOutputStream payloadStream;
-    private OutputCipherControl cipherControl;
-    private MessageOutChannel controlChannel;
-    private Encryptor<byte[]> enc;
-    private SecretKey key;
 
     private void setNextKeyEncryption(byte[] data) {
         when(key.getEncoded()).thenReturn(data);
@@ -32,13 +38,11 @@ public class TestBroadcastEncryptionServer {
     @Before
     @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
-        userManager = mock(BroadcastSchemeUserManager.class);
-        payloadStream = new MemoryOutputStream(4096);
-        cipherControl = mock(OutputCipherControl.class);
-        key = mock(SecretKey.class);
+        MockitoAnnotations.initMocks(this);
+        payloadStream = new PipedOutputStream();
+        payloadStreamIn = new PipedInputStream(payloadStream);
+        //payloadStream = new MemoryOutputStream(4096);
         when(cipherControl.getKey()).thenReturn(key);
-        controlChannel = mock(MessageOutChannel.class);
-        enc = mock(Encryptor.class);
         sut = new BroadcastEncryptionServer<Identity>(
             userManager, 
             enc, 
@@ -51,36 +55,36 @@ public class TestBroadcastEncryptionServer {
     @Test
     public void noInteractionsAtConstruction() throws Exception {
         verifyZeroInteractions(userManager, cipherControl, controlChannel);
-        assertEquals(0, payloadStream.getSentBytes().length);
+        //assertEquals(0, payloadStream.getSentBytes().length);
+        assertEquals(0, payloadStreamIn.available());
     }
 
     @Test
     public void normalWriteWorks() throws Exception {
         byte[] expected = str2bytes("abc");
         sut.write(expected);
-        assertArrayEquals(expected, payloadStream.getSentBytes());
+        assertPayloadBytes(expected);
         verifyZeroInteractions(userManager, cipherControl, controlChannel);
     }
 
     @Test
     public void keyUpdateWorks() throws Exception {
-        String payload = "abc";
+        byte[] payload = str2bytes("abc");
 
         byte[] key1 = str2bytes("xxx");
         setNextKeyEncryption(key1);
         sut.scheduleKeyUpdate();
-        sut.write(str2bytes(payload));
+        sut.write(payload);
         verify(controlChannel).sendMessage(key1);
-        assertArrayEquals(str2bytes(payload), payloadStream.getSentBytes());
+        assertPayloadBytes(payload);
         verifyNoMoreInteractions(controlChannel);
         
         byte[] key2 = str2bytes("yyy");
         setNextKeyEncryption(key2);
         sut.scheduleKeyUpdate();
-        sut.write(str2bytes(payload));
+        sut.write(payload);
         verify(controlChannel).sendMessage(key2);
-        assertArrayEquals(str2bytes(payload + payload), 
-                          payloadStream.getSentBytes());
+        assertPayloadBytes(payload);
         verifyNoMoreInteractions(controlChannel);
     }
     
@@ -100,7 +104,12 @@ public class TestBroadcastEncryptionServer {
         byte[] payload = str2bytes("abc");
         sut.write(payload);
         verify(controlChannel).sendMessage(key1);
-        assertArrayEquals(payload,
-                payloadStream.getSentBytes());
+        assertPayloadBytes(payload);
+    }
+    
+    private void assertPayloadBytes(byte[] expected) throws IOException {
+        byte[] buffer = new byte[payloadStreamIn.available()];
+        payloadStreamIn.read(buffer);
+        assertArrayEquals(expected, buffer);
     }
 }

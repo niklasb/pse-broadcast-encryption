@@ -14,6 +14,8 @@ import java.util.Map;
  * @param <ID> The type of the user identities
  */
 public class ServerData<ID> implements Serializable {
+    private static final long serialVersionUID = -4614028292663697207L;
+
     private Map<String, User<ID>> userByName = new HashMap<String, User<ID>>();
     private Map<ID, User<ID>> userById = new HashMap<ID, User<ID>>();
     private BroadcastSchemeUserManager<ID> users;
@@ -37,10 +39,9 @@ public class ServerData<ID> implements Serializable {
             return Optional.absent();
         }
         // create necessary data
-        ID userIdent = users.getIdentity(addedUsers);
+        ID userIdent = users.getIdentity(addedUsers++);
         User<ID> newOne = new User<ID>(name, userIdent);
         // adjust data structures
-        addedUsers++;
         userByName.put(name, newOne);
         userById.put(userIdent, newOne);
         

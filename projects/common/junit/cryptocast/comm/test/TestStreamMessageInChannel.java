@@ -10,7 +10,7 @@ import org.junit.Test;
 import static cryptocast.util.ByteStringUtils.*;
 import cryptocast.comm.*;
 
-public class TestRawMessageInChannel {
+public class TestStreamMessageInChannel {
     @Test
     public void recvMessageWorks() throws Exception {
         byte[] packed = str2bytes(

@@ -10,6 +10,8 @@ import java.util.Map;
  *
  */
 public class ServerHistory implements Serializable {
+    private static final long serialVersionUID = 140551767140374605L;
+    
     // A map for servers and their corresponding key files
     private Map<String, File> servers;
 
