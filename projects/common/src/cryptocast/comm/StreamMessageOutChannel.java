@@ -9,14 +9,14 @@ import java.nio.ByteOrder;
  * Wraps a byte-based instance of {@link OutputStream} and allows to use it as a message-based
  * channel.
  */
-public class RawMessageOutChannel extends MessageOutChannel {
+public class StreamMessageOutChannel extends MessageOutChannel {
     private OutputStream inner;
 
     /**
      * Creates a new instance of MessageOutChannel with the given OutChannel as inner channel.
      * @param inner The OutChannel which will be wrapped.
      */
-    public RawMessageOutChannel(OutputStream inner) {
+    public StreamMessageOutChannel(OutputStream inner) {
         this.inner = inner; 
     }
 

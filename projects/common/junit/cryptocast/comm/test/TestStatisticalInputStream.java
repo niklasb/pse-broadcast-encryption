@@ -2,6 +2,7 @@ package cryptocast.comm.test;
 
 import static org.junit.Assert.*;
 import static cryptocast.util.ByteStringUtils.*;
+import cryptocast.comm.*;
 
 import org.junit.Test;
 

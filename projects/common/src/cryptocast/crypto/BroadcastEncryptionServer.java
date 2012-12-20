@@ -80,6 +80,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
      * on the fly.
      * @param data The data to send
      */
+    @Override
     public void write(byte[] data, int offset, int len) throws IOException {
         Action action;
         while (null != (action = pendingActions.poll())) {
@@ -109,11 +110,6 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
     public void revoke(ID id) {
         context.revoke(id);
         scheduleKeyUpdate();
-    }
-
-    @Override
-    public void write(byte[] data) throws IOException {
-        write(data, 0, data.length);
     }
     
     @Override

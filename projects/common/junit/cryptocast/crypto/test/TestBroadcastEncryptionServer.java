@@ -5,11 +5,11 @@ import static org.junit.Assert.*;
 import javax.crypto.SecretKey;
 
 import org.junit.*;
-
-import cryptocast.comm.MemoryOutputStream;
-import cryptocast.comm.MessageOutChannel;
 import static org.mockito.Mockito.*;
-import static cryptocast.comm.TestUtils.*;
+
+import cryptocast.comm.*;
+import cryptocast.crypto.*;
+import static cryptocast.util.ByteStringUtils.*;
 
 class Identity {
 }

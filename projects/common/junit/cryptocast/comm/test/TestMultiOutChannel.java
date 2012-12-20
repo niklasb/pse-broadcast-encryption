@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import org.junit.*;
 
 import static cryptocast.util.ByteStringUtils.*;
+import cryptocast.comm.*;
 
 public class TestMultiOutChannel {
 

@@ -7,9 +7,8 @@ import org.junit.Test;
 
 import com.google.common.base.Optional;
 
-import cryptocast.crypto.naorpinkas.NaorPinkasClient;
-import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
-import cryptocast.crypto.naorpinkas.NaorPinkasServer;
+import cryptocast.crypto.naorpinkas.*;
+import cryptocast.server.*;
 
 public class TestServerData {
     

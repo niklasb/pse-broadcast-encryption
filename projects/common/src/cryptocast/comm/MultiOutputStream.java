@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * destination.
  */
 public class MultiOutputStream extends OutputStream {
-    enum ErrorHandling {
+    public enum ErrorHandling {
         REMOVE,
         IGNORE,
         THROW,
@@ -50,11 +50,6 @@ public class MultiOutputStream extends OutputStream {
                 }
             }
         }
-    }
-    
-    @Override
-    public void write(byte[] data) throws IOException {
-        write(data, 0, data.length);
     }
     
     @Override

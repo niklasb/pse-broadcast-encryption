@@ -2,10 +2,10 @@ package cryptocast.crypto;
 
 import java.math.BigInteger;
 
-public class ModularExponentationGroup extends IntegersModuloPrime {
+public class ModularExponentiationGroup extends IntegersModuloPrime {
     BigInteger g;
 
-    public ModularExponentationGroup(BigInteger g, BigInteger p) {
+    public ModularExponentiationGroup(BigInteger g, BigInteger p) {
         super(p);
     }
     
@@ -20,7 +20,7 @@ public class ModularExponentationGroup extends IntegersModuloPrime {
      * It is taken from http://tools.ietf.org/html/rfc5114#section-2.1
      * @return The group
      */
-    public static ModularExponentationGroup getP1024Q160() {
+    public static ModularExponentiationGroup getP1024Q160() {
         BigInteger p = hexStringToBigInt(
            "B10B8F96 A080E01D DE92DE5E AE5D54EC 52C99FBC FB06A3C6" +
            "9A6A9DCA 52D23B61 6073E286 75A23D18 9838EF1E 2EE652C0" +
@@ -37,7 +37,7 @@ public class ModularExponentationGroup extends IntegersModuloPrime {
             "D662A4D1 8E73AFA3 2D779D59 18D08BC8 858F4DCE F97C2A24" +
             "855E6EEB 22B3B2E5"
             );
-        return new ModularExponentationGroup(p, g);
+        return new ModularExponentiationGroup(p, g);
     }
 
     /**
@@ -46,7 +46,7 @@ public class ModularExponentationGroup extends IntegersModuloPrime {
      * It is taken from http://tools.ietf.org/html/rfc5114#section-2.1
      * @return The group
      */
-    public static ModularExponentationGroup getP2048Q224() {
+    public static ModularExponentiationGroup getP2048Q224() {
         BigInteger p = hexStringToBigInt(
             "AD107E1E 9123A9D0 D660FAA7 9559C51F A20D64E5 683B9FD1" +
             "B54B1597 B61D0A75 E6FA141D F95A56DB AF9A3C40 7BA1DF15" +
@@ -73,7 +73,7 @@ public class ModularExponentationGroup extends IntegersModuloPrime {
             "EDFE72FE 9B6AA4BD 7B5A0F1C 71CFFF4C 19C418E1 F6EC0179" +
             "81BC087F 2A7065B3 84B890D3 191F2BFA"
             );
-        return new ModularExponentationGroup(p, g);
+        return new ModularExponentiationGroup(p, g);
     }
     
     private static BigInteger hexStringToBigInt(String hex) {

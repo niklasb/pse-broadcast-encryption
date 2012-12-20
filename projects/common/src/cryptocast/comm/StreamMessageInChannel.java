@@ -9,7 +9,7 @@ import java.nio.ByteOrder;
  * Wraps a byte-based instance of {@link InputStream} and allows to use it as a
  * message-based channel.
  */
-public class RawMessageInChannel {
+public class StreamMessageInChannel {
     private InputStream inner;
 
     /**
@@ -17,7 +17,7 @@ public class RawMessageInChannel {
      * channel.
      * @param inner The wrapped channel
      */
-    public RawMessageInChannel(InputStream inner) {
+    public StreamMessageInChannel(InputStream inner) {
         this.inner = inner;
     }
 

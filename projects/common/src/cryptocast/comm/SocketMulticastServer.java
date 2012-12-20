@@ -1,7 +1,7 @@
 package cryptocast.comm;
 
+import java.io.FilterOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,9 +10,9 @@ import cryptocast.util.Callback;
 /**
  * This class implements channel-based communication via TCP.
  */
-class SocketMulticastServer extends OutputStream implements Runnable {
+class SocketMulticastServer extends FilterOutputStream implements Runnable {
     MultiOutputStream multi = new MultiOutputStream(
-                  MultiOutputStream.ErrorHandling.REMOVE);
+            MultiOutputStream.ErrorHandling.REMOVE);
     Callback<IOException> excHandler;
     ServerSocket server;
     
@@ -22,6 +22,8 @@ class SocketMulticastServer extends OutputStream implements Runnable {
      */
     public SocketMulticastServer(ServerSocket server,
                                  Callback<IOException> excHandler) { 
+        super(null);
+        this.out = multi;
         this.server = server;
         this.excHandler = excHandler;
     };
@@ -38,20 +40,5 @@ class SocketMulticastServer extends OutputStream implements Runnable {
                 return;
             }
         }
-    }
-
-    @Override
-    public void write(byte[] data, int offset, int len) throws IOException {
-        multi.write(data, offset, len);
-    }
-    
-    @Override
-    public void write(byte[] data) throws IOException {
-        multi.write(data);
-    }
-    
-    @Override
-    public void write(int b) throws IOException {
-        multi.write(b);
     }
 }

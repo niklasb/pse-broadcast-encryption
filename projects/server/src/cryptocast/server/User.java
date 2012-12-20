@@ -4,7 +4,7 @@ package cryptocast.server;
  * Represents a user in our application.
  * @param <ID> The type of the user identities
  */
-class User<ID> {
+public class User<ID> {
     //User's name.
     private String name;
     private ID id;

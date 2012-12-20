@@ -16,8 +16,8 @@ public class StreamUtils {
      * @param size The exact amount of bytes to read
      * @param buffer The target buffer
      */
-    static int readall(InputStream in, byte[] buffer, int offset, int len) 
-                            throws InterruptedException, IOException {
+    public static int readall(InputStream in, byte[] buffer, int offset, int len) 
+                                  throws InterruptedException, IOException {
         // use polling to read all data
         int total = 0;
         for (;;) {

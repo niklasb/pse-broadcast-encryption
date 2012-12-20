@@ -40,9 +40,4 @@ public class StatisticalInputStream extends InputStream {
         receivedBytes += received;
         return received;
     }
-    
-    @Override
-    public int read(byte[] buffer) throws IOException {
-        return inner.read(buffer, 0, buffer.length);
-    }
 }

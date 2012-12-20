@@ -3,7 +3,8 @@ package cryptocast.comm.test;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
-import static cryptocast.comm.TestUtils.*;
+import static cryptocast.util.ByteStringUtils.*;
+import cryptocast.comm.*;
 
 import org.junit.Test;
 

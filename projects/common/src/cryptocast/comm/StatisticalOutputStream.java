@@ -32,11 +32,6 @@ public class StatisticalOutputStream extends OutputStream {
     }
     
     @Override 
-    public void write(byte[] buffer) throws IOException {
-        write(buffer, 0, buffer.length);
-    }
-    
-    @Override 
     public void write(int b) throws IOException {
         sentBytes++;
         inner.write(b);

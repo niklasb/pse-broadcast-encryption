@@ -3,7 +3,7 @@ package cryptocast.crypto.test;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
-
+import cryptocast.crypto.*;
 import org.junit.Test;
 
 public class TestPolynomial {

@@ -36,11 +36,6 @@ public class PacketizingOutputStream extends OutputStream {
     }
     
     @Override
-    public void write(byte[] data) throws IOException {
-        write(data, 0, data.length);
-    }
-    
-    @Override
     public void write(int b) throws IOException {
         messageBuffer[bufferOffset++] = (byte)b;
         if (bufferOffset == messageBuffer.length) {

@@ -2,7 +2,8 @@ package cryptocast.comm.test;
 
 import static org.junit.Assert.*;
 
-import static cryptocast.comm.TestUtils.*;
+import static cryptocast.util.ByteStringUtils.*;
+import cryptocast.comm.*;
 
 import org.junit.Test;
 
@@ -15,8 +16,8 @@ public class TestRawMessageChannels {
 	    byte[] buffer = new byte[4096];
 	    MemoryInputStream pipeIn = new MemoryInputStream(buffer, 2);
 	    MemoryOutputStream pipeOut = new MemoryOutputStream(buffer);
-	    RawMessageInChannel in = new RawMessageInChannel(pipeIn);
-	    RawMessageOutChannel out = new RawMessageOutChannel(pipeOut);
+	    StreamMessageInChannel in = new StreamMessageInChannel(pipeIn);
+	    StreamMessageOutChannel out = new StreamMessageOutChannel(pipeOut);
 	    for (byte[] msg : messages) {
 	        out.sendMessage(msg);
 	        assertArrayEquals(msg, in.recvMessage());
