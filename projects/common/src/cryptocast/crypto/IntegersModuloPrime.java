@@ -64,4 +64,10 @@ public class IntegersModuloPrime extends Field<BigInteger> {
         } while (r.compareTo(p) >= 0);
         return r;
     }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other == null || other.getClass() != getClass()) { return false; }
+        return p.equals(((IntegersModuloPrime)other).p);
+    }
 }

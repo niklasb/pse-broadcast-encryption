@@ -4,6 +4,7 @@ import cryptocast.crypto.*;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * A server in the Naor-Pinkas broadcast encryption scheme. It knows
@@ -14,13 +15,21 @@ public class NaorPinkasServer
       implements BroadcastSchemeUserManager<NaorPinkasIdentity>,
                  BroadcastSchemeKeyManager<NaorPinkasIdentity>,
                  Serializable,
-                 Encryptor<BigInteger> {
+                 Encryptor<byte[]> {
+    private int t;
+    private ModularExponentiationGroup group;
+    
     /**
      * Encrypts a secret.
      * @param secret the secret
      * @return The cipher text
      */
-    public byte[] encrypt(BigInteger secret) {return null;}
+    public byte[] encrypt(byte[] secret) {
+        BigInteger x = new BigInteger(1, secret);
+        checkArgument(x.compareTo(group.getP()) < 0, "Secret is too large to encrypt");
+        return null;
+    }
+
     /**
      * @param i An index
      * @return The identity with the given index

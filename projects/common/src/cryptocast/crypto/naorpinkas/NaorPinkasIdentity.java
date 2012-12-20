@@ -6,11 +6,11 @@ import java.math.BigInteger;
  * An identity in the Naor-Pinkas broadcast encryption scheme
  */
 public class NaorPinkasIdentity {
-    BigInteger id;
+    BigInteger i;
 
-    private NaorPinkasIdentity(BigInteger id) {
-        this.id = id;
+    protected NaorPinkasIdentity(BigInteger i) {
+        this.i = i;
     }
 
-    private BigInteger getId() { return id; }
+    protected BigInteger getI() { return i; }
 }

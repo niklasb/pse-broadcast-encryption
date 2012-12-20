@@ -26,7 +26,7 @@ public class TestBroadcastEncryptionServer {
     @Mock private MessageOutChannel controlChannel;
     @Mock private Encryptor<byte[]> enc;
     @Mock private SecretKey key;
-    private PipedOutputStream payloadStream;
+    private PipedOutputStream payloadStreamOut;
     private PipedInputStream payloadStreamIn;
     private BroadcastEncryptionServer<Identity> sut;
 
@@ -39,15 +39,14 @@ public class TestBroadcastEncryptionServer {
     @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        payloadStream = new PipedOutputStream();
-        payloadStreamIn = new PipedInputStream(payloadStream);
-        //payloadStream = new MemoryOutputStream(4096);
+        payloadStreamOut = new PipedOutputStream();
+        payloadStreamIn = new PipedInputStream(payloadStreamOut);
         when(cipherControl.getKey()).thenReturn(key);
         sut = new BroadcastEncryptionServer<Identity>(
             userManager, 
             enc, 
             controlChannel, 
-            payloadStream, 
+            payloadStreamOut, 
             cipherControl);
         setNextKeyEncryption(str2bytes("aaa"));
     }
@@ -55,7 +54,6 @@ public class TestBroadcastEncryptionServer {
     @Test
     public void noInteractionsAtConstruction() throws Exception {
         verifyZeroInteractions(userManager, cipherControl, controlChannel);
-        //assertEquals(0, payloadStream.getSentBytes().length);
         assertEquals(0, payloadStreamIn.available());
     }
 

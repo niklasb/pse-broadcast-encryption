@@ -1,6 +1,6 @@
 package cryptocast.crypto;
 
-import java.util.Collection;
+import java.util.List;
 import com.google.common.base.Optional;
 
 /**
@@ -15,5 +15,5 @@ public interface ShareCombinator<S, T> {
    * @return The reconstructed secret or absent if the information represented
    * by the given shares is insufficient to restore it.
    */
-  public Optional<S> restore(Collection<T> shares);
+  public Optional<S> restore(List<T> shares);
 }

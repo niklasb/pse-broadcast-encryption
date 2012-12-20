@@ -7,6 +7,7 @@ public class ModularExponentiationGroup extends IntegersModuloPrime {
 
     public ModularExponentiationGroup(BigInteger g, BigInteger p) {
         super(p);
+        this.g = g;
     }
     
     /** @return $g$ */
@@ -14,6 +15,11 @@ public class ModularExponentiationGroup extends IntegersModuloPrime {
         return g;
     }
     
+    /** @return $g^k$ */
+    public BigInteger getPowerOfG(BigInteger k) {
+        return pow(g, k);
+    }
+
     /**
      * Initializes a 1024-bit Diffie-Hellman MODP group
      * with a 160-bit prime order subgroup.
@@ -78,5 +84,12 @@ public class ModularExponentiationGroup extends IntegersModuloPrime {
     
     private static BigInteger hexStringToBigInt(String hex) {
         return new BigInteger(hex.replaceAll("\\s+", ""), 16);
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other == null || other.getClass() != getClass()) { return false; }
+        return super.equals(other)
+            && g.equals(((ModularExponentiationGroup)other).g);
     }
 }
