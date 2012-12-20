@@ -14,7 +14,7 @@ public interface BroadcastSchemeUserManager<ID> {
      * Revokes a user.
      * @param id The identity of the user
      */
-    public void revoke(ID id);
+    public void revoke(ID id) throws NoMoreRevocationsPossibleError;
     /**
      * @param id The identity of the user
      * @return Whether the user is revoked.

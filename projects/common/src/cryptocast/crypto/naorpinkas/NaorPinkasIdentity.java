@@ -13,4 +13,9 @@ public class NaorPinkasIdentity {
     }
 
     protected BigInteger getI() { return i; }
+    
+    public boolean equals(Object other) {
+        if (other == null || other.getClass() != getClass()) { return false; }
+        return ((NaorPinkasIdentity)other).i.equals(i);
+    }
 }

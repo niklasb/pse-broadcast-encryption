@@ -30,6 +30,10 @@ public class NaorPinkasPersonalKey implements PrivateKey {
         return new NaorPinkasShare(t, r, i, x, group);
     }
 
+    public NaorPinkasIdentity getIdentity() {
+        return new NaorPinkasIdentity(i);
+    }
+
     public String getAlgorithm() { return "Naor-Pinkas"; }
     public byte[] getEncoded() { return null; }
     public String getFormat() { return null; }
