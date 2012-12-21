@@ -1,6 +1,7 @@
 package cryptocast.client.filechooser;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.os.Bundle;
@@ -12,11 +13,18 @@ import android.widget.ListView;
  * choose one file.
  */
 public abstract class FileChooser extends ListActivity {
+    
+    private File currentDir;
+    
+    
     /** Initialize the instance
      * @param savedInstanceState the stored state
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        currentDir = new File("/sdcard/");
+        updateItems(currentDir);
     }
 
     /** Handles a click onto a list item.
@@ -29,7 +37,19 @@ public abstract class FileChooser extends ListActivity {
     protected void onListItemClick(ListView lst, View view, int position, long id) {
     }
 
-    private void fill(File f) {
+    private void updateItems(File curDir) {
+        this.setTitle("Directory: " + curDir.getName());
+        File[] data =  curDir.listFiles();
+        ArrayList<DirectoryListElement> folders = new ArrayList<DirectoryListElement>();
+        ArrayList<FileListElement> files = new ArrayList<FileListElement>();
+        
+        for (File file : data) {
+            if (file.isDirectory()) {
+                folders.add(new DirectoryListElement(file));
+            } else {
+                files.add(new FileListElement(file));
+            }
+        }
     }
     
     /** Called when the user clicks a file in the list.

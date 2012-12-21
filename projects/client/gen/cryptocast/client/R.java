@@ -59,11 +59,10 @@ public final class R {
         public static final int connect_button=0x7f040003;
         public static final int hello_world=0x7f040001;
         public static final int hostname_hint=0x7f040004;
-        public static final int main_server_string=0x7f04000a;
         public static final int menu_settings=0x7f040002;
         public static final int ok=0x7f040008;
         public static final int preference_server_name=0x7f040009;
-        public static final int saved_server_main=0x7f04000b;
+        public static final int saved_server_main=0x7f04000a;
         public static final int title_activity_options=0x7f040005;
         public static final int traffic_overview=0x7f040007;
         public static final int wifi_mode=0x7f040006;
