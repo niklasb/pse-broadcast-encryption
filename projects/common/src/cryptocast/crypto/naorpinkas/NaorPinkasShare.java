@@ -1,8 +1,10 @@
 package cryptocast.crypto.naorpinkas;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 import cryptocast.crypto.ModularExponentiationGroup;
+import static cryptocast.util.ByteUtils.*;
 
 /**
  * A share in the Naor-Pinkas broadcast encryption scheme. It consists of a tuple
@@ -26,5 +28,19 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare> {
     @Override
     public int compareTo(NaorPinkasShare other) {
         return i.compareTo(other.i);
+    }
+    
+    public static NaorPinkasShare unpack(int t, 
+                                        BigInteger r, 
+                                        ModularExponentiationGroup group,
+                                        ByteBuffer buf) {
+        BigInteger i = getBigInt(buf),
+                   x = getBigInt(buf);
+        return new NaorPinkasShare(t, r, i, x, group);
+    }
+
+    public void pack(ByteBuffer buf) {
+        putBigInt(buf, i);
+        putBigInt(buf, x);
     }
 }

@@ -1,7 +1,7 @@
 package cryptocast.comm.test;
 
 import static org.junit.Assert.*;
-import static cryptocast.util.ByteStringUtils.*;
+import static cryptocast.util.ByteUtils.*;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;

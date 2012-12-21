@@ -15,7 +15,7 @@ import org.mockito.*;
 
 import cryptocast.comm.*;
 import cryptocast.crypto.*;
-import static cryptocast.util.ByteStringUtils.*;
+import static cryptocast.util.ByteUtils.*;
 
 class Identity {
 }
@@ -95,7 +95,15 @@ public class TestBroadcastEncryptionServer {
     
     @Test
     public void keyBroadcastWorks() throws Exception {
+        byte[] payload = str2bytes("abc");
         
+        byte[] key1 = str2bytes("xxx");
+        setNextKeyEncryption(key1);
+        sut.scheduleKeyBroadcast();
+        sut.write(payload);
+        verify(controlChannel).sendMessage(key1);
+        assertPayloadBytes(payload);
+        verifyNoMoreInteractions(controlChannel);
     }
 
     @Test

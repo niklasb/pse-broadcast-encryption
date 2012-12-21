@@ -15,7 +15,7 @@ public class OptimisticGenerator<T> extends Generator<T> implements Serializable
 
     @Override
     public T get(int i) {
-        extend(i);
+        extend(i + 1);
         return values.get(i);
     }
     
@@ -33,13 +33,13 @@ public class OptimisticGenerator<T> extends Generator<T> implements Serializable
         return result;
     }
     
-    private void extend(int i) {
-        if (i < values.size()) {
+    private void extend(int minLen) {
+        if (minLen <= values.size()) {
             return;
         }
         int newSize = 1;
         // find next power of two
-        while (newSize <= i) {
+        while (newSize < minLen) {
             newSize <<= 1;
         }
         for (T x : inner.getRange(values.size(), newSize)) {
