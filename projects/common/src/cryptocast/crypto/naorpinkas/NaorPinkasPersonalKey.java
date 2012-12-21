@@ -25,7 +25,7 @@ public class NaorPinkasPersonalKey implements PrivateKey {
         this.group = group;
     }
 
-    public NaorPinkasShare createShare(BigInteger r) {
+    public NaorPinkasShare getShare(BigInteger r) {
         BigInteger x = group.pow(group.getPowerOfG(pi), r);
         return new NaorPinkasShare(t, r, i, x, group);
     }

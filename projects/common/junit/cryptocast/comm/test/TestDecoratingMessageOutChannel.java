@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import static org.mockito.Mockito.*;
-import static cryptocast.util.ByteStringUtils.*;
+import static cryptocast.util.ByteUtils.*;
 import cryptocast.comm.*;
 
 public class TestDecoratingMessageOutChannel {

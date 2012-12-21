@@ -3,9 +3,12 @@ package cryptocast.crypto.naorpinkas;
 import cryptocast.crypto.*;
 import cryptocast.util.Generator;
 import cryptocast.util.OptimisticGenerator;
+import static cryptocast.util.ByteUtils.*;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,14 +37,19 @@ public class NaorPinkasServer
     private Set<NaorPinkasIdentity> revokedUsers =
                  new HashSet<NaorPinkasIdentity>();
     private Generator<NaorPinkasPersonalKey> keyGen;
+    private Polynomial<BigInteger> poly;
+    private BigInteger gp0;  // $g^P(0)$
     
     private static SecureRandom rnd = new SecureRandom();
 
     private NaorPinkasServer(int t, ModularExponentiationGroup group,
-                             Generator<NaorPinkasPersonalKey> keyGen) {
+                             Generator<NaorPinkasPersonalKey> keyGen,
+                             Polynomial<BigInteger> poly) {
         this.t = t;
         this.group = group;
         this.keyGen = keyGen;
+        this.poly = poly;
+        this.gp0 = group.getPowerOfG(poly.evaluate(BigInteger.ZERO));
     }
     
     public NaorPinkasServer generate(int t, ModularExponentiationGroup group) {
@@ -50,7 +58,7 @@ public class NaorPinkasServer
                 new OptimisticGenerator<NaorPinkasPersonalKey>(
                         new NaorPinkasKeyGenerator(
                                 t, new SecureRandom(), group, poly));
-        return new NaorPinkasServer(t, group, keyGen);
+        return new NaorPinkasServer(t, group, keyGen, poly);
     }
 
     /**
@@ -59,6 +67,8 @@ public class NaorPinkasServer
      * @return The cipher text
      */
     public byte[] encrypt(byte[] secret) {
+        // interpret bytes as the one's complement 
+        // representation of a number
         BigInteger x = new BigInteger(1, secret);
         checkArgument(x.compareTo(group.getP()) < 0, "Secret is too large to encrypt");
         NaorPinkasPersonalKey[] keys = new NaorPinkasPersonalKey[t];
@@ -70,7 +80,25 @@ public class NaorPinkasServer
         for (NaorPinkasIdentity id : revokedUsers) {
             keys[i++] = getPersonalKey(id).get();
         }
-        return null;
+        BigInteger r = group.randomElement(rnd),
+                   grp0 = group.pow(gp0, r), // g^{r P(0)}
+                   xor = grp0.xor(x);
+        return buildMessage(r, xor, keys);
+    }
+
+    private byte[] buildMessage(BigInteger r, BigInteger xor, 
+            NaorPinkasPersonalKey[] keys) {
+        ByteBuffer msg = ByteBuffer.allocate((keys.length + 2)* 0x4000);
+        msg.order(ByteOrder.BIG_ENDIAN);
+        msg.putInt(t);
+        putBigInt(msg, r);
+        putBigInt(msg, xor);
+        putBigInt(msg, group.getP());
+        putBigInt(msg, group.getG());
+        for (NaorPinkasPersonalKey key : keys) {
+            key.getShare(r).pack(msg);
+        }
+        return partialBufferToBytes(msg);
     }
 
     /**

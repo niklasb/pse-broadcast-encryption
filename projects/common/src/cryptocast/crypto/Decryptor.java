@@ -10,5 +10,5 @@ public interface Decryptor<S> {
      * @param cipher The encrypted secret
      * @return The decrypted secret
      */
-    public S decrypt(byte[] cipher);
+    public S decrypt(byte[] cipher) throws DecryptionError;
 }
