@@ -1,9 +1,13 @@
 package cryptocast.util;
 
-import com.google.common.base.Charsets;
+import java.io.UnsupportedEncodingException;
 
 public class ByteStringUtils {
     public static byte[] str2bytes(String str) {
-        return str.getBytes(Charsets.ISO_8859_1);
+        try {
+            return str.getBytes("ISO-8859-1");
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError("can never happen");
+        }
     }
 }

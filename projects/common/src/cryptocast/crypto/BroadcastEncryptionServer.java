@@ -107,7 +107,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
      * Revokes a user.
      * @param id The identity of the user
      */
-    public void revoke(ID id) {
+    public void revoke(ID id) throws NoMoreRevocationsPossibleError {
         context.revoke(id);
         scheduleKeyUpdate();
     }

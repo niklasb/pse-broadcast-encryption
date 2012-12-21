@@ -94,6 +94,11 @@ public class TestBroadcastEncryptionServer {
     }
     
     @Test
+    public void keyBroadcastWorks() throws Exception {
+        
+    }
+
+    @Test
     public void revokeTriggersKeyUpdate() throws Exception {
         byte[] key1 = str2bytes("xxx");
         Identity id = new Identity();

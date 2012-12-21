@@ -1,23 +1,32 @@
 package cryptocast.client.filechooser;
 
+import java.io.File;
+import android.graphics.Bitmap;
+
 
 /**
  * A list element in our file chooser, representing a file.
  */
 public class FileListElement implements ListElement {
+    private File path;
+
     /**
      * Creates a new instance.
      * @param path The path of the file
      */
-    public FileListElement(String path) { }
+    public FileListElement(File path) {
+        this.path = path;
+    }
 
     /**
      * @return The path of the element
      */
-    public String getPath() { return null; }
+    public File getPath() { 
+        return path; 
+    }
 
     /**
      * @return The icon associated with this element.
      */
-    public String getIcon() { return null; }
+    public Bitmap getIcon() { return null; }
 }
