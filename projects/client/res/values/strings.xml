@@ -10,5 +10,8 @@
     <string name="wifi_mode">WIFI data only</string>
     <string name="traffic_overview">Traffic overview</string>
     <string name="ok">Ok</string>
+    <string name="preference_server_name"/>
+    <string name="main_server_string"></string>
+    <string name="saved_server_main"/>
 
 </resources>

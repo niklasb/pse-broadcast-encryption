@@ -25,7 +25,8 @@
         android:hint="@string/hostname_hint"
         android:maxLines="1"
         android:maxWidth="250dp"
-        android:minWidth="250dp" >
+        android:minWidth="250dp"
+        android:text="@string/main_server_string" >
 
         <requestFocus />
     </EditText>
