@@ -1,0 +1,12 @@
+package cryptocast.crypto.test;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class TestLagrangeInterpolation {
+    @Test
+    public void test() {
+        fail("Not yet implemented");
+    }
+}

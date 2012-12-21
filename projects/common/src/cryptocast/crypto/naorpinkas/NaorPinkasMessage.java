@@ -4,7 +4,6 @@ import static cryptocast.util.ByteUtils.*;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import com.google.common.collect.ImmutableList;
 
@@ -17,7 +16,7 @@ public class NaorPinkasMessage implements Packable {
     private ImmutableList<NaorPinkasShare> shares;
     private ModularExponentiationGroup group;
     int t;
-    
+
     public NaorPinkasMessage(int t, BigInteger r, BigInteger xor, 
                              ModularExponentiationGroup group,
                              ImmutableList<NaorPinkasShare> shares) {
@@ -27,11 +26,11 @@ public class NaorPinkasMessage implements Packable {
         this.group = group;
         this.shares = shares;
     }
-    
+
     public BigInteger getXor() { return xor; }
     public BigInteger getR() { return xor; }
     public ImmutableList<NaorPinkasShare> getShares() { return shares; }
-    
+
     public int getMaxSpace() {
         return 4 + 2 * group.getMaxNumberSpace() 
                  + group.getMaxSpace() 
@@ -47,7 +46,7 @@ public class NaorPinkasMessage implements Packable {
             share.pack(buf);
         }
     }
-    
+
     public static NaorPinkasMessage unpack(ByteBuffer buf) {
         int t = buf.getInt();
         BigInteger r = getBigInt(buf),

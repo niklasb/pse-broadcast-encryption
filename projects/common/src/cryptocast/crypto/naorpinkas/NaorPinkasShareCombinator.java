@@ -31,7 +31,7 @@ public class NaorPinkasShareCombinator implements ShareCombinator<BigInteger, Na
         BigInteger[] xs = new BigInteger[sharesCopy.size()];
         int i = 0;
         for (NaorPinkasShare share : sharesCopy) {
-            xs[i] = share.i;
+            xs[i] = share.getI();
             if (i > 0 && xs[i] == xs[i-1]) {
                 // redundant information
                 return Optional.absent();
@@ -42,7 +42,7 @@ public class NaorPinkasShareCombinator implements ShareCombinator<BigInteger, Na
         BigInteger res = group.one();
         i = 0;
         for (NaorPinkasShare share : sharesCopy) {
-            res = group.multiply(res, group.pow(share.x, lambdas[i]));
+            res = group.multiply(res, group.pow(share.getGRPI(), lambdas[i]));
             i++;
         }
         return Optional.of(res);

@@ -102,6 +102,7 @@ public class NaorPinkasServer
         // first t users are dummies
         return keyGen.get(t + i);
     }
+
     private NaorPinkasPersonalKey getDummyKey(int i) {
         return keyGen.get(i);
     }

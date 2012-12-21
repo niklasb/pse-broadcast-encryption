@@ -14,18 +14,21 @@ import static cryptocast.util.ByteUtils.*;
  */
 public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
     protected int t;
-    protected BigInteger r, i, x;
+    protected BigInteger r, i, grpi;
     protected ModularExponentiationGroup group;
 
-    protected NaorPinkasShare(int t, BigInteger r, BigInteger i, BigInteger x,
-                              ModularExponentiationGroup group) {
+    public NaorPinkasShare(int t, BigInteger r, BigInteger i, BigInteger grpi,
+                           ModularExponentiationGroup group) {
         this.t = t;
         this.r = r;
         this.i = i;
-        this.x = x;
+        this.grpi = grpi;
         this.group = group;
     }
     
+    public BigInteger getI() { return i; }
+    public BigInteger getGRPI() { return grpi; }
+
     @Override
     public int compareTo(NaorPinkasShare other) {
         return i.compareTo(other.i);
@@ -39,15 +42,26 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
     @Override
     public void pack(ByteBuffer buf) {
         putBigInt(buf, i);
-        putBigInt(buf, x);
+        putBigInt(buf, grpi);
     }
-    
+
     public static NaorPinkasShare unpack(int t, 
                                          BigInteger r, 
                                          ModularExponentiationGroup group,
                                          ByteBuffer buf) {
         BigInteger i = getBigInt(buf),
-                   x = getBigInt(buf);
-        return new NaorPinkasShare(t, r, i, x, group);
+                   grpi = getBigInt(buf);
+        return new NaorPinkasShare(t, r, i, grpi, group);
+    }
+    
+    @Override
+    public boolean equals(Object other_) {
+        if (other_ == null || other_.getClass() != getClass()) { return false; }
+        NaorPinkasShare other = (NaorPinkasShare)other_;
+        return t == other.t 
+            && r.equals(other.r) 
+            && i.equals(other.i)
+            && grpi.equals(other.grpi)
+            && group.equals(other.group);
     }
 }

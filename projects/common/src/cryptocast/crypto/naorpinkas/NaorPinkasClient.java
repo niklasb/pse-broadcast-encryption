@@ -1,10 +1,9 @@
 package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
+import cryptocast.util.ByteUtils;
 
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +32,9 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
       * @return The decrypted secret
       */
     public byte[] decrypt(byte[] cipher) throws InsufficientInformationError {
-        ByteBuffer buf = ByteBuffer.wrap(cipher);
-        buf.order(ByteOrder.BIG_ENDIAN);
-        NaorPinkasMessage msg = NaorPinkasMessage.unpack(buf);
+        NaorPinkasMessage msg = NaorPinkasMessage.unpack(
+                ByteUtils.startUnpack(cipher));
+        // make a mutable copy, so we can add our own share
         List<NaorPinkasShare> shares = new ArrayList<NaorPinkasShare>(msg.getShares());
         shares.add(key.getShare(msg.getR()));
         Optional<BigInteger> mInterpol = combinator.restore(shares);

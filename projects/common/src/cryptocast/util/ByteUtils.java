@@ -35,4 +35,10 @@ public class ByteUtils {
         System.arraycopy(buf.array(), 0, result, 0, result.length);
         return result;
     }
+    
+    public static ByteBuffer startUnpack(byte[] data) {
+        ByteBuffer buf = ByteBuffer.wrap(data);
+        buf.order(ByteOrder.BIG_ENDIAN);
+        return buf;
+    }
 }

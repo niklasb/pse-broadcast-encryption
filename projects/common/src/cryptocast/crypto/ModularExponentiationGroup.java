@@ -27,7 +27,8 @@ public class ModularExponentiationGroup extends IntegersModuloPrime
 
     public int getMaxNumberSpace() {
         // round up to next int: (a + b - 1) / b = ceil(a / b)
-        return (getP().bitCount() + 7) / 8;
+        // also add 4 bytes for size information and 1 byte for the sign bit
+        return 4 + 1 + (getP().bitLength() + 7) / 8;
     }
 
     @Override
