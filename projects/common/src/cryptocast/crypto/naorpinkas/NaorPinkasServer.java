@@ -3,6 +3,7 @@ package cryptocast.crypto.naorpinkas;
 import cryptocast.crypto.*;
 import cryptocast.util.Generator;
 import cryptocast.util.OptimisticGenerator;
+import cryptocast.util.Packable;
 import static cryptocast.util.ByteUtils.*;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -71,34 +73,20 @@ public class NaorPinkasServer
         // representation of a number
         BigInteger x = new BigInteger(1, secret);
         checkArgument(x.compareTo(group.getP()) < 0, "Secret is too large to encrypt");
-        NaorPinkasPersonalKey[] keys = new NaorPinkasPersonalKey[t];
-        int i = 0;
-        int dummies = t - revokedUsers.size();
-        while (i < dummies) {
-            keys[i++] = getDummyKey(i);
-        }
-        for (NaorPinkasIdentity id : revokedUsers) {
-            keys[i++] = getPersonalKey(id).get();
-        }
         BigInteger r = group.randomElement(rnd),
                    grp0 = group.pow(gp0, r), // g^{r P(0)}
                    xor = grp0.xor(x);
-        return buildMessage(r, xor, keys);
-    }
-
-    private byte[] buildMessage(BigInteger r, BigInteger xor, 
-            NaorPinkasPersonalKey[] keys) {
-        ByteBuffer msg = ByteBuffer.allocate((keys.length + 2)* 0x4000);
-        msg.order(ByteOrder.BIG_ENDIAN);
-        msg.putInt(t);
-        putBigInt(msg, r);
-        putBigInt(msg, xor);
-        putBigInt(msg, group.getP());
-        putBigInt(msg, group.getG());
-        for (NaorPinkasPersonalKey key : keys) {
-            key.getShare(r).pack(msg);
+        ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
+        int i = 0;
+        int dummies = t - revokedUsers.size();
+        while (i < dummies) {
+            shares.add(getDummyKey(i).getShare(r));
         }
-        return partialBufferToBytes(msg);
+        for (NaorPinkasIdentity id : revokedUsers) {
+            shares.add(getPersonalKey(id).get().getShare(r));
+        }
+        Packable msg = new NaorPinkasMessage(t, r, xor, group, shares.build());
+        return pack(msg);
     }
 
     /**

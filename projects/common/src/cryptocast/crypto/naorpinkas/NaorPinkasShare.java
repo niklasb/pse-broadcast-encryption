@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 import cryptocast.crypto.ModularExponentiationGroup;
+import cryptocast.util.Packable;
 import static cryptocast.util.ByteUtils.*;
 
 /**
@@ -11,7 +12,7 @@ import static cryptocast.util.ByteUtils.*;
  * $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
  * value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$.
  */
-public class NaorPinkasShare implements Comparable<NaorPinkasShare> {
+public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
     protected int t;
     protected BigInteger r, i, x;
     protected ModularExponentiationGroup group;
@@ -29,18 +30,24 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare> {
     public int compareTo(NaorPinkasShare other) {
         return i.compareTo(other.i);
     }
-    
-    public static NaorPinkasShare unpack(int t, 
-                                        BigInteger r, 
-                                        ModularExponentiationGroup group,
-                                        ByteBuffer buf) {
-        BigInteger i = getBigInt(buf),
-                   x = getBigInt(buf);
-        return new NaorPinkasShare(t, r, i, x, group);
+
+    @Override
+    public int getMaxSpace() {
+        return 2 * group.getMaxNumberSpace();
     }
 
+    @Override
     public void pack(ByteBuffer buf) {
         putBigInt(buf, i);
         putBigInt(buf, x);
+    }
+    
+    public static NaorPinkasShare unpack(int t, 
+                                         BigInteger r, 
+                                         ModularExponentiationGroup group,
+                                         ByteBuffer buf) {
+        BigInteger i = getBigInt(buf),
+                   x = getBigInt(buf);
+        return new NaorPinkasShare(t, r, i, x, group);
     }
 }

@@ -2,6 +2,7 @@ package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,10 +26,11 @@ public class NaorPinkasShareCombinator implements ShareCombinator<BigInteger, Na
             // missing information
             return Optional.absent();
         }
-        Collections.sort(shares);
-        BigInteger[] xs = new BigInteger[shares.size()];
+        List<NaorPinkasShare> sharesCopy = new ArrayList<NaorPinkasShare>(shares);
+        Collections.sort(sharesCopy);
+        BigInteger[] xs = new BigInteger[sharesCopy.size()];
         int i = 0;
-        for (NaorPinkasShare share : shares) {
+        for (NaorPinkasShare share : sharesCopy) {
             xs[i] = share.i;
             if (i > 0 && xs[i] == xs[i-1]) {
                 // redundant information
@@ -39,7 +41,7 @@ public class NaorPinkasShareCombinator implements ShareCombinator<BigInteger, Na
         BigInteger[] lambdas = LagrangeInterpolation.computeCoefficients(group, xs);
         BigInteger res = group.one();
         i = 0;
-        for (NaorPinkasShare share : shares) {
+        for (NaorPinkasShare share : sharesCopy) {
             res = group.multiply(res, group.pow(share.x, lambdas[i]));
             i++;
         }

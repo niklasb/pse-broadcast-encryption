@@ -3,6 +3,7 @@ package cryptocast.util;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class ByteUtils {
     public static byte[] str2bytes(String str) {
@@ -26,7 +27,10 @@ public class ByteUtils {
         buf.put(bytes);
     }
     
-    public static byte[] partialBufferToBytes(ByteBuffer buf) {
+    public static byte[] pack(Packable p) {
+        ByteBuffer buf = ByteBuffer.allocate(p.getMaxSpace());
+        buf.order(ByteOrder.BIG_ENDIAN);
+        p.pack(buf);
         byte[] result = new byte[buf.position()];
         System.arraycopy(buf.array(), 0, result, 0, result.length);
         return result;

@@ -1,8 +1,13 @@
 package cryptocast.crypto;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
-public class ModularExponentiationGroup extends IntegersModuloPrime {
+import static cryptocast.util.ByteUtils.*;
+import cryptocast.util.Packable;
+
+public class ModularExponentiationGroup extends IntegersModuloPrime 
+                                        implements Packable {
     BigInteger g;
 
     public ModularExponentiationGroup(BigInteger g, BigInteger p) {
@@ -20,6 +25,28 @@ public class ModularExponentiationGroup extends IntegersModuloPrime {
         return pow(g, k);
     }
 
+    public int getMaxNumberSpace() {
+        // round up to next int: (a + b - 1) / b = ceil(a / b)
+        return (getP().bitCount() + 7) / 8;
+    }
+
+    @Override
+    public int getMaxSpace() {
+        return 2 * getMaxNumberSpace();
+    }
+    
+    @Override
+    public void pack(ByteBuffer buf) {
+        putBigInt(buf, getP());
+        putBigInt(buf, g);
+    }
+
+    public static ModularExponentiationGroup unpack(ByteBuffer buf) {
+        BigInteger p = getBigInt(buf),
+                   g = getBigInt(buf);
+        return new ModularExponentiationGroup(p, g);
+    }
+    
     /**
      * Initializes a 1024-bit Diffie-Hellman MODP group
      * with a 160-bit prime order subgroup.
