@@ -1,6 +1,8 @@
 package cryptocast.client;
 
 import android.support.v4.app.FragmentActivity;
+import android.view.MenuItem;
+import android.view.View;
 
  /**
  * This class represents the activity to connect to the server.
@@ -22,6 +24,7 @@ public class MainActivity extends FragmentActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
     }
 
     /**

@@ -40,6 +40,7 @@ public class StreamViewerActivity extends FragmentActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
     }
 
     /**

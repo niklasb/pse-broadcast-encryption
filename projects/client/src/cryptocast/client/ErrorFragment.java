@@ -17,6 +17,7 @@ public class ErrorFragment extends DialogFragment {
      * @param message Error message describing the error which occured before this fragment pops up.
      */
     public ErrorFragment(String message) {
+        //oder methode setMessage
         super();
         this.message = message;
     }
@@ -24,17 +25,17 @@ public class ErrorFragment extends DialogFragment {
     /** @return The error message */
     public String getMessage() { return message; }
 
-//    @Override
-//    public Dialog onCreateDialog(Bundle savedInstanceState) {
-//        // Use the Builder class for convenient dialog construction
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setMessage(message)
-//            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-//                   public void onClick(DialogInterface dialog, int id) {
-//                       // do sth when ok
-//                   }
-//               });
-//        // Create the AlertDialog object and return it
-//        return builder.create();
-//    }
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Use the Builder class for convenient dialog construction
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int id) {
+                       // do sth when ok
+                   }
+               });
+        // Create the AlertDialog object and return it
+        return builder.create();
+    }
 }

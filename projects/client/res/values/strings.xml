@@ -9,5 +9,6 @@
     <string name="title_activity_options">OptionsActivity</string>
     <string name="wifi_mode">WIFI data only</string>
     <string name="traffic_overview">Traffic overview</string>
+    <string name="ok">Ok</string>
 
 </resources>

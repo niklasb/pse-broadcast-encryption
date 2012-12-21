@@ -1,4 +1,4 @@
-package cryptocast.client.fileChooser;
+package cryptocast.client.filechooser;
 
 import java.util.List;
 import android.content.Context;
@@ -17,6 +17,7 @@ public class FileArrayAdapter extends ArrayAdapter<ListElement> {
      * @param objects List with all elements which will be shown by the view.
      */
     public FileArrayAdapter(Context context, int textViewResourceId, List<ListElement> objects) {
+        super(context, textViewResourceId, objects);
     }
 
     /**
@@ -24,6 +25,7 @@ public class FileArrayAdapter extends ArrayAdapter<ListElement> {
      * @return The list element at the given position in the list.
      */
     public ListElement getItem(int position) {
+        return null;
     }
 
     /**
@@ -34,5 +36,6 @@ public class FileArrayAdapter extends ArrayAdapter<ListElement> {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        return parent;
     }
 }

@@ -1,4 +1,11 @@
-package cryptocast.client.fileChooser;
+package cryptocast.client.filechooser;
+
+import java.io.File;
+
+import android.app.ListActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 
 /**
  * An UI element that allows the user to browse the files and folders of the SD card and
@@ -24,5 +31,9 @@ public abstract class FileChooser extends ListActivity {
 
     private void fill(File f) {
     }
-    private abstract void onFileClick(ListElement o);
+    
+    /** Called when the user clicks a file in the list.
+     * @param item The clicked list item.
+     */
+    protected abstract void onFileClick(FileListElement o);
 }
