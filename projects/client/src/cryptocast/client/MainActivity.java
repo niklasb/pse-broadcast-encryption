@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
  /**
  * This class represents the activity to connect to the server.
@@ -20,23 +23,36 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //loading last server name from shared preference
-        SharedPreferences sharedPref = getSharedPreferences(
-                getString(R.string.preference_server_name), Context.MODE_PRIVATE);
-        String serverName = getString(R.string.main_server_string);
-        serverName = sharedPref.getString(getString(R.string.saved_server_main), "");
-        
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);  
     }
     
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //saving last server name from shared prefernce
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+    protected void onResume() {
+        super.onResume();
+        
+        //loading last server name from shared preference
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_server_name), Context.MODE_PRIVATE);
+        //TODO
+        String serverName = sharedPref.getString(getString(R.string.saved_server_main), "");
+        //write server to textView
+        TextView tv1 = (TextView) findViewById(R.id.editText1);
+        tv1.setText(serverName); 
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        //get last server name
+        TextView tv1 = (TextView) findViewById(R.id.editText1);
+        String serverName =  tv1.getText().toString();
+        //saving last server name to shared preference
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_server_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.saved_server_main),
-                getString(R.string.main_server_string));
+                serverName);
         editor.commit();
     }
     
@@ -46,13 +62,20 @@ public class MainActivity extends FragmentActivity {
      */
     public void connectToServer(View view) {
     }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_main, menu);
+        return true;
+    }
 
     /** Handles a click on the main menu.
      * @param item The clicked item
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return false;
+        return true;
     }
 
     /**
