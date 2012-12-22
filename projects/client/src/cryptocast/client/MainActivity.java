@@ -1,6 +1,7 @@
 package cryptocast.client;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -75,7 +76,16 @@ public class MainActivity extends FragmentActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return true;
+        // Handle menu item click
+        switch (item.getItemId()) {
+            case R.id.itemOptions:
+                Intent intent = new Intent(this, OptionsActivity.class);
+                startActivity(intent);
+                return true;
+            
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
