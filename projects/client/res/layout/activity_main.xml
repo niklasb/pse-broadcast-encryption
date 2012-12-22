@@ -23,6 +23,7 @@
         android:layout_x="40dp"
         android:layout_y="278dp"
         android:hint="@string/hostname_hint"
+        android:lines="1"
         android:maxLines="1"
         android:maxWidth="250dp"
         android:minWidth="250dp" >

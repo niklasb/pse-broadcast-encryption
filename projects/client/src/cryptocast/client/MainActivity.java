@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
  /**
@@ -24,7 +25,14 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);  
+        setContentView(R.layout.activity_main);
+        
+        final Button connectButton = (Button) findViewById(R.id.button1);
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // TODO action on click
+            }
+        });
     }
     
     @Override
