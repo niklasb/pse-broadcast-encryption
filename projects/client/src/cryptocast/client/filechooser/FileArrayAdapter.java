@@ -1,8 +1,12 @@
 package cryptocast.client.filechooser;
 
 import java.util.List;
+
+import cryptocast.client.R;
+
 import android.content.Context;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,11 +50,23 @@ public class FileArrayAdapter extends ArrayAdapter<ListElement> {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /*if (convertView == null) {
-            LayoutInflater vi = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(id, null);
+        if (convertView == null) {
+            LayoutInflater vi = 
+                    (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = vi.inflate(textViewResourceId, null);
         }
-        */
+        
+        ListElement elem = elements.get(position);
+        if (elem != null) {
+            TextView t1 = (TextView) convertView.findViewById(R.id.textView1);
+            TextView t2 = (TextView) convertView.findViewById(R.id.textView2);
+            
+            if(t1!=null)
+             t1.setText(elem.getPath().getName());
+            if(t2!=null)
+             t2.setText(elem.getPath().getName());
+    }
+        
         return parent;
     }
 }

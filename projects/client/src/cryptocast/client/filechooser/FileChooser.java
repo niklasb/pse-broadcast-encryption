@@ -2,6 +2,9 @@ package cryptocast.client.filechooser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+
+import cryptocast.client.R;
 
 import android.app.ListActivity;
 import android.os.Bundle;
@@ -40,8 +43,8 @@ public abstract class FileChooser extends ListActivity {
     private void updateItems(File curDir) {
         this.setTitle("Directory: " + curDir.getName());
         File[] data =  curDir.listFiles();
-        ArrayList<DirectoryListElement> folders = new ArrayList<DirectoryListElement>();
-        ArrayList<FileListElement> files = new ArrayList<FileListElement>();
+        List<ListElement> folders = new ArrayList<ListElement>();
+        List<ListElement> files = new ArrayList<ListElement>();
         
         for (File file : data) {
             if (file.isDirectory()) {
@@ -50,6 +53,11 @@ public abstract class FileChooser extends ListActivity {
                 files.add(new FileListElement(file));
             }
         }
+        
+        
+        FileArrayAdapter adapter = 
+                new FileArrayAdapter(FileChooser.this,R.layout.filechooser, folders);
+        this.setListAdapter(adapter);
     }
     
     /** Called when the user clicks a file in the list.
