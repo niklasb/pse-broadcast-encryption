@@ -14,18 +14,18 @@ import cryptocast.util.Generator;
 public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey> {
     private int t;
     private SecureRandom rnd;
-    private SchnorrGroup group;
+    private SchnorrGroup schnorr;
     private Polynomial<BigInteger> poly;
     private Map<NaorPinkasIdentity, NaorPinkasPersonalKey> keyByIdentity =
                new HashMap<NaorPinkasIdentity, NaorPinkasPersonalKey>();
     
     public NaorPinkasKeyGenerator(int t,
                                   SecureRandom rnd, 
-                                  SchnorrGroup group, 
+                                  SchnorrGroup schnorr, 
                                   Polynomial<BigInteger> poly) {
         this.t = t;
         this.rnd = rnd;
-        this.group = group;
+        this.schnorr = schnorr;
         this.poly = poly;
     }
 
@@ -33,7 +33,7 @@ public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey> {
     public NaorPinkasPersonalKey get(int i) {
         BigInteger x = poly.getField().randomElement(rnd),
                    y = poly.evaluate(x);
-        NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, x, y, group);
+        NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, x, y, schnorr);
         addKey(key);
         return key;
     }
@@ -48,7 +48,7 @@ public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey> {
         BigInteger[] ys = poly.evaluateMulti(xs);
         ImmutableList.Builder<NaorPinkasPersonalKey> keys = ImmutableList.builder();
         for (int i = 0; i < len; ++i) {
-            NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, xs[i], ys[i], group);
+            NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, xs[i], ys[i], schnorr);
             keys.add(key);
             addKey(key);
         }

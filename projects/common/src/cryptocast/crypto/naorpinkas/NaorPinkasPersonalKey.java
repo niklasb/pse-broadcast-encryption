@@ -15,19 +15,19 @@ public class NaorPinkasPersonalKey implements PrivateKey {
 
     protected int t;
     protected BigInteger i, pi;
-    protected SchnorrGroup group;
+    protected SchnorrGroup schnorr;
 
     protected NaorPinkasPersonalKey(int t, BigInteger i, BigInteger pi, 
-                                    SchnorrGroup group) {
+                                    SchnorrGroup schnorr) {
         this.t = t;
         this.i = i;
         this.pi = pi;
-        this.group = group;
+        this.schnorr = schnorr;
     }
 
     public NaorPinkasShare getShare(BigInteger r) {
-        BigInteger x = group.pow(group.getPowerOfG(pi), r);
-        return new NaorPinkasShare(t, r, i, x, group);
+        BigInteger x = schnorr.getFieldModP().pow(schnorr.getPowerOfG(pi), r);
+        return new NaorPinkasShare(t, r, i, x, schnorr);
     }
 
     public NaorPinkasIdentity getIdentity() {
