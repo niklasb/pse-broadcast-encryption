@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 
 import cryptocast.crypto.*;
 import cryptocast.util.Generator;
@@ -13,18 +14,18 @@ import cryptocast.util.Generator;
 public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey> {
     private int t;
     private SecureRandom rnd;
-    private ModularExponentiationGroup group;
+    private SchnorrGroup schnorr;
     private Polynomial<BigInteger> poly;
     private Map<NaorPinkasIdentity, NaorPinkasPersonalKey> keyByIdentity =
                new HashMap<NaorPinkasIdentity, NaorPinkasPersonalKey>();
     
     public NaorPinkasKeyGenerator(int t,
                                   SecureRandom rnd, 
-                                  ModularExponentiationGroup group, 
+                                  SchnorrGroup schnorr, 
                                   Polynomial<BigInteger> poly) {
         this.t = t;
         this.rnd = rnd;
-        this.group = group;
+        this.schnorr = schnorr;
         this.poly = poly;
     }
 
@@ -32,25 +33,26 @@ public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey> {
     public NaorPinkasPersonalKey get(int i) {
         BigInteger x = poly.getField().randomElement(rnd),
                    y = poly.evaluate(x);
-        NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, x, y, group);
+        NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, x, y, schnorr);
         addKey(key);
         return key;
     }
 
     @Override
-    public NaorPinkasPersonalKey[] getRange(int a, int b) {
+    public ImmutableList<NaorPinkasPersonalKey> getRange(int a, int b) {
         BigInteger[] xs = new BigInteger[b - a];
         int len = xs.length;
         for (int i = 0; i < len; ++i) {
             xs[i] = poly.getField().randomElement(rnd);
         }
         BigInteger[] ys = poly.evaluateMulti(xs);
-        NaorPinkasPersonalKey[] keys = new NaorPinkasPersonalKey[len];
+        ImmutableList.Builder<NaorPinkasPersonalKey> keys = ImmutableList.builder();
         for (int i = 0; i < len; ++i) {
-            keys[i] = new NaorPinkasPersonalKey(t, xs[i], ys[i], group);
-            addKey(keys[i]);
+            NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, xs[i], ys[i], schnorr);
+            keys.add(key);
+            addKey(key);
         }
-        return keys;
+        return keys.build();
     }
     
     public Optional<NaorPinkasPersonalKey> getKey(NaorPinkasIdentity id) {

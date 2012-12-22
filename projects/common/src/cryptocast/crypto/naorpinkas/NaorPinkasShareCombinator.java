@@ -21,28 +21,32 @@ public class NaorPinkasShareCombinator implements ShareCombinator<BigInteger, Na
     @Override
     public Optional<BigInteger> restore(List<NaorPinkasShare> shares) {
         int t = shares.get(0).t;
-        ModularExponentiationGroup group = shares.get(0).group;
-        if (shares.size() != t + 1) {
+        SchnorrGroup schnorr = shares.get(0).group;
+        if (shares.size() < t + 1) {
             // missing information
+            System.out.println("test1");
             return Optional.absent();
         }
         List<NaorPinkasShare> sharesCopy = new ArrayList<NaorPinkasShare>(shares);
         Collections.sort(sharesCopy);
-        BigInteger[] xs = new BigInteger[sharesCopy.size()];
+        BigInteger[] xs = new BigInteger[t + 1];
         int i = 0;
         for (NaorPinkasShare share : sharesCopy) {
+            if (i >= t + 1) { break; }
             xs[i] = share.getI();
-            if (i > 0 && xs[i] == xs[i-1]) {
+            if (i > 0 && xs[i].equals(xs[i-1])) {
                 // redundant information
                 return Optional.absent();
             }
             i++;
         }
-        BigInteger[] lambdas = LagrangeInterpolation.computeCoefficients(group, xs);
-        BigInteger res = group.one();
+        Field<BigInteger> modQ = schnorr.getFieldModQ(),
+                          modP = schnorr.getFieldModP();
+        BigInteger[] lambdas = LagrangeInterpolation.computeCoefficients(modQ, xs);
+        BigInteger res = modP.one();
         i = 0;
         for (NaorPinkasShare share : sharesCopy) {
-            res = group.multiply(res, group.pow(share.getGRPI(), lambdas[i]));
+            res = modP.multiply(res, modP.pow(share.getGRPI(), lambdas[i]));
             i++;
         }
         return Optional.of(res);

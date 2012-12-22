@@ -3,6 +3,8 @@ package cryptocast.util;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.google.common.collect.ImmutableList;
+
 public class OptimisticGenerator<T> extends Generator<T> implements Serializable {
     private static final long serialVersionUID = -544402880183253672L;
     
@@ -20,17 +22,16 @@ public class OptimisticGenerator<T> extends Generator<T> implements Serializable
     }
     
     @Override
-    @SuppressWarnings("unchecked")
-    public T[] getRange(int a, int b) {
+    public ImmutableList<T> getRange(int a, int b) {
         if (a == b) { 
-            return (T[])new Object[0];
+            return ImmutableList.<T>builder().build();
         }
         extend(b);
-        T[] result = (T[])new Object[b - a];
+        ImmutableList.Builder<T> result = ImmutableList.builder();
         for (int i = 0; i < b - a; ++i) {
-            result[i] = values.get(a + i);
+            result.add(values.get(a + i));
         }
-        return result;
+        return result.build();
     }
     
     private void extend(int minLen) {

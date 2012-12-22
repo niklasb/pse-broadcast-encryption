@@ -4,13 +4,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import cryptocast.crypto.ModularExponentiationGroup;
+import cryptocast.crypto.SchnorrGroup;
 
 public class TestModularExponentiationGroup {
     @Test
     public void equalsWorks() {
-        ModularExponentiationGroup g1 = ModularExponentiationGroup.getP1024Q160();
-        ModularExponentiationGroup g2 = ModularExponentiationGroup.getP1024Q160();
+        SchnorrGroup g1 = SchnorrGroup.getP1024Q160();
+        SchnorrGroup g2 = SchnorrGroup.getP1024Q160();
         assertEquals(g1, g2);
     }
 }

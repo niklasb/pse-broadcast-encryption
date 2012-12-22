@@ -5,6 +5,8 @@ import static org.mockito.Mockito.*;
 import org.mockito.Mockito;
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableList;
+
 import cryptocast.util.Generator;
 
 public class TestGenerator {
@@ -19,8 +21,8 @@ public class TestGenerator {
 		doReturn(2).when(gen).get(3);
 		doReturn(1).when(gen).get(4);
 		doReturn(0).when(gen).get(5);
-		assertArrayEquals(new Integer[] { 4, 3, 2 }, 
-		                  gen.getRange(1, 4));
+		assertEquals(ImmutableList.builder().add(4, 3, 2).build(),
+		             gen.getRange(1, 4));
 	}
 
 }

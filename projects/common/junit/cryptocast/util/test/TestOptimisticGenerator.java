@@ -8,6 +8,8 @@ import static org.mockito.Mockito.*;
 
 import org.mockito.Mockito;
 
+import com.google.common.collect.ImmutableList;
+
 import cryptocast.util.*;
 
 public class TestOptimisticGenerator {
@@ -34,8 +36,8 @@ public class TestOptimisticGenerator {
 
     @Test
     public void getRangeWorks() {
-        assertArrayEquals(new Integer[] { 1, 2, 3 }, 
-                          gen.getRange(1, 4));
+        assertEquals(ImmutableList.builder().add(1, 2, 3).build(),
+                     gen.getRange(1, 4));
     }
 
     @Test

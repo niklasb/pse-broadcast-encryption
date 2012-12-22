@@ -31,9 +31,9 @@ public class NaorPinkasServer
                  Serializable,
                  Encryptor<byte[]> {
     private static final long serialVersionUID = -6864326409385317975L;
-    
+
     private int t;
-    private ModularExponentiationGroup group;
+    private SchnorrGroup schnorr;
     private Map<NaorPinkasIdentity, NaorPinkasPersonalKey> userByIdentity =
                  new HashMap<NaorPinkasIdentity, NaorPinkasPersonalKey>();
     private Set<NaorPinkasIdentity> revokedUsers =
@@ -41,26 +41,27 @@ public class NaorPinkasServer
     private Generator<NaorPinkasPersonalKey> keyGen;
     private Polynomial<BigInteger> poly;
     private BigInteger gp0;  // $g^P(0)$
-    
+
     private static SecureRandom rnd = new SecureRandom();
 
-    private NaorPinkasServer(int t, ModularExponentiationGroup group,
+    private NaorPinkasServer(int t, SchnorrGroup schnorr,
                              Generator<NaorPinkasPersonalKey> keyGen,
                              Polynomial<BigInteger> poly) {
         this.t = t;
-        this.group = group;
+        this.schnorr = schnorr;
         this.keyGen = keyGen;
         this.poly = poly;
-        this.gp0 = group.getPowerOfG(poly.evaluate(BigInteger.ZERO));
+        this.gp0 = schnorr.getPowerOfG(poly.evaluate(BigInteger.ZERO));
     }
-    
-    public NaorPinkasServer generate(int t, ModularExponentiationGroup group) {
-        Polynomial<BigInteger> poly = Polynomial.createRandomPolynomial(rnd, group, t);
+
+    public NaorPinkasServer generate(int t, SchnorrGroup schnorr) {
+        Polynomial<BigInteger> poly = 
+                Polynomial.createRandomPolynomial(rnd, schnorr.getFieldModQ(), t);
         Generator<NaorPinkasPersonalKey> keyGen = 
                 new OptimisticGenerator<NaorPinkasPersonalKey>(
                         new NaorPinkasKeyGenerator(
-                                t, new SecureRandom(), group, poly));
-        return new NaorPinkasServer(t, group, keyGen, poly);
+                                t, new SecureRandom(), schnorr, poly));
+        return new NaorPinkasServer(t, schnorr, keyGen, poly);
     }
 
     /**
@@ -72,10 +73,10 @@ public class NaorPinkasServer
         // interpret bytes as the one's complement 
         // representation of a number
         BigInteger x = new BigInteger(1, secret);
-        checkArgument(x.compareTo(group.getP()) < 0, "Secret is too large to encrypt");
-        BigInteger r = group.randomElement(rnd),
-                   grp0 = group.pow(gp0, r), // g^{r P(0)}
+        BigInteger r = schnorr.getFieldModP().randomElement(rnd),
+                   grp0 = schnorr.getFieldModP().pow(gp0, r), // g^{r P(0)}
                    xor = grp0.xor(x);
+        checkArgument(xor.compareTo(schnorr.getP()) < 0, "Secret is too large to encrypt");
         ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
         int i = 0;
         int dummies = t - revokedUsers.size();
@@ -85,7 +86,7 @@ public class NaorPinkasServer
         for (NaorPinkasIdentity id : revokedUsers) {
             shares.add(getPersonalKey(id).get().getShare(r));
         }
-        Packable msg = new NaorPinkasMessage(t, r, xor, group, shares.build());
+        Packable msg = new NaorPinkasMessage(t, r, xor, schnorr, shares.build());
         return pack(msg);
     }
 

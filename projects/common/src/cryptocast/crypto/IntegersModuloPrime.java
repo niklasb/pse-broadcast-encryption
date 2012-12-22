@@ -8,7 +8,7 @@ import java.util.Random;
  */
 public class IntegersModuloPrime extends Field<BigInteger> {
     private BigInteger p;
-    
+   
     /**
      * Initializes the field.
      * @param p A prime number
@@ -22,36 +22,49 @@ public class IntegersModuloPrime extends Field<BigInteger> {
         return p;
     }
 
+    @Override
     public BigInteger add(BigInteger a, BigInteger b) {
         return a.add(b).mod(p);
     }
 
+    @Override
     public BigInteger multiply(BigInteger a, BigInteger b) {
         return a.multiply(b).mod(p);
     }
 
+    @Override
     public BigInteger negate(BigInteger a) {
         return a.negate().mod(p);
     }
-    
+
+    @Override
     public BigInteger invert(BigInteger a) throws ArithmeticException { 
         return a.modInverse(p);
     }
 
+    @Override
     public BigInteger zero() {
         return BigInteger.valueOf(0);
     }
 
+    @Override
     public BigInteger one() {
         return BigInteger.valueOf(1);
     }
 
+    @Override
     public BigInteger subtract(BigInteger a, BigInteger b) {
         return a.subtract(b).mod(p);
     }
-    
+
+    @Override
     public BigInteger pow(BigInteger a, BigInteger e) {
         return a.modPow(e, p);
+    }
+
+    @Override
+    public Class<BigInteger> getElementClass() {
+        return BigInteger.class;
     }
 
     @Override

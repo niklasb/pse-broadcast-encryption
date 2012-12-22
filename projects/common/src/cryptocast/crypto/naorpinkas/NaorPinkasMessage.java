@@ -14,11 +14,11 @@ public class NaorPinkasMessage implements Packable {
     private BigInteger xor;
     private BigInteger r;
     private ImmutableList<NaorPinkasShare> shares;
-    private ModularExponentiationGroup group;
+    private SchnorrGroup group;
     int t;
 
     public NaorPinkasMessage(int t, BigInteger r, BigInteger xor, 
-                             ModularExponentiationGroup group,
+                             SchnorrGroup group,
                              ImmutableList<NaorPinkasShare> shares) {
         this.t = t;
         this.r = r;
@@ -51,7 +51,7 @@ public class NaorPinkasMessage implements Packable {
         int t = buf.getInt();
         BigInteger r = getBigInt(buf),
                    xor = getBigInt(buf);
-        ModularExponentiationGroup group = ModularExponentiationGroup.unpack(buf);
+        SchnorrGroup group = SchnorrGroup.unpack(buf);
         ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
         for (int i = 0; i < t; ++i) {
             shares.add(NaorPinkasShare.unpack(t, r, group, buf));
