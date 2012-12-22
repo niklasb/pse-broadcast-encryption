@@ -4,7 +4,6 @@ import cryptocast.comm.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigInteger;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -23,8 +22,6 @@ public class BroadcastEncryptionServer<ID> extends OutputStream {
     private MessageOutChannel controlChannel;
     private OutputStream payloadStream;
     OutputCipherControl cipherControl;
-    
-    private static final int BUFSIZE = 4096 * 1024;
 
     /**
      * Initializes a broadcast encryption server.

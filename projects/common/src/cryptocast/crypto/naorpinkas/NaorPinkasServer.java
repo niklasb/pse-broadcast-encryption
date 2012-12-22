@@ -36,7 +36,6 @@ public class NaorPinkasServer
     private Set<NaorPinkasIdentity> revokedUsers =
                  new HashSet<NaorPinkasIdentity>();
     private Generator<NaorPinkasPersonalKey> keyGen;
-    private Polynomial<BigInteger> poly;
     private BigInteger gp0;  // $g^P(0)$
 
     private static SecureRandom rnd = new SecureRandom();
@@ -47,7 +46,6 @@ public class NaorPinkasServer
         this.t = t;
         this.schnorr = schnorr;
         this.keyGen = keyGen;
-        this.poly = poly;
         this.gp0 = schnorr.getPowerOfG(poly.evaluate(BigInteger.ZERO));
     }
 

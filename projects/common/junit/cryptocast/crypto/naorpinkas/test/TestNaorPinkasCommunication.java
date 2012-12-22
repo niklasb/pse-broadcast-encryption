@@ -10,7 +10,7 @@ import cryptocast.crypto.*;
 import cryptocast.crypto.naorpinkas.*;
 import static cryptocast.util.ByteUtils.str2bytes;
 
-public class TestNaorPinkasCommunication extends TestWithNaorPinkasContext {
+public class TestNaorPinkasCommunication extends WithNaorPinkasContext {
     private int t = 10;
     NaorPinkasServer server = NaorPinkasServer.generate(t, schnorr);
     NaorPinkasClient client = 

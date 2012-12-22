@@ -10,34 +10,6 @@ import org.junit.Test;
 import cryptocast.crypto.*;
 
 public class TestLagrangeInterpolation {
-//    @Test
-//    public void interpolationInExponentWorks() {
-//        ModularExponentiationGroup group = ModularExponentiationGroup.getP1024Q160();
-//        Polynomial<BigInteger> poly = makePolynomial(group, new int[] { 2, 3, 7, 11 });
-//        BigInteger[] xs = new BigInteger[] { 
-//                BigInteger.valueOf(123123123),
-//                BigInteger.valueOf(3),
-//                BigInteger.valueOf(21233312),
-//                BigInteger.valueOf(8888889)
-//        };
-//        BigInteger[] lambdas = LagrangeInterpolation.computeCoefficients(group, xs);
-//        ModularExponentiationGroup outerGroup = new ModularExponentiationGroup(
-//                group.getP().add(BigInteger.ONE), group.getG());
-//        
-//        BigInteger sum = group.zero();
-//        BigInteger prod = group.one();
-//        for (int i = 0; i < xs.length; ++i) {
-//            BigInteger e = lambdas[i].multiply(poly.evaluate(xs[i]));
-//            prod = prod.multiply(outerGroup.getPowerOfG(e));
-//            sum = sum.add(e);
-//        }
-//        
-//        BigInteger p0 = poly.evaluate(group.zero());
-//        BigInteger expected = group.getPowerOfG(p0);
-//        //assertEquals(expectedSum, actualSum);
-//        assertEquals(group.getPowerOfG(p0), prod.mod(group.getP()));
-//    }
-//    
     @Test
     public void interpolationInExponentWorks() {
         SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
@@ -88,8 +60,6 @@ public class TestLagrangeInterpolation {
 
     @Test
     public void randomTests() {
-        Field<BigInteger> field = SchnorrGroup.getP1024Q160().getFieldModP();
-        Random rnd = new Random();
         for (int i = 0; i < 10; ++i) {
             randomTest(10);
         }

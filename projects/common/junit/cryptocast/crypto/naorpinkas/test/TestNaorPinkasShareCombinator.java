@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 import cryptocast.crypto.*;
 import cryptocast.crypto.naorpinkas.*;
 
-public class TestNaorPinkasShareCombinator extends TestWithNaorPinkasContext {
+public class TestNaorPinkasShareCombinator extends WithNaorPinkasContext {
     
     @Test
     public void canRestoreSecretFromValidShares() {

@@ -12,7 +12,7 @@ import cryptocast.crypto.*;
 import cryptocast.crypto.naorpinkas.*;
 import cryptocast.util.ByteUtils;
 
-public class TestNaorPinkasMessage extends TestWithNaorPinkasContext {
+public class TestNaorPinkasMessage extends WithNaorPinkasContext {
     @Test
     public void packAndUnpackWorks() {
         Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 6, 123, 22 });

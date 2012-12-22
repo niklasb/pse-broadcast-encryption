@@ -1,11 +1,6 @@
 package cryptocast.crypto.naorpinkas.test;
 
-import static org.junit.Assert.*;
-
 import java.math.BigInteger;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import cryptocast.crypto.Field;
 import cryptocast.crypto.Polynomial;
@@ -13,7 +8,7 @@ import cryptocast.crypto.SchnorrGroup;
 import cryptocast.crypto.naorpinkas.NaorPinkasShare;
 import cryptocast.crypto.naorpinkas.NaorPinkasShareCombinator;
 
-public class TestWithNaorPinkasContext {
+public class WithNaorPinkasContext {
     protected SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
     protected Field<BigInteger> modQ = schnorr.getFieldModQ(),
                                 modP = schnorr.getFieldModP();

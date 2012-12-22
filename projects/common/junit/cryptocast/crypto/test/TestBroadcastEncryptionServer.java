@@ -3,7 +3,6 @@ package cryptocast.crypto.test;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
@@ -36,7 +35,6 @@ public class TestBroadcastEncryptionServer {
     }
 
     @Before
-    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         payloadStreamOut = new PipedOutputStream();

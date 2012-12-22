@@ -5,8 +5,6 @@ import cryptocast.comm.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.util.Collection;
 
 /**
  * The client side of a broadcast encryption scheme.

@@ -19,7 +19,6 @@ public class TestStreamMessageChannels {
 	        str2bytes("XXXXXX"),
 	        str2bytes("foobar")
 	    };
-	    byte[] buffer = new byte[4096];
         PipedOutputStream pipeOut = new PipedOutputStream();
         PipedInputStream pipeIn = new PipedInputStream(pipeOut);
 	    StreamMessageInChannel in = new StreamMessageInChannel(pipeIn);

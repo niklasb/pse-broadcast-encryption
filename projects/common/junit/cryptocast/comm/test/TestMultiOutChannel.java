@@ -11,7 +11,8 @@ import static cryptocast.util.ByteUtils.*;
 import cryptocast.comm.*;
 
 public class TestMultiOutChannel {
-    private MultiOutputStream sut;
+    private MultiOutputStream sut =
+                new MultiOutputStream(MultiOutputStream.ErrorHandling.THROW);;
     private ByteArrayOutputStream[] channels = {
             new ByteArrayOutputStream(),
             new ByteArrayOutputStream(),
@@ -20,7 +21,6 @@ public class TestMultiOutChannel {
     
     @Before
     public void setUp() {
-        sut = new MultiOutputStream(MultiOutputStream.ErrorHandling.THROW);
         for (OutputStream chan : channels) {
             sut.addChannel(chan);
         }
