@@ -14,7 +14,7 @@ public class TestNaorPinkasShare {
 	@Test
 	public void packAndUnpackWorks() {
 	    int t = 3;
-	    ModularExponentiationGroup group = ModularExponentiationGroup.getP1024Q160();
+	    SchnorrGroup group = SchnorrGroup.getP1024Q160();
 	    // use large numbers to verify that getMaxSpace() works
 	    BigInteger p = group.getP(),
 	               r = p.subtract(BigInteger.valueOf(1)),

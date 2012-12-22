@@ -8,6 +8,8 @@ import java.util.Random;
  * @param <T> The values we work on.
  */
 public abstract class Field<T> {
+    public abstract Class<T> getElementClass();
+
     /**
      * Adds two elements of the field.
      * @param a First element

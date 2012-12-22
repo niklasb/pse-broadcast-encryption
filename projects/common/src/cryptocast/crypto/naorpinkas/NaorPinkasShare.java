@@ -3,7 +3,7 @@ package cryptocast.crypto.naorpinkas;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
-import cryptocast.crypto.ModularExponentiationGroup;
+import cryptocast.crypto.SchnorrGroup;
 import cryptocast.util.Packable;
 import static cryptocast.util.ByteUtils.*;
 
@@ -15,10 +15,10 @@ import static cryptocast.util.ByteUtils.*;
 public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
     protected int t;
     protected BigInteger r, i, grpi;
-    protected ModularExponentiationGroup group;
+    protected SchnorrGroup group;
 
     public NaorPinkasShare(int t, BigInteger r, BigInteger i, BigInteger grpi,
-                           ModularExponentiationGroup group) {
+                           SchnorrGroup group) {
         this.t = t;
         this.r = r;
         this.i = i;
@@ -47,7 +47,7 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
 
     public static NaorPinkasShare unpack(int t, 
                                          BigInteger r, 
-                                         ModularExponentiationGroup group,
+                                         SchnorrGroup group,
                                          ByteBuffer buf) {
         BigInteger i = getBigInt(buf),
                    grpi = getBigInt(buf);

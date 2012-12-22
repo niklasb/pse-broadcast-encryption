@@ -1,6 +1,8 @@
 package cryptocast.crypto;
 
+import java.lang.reflect.Array;
 import java.util.Random;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * A polynomial $P$ over a field
@@ -86,16 +88,22 @@ public class Polynomial<T> {
      * @param <T> The type of the field's elements over which the random polynomial is formed.
      * @param rnd The source of randomness
      * @param field An instance of the field over which the polynomial is formed.
-     * @param degree The degree of the generated polynomial
+     * @param degree The degree of the generated polynomial (can be -1, see getDegree())
      * @return The generated polynomial
      */
     public static <T> Polynomial<T> createRandomPolynomial(Random rnd, Field<T> field, int degree) {
+        checkArgument(degree >= -1, "Degree must be >= -1, but is " + degree);
         // the cast is ugly, but okay here because we explicitely
         // initialize every element before accessing it again
         @SuppressWarnings("unchecked")
-        T[] coefficients = (T[])new Object[degree+1];
+        T[] coefficients = (T[])Array.newInstance(field.getElementClass(), degree + 1);
         for (int i = 0; i <= degree; ++i) {
             coefficients[i] = field.randomElement(rnd);
+        }
+        if (degree >= 0) {
+            do {
+                coefficients[degree] = field.randomElement(rnd);
+            } while (coefficients[degree].equals(field.zero()));
         }
         return new Polynomial<T>(field, coefficients);
     }

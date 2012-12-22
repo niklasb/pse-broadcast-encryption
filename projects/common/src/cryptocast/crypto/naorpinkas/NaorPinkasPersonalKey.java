@@ -3,7 +3,7 @@ package cryptocast.crypto.naorpinkas;
 import java.math.BigInteger;
 import java.security.PrivateKey;
 
-import cryptocast.crypto.ModularExponentiationGroup;
+import cryptocast.crypto.SchnorrGroup;
 
 /**
  * A user's personal key in the Naor-Pinkas broadcast encryption scheme.
@@ -15,10 +15,10 @@ public class NaorPinkasPersonalKey implements PrivateKey {
 
     protected int t;
     protected BigInteger i, pi;
-    protected ModularExponentiationGroup group;
+    protected SchnorrGroup group;
 
     protected NaorPinkasPersonalKey(int t, BigInteger i, BigInteger pi, 
-                                    ModularExponentiationGroup group) {
+                                    SchnorrGroup group) {
         this.t = t;
         this.i = i;
         this.pi = pi;

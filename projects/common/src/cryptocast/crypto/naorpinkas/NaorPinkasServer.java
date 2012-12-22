@@ -31,9 +31,9 @@ public class NaorPinkasServer
                  Serializable,
                  Encryptor<byte[]> {
     private static final long serialVersionUID = -6864326409385317975L;
-    
+
     private int t;
-    private ModularExponentiationGroup group;
+    private SchnorrGroup group;
     private Map<NaorPinkasIdentity, NaorPinkasPersonalKey> userByIdentity =
                  new HashMap<NaorPinkasIdentity, NaorPinkasPersonalKey>();
     private Set<NaorPinkasIdentity> revokedUsers =
@@ -41,10 +41,10 @@ public class NaorPinkasServer
     private Generator<NaorPinkasPersonalKey> keyGen;
     private Polynomial<BigInteger> poly;
     private BigInteger gp0;  // $g^P(0)$
-    
+
     private static SecureRandom rnd = new SecureRandom();
 
-    private NaorPinkasServer(int t, ModularExponentiationGroup group,
+    private NaorPinkasServer(int t, SchnorrGroup group,
                              Generator<NaorPinkasPersonalKey> keyGen,
                              Polynomial<BigInteger> poly) {
         this.t = t;
@@ -53,8 +53,8 @@ public class NaorPinkasServer
         this.poly = poly;
         this.gp0 = group.getPowerOfG(poly.evaluate(BigInteger.ZERO));
     }
-    
-    public NaorPinkasServer generate(int t, ModularExponentiationGroup group) {
+
+    public NaorPinkasServer generate(int t, SchnorrGroup group) {
         Polynomial<BigInteger> poly = Polynomial.createRandomPolynomial(rnd, group, t);
         Generator<NaorPinkasPersonalKey> keyGen = 
                 new OptimisticGenerator<NaorPinkasPersonalKey>(
