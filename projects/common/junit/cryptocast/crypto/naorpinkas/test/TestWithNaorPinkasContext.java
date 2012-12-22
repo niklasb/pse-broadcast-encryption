@@ -19,10 +19,6 @@ public class TestWithNaorPinkasContext {
                                 modP = schnorr.getFieldModP();
     protected NaorPinkasShareCombinator combi = new NaorPinkasShareCombinator();
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
     protected NaorPinkasShare makeShare(Polynomial<BigInteger> poly, BigInteger r, int xi) {
         BigInteger x = BigInteger.valueOf(xi);
         return new NaorPinkasShare(poly.getDegree(), r, x, 

@@ -12,7 +12,9 @@ public class NaorPinkasIdentity {
         this.i = i;
     }
 
-    protected BigInteger getI() { return i; }
+    protected BigInteger getI() { 
+        return i; 
+    }
     
     @Override
     public int hashCode() {
