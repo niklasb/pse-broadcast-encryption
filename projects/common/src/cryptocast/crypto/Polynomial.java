@@ -59,7 +59,7 @@ public class Polynomial<T> {
      */
     public T[] evaluateMulti(T[] xs) {
         @SuppressWarnings("unchecked")
-        T[] result = (T[])new Object[xs.length];
+        T[] result = (T[])Array.newInstance(field.getElementClass(), xs.length);
         for (int i = 0, len = xs.length; i < len; ++i) {
             result[i] = evaluate(xs[i]);
         }

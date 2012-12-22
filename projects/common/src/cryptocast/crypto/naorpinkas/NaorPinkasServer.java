@@ -3,13 +3,10 @@ package cryptocast.crypto.naorpinkas;
 import cryptocast.crypto.*;
 import cryptocast.util.Generator;
 import cryptocast.util.OptimisticGenerator;
-import cryptocast.util.Packable;
-import static cryptocast.util.ByteUtils.*;
+import cryptocast.util.ByteUtils;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,7 +31,7 @@ public class NaorPinkasServer
 
     private int t;
     private SchnorrGroup schnorr;
-    private Map<NaorPinkasIdentity, NaorPinkasPersonalKey> userByIdentity =
+    private Map<NaorPinkasIdentity, NaorPinkasPersonalKey> keyByIdentity =
                  new HashMap<NaorPinkasIdentity, NaorPinkasPersonalKey>();
     private Set<NaorPinkasIdentity> revokedUsers =
                  new HashSet<NaorPinkasIdentity>();
@@ -54,7 +51,7 @@ public class NaorPinkasServer
         this.gp0 = schnorr.getPowerOfG(poly.evaluate(BigInteger.ZERO));
     }
 
-    public NaorPinkasServer generate(int t, SchnorrGroup schnorr) {
+    public static NaorPinkasServer generate(int t, SchnorrGroup schnorr) {
         Polynomial<BigInteger> poly = 
                 Polynomial.createRandomPolynomial(rnd, schnorr.getFieldModQ(), t);
         Generator<NaorPinkasPersonalKey> keyGen = 
@@ -70,24 +67,32 @@ public class NaorPinkasServer
      * @return The cipher text
      */
     public byte[] encrypt(byte[] secret) {
+        byte[] bytes = new byte[secret.length + 1];
+        bytes[0] = 0x01;
+        System.arraycopy(secret, 0, bytes, 1, secret.length);
+        return ByteUtils.pack(encryptNumber(new BigInteger(bytes)));
+    }
+
+    public NaorPinkasMessage encryptNumber(BigInteger secret) {
         // interpret bytes as the one's complement 
         // representation of a number
-        BigInteger x = new BigInteger(1, secret);
         BigInteger r = schnorr.getFieldModP().randomElement(rnd),
                    grp0 = schnorr.getFieldModP().pow(gp0, r), // g^{r P(0)}
-                   xor = grp0.xor(x);
+                   xor = grp0.xor(secret);
+        System.out.printf("Server:\n  r = %s\n  grp0 = %s\n  xor = %s\n", r, grp0, xor);
         checkArgument(xor.compareTo(schnorr.getP()) < 0, "Secret is too large to encrypt");
         ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
         int i = 0;
         int dummies = t - revokedUsers.size();
         while (i < dummies) {
             shares.add(getDummyKey(i).getShare(r));
+            ++i;
         }
         for (NaorPinkasIdentity id : revokedUsers) {
             shares.add(getPersonalKey(id).get().getShare(r));
         }
-        Packable msg = new NaorPinkasMessage(t, r, xor, schnorr, shares.build());
-        return pack(msg);
+        System.out.println("Shares: " + shares.build().size());
+        return new NaorPinkasMessage(t, r, xor, schnorr, shares.build());
     }
 
     /**
@@ -101,7 +106,9 @@ public class NaorPinkasServer
 
     private NaorPinkasPersonalKey getUserKey(int i) {
         // first t users are dummies
-        return keyGen.get(t + i);
+        NaorPinkasPersonalKey key = keyGen.get(t + i);
+        keyByIdentity.put(key.getIdentity(), key);
+        return key;
     }
 
     private NaorPinkasPersonalKey getDummyKey(int i) {
@@ -133,6 +140,6 @@ public class NaorPinkasServer
      * such user exists
      */
     public Optional<NaorPinkasPersonalKey> getPersonalKey(NaorPinkasIdentity id) {
-        return Optional.fromNullable(userByIdentity.get(id));
+        return Optional.fromNullable(keyByIdentity.get(id));
     }
 }

@@ -14,26 +14,26 @@ public class NaorPinkasMessage implements Packable {
     private BigInteger xor;
     private BigInteger r;
     private ImmutableList<NaorPinkasShare> shares;
-    private SchnorrGroup group;
+    private SchnorrGroup schnorr;
     int t;
 
     public NaorPinkasMessage(int t, BigInteger r, BigInteger xor, 
-                             SchnorrGroup group,
+                             SchnorrGroup schnorr,
                              ImmutableList<NaorPinkasShare> shares) {
         this.t = t;
         this.r = r;
         this.xor = xor;
-        this.group = group;
+        this.schnorr = schnorr;
         this.shares = shares;
     }
 
     public BigInteger getXor() { return xor; }
-    public BigInteger getR() { return xor; }
+    public BigInteger getR() { return r; }
     public ImmutableList<NaorPinkasShare> getShares() { return shares; }
 
     public int getMaxSpace() {
-        return 4 + 2 * group.getMaxNumberSpace() 
-                 + group.getMaxSpace() 
+        return 4 + 2 * schnorr.getMaxNumberSpace() 
+                 + schnorr.getMaxSpace() 
                  + shares.size() * shares.get(0).getMaxSpace();
     }
 
@@ -41,7 +41,7 @@ public class NaorPinkasMessage implements Packable {
         buf.putInt(t);
         putBigInt(buf, r);
         putBigInt(buf, xor);
-        group.pack(buf);
+        schnorr.pack(buf);
         for (NaorPinkasShare share : shares) {
             share.pack(buf);
         }
@@ -51,11 +51,22 @@ public class NaorPinkasMessage implements Packable {
         int t = buf.getInt();
         BigInteger r = getBigInt(buf),
                    xor = getBigInt(buf);
-        SchnorrGroup group = SchnorrGroup.unpack(buf);
+        SchnorrGroup schnorr = SchnorrGroup.unpack(buf);
         ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
         for (int i = 0; i < t; ++i) {
-            shares.add(NaorPinkasShare.unpack(t, r, group, buf));
+            shares.add(NaorPinkasShare.unpack(t, r, schnorr, buf));
         }
-        return new NaorPinkasMessage(t, r, xor, group, shares.build());
+        return new NaorPinkasMessage(t, r, xor, schnorr, shares.build());
+    }
+    
+    @Override
+    public boolean equals(Object other_) {
+        if (other_ == null || other_.getClass() != getClass()) { return false; }
+        NaorPinkasMessage other = (NaorPinkasMessage)other_;
+        return t == other.t
+            && r.equals(other.r)
+            && xor.equals(other.xor)
+            && schnorr.equals(other.schnorr)
+            && shares.equals(other.shares);
     }
 }

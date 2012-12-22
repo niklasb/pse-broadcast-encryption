@@ -34,6 +34,13 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
     public byte[] decrypt(byte[] cipher) throws InsufficientInformationError {
         NaorPinkasMessage msg = NaorPinkasMessage.unpack(
                 ByteUtils.startUnpack(cipher));
+        byte[] bytes = decryptNumber(msg).toByteArray();
+        byte[] secret = new byte[bytes.length - 1];
+        System.arraycopy(bytes, 1, secret, 0, secret.length);
+        return secret;
+    }
+    
+    public BigInteger decryptNumber(NaorPinkasMessage msg) throws InsufficientInformationError {
         // make a mutable copy, so we can add our own share
         List<NaorPinkasShare> shares = new ArrayList<NaorPinkasShare>(msg.getShares());
         shares.add(key.getShare(msg.getR()));
@@ -42,6 +49,7 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
             throw new InsufficientInformationError(
                     "Cannot restore secret: Redundant or missing information");
         }
-        return mInterpol.get().xor(msg.getXor()).toByteArray();
+        System.out.printf("Client:\n  r = %s\n  grp0 = %s\n  xor = %s\n", msg.getR(), mInterpol.get(), msg.getXor());
+        return mInterpol.get().xor(msg.getXor());
     }
 }

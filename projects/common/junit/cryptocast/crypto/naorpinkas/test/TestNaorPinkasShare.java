@@ -14,15 +14,15 @@ public class TestNaorPinkasShare {
 	@Test
 	public void packAndUnpackWorks() {
 	    int t = 3;
-	    SchnorrGroup group = SchnorrGroup.getP1024Q160();
+	    SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
 	    // use large numbers to verify that getMaxSpace() works
-	    BigInteger p = group.getP(),
+	    BigInteger p = schnorr.getP(),
 	               r = p.subtract(BigInteger.valueOf(1)),
 	               i = p.subtract(BigInteger.valueOf(2)),
 	               grpi = p.subtract(BigInteger.valueOf(3));
-	    NaorPinkasShare expected = new NaorPinkasShare(t, r, i, grpi, group);
+	    NaorPinkasShare expected = new NaorPinkasShare(t, r, i, grpi, schnorr);
 		byte[] packed = ByteUtils.pack(expected);
-		NaorPinkasShare actual = NaorPinkasShare.unpack(t, r, group, 
+		NaorPinkasShare actual = NaorPinkasShare.unpack(t, r, schnorr, 
 		        ByteUtils.startUnpack(packed));
 		assertEquals(expected, actual);
 	}

@@ -31,8 +31,8 @@ public class TestPolynomial {
 	@Test 
 	public void evaluateMultiWorks() {
 	    Polynomial<BigInteger> poly = makePolynomial(mod11, new int[] { 2, 3, 5, 7 });
-	    int[] xs = new int[] { 6, 7, 3, 8, 9, 0, 10, 5, 2, 1, 4 };
-	    int[] ys = new int[] { 7, 7, 3, 3, 4, 2, 8,  5, 7, 6, 3 };
+	    int[] xs = { 6, 7, 3, 8, 9, 0, 10, 5, 2, 1, 4 };
+	    int[] ys = { 7, 7, 3, 3, 4, 2, 8,  5, 7, 6, 3 };
 	    assertArrayEquals(intArrayToBigIntArray(ys), 
 	                      poly.evaluateMulti(intArrayToBigIntArray(xs)));
 	}

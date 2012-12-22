@@ -13,10 +13,12 @@ import org.junit.Test;
 public class TestStreamMessageChannels {
 	@Test
 	public void sendAndRecvWorkTogether() throws Exception {
-	    byte[][] messages = new byte[][] { str2bytes("abc"),
-	                                       str2bytes("aaaaaaaaaa"),
-	                                       str2bytes("XXXXXX"),
-	                                       str2bytes("foobar")};
+	    byte[][] messages = { 
+	        str2bytes("abc"),
+	        str2bytes("aaaaaaaaaa"),
+	        str2bytes("XXXXXX"),
+	        str2bytes("foobar")
+	    };
 	    byte[] buffer = new byte[4096];
         PipedOutputStream pipeOut = new PipedOutputStream();
         PipedInputStream pipeIn = new PipedInputStream(pipeOut);

@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.google.common.base.Optional;
 
+import cryptocast.crypto.SchnorrGroup;
 import cryptocast.crypto.naorpinkas.*;
 import cryptocast.server.*;
 
@@ -16,7 +17,7 @@ public class TestServerData {
     
     @Before
     public void setUp() {
-        NaorPinkasServer naorServer = new NaorPinkasServer();
+        NaorPinkasServer naorServer = NaorPinkasServer.generate(50, SchnorrGroup.getP1024Q160());
         testData = new ServerData<NaorPinkasIdentity>(naorServer, naorServer);
     }
     

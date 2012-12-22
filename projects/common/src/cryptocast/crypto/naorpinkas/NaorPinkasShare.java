@@ -15,17 +15,20 @@ import static cryptocast.util.ByteUtils.*;
 public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
     protected int t;
     protected BigInteger r, i, grpi;
-    protected SchnorrGroup group;
+    protected SchnorrGroup schnorr;
 
     public NaorPinkasShare(int t, BigInteger r, BigInteger i, BigInteger grpi,
-                           SchnorrGroup group) {
+                           SchnorrGroup schnorr) {
         this.t = t;
         this.r = r;
         this.i = i;
         this.grpi = grpi;
-        this.group = group;
+        this.schnorr = schnorr;
     }
     
+    public int getT() { return t; }
+    public SchnorrGroup getGroup() { return schnorr; }
+    public BigInteger getR() { return r; }
     public BigInteger getI() { return i; }
     public BigInteger getGRPI() { return grpi; }
 
@@ -36,7 +39,7 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
 
     @Override
     public int getMaxSpace() {
-        return 2 * group.getMaxNumberSpace();
+        return 2 * schnorr.getMaxNumberSpace();
     }
 
     @Override
@@ -62,6 +65,6 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
             && r.equals(other.r) 
             && i.equals(other.i)
             && grpi.equals(other.grpi)
-            && group.equals(other.group);
+            && schnorr.equals(other.schnorr);
     }
 }

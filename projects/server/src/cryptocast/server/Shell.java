@@ -12,7 +12,7 @@ import cryptocast.util.InteractiveCommandLineInterface;
  * @param <ID> The type of the user identities.
  */
 public class Shell<ID> extends InteractiveCommandLineInterface {
-    private static ShellCommand commands[] = new ShellCommand[] {
+    private static ShellCommand commands[] = {
         new ShellCommand("help",
                          "[<command>]",
                          "Shows the command line help",

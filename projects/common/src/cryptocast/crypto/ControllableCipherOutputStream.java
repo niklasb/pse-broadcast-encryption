@@ -50,7 +50,7 @@ public class ControllableCipherOutputStream extends FilterOutputStream
     }
     
     private OutputStream createNewCipherStream(SecretKey key) {
-        byte[] ivBytes = new byte[] { 
+        byte[] ivBytes = { 
                 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 
                 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
         IvParameterSpec iv = new IvParameterSpec(ivBytes);
@@ -60,8 +60,7 @@ public class ControllableCipherOutputStream extends FilterOutputStream
             cipher.init(Cipher.ENCRYPT_MODE, key, iv);
         } catch (Exception e) {
             // cannot happen: string is correct and AES must be supported.
-            e.printStackTrace();
-            System.exit(1);
+            throw new AssertionError("cannot happen");
         }
         return new CipherOutputStream(inner, cipher);
     }

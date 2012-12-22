@@ -1,0 +1,30 @@
+package cryptocast.crypto.naorpinkas.test;
+
+import static org.junit.Assert.*;
+
+import java.math.BigInteger;
+
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
+
+import cryptocast.crypto.*;
+import cryptocast.crypto.naorpinkas.*;
+import cryptocast.util.ByteUtils;
+
+public class TestNaorPinkasMessage extends TestWithNaorPinkasContext {
+    @Test
+    public void packAndUnpackWorks() {
+        Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 6, 123, 22 });
+        ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
+        BigInteger r = BigInteger.valueOf(111111),
+                   xor = BigInteger.valueOf(222222);
+        shares.add(makeShare(poly, r, 123));
+        shares.add(makeShare(poly, r, 123123123));
+        NaorPinkasMessage expected = 
+                new NaorPinkasMessage(poly.getDegree(), r, xor, schnorr, shares.build());
+        byte[] packed = ByteUtils.pack(expected);
+        assertEquals(expected, 
+                     NaorPinkasMessage.unpack(ByteUtils.startUnpack(packed)));
+    }
+}

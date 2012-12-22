@@ -12,17 +12,13 @@ import com.google.common.collect.ImmutableList;
 import cryptocast.crypto.*;
 import cryptocast.crypto.naorpinkas.*;
 
-public class TestNaorPinkasShareCombinator {
-    SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
-    Field<BigInteger> modQ = schnorr.getFieldModQ(),
-                      modP = schnorr.getFieldModP();
-    NaorPinkasShareCombinator combi = new NaorPinkasShareCombinator();
-
+public class TestNaorPinkasShareCombinator extends TestWithNaorPinkasContext {
+    
     @Test
     public void canRestoreSecretFromValidShares() {
         Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 2, 3, 7, 11 });
         BigInteger r = BigInteger.valueOf(11111),
-                   grp0 = schnorr.getPowerOfG(r.multiply(poly.evaluate(modQ.zero())));
+                   grp0 = schnorr.getPowerOfG(modQ.multiply(r, poly.evaluate(modQ.zero())));
         ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
         shares.add(makeShare(poly, r, 123123));
         shares.add(makeShare(poly, r, 33123));
@@ -56,20 +52,5 @@ public class TestNaorPinkasShareCombinator {
         shares.add(makeShare(poly, r, 22233333));
         Optional<BigInteger> actualGRP0 = combi.restore(shares.build());
         assertFalse(actualGRP0.isPresent());
-    }
-    
-    private NaorPinkasShare makeShare(Polynomial<BigInteger> poly, BigInteger r, int xi) {
-        BigInteger x = BigInteger.valueOf(xi);
-        return new NaorPinkasShare(poly.getDegree(), r, x, 
-                                   schnorr.getPowerOfG(r.multiply(poly.evaluate(x))),
-                                   schnorr);
-    }
-
-    private Polynomial<BigInteger> makePolynomial(Field<BigInteger> field, int coefficients[]) {
-        BigInteger[] coeff = new BigInteger[coefficients.length];
-        for (int i = 0; i < coeff.length; ++i) {
-            coeff[i] = BigInteger.valueOf(coefficients[i]);
-        }
-        return new Polynomial<BigInteger>(field, coeff);
     }
 }

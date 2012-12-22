@@ -20,8 +20,8 @@ public class NaorPinkasShareCombinator implements ShareCombinator<BigInteger, Na
      */
     @Override
     public Optional<BigInteger> restore(List<NaorPinkasShare> shares) {
-        int t = shares.get(0).t;
-        SchnorrGroup schnorr = shares.get(0).group;
+        int t = shares.get(0).getT();
+        SchnorrGroup schnorr = shares.get(0).getGroup();
         if (shares.size() < t + 1) {
             // missing information
             System.out.println("test1");
