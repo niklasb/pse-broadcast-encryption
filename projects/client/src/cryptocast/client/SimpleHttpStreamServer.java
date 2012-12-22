@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import static cryptocast.util.ByteStringUtils.str2bytes;
+import static cryptocast.util.ByteUtils.str2bytes;
 
 public class SimpleHttpStreamServer implements Runnable {
     InputStream in;
