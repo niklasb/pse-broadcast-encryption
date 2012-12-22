@@ -32,6 +32,10 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
     public BigInteger getI() { return i; }
     public BigInteger getGRPI() { return grpi; }
 
+    public NaorPinkasIdentity getIdentity() {
+        return new NaorPinkasIdentity(i);
+    }
+
     @Override
     public int compareTo(NaorPinkasShare other) {
         return i.compareTo(other.i);

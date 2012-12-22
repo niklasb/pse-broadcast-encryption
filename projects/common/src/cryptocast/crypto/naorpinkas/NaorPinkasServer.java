@@ -79,7 +79,6 @@ public class NaorPinkasServer
         BigInteger r = schnorr.getFieldModP().randomElement(rnd),
                    grp0 = schnorr.getFieldModP().pow(gp0, r), // g^{r P(0)}
                    xor = grp0.xor(secret);
-        System.out.printf("Server:\n  r = %s\n  grp0 = %s\n  xor = %s\n", r, grp0, xor);
         checkArgument(xor.compareTo(schnorr.getP()) < 0, "Secret is too large to encrypt");
         ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
         int i = 0;
@@ -91,7 +90,6 @@ public class NaorPinkasServer
         for (NaorPinkasIdentity id : revokedUsers) {
             shares.add(getPersonalKey(id).get().getShare(r));
         }
-        System.out.println("Shares: " + shares.build().size());
         return new NaorPinkasMessage(t, r, xor, schnorr, shares.build());
     }
 

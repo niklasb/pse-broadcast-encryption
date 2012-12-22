@@ -58,6 +58,7 @@ public abstract class Field<T> {
     public T subtract(T a, T b) {
         return add(a, negate(b));
     }
+    
     /**
      * Divides two elements of the field.
      * @param a First element
@@ -67,6 +68,7 @@ public abstract class Field<T> {
     public T divide(T a, T b) {
         return multiply(a, invert(b));
     }
+    
     /**
      * Raises an element of the field to an integer power.
      * @param a The element of the field

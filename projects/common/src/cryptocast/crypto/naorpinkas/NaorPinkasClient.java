@@ -49,7 +49,6 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
             throw new InsufficientInformationError(
                     "Cannot restore secret: Redundant or missing information");
         }
-        System.out.printf("Client:\n  r = %s\n  grp0 = %s\n  xor = %s\n", msg.getR(), mInterpol.get(), msg.getXor());
         return mInterpol.get().xor(msg.getXor());
     }
 }

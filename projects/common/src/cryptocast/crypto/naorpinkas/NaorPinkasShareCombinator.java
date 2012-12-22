@@ -24,7 +24,6 @@ public class NaorPinkasShareCombinator implements ShareCombinator<BigInteger, Na
         SchnorrGroup schnorr = shares.get(0).getGroup();
         if (shares.size() < t + 1) {
             // missing information
-            System.out.println("test1");
             return Optional.absent();
         }
         List<NaorPinkasShare> sharesCopy = new ArrayList<NaorPinkasShare>(shares);

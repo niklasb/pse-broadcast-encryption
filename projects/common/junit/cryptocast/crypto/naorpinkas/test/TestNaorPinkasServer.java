@@ -2,20 +2,70 @@ package cryptocast.crypto.naorpinkas.test;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
+import java.math.BigInteger;
+
 import org.junit.Test;
 
-import cryptocast.crypto.SchnorrGroup;
-import cryptocast.crypto.naorpinkas.NaorPinkasClient;
-import cryptocast.crypto.naorpinkas.NaorPinkasServer;
+import cryptocast.crypto.*;
+import cryptocast.crypto.naorpinkas.*;
 
 public class TestNaorPinkasServer {
+    int t = 10;
+    NaorPinkasServer server = 
+            NaorPinkasServer.generate(t, SchnorrGroup.getP1024Q160());
+    
     @Test
-    public void getPersonalKeyWorks() {
-        NaorPinkasServer server = 
-                NaorPinkasServer.generate(5, SchnorrGroup.getP1024Q160());
+    public void getPersonalKeyWorks() throws Exception {
         for (int i = 0; i < 10; ++i) {
             assertTrue(server.getPersonalKey(server.getIdentity(i)).isPresent());
         }
+    }
+    
+    @Test
+    public void serverBroadcastsTheCorrectNumberOfShares() throws Exception {
+        assertEquals(t, server.encryptNumber(BigInteger.valueOf(111111)).getShares().size());
+    }
+    
+    @Test
+    public void canCheckRevocationStatus() throws Exception {
+        NaorPinkasIdentity id = server.getIdentity(2);
+        assertFalse(server.isRevoked(id));
+        server.revoke(id);
+        assertTrue(server.isRevoked(id));
+    }
+
+    @Test
+    public void canRevokeUpToTUsers() throws Exception {
+        for (int i = 0; i < t; ++i) {
+            server.revoke(server.getIdentity(i));
+        }
+    }
+
+    @Test(expected=NoMoreRevocationsPossibleError.class)
+    public void canRevokeOnlyTUsers() throws Exception {
+        for (int i = 0; i < t + 1; ++i) {
+            server.revoke(server.getIdentity(i));
+        }
+    }
+
+    @Test
+    public void serverBroadcastsRevokedUserShares() throws Exception {
+        int[] revoked = { 0, 2, 4 };
+        for (int i : revoked) {
+            server.revoke(server.getIdentity(i));
+        }
+        NaorPinkasMessage msg = server.encryptNumber(BigInteger.valueOf(111111));
+        for (int i : revoked) {
+            assertTrue(containsShareForUser(msg, server.getIdentity(i)));
+        }
+    }
+    
+    private boolean containsShareForUser(NaorPinkasMessage msg, NaorPinkasIdentity id) {
+        for (NaorPinkasShare share : msg.getShares()) {
+            if (share.getIdentity().equals(id)) { 
+                return true; 
+            }
+        }
+        return false;
     }
 }

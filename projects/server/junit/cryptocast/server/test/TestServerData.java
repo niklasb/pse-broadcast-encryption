@@ -12,14 +12,10 @@ import cryptocast.crypto.naorpinkas.*;
 import cryptocast.server.*;
 
 public class TestServerData {
-    
-    private ServerData<NaorPinkasIdentity> testData;
-    
-    @Before
-    public void setUp() {
-        NaorPinkasServer naorServer = NaorPinkasServer.generate(50, SchnorrGroup.getP1024Q160());
-        testData = new ServerData<NaorPinkasIdentity>(naorServer, naorServer);
-    }
+    private NaorPinkasServer naorServer = 
+               NaorPinkasServer.generate(50, SchnorrGroup.getP1024Q160());
+    private ServerData<NaorPinkasIdentity> testData = 
+                new ServerData<NaorPinkasIdentity>(naorServer, naorServer);
     
     @Test
     public void userCreationWithNull() {
