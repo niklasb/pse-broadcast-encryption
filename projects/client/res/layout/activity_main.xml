@@ -39,6 +39,7 @@
         android:layout_x="37dp"
         android:layout_y="332dp"
         android:minWidth="252dp"
+        android:onClick="onConnect"
         android:text="@string/connect_button"
         android:textSize="20sp" />
 
