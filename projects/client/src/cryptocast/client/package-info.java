@@ -6,3 +6,5 @@
  * Every error is displayed by using a simple pop up window defined by the class {@link ErrorFragment}.
  */
 package cryptocast.client;
+import cryptocast.client.filechooser.FileChooser;
+

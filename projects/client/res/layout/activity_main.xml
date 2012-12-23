@@ -17,7 +17,7 @@
         android:src="@drawable/logo_transparent" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/editHostname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="40dp"
@@ -26,7 +26,8 @@
         android:lines="1"
         android:maxLines="1"
         android:maxWidth="250dp"
-        android:minWidth="250dp" >
+        android:minWidth="250dp"
+        android:onClick="onConnect" >
 
         <requestFocus />
     </EditText>

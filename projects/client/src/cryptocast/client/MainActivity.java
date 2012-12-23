@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
  /**
@@ -26,13 +25,6 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        final Button connectButton = (Button) findViewById(R.id.button1);
-        connectButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // TODO action on click
-            }
-        });
     }
     
     @Override
@@ -45,7 +37,7 @@ public class MainActivity extends FragmentActivity {
         //TODO
         String serverName = sharedPref.getString(getString(R.string.saved_server_main), "");
         //write server to textView
-        TextView tv1 = (TextView) findViewById(R.id.editText1);
+        TextView tv1 = (TextView) findViewById(R.id.editHostname);
         tv1.setText(serverName); 
     }
     
@@ -54,7 +46,7 @@ public class MainActivity extends FragmentActivity {
         super.onPause();
         
         //get last server name
-        TextView tv1 = (TextView) findViewById(R.id.editText1);
+        TextView tv1 = (TextView) findViewById(R.id.editHostname);
         String serverName =  tv1.getText().toString();
         //saving last server name to shared preference
         SharedPreferences sharedPref = getSharedPreferences(
@@ -94,6 +86,19 @@ public class MainActivity extends FragmentActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    
+    /**
+     * Shows the KeyChoiceActivity if the hostname seems to be valid
+     * @param view The view from which this method was called.
+     */
+    public void onConnect(View view) {
+        //get text which was typed to hostname textfield
+        EditText editText = (EditText) findViewById(R.id.editHostname);
+        String hostname = editText.getText().toString();
+        //TODO check if hostname is valid
+        Intent intent = new Intent(this, KeyChoiceActivity.class);
+        startActivity(intent);
     }
 
     /**

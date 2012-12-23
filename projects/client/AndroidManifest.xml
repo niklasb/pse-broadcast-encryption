@@ -29,7 +29,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="cryptocast.client.FileChooser"
+            android:name="cryptocast.client.filechooser"
+            android:label="@string/title_activity_file_chooser" >
+        </activity>
+        <activity
+            android:name="cryptocast.client.filechooser.FileChooser"
             android:label="@string/title_activity_file_chooser" >
         </activity>
     </application>

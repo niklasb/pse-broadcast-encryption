@@ -26,6 +26,7 @@ public abstract class FileChooser extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_file_chooser);
         currentDir = new File("/sdcard/");
         updateItems(currentDir);
     }
@@ -56,7 +57,7 @@ public abstract class FileChooser extends ListActivity {
         
         
         FileArrayAdapter adapter = 
-                new FileArrayAdapter(FileChooser.this,R.layout.filechooser, folders);
+                new FileArrayAdapter(FileChooser.this,R.layout.activity_file_chooser, folders);
         this.setListAdapter(adapter);
     }
     
