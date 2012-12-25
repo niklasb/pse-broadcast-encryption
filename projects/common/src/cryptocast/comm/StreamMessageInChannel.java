@@ -9,7 +9,7 @@ import java.nio.ByteOrder;
  * Wraps a byte-based instance of {@link InputStream} and allows to use it as a
  * message-based channel.
  */
-public class StreamMessageInChannel {
+public class StreamMessageInChannel implements MessageInChannel {
     private InputStream inner;
 
     /**
@@ -26,7 +26,8 @@ public class StreamMessageInChannel {
      * @return The received data
      * @throws IOException if the message header or the message is malformed
      */
-    public byte[] recvMessage() throws InterruptedException, IOException {
+    @Override
+    public byte[] recvMessage() throws IOException {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.order(ByteOrder.BIG_ENDIAN);
         int recv = StreamUtils.readall(inner, buffer.array(), 0, 4);

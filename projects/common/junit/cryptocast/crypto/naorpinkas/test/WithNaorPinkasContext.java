@@ -2,11 +2,8 @@ package cryptocast.crypto.naorpinkas.test;
 
 import java.math.BigInteger;
 
-import cryptocast.crypto.Field;
-import cryptocast.crypto.Polynomial;
-import cryptocast.crypto.SchnorrGroup;
-import cryptocast.crypto.naorpinkas.NaorPinkasShare;
-import cryptocast.crypto.naorpinkas.NaorPinkasShareCombinator;
+import cryptocast.crypto.*;
+import cryptocast.crypto.naorpinkas.*;
 
 public class WithNaorPinkasContext {
     protected SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();

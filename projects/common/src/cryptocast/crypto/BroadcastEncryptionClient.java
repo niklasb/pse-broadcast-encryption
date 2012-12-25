@@ -1,29 +1,37 @@
 package cryptocast.crypto;
 
-import cryptocast.comm.*;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
+
+import cryptocast.comm.MessageInChannel;
 
 /**
  * The client side of a broadcast encryption scheme.
  */
 public class BroadcastEncryptionClient extends InputStream {
-    private static int BUFSIZE = 4096 * 1024;
-    byte[] buffer = new byte[BUFSIZE];
-    
+    private DynamicCipherInputStream cipherStream;
+
     /**
      * Initializes a broadcast encryption client.
      * @param inner The message-based underlying communication channel.
      * @param dec The decryption context
      */
-    public BroadcastEncryptionClient(StreamMessageInChannel inner,
-                                     Decryptor<BigInteger> dec) { }
+    public BroadcastEncryptionClient(DynamicCipherInputStream cipherStream) {
+        this.cipherStream = cipherStream;
+    }
+
+    public BroadcastEncryptionClient(MessageInChannel inner, Decryptor<byte[]> dec) 
+                                           throws IOException {
+        this.cipherStream = new DynamicCipherInputStream(inner, dec);
+    }
 
     @Override
+    public int read(byte[] buffer, int offset, int len) throws IOException {
+        return cipherStream.read(buffer, offset, len);
+    }
+    
+    @Override
     public int read() throws IOException {
-        // TODO Auto-generated method stub
-        return 0;
+        return cipherStream.read();
     }
 }

@@ -16,72 +16,34 @@ import cryptocast.comm.*;
 import cryptocast.crypto.*;
 import static cryptocast.util.ByteUtils.*;
 
-class Identity {
-}
+class Identity { }
 
 public class TestBroadcastEncryptionServer {
     @Mock private BroadcastSchemeUserManager<Identity> userManager;
-    @Mock private OutputCipherControl cipherControl;
-    @Mock private MessageOutChannel controlChannel;
-    @Mock private Encryptor<byte[]> enc;
-    @Mock private SecretKey key;
-    private PipedOutputStream payloadStreamOut;
-    private PipedInputStream payloadStreamIn;
+    @Mock private DynamicCipherOutputStream cipherStream;
     private BroadcastEncryptionServer<Identity> sut;
-
-    private void setNextKeyEncryption(byte[] data) {
-        when(key.getEncoded()).thenReturn(data);
-        when(enc.encrypt(data)).thenReturn(data);
-    }
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        payloadStreamOut = new PipedOutputStream();
-        payloadStreamIn = new PipedInputStream(payloadStreamOut);
-        when(cipherControl.getKey()).thenReturn(key);
-        sut = new BroadcastEncryptionServer<Identity>(
-            userManager, 
-            enc, 
-            controlChannel, 
-            payloadStreamOut, 
-            cipherControl);
-        setNextKeyEncryption(str2bytes("aaa"));
+        sut = new BroadcastEncryptionServer<Identity>(userManager, cipherStream);
     }
 
     @Test
     public void noInteractionsAtConstruction() throws Exception {
-        verifyZeroInteractions(userManager, cipherControl, controlChannel);
-        assertEquals(0, payloadStreamIn.available());
-    }
-
-    @Test
-    public void normalWriteWorks() throws Exception {
-        byte[] expected = str2bytes("abc");
-        sut.write(expected);
-        assertPayloadBytes(expected);
-        verifyZeroInteractions(userManager, cipherControl, controlChannel);
+        verifyZeroInteractions(userManager, cipherStream);
     }
 
     @Test
     public void keyUpdateWorks() throws Exception {
-        byte[] payload = str2bytes("abc");
+        sut.updateKey();
+        verify(cipherStream).updateKey();
+    }
 
-        byte[] key1 = str2bytes("xxx");
-        setNextKeyEncryption(key1);
-        sut.scheduleKeyUpdate();
-        sut.write(payload);
-        verify(controlChannel).sendMessage(key1);
-        assertPayloadBytes(payload);
-        verifyNoMoreInteractions(controlChannel);
-        
-        byte[] key2 = str2bytes("yyy");
-        setNextKeyEncryption(key2);
-        sut.scheduleKeyUpdate();
-        sut.write(payload);
-        verify(controlChannel).sendMessage(key2);
-        assertPayloadBytes(payload);
-        verifyNoMoreInteractions(controlChannel);
+    @Test
+    public void keyBroadcastWorks() throws Exception {
+        sut.broadcastKey();
+        verify(cipherStream).reinitializeCipher();
     }
     
     @Test
@@ -90,35 +52,11 @@ public class TestBroadcastEncryptionServer {
         sut.revoke(id);
         verify(userManager).revoke(id);
     }
-    
-    @Test
-    public void keyBroadcastWorks() throws Exception {
-        byte[] payload = str2bytes("abc");
-        
-        byte[] key1 = str2bytes("xxx");
-        setNextKeyEncryption(key1);
-        sut.scheduleKeyBroadcast();
-        sut.write(payload);
-        verify(controlChannel).sendMessage(key1);
-        assertPayloadBytes(payload);
-        verifyNoMoreInteractions(controlChannel);
-    }
 
     @Test
     public void revokeTriggersKeyUpdate() throws Exception {
-        byte[] key1 = str2bytes("xxx");
         Identity id = new Identity();
-        setNextKeyEncryption(key1);
         sut.revoke(id);
-        byte[] payload = str2bytes("abc");
-        sut.write(payload);
-        verify(controlChannel).sendMessage(key1);
-        assertPayloadBytes(payload);
-    }
-    
-    private void assertPayloadBytes(byte[] expected) throws IOException {
-        byte[] buffer = new byte[payloadStreamIn.available()];
-        payloadStreamIn.read(buffer);
-        assertArrayEquals(expected, buffer);
+        verify(cipherStream).updateKey();
     }
 }
