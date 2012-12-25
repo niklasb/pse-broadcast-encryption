@@ -13,5 +13,6 @@
     <string name="preference_server_name" />
     <string name="saved_server_main" />
     <string name="title_activity_file_chooser">FileChooser</string>
+    <string name="title_activity_key_chooser">KeyChooser</string>
 
 </resources>

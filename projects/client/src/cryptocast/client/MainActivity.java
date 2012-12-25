@@ -97,7 +97,7 @@ public class MainActivity extends FragmentActivity {
         EditText editText = (EditText) findViewById(R.id.editHostname);
         String hostname = editText.getText().toString();
         //TODO check if hostname is valid
-        Intent intent = new Intent(this, KeyChoiceActivity.class);
+        Intent intent = new Intent(this, KeyChooser.class);
         startActivity(intent);
     }
 

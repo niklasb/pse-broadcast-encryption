@@ -42,11 +42,11 @@ public abstract class FileChooser extends ListActivity {
     }
 
     private void updateItems(File curDir) {
-        this.setTitle("Directory: " + curDir.getName());
+        //this.setTitle("Directory: " + curDir.getName());
         File[] data =  curDir.listFiles();
-        List<ListElement> folders = new ArrayList<ListElement>();
-        List<ListElement> files = new ArrayList<ListElement>();
-        
+        //List<ListElement> folders = new ArrayList<ListElement>();
+        //List<ListElement> files = new ArrayList<ListElement>();
+        /*
         for (File file : data) {
             if (file.isDirectory()) {
                 folders.add(new DirectoryListElement(file));
@@ -54,11 +54,12 @@ public abstract class FileChooser extends ListActivity {
                 files.add(new FileListElement(file));
             }
         }
+        */
         
-        
-        FileArrayAdapter adapter = 
+        /*FileArrayAdapter adapter = 
                 new FileArrayAdapter(FileChooser.this,R.layout.activity_file_chooser, folders);
         this.setListAdapter(adapter);
+        */
     }
     
     /** Called when the user clicks a file in the list.
