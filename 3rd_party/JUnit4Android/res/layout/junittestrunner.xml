@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/gallerylayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:progressDrawable="@drawable/progress" />
+
+        <TextView
+            android:id="@+id/suiteNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="11dp"
+            android:ellipsize="start"
+            android:scrollHorizontally="true"
+            android:text="TEST"
+            android:textColor="#000" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onStartTestClicked"
+        android:text="Run Tests" />
+
+    <ExpandableListView
+        android:id="@+id/expandableListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ExpandableListView>
+
+</LinearLayout>
