@@ -20,7 +20,7 @@ public class TestDynamicCipherStreams {
     
     @Before
     public void setUp() throws Exception {
-        encDec = mock(NullEncryptor.class, Mockito.CALLS_REAL_METHODS);
+        encDec = spy(new NullEncryptor());
         out = DynamicCipherOutputStream.start(fifo, 256, encDec);
         in = new DynamicCipherInputStream(fifo, encDec);
     }
@@ -90,7 +90,7 @@ public class TestDynamicCipherStreams {
         byte[] read = new byte[expected.length + 10];
         assertEquals(expected.length, StreamUtils.readall(in, read, 0, read.length));
         assertArrayEquals(expected, ArrayUtils.copyOfRange(read, 0, expected.length));
-        verify(encDec, atMost(1)).encrypt(any(byte[].class));
-        verify(encDec, atMost(1)).decrypt(any(byte[].class));
+        verify(encDec, times(1)).encrypt(any(byte[].class));
+        verify(encDec, times(1)).decrypt(any(byte[].class));
     }
 }

@@ -60,14 +60,14 @@ public class TestLagrangeInterpolation {
 
     @Test
     public void randomTests() {
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 3; ++i) {
             randomTest(10);
         }
     }
 
     @Test
     public void largeTest() {
-        randomTest(40);
+        randomTest(20);
     }
 
     private void randomTest(int t) {
