@@ -34,7 +34,7 @@ public class MainActivity extends FragmentActivity {
         //loading last server name from shared preference
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_server_name), Context.MODE_PRIVATE);
-        //TODO
+        //TODO 
         String serverName = sharedPref.getString(getString(R.string.saved_server_main), "");
         //write server to textView
         TextView tv1 = (TextView) findViewById(R.id.editHostname);

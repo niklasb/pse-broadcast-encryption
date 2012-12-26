@@ -25,18 +25,15 @@ public class KeyChooser extends Activity implements OnItemClickListener {
     }
 
     private void updateItems(File curDir) {
-       File[] curDirFiles = curDir.listFiles();
+        File[] curDirFiles = curDir.listFiles();
         
-       // insert 'up navigation' item TODO if not in sdcard directory
-       currentDirData =  new File[curDirFiles.length + 1];
-       currentDirData[0] = curDir.getParentFile();
-       for (int i = 1; i < currentDirData.length; i++) {
-          currentDirData[i] = curDirFiles[i - 1];
-       }
+        // insert 'up navigation' item TODO if not in sdcard directory
+        currentDirData =  new File[curDirFiles.length + 1];
+        System.arraycopy(curDirFiles, 0, currentDirData, 1, curDirFiles.length);
+        currentDirData[0] = curDir.getParentFile();
 
         TextView textView = (TextView) findViewById(R.id.textView1);
         textView.setText("Current Dir: " + currentDir.toString());
-
         
         ListView listView = (ListView) findViewById(R.id.listView1);
         listView.setOnItemClickListener(this);
