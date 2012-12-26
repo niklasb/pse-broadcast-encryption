@@ -1,8 +1,9 @@
 package cryptocast.comm;
 
-import java.util.Arrays;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import cryptocast.util.ArrayUtils;
 
 public class MessageBuffer extends MessageOutChannel implements MessageInChannel {
     private Queue<byte[]> messages = new LinkedBlockingQueue<byte[]>();
@@ -27,7 +28,7 @@ public class MessageBuffer extends MessageOutChannel implements MessageInChannel
 
     @Override
     public void sendMessage(byte[] data, int offset, int len) {
-        messages.add(Arrays.copyOfRange(data, offset, len));
+        messages.add(ArrayUtils.copyOfRange(data, offset, len));
     }
     
     public void close() {

@@ -5,12 +5,15 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import static cryptocast.util.ErrorUtils.cannotHappen;
+
 public class ByteUtils {
     public static byte[] str2bytes(String str) {
         try {
             return str.getBytes("ISO-8859-1");
         } catch (UnsupportedEncodingException e) {
-            throw new AssertionError("can never happen");
+            cannotHappen(e);
+            return null; // just to make the compiler happy
         }
     }
     
@@ -36,9 +39,15 @@ public class ByteUtils {
         return result;
     }
     
-    public static ByteBuffer startUnpack(byte[] data) {
+    public static ByteBuffer startUnpack(byte[] data, int offset, int len) {
         ByteBuffer buf = ByteBuffer.wrap(data);
         buf.order(ByteOrder.BIG_ENDIAN);
+        buf.position(offset);
+        buf.limit(offset + len);
         return buf;
+    }
+    
+    public static ByteBuffer startUnpack(byte[] data) {
+        return startUnpack(data, 0, data.length);
     }
 }

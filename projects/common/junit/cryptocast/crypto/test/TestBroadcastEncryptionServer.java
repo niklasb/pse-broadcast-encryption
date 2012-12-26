@@ -1,20 +1,11 @@
 package cryptocast.crypto.test;
 
 import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-
-import javax.crypto.SecretKey;
-
 import org.junit.*;
 import static org.mockito.Mockito.*;
 import org.mockito.*;
 
-import cryptocast.comm.*;
 import cryptocast.crypto.*;
-import static cryptocast.util.ByteUtils.*;
 
 class Identity { }
 
@@ -56,7 +47,20 @@ public class TestBroadcastEncryptionServer {
     @Test
     public void revokeTriggersKeyUpdate() throws Exception {
         Identity id = new Identity();
+        when(userManager.revoke(id))
+            .thenReturn(true)
+            .thenReturn(false);
         sut.revoke(id);
-        verify(cipherStream).updateKey();
+        verify(cipherStream, times(1)).updateKey();
+        sut.revoke(id);
+        verify(cipherStream, times(1)).updateKey();
+        
+        when(userManager.unrevoke(id))
+            .thenReturn(true)
+            .thenReturn(false);
+        sut.unrevoke(id);
+        verify(cipherStream, times(2)).updateKey();
+        sut.unrevoke(id);
+        verify(cipherStream, times(2)).updateKey();
     }
 }

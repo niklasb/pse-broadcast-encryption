@@ -111,17 +111,17 @@ public class NaorPinkasServer
         return keyGen.get(i);
     }
 
-    /**
-     * Revokes a user.
-     * @param id The identity of the user
-     */
-    public void revoke(NaorPinkasIdentity id) throws NoMoreRevocationsPossibleError {
+    public boolean revoke(NaorPinkasIdentity id) throws NoMoreRevocationsPossibleError {
         if (revokedUsers.size() == t) {
             throw new NoMoreRevocationsPossibleError();
         }
-        revokedUsers.add(id);
+        return revokedUsers.add(id);
     }
     
+    public boolean unrevoke(NaorPinkasIdentity id) {
+        return !revokedUsers.remove(id);
+    }
+
     /**
      * @param id The identity of the user
      * @return Whether the user is revoked.

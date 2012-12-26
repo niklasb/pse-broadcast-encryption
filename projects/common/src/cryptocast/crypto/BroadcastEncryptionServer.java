@@ -54,7 +54,14 @@ public class BroadcastEncryptionServer<ID> extends FilterOutputStream {
      * @param id The identity of the user
      */
     public void revoke(ID id) throws NoMoreRevocationsPossibleError, IOException {
-        context.revoke(id);
-        updateKey();
+        if (context.revoke(id)) {
+            updateKey();
+        }
+    }
+    
+    public void unrevoke(ID id) throws IOException {
+        if (context.unrevoke(id)) {
+            updateKey();
+        }
     }
 }

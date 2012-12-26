@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class TestStreamUtils {
     @Test
-    public void rreadallWorks() throws Exception {
+    public void readallWorks() throws Exception {
         byte[] expected = str2bytes("abcdefghijk");
         InputStream in = new ByteArrayInputStream(expected);
         int size = expected.length;

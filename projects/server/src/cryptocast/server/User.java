@@ -17,7 +17,7 @@ public class User<ID> {
         this.name = name;
         this.id = id;
     }
-
+    
     /** @return The name of this user */
     public String getName() { return name; }
     /** @return The id of this user */

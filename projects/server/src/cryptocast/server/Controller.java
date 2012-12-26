@@ -8,7 +8,6 @@ import java.io.OutputStream;
  * @param <ID> The type of the user identities
  */
 public class Controller<ID> {
-
     private ServerData<ID> data;
     private Shell<ID> shell;
     private OutputStream stream;

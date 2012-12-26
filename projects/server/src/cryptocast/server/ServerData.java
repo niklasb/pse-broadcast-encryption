@@ -23,7 +23,6 @@ public class ServerData<ID> implements Serializable {
     //the amount of all users added
     private int addedUsers = 0;
     
-    //TODO
     public ServerData(BroadcastSchemeUserManager<ID> users, BroadcastSchemeKeyManager<ID> keys) {
         this.users = users;
         this.keys = keys;
@@ -32,11 +31,13 @@ public class ServerData<ID> implements Serializable {
     /**
      * Creates and saves a new user by name.
      * @param name The user's name
-     * @return The new user if he has been added successfully, else absent is returned.
+     * @return The new user if it has been added successfully or the
+     *         already existing user object with the given name.
      */
-    public Optional<User<ID>> createNewUser(String name) {
-        if (name == null || getUserByName(name).isPresent()) {
-            return Optional.absent();
+    public User<ID> createNewUser(String name) {
+        User<ID> alreadyThere = userByName.get(name);
+        if (alreadyThere != null) {
+            return alreadyThere;
         }
         // create necessary data
         ID userIdent = users.getIdentity(addedUsers++);
@@ -44,8 +45,7 @@ public class ServerData<ID> implements Serializable {
         // adjust data structures
         userByName.put(name, newOne);
         userById.put(userIdent, newOne);
-        
-        return Optional.of(newOne);
+        return newOne;
     }
 
     /**
@@ -54,10 +54,7 @@ public class ServerData<ID> implements Serializable {
      * @return A user instance, if it was found, or absent otherwise
      */
     public Optional<User<ID>> getUserByName(String name) {
-        if (name == null || !userByName.containsKey(name)) {
-            return Optional.absent();
-        }
-        return Optional.of(userByName.get(name));
+        return Optional.fromNullable(userByName.get(name));
     }
 
     /**
@@ -65,7 +62,7 @@ public class ServerData<ID> implements Serializable {
      * @param user The user object
      * @return The private key
      */
-    public Optional<PrivateKey> getPersonalKey(User<ID> user) {
-        return null;
+    public Optional<? extends PrivateKey> getPersonalKey(User<ID> user) {
+        return keys.getPersonalKey(user.getIdentity());
     }
 }

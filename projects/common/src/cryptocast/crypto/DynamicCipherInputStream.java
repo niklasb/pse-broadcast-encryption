@@ -20,7 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 import cryptocast.comm.MessageInChannel;
 import cryptocast.util.ByteUtils;
 
-import static cryptocast.util.ErrorUtils.cannotHappen;
+import static cryptocast.util.ErrorUtils.*;
 
 public class DynamicCipherInputStream extends InputStream {
     MessageInChannel inner;
@@ -76,17 +76,17 @@ public class DynamicCipherInputStream extends InputStream {
             }
             return;
         case DynamicCipherOutputStream.CTRL_UPDATE_KEY:
-            byte[] msgData = Arrays.copyOfRange(msg, 1, msg.length);
             if (cipher != null) {
                 finalizeCipher();
             }
             DynamicCipherKeyUpdateMessage keyUpdate = 
-                    DynamicCipherKeyUpdateMessage.unpack(ByteUtils.startUnpack(msgData));
+                    DynamicCipherKeyUpdateMessage.unpack(
+                            ByteUtils.startUnpack(msg, 1, msg.length - 1));
             if (!Arrays.equals(keyUpdate.getEncryptedKey(), lastEncryptedKey)) {
                 try {
                     key = decodeKey(dec.decrypt(keyUpdate.getEncryptedKey()));
                 } catch (DecryptionError e) {
-                    throw new IOException("Error while decrypting session key", e);
+                    throwWithCause(new IOException("Error while decrypting session key"), e);
                 }
             }
             lastEncryptedKey = keyUpdate.getEncryptedKey();
@@ -94,9 +94,9 @@ public class DynamicCipherInputStream extends InputStream {
                 cipher = createCipher(key, new IvParameterSpec(keyUpdate.getIv()));
                 //System.out.printf("[client] cipher.ivsize=%d\n", cipher.getIV().length);
             } catch (InvalidKeyException e) {
-                throw new IOException("The other side sent an invalid session key", e);
+                throwWithCause(new IOException("The other side sent an invalid session key"), e);
             } catch (InvalidAlgorithmParameterException e) {
-                throw new IOException("The other side sent an invalid IV", e);
+                throwWithCause(new IOException("The other side sent an invalid IV"), e);
             }
             return;
         case DynamicCipherOutputStream.CTRL_EOF:
