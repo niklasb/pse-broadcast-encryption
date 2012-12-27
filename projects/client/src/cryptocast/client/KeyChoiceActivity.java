@@ -9,7 +9,7 @@ import com.google.common.base.Optional;
  * This activity lets a user choose an encryption key file
  * which is then sent to the server for authentication.
  */
-public class KeyChoiceActivity extends cryptocast.cryptocast.client.filechooser.FileChooser {
+public class KeyChoiceActivity {
     private File chosenFile;
 
     /** @return The chosen file or absent on abort. */
@@ -20,8 +20,10 @@ public class KeyChoiceActivity extends cryptocast.cryptocast.client.filechooser.
     /** Called when the user clicks a file in the list.
      * @param item The clicked list item.
      */
+    /*
     @Override
     protected void onFileClick(FileListElement o) {
         
     }
+    */
 }

@@ -22,32 +22,36 @@ public class FileChooser extends Activity implements OnItemClickListener {
 
     private File currentDir;
     private File[] currentDirData;
+    ArrayAdapter<File> adapter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_chooser);
         currentDir = Environment.getExternalStorageDirectory();
         updateItems(currentDir);
+        
+        ListView listView = (ListView) findViewById(R.id.listView1);
+        listView.setOnItemClickListener(this);
+        
+        
     }
 
     private void updateItems(File curDir) {
         File[] curDirFiles = curDir.listFiles();
         
-        // insert 'up navigation' item TODO if not in sdcard directory
+        // insert 'up navigation' item
         currentDirData =  new File[curDirFiles.length + 1];
         System.arraycopy(curDirFiles, 0, currentDirData, 1, curDirFiles.length);
         currentDirData[0] = curDir.getParentFile();
 
+        // set title
         TextView textView = (TextView) findViewById(R.id.textView1);
         textView.setText("Current Dir: " + currentDir.toString());
         
         ListView listView = (ListView) findViewById(R.id.listView1);
-        listView.setOnItemClickListener(this);
-        ArrayAdapter<File> adapter = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, 
+        adapter = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, 
                 android.R.id.text1, currentDirData);
-        
         listView.setAdapter(adapter);
-        
     }
 
     @Override
@@ -59,13 +63,9 @@ public class FileChooser extends Activity implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-        if (currentDirData[pos].isDirectory()) {
+        if (currentDirData[pos].isDirectory() && currentDirData[pos].getParent() != null) {
             currentDir = currentDirData[pos];
+            updateItems(currentDir);
         }
-        updateItems(currentDir);
-        // TODO check if keyfile
     }
-    
-
-
 }
