@@ -1,69 +1,71 @@
 package cryptocast.client.filechooser;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import cryptocast.client.R;
+import cryptocast.client.R.id;
+import cryptocast.client.R.layout;
+import cryptocast.client.R.menu;
 
-import android.app.ListActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.app.Activity;
+import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
-/**
- * An UI element that allows the user to browse the files and folders of the SD card and
- * choose one file.
- */
-public abstract class FileChooser extends ListActivity {
-    
+public class FileChooser extends Activity implements OnItemClickListener {
+
     private File currentDir;
-    
-    
-    /** Initialize the instance
-     * @param savedInstanceState the stored state
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    private File[] currentDirData;
+    ArrayAdapter<File> adapter;
+
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_chooser);
-        currentDir = new File("/sdcard/");
+        currentDir = Environment.getExternalStorageDirectory();
         updateItems(currentDir);
-    }
-
-    /** Handles a click onto a list item.
-     * @param lst The list
-     * @param view The view
-     * @param position The index of the list item
-     * @param id The ID of the list item
-     */
-    @Override
-    protected void onListItemClick(ListView lst, View view, int position, long id) {
+        
+        ListView listView = (ListView) findViewById(R.id.listView1);
+        listView.setOnItemClickListener(this);
+        
+        
     }
 
     private void updateItems(File curDir) {
-        //this.setTitle("Directory: " + curDir.getName());
-        File[] data =  curDir.listFiles();
-        //List<ListElement> folders = new ArrayList<ListElement>();
-        //List<ListElement> files = new ArrayList<ListElement>();
-        /*
-        for (File file : data) {
-            if (file.isDirectory()) {
-                folders.add(new DirectoryListElement(file));
-            } else {
-                files.add(new FileListElement(file));
-            }
-        }
-        */
+        File[] curDirFiles = curDir.listFiles();
         
-        /*FileArrayAdapter adapter = 
-                new FileArrayAdapter(FileChooser.this,R.layout.activity_file_chooser, folders);
-        this.setListAdapter(adapter);
-        */
+        // insert 'up navigation' item
+        currentDirData =  new File[curDirFiles.length + 1];
+        System.arraycopy(curDirFiles, 0, currentDirData, 1, curDirFiles.length);
+        currentDirData[0] = curDir.getParentFile();
+
+        // set title
+        TextView textView = (TextView) findViewById(R.id.textView1);
+        textView.setText("Current Dir: " + currentDir.toString());
+        
+        ListView listView = (ListView) findViewById(R.id.listView1);
+        adapter = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, 
+                android.R.id.text1, currentDirData);
+        listView.setAdapter(adapter);
     }
-    
-    /** Called when the user clicks a file in the list.
-     * @param item The clicked list item.
-     */
-    protected abstract void onFileClick(FileListElement o);
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
+        if (currentDirData[pos].isDirectory() && currentDirData[pos].getParent() != null) {
+            currentDir = currentDirData[pos];
+            updateItems(currentDir);
+        }
+    }
 }

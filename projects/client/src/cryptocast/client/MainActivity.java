@@ -1,5 +1,6 @@
 package cryptocast.client;
 
+import cryptocast.client.filechooser.FileChooser;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -88,7 +89,7 @@ public class MainActivity extends FragmentActivity {
         EditText editText = (EditText) findViewById(R.id.editHostname);
         String hostname = editText.getText().toString();
         //TODO check if hostname is valid
-        Intent intent = new Intent(this, KeyChooser.class);
+        Intent intent = new Intent(this, FileChooser.class);
         startActivity(intent);
     }
     
