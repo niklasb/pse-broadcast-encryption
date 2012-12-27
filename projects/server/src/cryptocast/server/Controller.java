@@ -5,27 +5,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
-import java.security.PrivateKey;
 import java.util.List;
 
 import com.google.common.base.Optional;
 
-import cryptocast.crypto.BroadcastEncryptionServer;
-import cryptocast.crypto.SchnorrGroup;
-import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
-import cryptocast.crypto.naorpinkas.NaorPinkasPersonalKey;
-import cryptocast.crypto.naorpinkas.NaorPinkasServer;
+import cryptocast.crypto.*;
+import cryptocast.crypto.naorpinkas.*;
+import cryptocast.util.ByteUtils;
 import cryptocast.util.SerializationUtils;
-import cryptocast.comm.MessageOutChannel;
-import cryptocast.comm.SocketMulticastServer;
-import cryptocast.comm.StreamMessageOutChannel;
+import cryptocast.comm.*;
 
 /** Deals with user-interactions and therefore changes data in the model if necessary.
  * @param <ID> The type of the user identities
  */
 public class Controller {
     private static final int AES_KEY_BITS = 256;
-
+    private static final int KEY_BROADCAST_INTERVAL_SEC = 5;
+    
     private NaorPinkasServerData data;
     private MessageOutChannel rawOut;
     private File databaseFile;
@@ -57,8 +53,12 @@ public class Controller {
         }
         ServerSocket socket = new ServerSocket();
         socket.bind(bindAddress);
-        MessageOutChannel rawOut = new StreamMessageOutChannel(
-                                      new SocketMulticastServer(socket, null));
+        SocketMulticastServer multicastServer = 
+                new SocketMulticastServer(socket, null, 
+                    MultiOutputStream.ErrorHandling.THROW);
+        new Thread(multicastServer).start();
+        MessageOutChannel rawOut = 
+                new StreamMessageOutChannel(multicastServer);
         return new Controller(data, databaseFile, rawOut, 
                     startBroadcastEncryptionServer(data, rawOut));
     }
@@ -96,12 +96,25 @@ public class Controller {
     startBroadcastEncryptionServer(
             NaorPinkasServerData data, MessageOutChannel rawOut)
                     throws IOException {
-        return BroadcastEncryptionServer.start(
-                data.userManager, data.npServer, AES_KEY_BITS, rawOut);
+        BroadcastEncryptionServer<NaorPinkasIdentity> server = 
+                BroadcastEncryptionServer.start(
+                        data.userManager, data.npServer, AES_KEY_BITS, rawOut,
+                        KEY_BROADCAST_INTERVAL_SEC * 1000, // update every 15 seconds
+                        null);
+        new Thread(server).start();
+        return server;
     }
 
     public int getT() {
         return data.npServer.getT();
+    }
+    
+    public void streamSampleText() throws IOException, InterruptedException {
+        for (;;) {
+            encServer.write(ByteUtils.encodeUtf8("foo\n"));
+            encServer.flush();
+            Thread.sleep(1000);
+        }
     }
     
     /**
@@ -113,6 +126,7 @@ public class Controller {
         byte[] buffer = new byte[4096];
         while ((received = in.read(buffer)) >= 0) {
             encServer.write(buffer, 0, received);
+            encServer.flush();
         }
     }
 }

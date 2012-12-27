@@ -19,7 +19,7 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
     @Test
     public void serverCanSendToClient() throws Exception {
         BroadcastEncryptionServer<NaorPinkasIdentity> out = 
-                BroadcastEncryptionServer.start(server, server, 256, fifo);
+                BroadcastEncryptionServer.start(server, server, 256, fifo, 0, null);
         NaorPinkasPersonalKey key = server.getPersonalKey(server.getIdentity(0)).get();
         BroadcastEncryptionClient in =
                 new BroadcastEncryptionClient(fifo, new NaorPinkasClient(key));
@@ -28,5 +28,29 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
         out.close();
         byte[] read = new byte[payload.length + 10];
         assertEquals(payload.length, StreamUtils.readall(in, read, 0, read.length));
+    }
+
+    @Test
+    public void serverBroadcastsKeyRegularly() throws Exception {
+        BroadcastEncryptionServer<NaorPinkasIdentity> out = 
+                BroadcastEncryptionServer.start(server, server, 256, fifo, 0, null);
+        NaorPinkasPersonalKey key = server.getPersonalKey(server.getIdentity(0)).get();
+        byte[] payload = str2bytes("abcdefg");
+        out.write(payload);
+        out.flush();
+        fifo.setBlocking(false);
+        while (fifo.recvMessage() != null) {}
+        fifo.setBlocking(true);
+        BroadcastEncryptionClient in =
+                new BroadcastEncryptionClient(fifo, new NaorPinkasClient(key));
+        Thread worker = new Thread(out);
+        worker.start();
+        Thread.sleep(100);
+        out.write(payload);
+        out.close();
+        byte[] read = new byte[payload.length + 10];
+        assertEquals(payload.length, StreamUtils.readall(in, read, 0, read.length));
+        worker.interrupt();
+        worker.join();
     }
 }

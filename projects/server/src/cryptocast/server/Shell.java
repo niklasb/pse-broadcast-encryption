@@ -51,6 +51,9 @@ public class Shell extends InteractiveCommandLineInterface {
         new ShellCommand("stream-stdin",
                          "",
                          "Captures input from STDIN and broadcasts it"),
+        new ShellCommand("stream-sample-text",
+                         "",
+                         "Streams an infinite stream of sample text"),
         new ShellCommand("init",
                          "<t>",
                          "Creates a whole new crypto context"),
@@ -92,6 +95,7 @@ public class Shell extends InteractiveCommandLineInterface {
         else if (cmd.getName() == "unrevoke") { cmdUnrevokeUser(cmd, args); }
         else if (cmd.getName() == "save-keys") { cmdSaveKeys(cmd, args); }
         else if (cmd.getName() == "stream-stdin") { cmdStreamStdin(cmd, args); }
+        else if (cmd.getName() == "stream-sample-text") { cmdStreamSampleText(cmd, args); }
         else { cannotHappen(); }
     }
 
@@ -199,7 +203,6 @@ public class Shell extends InteractiveCommandLineInterface {
         if (!mUser.isPresent()) {
             error("User with this name already existing!");
         }
-        println("User was added successfully");
     }
     
     private void cmdRevokeUser(ShellCommand cmd, String[] args) throws CommandError {
@@ -215,7 +218,6 @@ public class Shell extends InteractiveCommandLineInterface {
         } catch (NoMoreRevocationsPossibleError e) {
             error("Cannot revoke any more users!");
         }
-        println("User was revoked successfully");
     }
     
     private void cmdUnrevokeUser(ShellCommand cmd, String[] args) throws CommandError {
@@ -227,7 +229,6 @@ public class Shell extends InteractiveCommandLineInterface {
         if (!getModel().unrevoke(user)) {
             error("User already authorized!");
         }
-        println("User was authorized successfully");
     }
 
     private void cmdSaveKeys(ShellCommand cmd, String[] args) throws CommandError, Exit {
@@ -250,6 +251,17 @@ public class Shell extends InteractiveCommandLineInterface {
         }
         try {
             control.saveUserKeys(dir, users);
+        } catch (Exception e) {
+            fatalError(e);
+        }
+    }
+    
+    private void cmdStreamSampleText(ShellCommand cmd, String[] args) throws CommandError, Exit {
+        if (args.length != 0) {
+            commandSyntaxError(cmd);
+        }
+        try {
+            control.streamSampleText();
         } catch (Exception e) {
             fatalError(e);
         }

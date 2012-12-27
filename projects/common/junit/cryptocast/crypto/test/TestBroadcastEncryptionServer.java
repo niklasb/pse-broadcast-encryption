@@ -17,7 +17,7 @@ public class TestBroadcastEncryptionServer {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        sut = new BroadcastEncryptionServer<Identity>(userManager, cipherStream);
+        sut = new BroadcastEncryptionServer<Identity>(userManager, cipherStream, 0, null);
     }
 
     @Test

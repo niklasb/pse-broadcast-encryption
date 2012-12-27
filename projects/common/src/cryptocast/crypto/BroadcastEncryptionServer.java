@@ -1,17 +1,21 @@
 package cryptocast.crypto;
 
 import cryptocast.comm.*;
+import cryptocast.util.Callback;
 
-import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * The server side of a broadcast encryption scheme
  * @param <ID> The type of the identities
  */
-public class BroadcastEncryptionServer<ID> extends FilterOutputStream {
+public class BroadcastEncryptionServer<ID> extends OutputStream
+                                           implements Runnable {
     private BroadcastSchemeUserManager<ID> context;
     private DynamicCipherOutputStream cipherStream;
+    private int intervalMilliseconds;
+    private Callback<Throwable> excHandler;
     
     /**
      * Initializes a broadcast encryption server.
@@ -20,32 +24,52 @@ public class BroadcastEncryptionServer<ID> extends FilterOutputStream {
      * @param enc The encryption context
      */
     public BroadcastEncryptionServer(BroadcastSchemeUserManager<ID> context,
-                                     DynamicCipherOutputStream cipherStream) {
-        super(cipherStream);
+                                     DynamicCipherOutputStream cipherStream,
+                                     int intervalMilliseconds,
+                                     Callback<Throwable> excHandler) {
         this.cipherStream = cipherStream;
         this.context = context;
+        this.intervalMilliseconds = intervalMilliseconds;
+        this.excHandler = excHandler;
     }
 
     public static <ID> BroadcastEncryptionServer<ID> start(
             BroadcastSchemeUserManager<ID> context,
             Encryptor<byte[]> enc,
             int symmetricKeyBits,
-            MessageOutChannel inner) throws IOException {
+            MessageOutChannel inner,
+            int intervalMilliseconds,
+            Callback<Throwable> excHandler) throws IOException {
         return new BroadcastEncryptionServer<ID>(context, 
-                DynamicCipherOutputStream.start(inner, symmetricKeyBits, enc));
+                DynamicCipherOutputStream.start(inner, symmetricKeyBits, enc),
+                intervalMilliseconds,
+                excHandler);
     }
 
     /**
      * Runs the worker that handles periodic group key broadcasts and sends
      * queued data packages.
      */
-    public void run() {}
+    public void run() {
+        for(;;) {
+            try {
+                Thread.sleep(intervalMilliseconds);
+            } catch (InterruptedException e) {
+                return;
+            }
+            try {
+                broadcastKey();
+            } catch (Exception e) {
+                excHandler.handle(e);
+            }
+        }
+    }
     
-    public void updateKey() throws IOException {
+    public synchronized void updateKey() throws IOException {
         cipherStream.updateKey();
     }
 
-    public void broadcastKey() throws IOException {
+    public synchronized void broadcastKey() throws IOException {
         cipherStream.reinitializeCipher();
     }
 
@@ -53,15 +77,35 @@ public class BroadcastEncryptionServer<ID> extends FilterOutputStream {
      * Revokes a user.
      * @param id The identity of the user
      */
-    public void revoke(ID id) throws NoMoreRevocationsPossibleError, IOException {
+    public synchronized void revoke(ID id) throws NoMoreRevocationsPossibleError, IOException {
         if (context.revoke(id)) {
             updateKey();
         }
     }
     
-    public void unrevoke(ID id) throws IOException {
+    public synchronized void unrevoke(ID id) throws IOException {
         if (context.unrevoke(id)) {
             updateKey();
         }
+    }
+    
+    @Override
+    public synchronized void close() throws IOException  {
+        cipherStream.close();
+    }
+    
+    @Override
+    public synchronized void flush() throws IOException {
+        cipherStream.flush();
+    }
+    
+    @Override
+    public synchronized void write(int b) throws IOException {
+        cipherStream.write(b);
+    }
+    
+    @Override
+    public synchronized void write(byte[] buf, int offset, int len) throws IOException {
+        cipherStream.write(buf, offset, len);
     }
 }

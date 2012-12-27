@@ -36,7 +36,9 @@ public final class TextClient {
             System.exit(1);
         }
         Socket sock = new Socket();
+        System.out.println("Connecting to server...");
         sock.connect(address.get());
+        System.out.println("Setting up encryption client");
         BroadcastEncryptionClient in =
                 new BroadcastEncryptionClient(
                         new StreamMessageInChannel(sock.getInputStream()), 

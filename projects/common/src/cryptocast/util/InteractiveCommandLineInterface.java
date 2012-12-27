@@ -63,6 +63,11 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
                 exit(0);
             }
 
+            // ignore empty lines of input
+            if (raw.matches("\\s*")) {
+                continue;
+            }
+            
             String[] cmdline = raw.trim().split("\\s+");
             String cmd = cmdline[0];
             String[] args = new String[cmdline.length - 1];

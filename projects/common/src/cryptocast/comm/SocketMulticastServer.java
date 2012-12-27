@@ -1,7 +1,7 @@
 package cryptocast.comm;
 
-import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,10 +10,9 @@ import cryptocast.util.Callback;
 /**
  * This class implements channel-based communication via TCP.
  */
-public class SocketMulticastServer extends FilterOutputStream implements Runnable {
-    private MultiOutputStream multi = new MultiOutputStream(
-                 MultiOutputStream.ErrorHandling.REMOVE);
-    private Callback<IOException> excHandler;
+public class SocketMulticastServer extends OutputStream implements Runnable {
+    private MultiOutputStream multi;
+    private Callback<Throwable> excHandler;
     private ServerSocket server;
     
     /**
@@ -21,13 +20,13 @@ public class SocketMulticastServer extends FilterOutputStream implements Runnabl
      * @param socket Server socket
      */
     public SocketMulticastServer(ServerSocket server,
-                                 Callback<IOException> excHandler) { 
-        super(null);
-        this.out = multi;
+                                 Callback<Throwable> excHandler,
+                                 MultiOutputStream.ErrorHandling errHandling) {
+        this.multi = new MultiOutputStream(errHandling);
         this.server = server;
         this.excHandler = excHandler;
     };
-
+    
     @Override
     public void run() {
         for(;;) {
@@ -35,10 +34,30 @@ public class SocketMulticastServer extends FilterOutputStream implements Runnabl
             try {
                 socket = server.accept();
                 multi.addChannel(socket.getOutputStream());
-            } catch (IOException e) {
+            } catch (Throwable e) {
                 excHandler.handle(e);
                 return;
             }
         }
+    }
+
+    @Override
+    public void write(byte[] data, int offset, int len) throws IOException {
+        multi.write(data, offset, len);
+    }
+    
+    @Override
+    public void write(int b) throws IOException {
+        multi.write(b);
+    }
+    
+    @Override
+    public void close() throws IOException {
+        multi.close();
+    }
+    
+    @Override
+    public void flush() throws IOException {
+        multi.flush();
     }
 }
