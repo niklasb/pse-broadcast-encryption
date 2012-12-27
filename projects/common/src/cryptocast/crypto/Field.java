@@ -1,5 +1,6 @@
 package cryptocast.crypto;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -7,7 +8,9 @@ import java.util.Random;
  * Represents a field over values of type T.
  * @param <T> The values we work on.
  */
-public abstract class Field<T> {
+public abstract class Field<T> implements Serializable {
+    private static final long serialVersionUID = -5044040558567213861L;
+
     public abstract Class<T> getElementClass();
 
     /**

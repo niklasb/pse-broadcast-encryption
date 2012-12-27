@@ -31,16 +31,13 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         
-        //loading last server name from shared preference
-        SharedPreferences sharedPref = getSharedPreferences(
-                getString(R.string.preference_server_name), Context.MODE_PRIVATE);
-        //TODO 
-        String serverName = sharedPref.getString(getString(R.string.saved_server_main), "");
+        String serverName = loadServerName();
         //write server to textView
         TextView tv1 = (TextView) findViewById(R.id.editHostname);
         tv1.setText(serverName); 
     }
     
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -48,13 +45,7 @@ public class MainActivity extends FragmentActivity {
         //get last server name
         TextView tv1 = (TextView) findViewById(R.id.editHostname);
         String serverName =  tv1.getText().toString();
-        //saving last server name to shared preference
-        SharedPreferences sharedPref = getSharedPreferences(
-                getString(R.string.preference_server_name), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.saved_server_main),
-                serverName);
-        editor.commit();
+        storeServerName(serverName);
     }
     
     /**
@@ -99,6 +90,25 @@ public class MainActivity extends FragmentActivity {
         //TODO check if hostname is valid
         Intent intent = new Intent(this, KeyChooser.class);
         startActivity(intent);
+    }
+    
+    public void storeServerName(String serverName) {
+        //saving last server name to shared preference
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_server_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.saved_server_main),
+                serverName);
+        editor.commit();
+    }
+    
+    public String loadServerName() {
+        //loading last server name from shared preference
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_server_name), Context.MODE_PRIVATE);
+        String serverName = sharedPref.getString(getString(R.string.saved_server_main), "");
+        
+        return serverName;
     }
 
     /**

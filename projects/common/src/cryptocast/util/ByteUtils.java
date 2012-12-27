@@ -17,6 +17,15 @@ public class ByteUtils {
         }
     }
     
+    public static byte[] encodeUtf8(String str) {
+        try {
+            return str.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            cannotHappen(e);
+            return null; // just to make the compiler happy
+        }
+    }
+    
     public static BigInteger getBigInt(ByteBuffer buf) {
         int len = buf.getInt();
         byte[] bytes = new byte[len];

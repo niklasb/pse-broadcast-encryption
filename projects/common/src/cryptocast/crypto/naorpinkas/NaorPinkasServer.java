@@ -49,6 +49,10 @@ public class NaorPinkasServer
         this.gp0 = schnorr.getPowerOfG(poly.evaluate(BigInteger.ZERO));
     }
 
+    public int getT() {
+        return t;
+    }
+    
     public static NaorPinkasServer generate(int t, SchnorrGroup schnorr) {
         Polynomial<BigInteger> poly = 
                 Polynomial.createRandomPolynomial(rnd, schnorr.getFieldModQ(), t);
@@ -119,7 +123,7 @@ public class NaorPinkasServer
     }
     
     public boolean unrevoke(NaorPinkasIdentity id) {
-        return !revokedUsers.remove(id);
+        return revokedUsers.remove(id);
     }
 
     /**

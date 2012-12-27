@@ -3,6 +3,7 @@ package cryptocast.client;
 import java.io.File;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
@@ -20,7 +21,7 @@ public class KeyChooser extends Activity implements OnItemClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_key_chooser);
-        currentDir = new File("/sdcard/");
+        currentDir = Environment.getExternalStorageDirectory();
         updateItems(currentDir);
     }
 

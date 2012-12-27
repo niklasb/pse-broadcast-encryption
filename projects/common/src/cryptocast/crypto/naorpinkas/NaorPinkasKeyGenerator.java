@@ -1,5 +1,6 @@
 package cryptocast.crypto.naorpinkas;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -11,7 +12,10 @@ import com.google.common.collect.ImmutableList;
 import cryptocast.crypto.*;
 import cryptocast.util.Generator;
 
-public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey> {
+public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey> 
+                                    implements Serializable {
+    private static final long serialVersionUID = 2925906243884263202L;
+    
     private int t;
     private SecureRandom rnd;
     private SchnorrGroup schnorr;

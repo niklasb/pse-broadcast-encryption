@@ -35,6 +35,15 @@ public class TestNaorPinkasServer {
     }
 
     @Test
+    public void revokeAndUnrevokeReturnCorrectBool() throws Exception {
+        NaorPinkasIdentity id = server.getIdentity(2);
+        assertTrue(server.revoke(id));
+        assertFalse(server.revoke(id));
+        assertTrue(server.unrevoke(id));
+        assertFalse(server.unrevoke(id));
+    }
+    
+    @Test
     public void canRevokeUpToTUsers() throws Exception {
         for (int i = 0; i < t; ++i) {
             server.revoke(server.getIdentity(i));

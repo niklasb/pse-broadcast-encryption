@@ -1,12 +1,16 @@
 package cryptocast.crypto;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Random;
 
 /**
  * The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$.
  */
-public class IntegersModuloPrime extends Field<BigInteger> {
+public class IntegersModuloPrime extends Field<BigInteger> 
+                                 implements Serializable {
+    private static final long serialVersionUID = -2607220779180962188L;
+    
     private BigInteger p;
    
     /**

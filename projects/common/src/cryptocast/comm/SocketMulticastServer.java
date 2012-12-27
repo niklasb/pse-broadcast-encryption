@@ -10,11 +10,11 @@ import cryptocast.util.Callback;
 /**
  * This class implements channel-based communication via TCP.
  */
-class SocketMulticastServer extends FilterOutputStream implements Runnable {
-    MultiOutputStream multi = new MultiOutputStream(
-            MultiOutputStream.ErrorHandling.REMOVE);
-    Callback<IOException> excHandler;
-    ServerSocket server;
+public class SocketMulticastServer extends FilterOutputStream implements Runnable {
+    private MultiOutputStream multi = new MultiOutputStream(
+                 MultiOutputStream.ErrorHandling.REMOVE);
+    private Callback<IOException> excHandler;
+    private ServerSocket server;
     
     /**
      * Creates an instance of a multicast server which uses the given socket.

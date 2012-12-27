@@ -1,10 +1,12 @@
-package cryptocast.server;
+package cryptocast.server.programs;
+
+import cryptocast.server.*;
 
 /**
  * The main method to start the server.
  */
-public final class Main {
-    private Main() { }
+public final class Server {
+    private Server() { }
     
     /**
      * @param args command line arguments

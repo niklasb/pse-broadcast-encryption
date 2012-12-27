@@ -13,9 +13,9 @@ import cryptocast.crypto.SchnorrGroup;
 public class NaorPinkasPersonalKey implements PrivateKey {
     private static final long serialVersionUID = 654772327240529095L;
 
-    protected int t;
-    protected BigInteger i, pi;
-    protected SchnorrGroup schnorr;
+    private int t;
+    private BigInteger i, pi;
+    private SchnorrGroup schnorr;
 
     protected NaorPinkasPersonalKey(int t, BigInteger i, BigInteger pi, 
                                     SchnorrGroup schnorr) {

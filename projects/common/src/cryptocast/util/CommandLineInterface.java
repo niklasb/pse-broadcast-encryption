@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
+import com.google.common.base.Throwables;
+
 /**
  * A simple framework for command line programs.
  */
@@ -100,7 +102,13 @@ public abstract class CommandLineInterface {
      */
     protected void fatalError(String format, Object... args) throws Exit {
         err.println(String.format(getErrorFormat(), String.format(format, args)));
-        exit(2);
+        exit(1);
+    }
+
+    protected void fatalError(Throwable e) throws Exit {
+        err.println("Fatal error:");
+        err.println(Throwables.getStackTraceAsString(e));
+        exit(1);
     }
 
     /**
@@ -123,9 +131,7 @@ public abstract class CommandLineInterface {
     /**
      * @return basic usage information for the program (should be overridden).
      */
-    protected String getBasicUsage() {
-        return "java [program] [arguments]";
-    }
+    protected abstract String getBasicUsage();
 
     /**
      * Prints additional usage information (may be overridden).

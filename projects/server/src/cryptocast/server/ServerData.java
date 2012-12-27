@@ -2,11 +2,15 @@ package cryptocast.server;
 
 import cryptocast.crypto.BroadcastSchemeUserManager;
 import cryptocast.crypto.BroadcastSchemeKeyManager;
+import cryptocast.crypto.Encryptor;
+import cryptocast.crypto.NoMoreRevocationsPossibleError;
 
 import com.google.common.base.Optional;
 
+import java.util.List;
 import java.io.Serializable;
 import java.security.PrivateKey;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,34 +22,36 @@ public class ServerData<ID> implements Serializable {
 
     private Map<String, User<ID>> userByName = new HashMap<String, User<ID>>();
     private Map<ID, User<ID>> userById = new HashMap<ID, User<ID>>();
-    private BroadcastSchemeUserManager<ID> users;
-    private BroadcastSchemeKeyManager<ID> keys;
+    protected BroadcastSchemeUserManager<ID> userManager;
+    protected BroadcastSchemeKeyManager<ID> keyManager;
+    protected List<User<ID>> users = new ArrayList<User<ID>>();
     //the amount of all users added
     private int addedUsers = 0;
-    
-    public ServerData(BroadcastSchemeUserManager<ID> users, BroadcastSchemeKeyManager<ID> keys) {
-        this.users = users;
-        this.keys = keys;
+
+    public ServerData(BroadcastSchemeUserManager<ID> userManager, 
+                      BroadcastSchemeKeyManager<ID> keyManager) {
+        this.userManager = userManager;
+        this.keyManager = keyManager;
     }
 
     /**
      * Creates and saves a new user by name.
      * @param name The user's name
-     * @return The new user if it has been added successfully or the
-     *         already existing user object with the given name.
+     * @return The new user if it has been added successfully or absent
+     *         if a user with the same name already existed
      */
-    public User<ID> createNewUser(String name) {
-        User<ID> alreadyThere = userByName.get(name);
-        if (alreadyThere != null) {
-            return alreadyThere;
+    public Optional<User<ID>> createNewUser(String name) {
+        if (userByName.get(name) != null) {
+            return Optional.absent();
         }
         // create necessary data
-        ID userIdent = users.getIdentity(addedUsers++);
+        ID userIdent = userManager.getIdentity(addedUsers++);
         User<ID> newOne = new User<ID>(name, userIdent);
         // adjust data structures
         userByName.put(name, newOne);
         userById.put(userIdent, newOne);
-        return newOne;
+        users.add(newOne);
+        return Optional.of(newOne);
     }
 
     /**
@@ -63,6 +69,22 @@ public class ServerData<ID> implements Serializable {
      * @return The private key
      */
     public Optional<? extends PrivateKey> getPersonalKey(User<ID> user) {
-        return keys.getPersonalKey(user.getIdentity());
+        return keyManager.getPersonalKey(user.getIdentity());
+    }
+
+    public boolean revoke(User<ID> user) throws NoMoreRevocationsPossibleError {
+        return userManager.revoke(user.getIdentity());
+    }
+
+    public boolean unrevoke(User<ID> user) {
+        return userManager.unrevoke(user.getIdentity());
+    }
+
+    public boolean isRevoked(User<ID> user) {
+        return userManager.isRevoked(user.getIdentity());
+    }
+
+    public List<User<ID>> getUsers() {
+        return users;
     }
 }

@@ -1,11 +1,14 @@
 package cryptocast.server;
 
+import java.io.Serializable;
+
 /**
  * Represents a user in our application.
  * @param <ID> The type of the user identities
  */
-public class User<ID> {
-    //User's name.
+public class User<ID> implements Serializable {
+    private static final long serialVersionUID = 3943067597233965248L;
+
     private String name;
     private ID id;
 

@@ -32,9 +32,12 @@ public class NaorPinkasMessage implements Packable {
     public ImmutableList<NaorPinkasShare> getShares() { return shares; }
 
     public int getMaxSpace() {
-        return 4 + 2 * schnorr.getMaxNumberSpace() 
-                 + schnorr.getMaxSpace() 
-                 + shares.size() * shares.get(0).getMaxSpace();
+        int size = 4 + 2 * schnorr.getMaxNumberSpace() 
+                     + schnorr.getMaxSpace();
+        if (shares.size() > 0) {
+            size += shares.size() * shares.get(0).getMaxSpace();
+        }
+        return size;
     }
 
     public void pack(ByteBuffer buf) {
