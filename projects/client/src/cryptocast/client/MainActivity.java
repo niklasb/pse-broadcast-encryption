@@ -92,7 +92,7 @@ public class MainActivity extends FragmentActivity {
         startActivity(intent);
     }
     
-    private void storeServerName(String serverName) {
+    public void storeServerName(String serverName) {
         //saving last server name to shared preference
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_server_name), Context.MODE_PRIVATE);
@@ -102,7 +102,7 @@ public class MainActivity extends FragmentActivity {
         editor.commit();
     }
     
-    private String loadServerName() {
+    public String loadServerName() {
         //loading last server name from shared preference
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_server_name), Context.MODE_PRIVATE);
