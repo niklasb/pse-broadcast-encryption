@@ -40,16 +40,16 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
      * @throws Exit if the program finishes early
      */
     @Override
-    protected void start(String[] args) throws CommandLineInterface.Exit {
+    protected void start(String[] args) throws Exit {
         parseArgs(args);
         mainloop();
     }
     
-    protected void parseArgs(String[] args) throws CommandLineInterface.Exit {
+    protected void parseArgs(String[] args) throws Exit {
     }
 
     /** Starts the interactive Prompt-Read-Evaluate main loop.  */
-    protected void mainloop() throws CommandLineInterface.Exit {
+    protected void mainloop() throws Exit {
         for (;;) {
             print(getPrompt());
             String raw = null;
@@ -80,7 +80,8 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
      * @param cmd The command name
      * @param args The command arguments
      */
-    protected abstract void performCommand(String cmd, String[] args) throws CommandError;
+    protected abstract void performCommand(String cmd, String[] args) 
+            throws CommandError, Exit;
 
     /**
      * Helper function to trigger an error withing a command's execution and break out to
