@@ -1,2 +1,2 @@
 #!/bin/sh
-rlwrap java -cp projects/common/bin:projects/server/bin:3rd_party/guava-13.0.1.jar cryptocast.server.programs.Server "$@"
+rlwrap java -cp projects/common/bin:projects/server/bin:3rd_party/guava-13.0.1.jar:3rd_party/jcommander-1.31-SNAPSHOT.jar cryptocast.server.programs.Server "$@"

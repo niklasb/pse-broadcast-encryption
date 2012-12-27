@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.*;
 
 import cryptocast.util.Callback;
 
@@ -14,26 +15,28 @@ public class SocketMulticastServer extends OutputStream implements Runnable {
     private MultiOutputStream multi;
     private Callback<Throwable> excHandler;
     private ServerSocket server;
+    private static Logger log = Logger.getLogger("cryptocast.comm.SocketMulticastServer");
     
     /**
      * Creates an instance of a multicast server which uses the given socket.
      * @param socket Server socket
      */
     public SocketMulticastServer(ServerSocket server,
-                                 Callback<Throwable> excHandler,
-                                 MultiOutputStream.ErrorHandling errHandling) {
-        this.multi = new MultiOutputStream(errHandling);
+                                 Callback<Throwable> excHandler) {
+        this.multi = new MultiOutputStream(MultiOutputStream.removeOnError);
         this.server = server;
         this.excHandler = excHandler;
     };
     
     @Override
     public void run() {
+        log.fine("Starting accept loop");
         for(;;) {
             Socket socket;
             try {
                 socket = server.accept();
                 multi.addChannel(socket.getOutputStream());
+                log.fine("New client connected!");
             } catch (Throwable e) {
                 excHandler.handle(e);
                 return;

@@ -2,14 +2,11 @@ package cryptocast.server;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -21,6 +18,7 @@ import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
 import cryptocast.util.InteractiveCommandLineInterface;
 import cryptocast.util.ByteUtils;
 import static cryptocast.util.ErrorUtils.cannotHappen;
+import static cryptocast.util.FileUtils.expandPath;
 
 /**
  * Implements the user interface of the server as an interactive console application.
@@ -75,8 +73,10 @@ public class Shell extends InteractiveCommandLineInterface {
      * @param out Stream to write normal output to.
      * @param err Stream to write error messages to.
      */
-    public Shell(InputStream in, PrintStream out, PrintStream err) {
+    public Shell(BufferedReader in, PrintStream out, PrintStream err, 
+            Controller control) {
         super(in, out, err);
+        this.control = control;
     }
 
     @Override
@@ -97,29 +97,6 @@ public class Shell extends InteractiveCommandLineInterface {
         else if (cmd.getName() == "stream-stdin") { cmdStreamStdin(cmd, args); }
         else if (cmd.getName() == "stream-sample-text") { cmdStreamSampleText(cmd, args); }
         else { cannotHappen(); }
-    }
-
-    @Override
-    protected String getBasicUsage() {
-        return "cryptocast-server database-file [listen-host:]listen-port";
-    }
-
-    @Override
-    protected void parseArgs(String[] args) throws Exit {
-        if (args.length != 2) {
-            usage();
-            exit(2);
-        }
-        File db = new File(args[0]);
-        Optional<InetSocketAddress> address = parseHostPort(args[1], "127.0.0.1");
-        if (!address.isPresent()) {
-            fatalError("Invalid host/port combination: " + args[1]);
-        }
-        try {
-            control = Controller.start(db, address.get());
-        } catch (Exception e) {
-            fatalError(e);
-        }
     }
     
     /**
@@ -316,29 +293,6 @@ public class Shell extends InteractiveCommandLineInterface {
     
     private void commandSyntaxError(ShellCommand cmd) throws CommandError {
         error("Invalid Syntax! Usage: %s %s", cmd.getName(), cmd.getSyntax());
-    }
-    
-    private File expandPath(String path) {
-        if (path.startsWith("~" + File.separator)) {
-            path = System.getProperty("user.home") + path.substring(1);
-        }
-        return new File(path);
-    }
-    
-    public static Optional<InetSocketAddress> parseHostPort(
-            String str, String defaultHost) {
-        String[] listen = str.split(":");
-        String host, sPort;
-        if (listen.length < 2) {
-            host = defaultHost;
-            sPort = listen[0];
-        } else {
-            host = listen[0];
-            sPort = listen[1];
-        }
-        Optional<Integer> mPort = parseInt(sPort);
-        if (!mPort.isPresent()) { return Optional.absent(); }
-        return Optional.of(new InetSocketAddress(host, mPort.get()));
     }
     
     public static Optional<Integer> parseInt(String str) {

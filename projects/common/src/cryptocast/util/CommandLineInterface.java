@@ -15,7 +15,10 @@ public abstract class CommandLineInterface {
      * Signals the exit of the application.
      */
     protected class Exit extends Throwable {
+        private static final long serialVersionUID = 6306942436754821406L;
+        
         private int status;
+        
         /**
          * Initializes a new Exit instance.
          * @param status The exit code
@@ -26,8 +29,6 @@ public abstract class CommandLineInterface {
          * @return The exit code
          */
         public int getStatus() { return status; }
-
-        private static final long serialVersionUID = 1;
     }
 
     // the program's output streams
@@ -41,20 +42,19 @@ public abstract class CommandLineInterface {
      * @param out The stream for program output
      * @param err The stream for error output
      */
-    public CommandLineInterface(InputStream in, PrintStream out, PrintStream err) {
-        this.in = new BufferedReader(new InputStreamReader(in));
+    public CommandLineInterface(BufferedReader in, PrintStream out, PrintStream err) {
+        this.in = in;
         this.out = out;
         this.err = err;
     }
 
     /**
      * Runs the application.
-     * @param args The command line arguments
      * @return The exit code
      */
-    public int run(String[] args) {
+    public int run() {
         try {
-            start(args);
+            start();
             return 0;
         } catch (Exit e) {
             return e.getStatus();
@@ -66,7 +66,7 @@ public abstract class CommandLineInterface {
      * @param args The command line arguments
      * @throws Exit if the program finishes early
      */
-    protected abstract void start(String[] args) throws Exit;
+    protected abstract void start() throws Exit;
 
     /**
      * Prints a string to the output stream.
@@ -106,7 +106,7 @@ public abstract class CommandLineInterface {
     }
 
     protected void fatalError(Throwable e) throws Exit {
-        err.println("Fatal error:");
+        err.printf(getErrorFormat() + "\n", "Fatal error!");
         err.println(Throwables.getStackTraceAsString(e));
         exit(1);
     }
@@ -119,22 +119,4 @@ public abstract class CommandLineInterface {
     protected void exit(int status) throws Exit {
         throw new Exit(status);
     }
-
-    /**
-     * Prints usage information.
-     */
-    protected void usage() {
-        err.println("Usage: " + getBasicUsage());
-        printAdditionalUsage();
-    }
-
-    /**
-     * @return basic usage information for the program (should be overridden).
-     */
-    protected abstract String getBasicUsage();
-
-    /**
-     * Prints additional usage information (may be overridden).
-     */
-    protected void printAdditionalUsage() { }
 }

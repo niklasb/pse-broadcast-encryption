@@ -1,7 +1,7 @@
 package cryptocast.util;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 
 /**
@@ -30,7 +30,7 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
      * @param out The stream for program output
      * @param err The stream for error output
      */
-    public InteractiveCommandLineInterface(InputStream in, PrintStream out, PrintStream err) {
+    public InteractiveCommandLineInterface(BufferedReader in, PrintStream out, PrintStream err) {
         super(in, out, err);
     }
 
@@ -40,12 +40,8 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
      * @throws Exit if the program finishes early
      */
     @Override
-    protected void start(String[] args) throws Exit {
-        parseArgs(args);
+    protected void start() throws Exit {
         mainloop();
-    }
-    
-    protected void parseArgs(String[] args) throws Exit {
     }
 
     /** Starts the interactive Prompt-Read-Evaluate main loop.  */

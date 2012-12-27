@@ -5,6 +5,7 @@ import cryptocast.util.Callback;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Logger;
 
 /**
  * The server side of a broadcast encryption scheme
@@ -16,6 +17,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
     private DynamicCipherOutputStream cipherStream;
     private int intervalMilliseconds;
     private Callback<Throwable> excHandler;
+    private static Logger log = Logger.getLogger("cryptocast.comm.BroadcastEncryptionServer");
     
     /**
      * Initializes a broadcast encryption server.
@@ -58,6 +60,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
                 return;
             }
             try {
+                log.fine("Broadcasting session key");
                 broadcastKey();
             } catch (Exception e) {
                 excHandler.handle(e);

@@ -5,21 +5,47 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.google.common.collect.ImmutableList;
+
 /**
  * Multiplexes several instances of {@link OutputStream}s so that they can be used as a single
  * destination.
  */
 public class MultiOutputStream extends OutputStream {
-    public enum ErrorHandling {
-        REMOVE,
-        IGNORE,
-        THROW,
-    };
-    List<OutputStream> channels = new ArrayList<OutputStream>();
-    ErrorHandling errHandling;
+    public static interface ErrorHandler {
+        public void handle(MultiOutputStream multi, OutputStream channel, 
+                IOException exc) throws IOException;
+    }
     
-    public MultiOutputStream(ErrorHandling errHandling) {
-        this.errHandling = errHandling;
+    public static ErrorHandler propagateError = new ErrorHandler() {
+        @Override
+        public void handle(MultiOutputStream multi, OutputStream channel, 
+                IOException exc) throws IOException {
+            throw exc;
+        }
+    };
+    
+    public static ErrorHandler removeOnError = new ErrorHandler() {
+        @Override
+        public void handle(MultiOutputStream multi, OutputStream channel, 
+                IOException exc) {
+            multi.removeChannel(channel);
+        }
+    };
+    
+    List<OutputStream> channels = new ArrayList<OutputStream>();
+    ErrorHandler errHandler;
+
+    public MultiOutputStream(ErrorHandler errHandler) {
+        this.errHandler = errHandler;
+    }
+    
+    public MultiOutputStream() {
+        this.errHandler = propagateError;
+    }
+
+    public ImmutableList<OutputStream> getChannels() {
+        return ImmutableList.copyOf(channels);
     }
 
     /**
@@ -39,15 +65,11 @@ public class MultiOutputStream extends OutputStream {
 
     @Override
     public void write(byte[] data, int offset, int len) throws IOException {
-        for (OutputStream chan : channels) {
+        for (OutputStream chan : getChannels()) {
             try {
                 chan.write(data, offset, len);
             } catch (IOException e) {
-                if (errHandling == ErrorHandling.THROW) {
-                    throw e;
-                } else if (errHandling == ErrorHandling.REMOVE) {
-                    removeChannel(chan);
-                }
+                errHandler.handle(this, chan, e);
             }
         }
     }

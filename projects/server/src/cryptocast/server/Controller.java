@@ -54,8 +54,7 @@ public class Controller {
         ServerSocket socket = new ServerSocket();
         socket.bind(bindAddress);
         SocketMulticastServer multicastServer = 
-                new SocketMulticastServer(socket, null, 
-                    MultiOutputStream.ErrorHandling.THROW);
+                new SocketMulticastServer(socket, null);
         new Thread(multicastServer).start();
         MessageOutChannel rawOut = 
                 new StreamMessageOutChannel(multicastServer);
@@ -110,8 +109,9 @@ public class Controller {
     }
     
     public void streamSampleText() throws IOException, InterruptedException {
+        int counter = 0;
         for (;;) {
-            encServer.write(ByteUtils.encodeUtf8("foo\n"));
+            encServer.write(ByteUtils.encodeUtf8((counter++) + "\n"));
             encServer.flush();
             Thread.sleep(1000);
         }

@@ -8,5 +8,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="../../3rd_party/mockito-core-1.9.5.jar"/>
 	<classpathentry kind="lib" path="../../3rd_party/com.springsource.org.objenesis-1.0.0.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/jcommander-1.31-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -30,7 +30,6 @@ public class TestNaorPinkasMessage extends WithNaorPinkasContext {
     
     @Test
     public void canPackEmptyMessage() {
-        Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 6, 123, 22 });
         BigInteger r = BigInteger.valueOf(111111),
                    xor = BigInteger.valueOf(222222);
         NaorPinkasMessage expected = 

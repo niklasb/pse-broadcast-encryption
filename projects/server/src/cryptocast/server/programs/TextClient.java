@@ -1,44 +1,40 @@
 package cryptocast.server.programs;
 
 import java.io.File;
-import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.security.PrivateKey;
 
-import com.google.common.base.Optional;
+import com.beust.jcommander.Parameter;
 
 import cryptocast.comm.StreamMessageInChannel;
 import cryptocast.crypto.BroadcastEncryptionClient;
-import cryptocast.crypto.DynamicCipherInputStream;
-import cryptocast.crypto.naorpinkas.NaorPinkasClient;
-import cryptocast.crypto.naorpinkas.NaorPinkasPersonalKey;
-import cryptocast.server.*;
+import cryptocast.crypto.naorpinkas.*;
+import cryptocast.server.OptParse;
 import cryptocast.util.SerializationUtils;
 
 /**
  * The main method to start the server.
  */
 public final class TextClient {
-    private TextClient() { }
+    static class Options extends OptParse.WithHelp {        
+        @Parameter(names = { "-k", "--keyfile" }, description = "User key file", 
+                   required = true)
+        private File keyFile;
+        
+        @Parameter(names = { "-p", "--port" }, description = "Connect port")
+        private int connectPort = 21337;
+
+        @Parameter(names = { "-b", "--bind-address"}, description = "Connect host")
+        private String connectHost = "127.0.0.1";
+    }
     
     /**
      * @param args command line arguments
      */
-    public static void main(String[] args) throws Exception {
-        if (args.length != 2) {
-            System.err.println("Usage: cryptocast-text-client key-file connect-host:connect-port");
-            System.exit(2);
-        }
-        NaorPinkasPersonalKey key = SerializationUtils.readFromFile(new File(args[0]));
-        Optional<InetSocketAddress> address = Shell.parseHostPort(args[1], "127.0.0.1");
-        if (!address.isPresent()) {
-            System.err.println("Invalid host/port combination: " + args[1]);
-            System.exit(1);
-        }
-        Socket sock = new Socket();
-        System.out.println("Connecting to server...");
-        sock.connect(address.get());
-        System.out.println("Setting up encryption client");
+    public static void main(String[] argv) throws Exception {
+        Options opts = OptParse.parseArgs(new Options(), "cryptocast-text-client", argv);
+        
+        NaorPinkasPersonalKey key = SerializationUtils.readFromFile(opts.keyFile);
+        Socket sock = new Socket(opts.connectHost, opts.connectPort);
         BroadcastEncryptionClient in =
                 new BroadcastEncryptionClient(
                         new StreamMessageInChannel(sock.getInputStream()), 
