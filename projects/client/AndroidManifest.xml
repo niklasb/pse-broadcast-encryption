@@ -30,15 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="cryptocast.client.filechooser"
-            android:label="@string/title_activity_file_chooser" >
-        </activity>
-        <activity
-            android:name="cryptocast.client.KeyChoiceActivity"
-            android:label="@string/title_activity_file_chooser" >
-        </activity>
-        <activity
-            android:name="cryptocast.client.KeyChooser"
+            android:name=".filechooser.FileChooser"
             android:label="@string/title_activity_key_chooser" >
         </activity>
     </application>

@@ -9,7 +9,7 @@ import com.google.common.base.Optional;
  * This activity lets a user choose an encryption key file
  * which is then sent to the server for authentication.
  */
-public class KeyChoiceActivity extends cryptocast.client.filechooser.FileChooser {
+public class KeyChoiceActivity extends cryptocast.cryptocast.client.filechooser.FileChooser {
     private File chosenFile;
 
     /** @return The chosen file or absent on abort. */
