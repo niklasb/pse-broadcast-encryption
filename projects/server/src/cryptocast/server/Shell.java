@@ -1,7 +1,11 @@
 package cryptocast.server;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -15,6 +19,7 @@ import com.google.common.base.Optional;
 import cryptocast.crypto.NoMoreRevocationsPossibleError;
 import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
 import cryptocast.util.InteractiveCommandLineInterface;
+import cryptocast.util.ByteUtils;
 import static cryptocast.util.ErrorUtils.cannotHappen;
 
 /**
@@ -24,36 +29,31 @@ public class Shell extends InteractiveCommandLineInterface {
     private static ShellCommand commands[] = {
         new ShellCommand("help",
                          "[<command>]",
-                         "Shows the command line help",
-                         null),
+                         "Shows the command line help"),
         new ShellCommand("add",
                          "<name>",
-                         "Adds a new user to the group of recipients",
-                         null),
+                         "Adds a new user to the group of recipients"),
         new ShellCommand("revoke",
                          "<name>",
-                         "Revokes a user",
-                         null),
+                         "Revokes a user"),
         new ShellCommand("unrevoke",
                          "<name>",
-                         "Unrevokes a user",
-                         null),
+                         "Unrevokes a user"),
         new ShellCommand("users",
                          "",
-                         "Lists users",
-                         null),
+                         "Lists users"),
         new ShellCommand("save",
                          "",
-                         "Saves the current crypto context and users",
-                         null),
+                         "Saves the current crypto context and users"),
         new ShellCommand("save-keys",
                          "dir [<user>, [<user>, ...]]",
-                         "Saves user keys to a directory",
-                         null),
+                         "Saves user keys to a directory"),
+        new ShellCommand("stream-stdin",
+                         "",
+                         "Captures input from STDIN and broadcasts it"),
         new ShellCommand("init",
                          "<t>",
-                         "Creates a whole new crypto context",
-                         null),
+                         "Creates a whole new crypto context"),
     };
 
     private static SortedMap<String, ShellCommand> commandsByName = 
@@ -91,6 +91,7 @@ public class Shell extends InteractiveCommandLineInterface {
         else if (cmd.getName() == "revoke") { cmdRevokeUser(cmd, args); }
         else if (cmd.getName() == "unrevoke") { cmdUnrevokeUser(cmd, args); }
         else if (cmd.getName() == "save-keys") { cmdSaveKeys(cmd, args); }
+        else if (cmd.getName() == "stream-stdin") { cmdStreamStdin(cmd, args); }
         else { cannotHappen(); }
     }
 
@@ -106,24 +107,12 @@ public class Shell extends InteractiveCommandLineInterface {
             exit(2);
         }
         File db = new File(args[0]);
-        String[] listen = args[1].split(":");
-        String host, sPort;
-        int port  = -1;
-        if (listen.length < 2) {
-            host = "127.0.0.1";
-            sPort = listen[0];
-        } else {
-            host = listen[0];
-            sPort = listen[1];
+        Optional<InetSocketAddress> address = parseHostPort(args[1], "127.0.0.1");
+        if (!address.isPresent()) {
+            fatalError("Invalid host/port combination: " + args[1]);
         }
         try {
-            port = Integer.parseInt(sPort);
-        } catch (NumberFormatException e) {
-            usage();
-            exit(2);
-        }
-        try {
-            control = Controller.start(db, new InetSocketAddress(host, port));
+            control = Controller.start(db, address.get());
         } catch (Exception e) {
             fatalError(e);
         }
@@ -240,7 +229,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
         println("User was authorized successfully");
     }
-    
+
     private void cmdSaveKeys(ShellCommand cmd, String[] args) throws CommandError, Exit {
         if (args.length < 1) {
             commandSyntaxError(cmd);
@@ -266,6 +255,41 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
+    private void cmdStreamStdin(ShellCommand cmd, String[] args) 
+                                throws CommandError, Exit {
+        if (args.length != 0) {
+            commandSyntaxError(cmd);
+        }
+        PipedOutputStream pipeOut = null;
+        PipedInputStream pipeIn = null;
+        try {
+            pipeOut = new PipedOutputStream();
+            pipeIn = new PipedInputStream(pipeOut);
+        } catch (Exception e) {
+            fatalError(e);
+        }
+        final BufferedReader in = this.in;
+        final OutputStream out = pipeOut;
+        Thread reader = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        out.write(ByteUtils.encodeUtf8(line + "\n"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        reader.start();
+        try {
+            control.stream(pipeIn);
+        } catch (Exception e) {
+            fatalError(e);
+        }
+    }
+
     private User<NaorPinkasIdentity> getUser(String name) throws CommandError {
         Optional<User<NaorPinkasIdentity>> mUser = getModel().getUserByName(name);
         if (!mUser.isPresent()) {
@@ -289,9 +313,25 @@ public class Shell extends InteractiveCommandLineInterface {
         return new File(path);
     }
     
-    private Optional<Integer> parseInt(String s) {
+    public static Optional<InetSocketAddress> parseHostPort(
+            String str, String defaultHost) {
+        String[] listen = str.split(":");
+        String host, sPort;
+        if (listen.length < 2) {
+            host = defaultHost;
+            sPort = listen[0];
+        } else {
+            host = listen[0];
+            sPort = listen[1];
+        }
+        Optional<Integer> mPort = parseInt(sPort);
+        if (!mPort.isPresent()) { return Optional.absent(); }
+        return Optional.of(new InetSocketAddress(host, mPort.get()));
+    }
+    
+    public static Optional<Integer> parseInt(String str) {
         try {
-            return Optional.of(Integer.parseInt(s));
+            return Optional.of(Integer.parseInt(str));
         } catch (NumberFormatException e) {
             return Optional.absent();
         }

@@ -13,6 +13,7 @@ import com.google.common.base.Optional;
 import cryptocast.crypto.BroadcastEncryptionServer;
 import cryptocast.crypto.SchnorrGroup;
 import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
+import cryptocast.crypto.naorpinkas.NaorPinkasPersonalKey;
 import cryptocast.crypto.naorpinkas.NaorPinkasServer;
 import cryptocast.util.SerializationUtils;
 import cryptocast.comm.MessageOutChannel;
@@ -71,8 +72,8 @@ public class Controller {
                                   throws IOException {
         for (User<NaorPinkasIdentity> user : users) {
             File keyFile = new File(dir.getAbsolutePath() + "/" + user.getName() + ".key");
-            Optional<? extends PrivateKey> mKey = 
-                    data.keyManager.getPersonalKey(user.getIdentity());
+            Optional<NaorPinkasPersonalKey> mKey = 
+                    data.npServer.getPersonalKey(user.getIdentity());
             assert mKey.isPresent();
             SerializationUtils.writeToFile(keyFile, mKey.get());
         }
