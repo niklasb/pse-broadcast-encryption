@@ -26,8 +26,7 @@
         android:lines="1"
         android:maxLines="1"
         android:maxWidth="250dp"
-        android:minWidth="250dp"
-        android:onClick="onConnect" >
+        android:minWidth="250dp" >
 
         <requestFocus />
     </EditText>
