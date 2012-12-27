@@ -2,6 +2,7 @@ package cryptocast.server;
 
 import cryptocast.crypto.BroadcastSchemeUserManager;
 import cryptocast.crypto.BroadcastSchemeKeyManager;
+import cryptocast.crypto.Encryptor;
 
 import com.google.common.base.Optional;
 
@@ -18,26 +19,29 @@ public class ServerData<ID> implements Serializable {
 
     private Map<String, User<ID>> userByName = new HashMap<String, User<ID>>();
     private Map<ID, User<ID>> userById = new HashMap<ID, User<ID>>();
-    private BroadcastSchemeUserManager<ID> users;
-    private BroadcastSchemeKeyManager<ID> keys;
+    protected BroadcastSchemeUserManager<ID> users;
+    protected BroadcastSchemeKeyManager<ID> keys;
+    protected Encryptor<byte[]> enc;
     //the amount of all users added
     private int addedUsers = 0;
-    
-    public ServerData(BroadcastSchemeUserManager<ID> users, BroadcastSchemeKeyManager<ID> keys) {
+
+    public ServerData(BroadcastSchemeUserManager<ID> users, 
+                      BroadcastSchemeKeyManager<ID> keys,
+                      Encryptor<byte[]> enc) {
         this.users = users;
         this.keys = keys;
+        this.enc = enc;
     }
 
     /**
      * Creates and saves a new user by name.
      * @param name The user's name
-     * @return The new user if it has been added successfully or the
-     *         already existing user object with the given name.
+     * @return The new user if it has been added successfully or absent
+     *         if a user with the same name already existed
      */
-    public User<ID> createNewUser(String name) {
-        User<ID> alreadyThere = userByName.get(name);
-        if (alreadyThere != null) {
-            return alreadyThere;
+    public Optional<User<ID>> createNewUser(String name) {
+        if (userByName.get(name) != null) {
+            return Optional.absent();
         }
         // create necessary data
         ID userIdent = users.getIdentity(addedUsers++);
@@ -45,7 +49,7 @@ public class ServerData<ID> implements Serializable {
         // adjust data structures
         userByName.put(name, newOne);
         userById.put(userIdent, newOne);
-        return newOne;
+        return Optional.of(newOne);
     }
 
     /**

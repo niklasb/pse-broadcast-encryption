@@ -1,5 +1,6 @@
 package cryptocast.crypto;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
@@ -8,9 +9,11 @@ import cryptocast.util.Packable;
 
 import static com.google.common.base.Preconditions.*;
 
-public class SchnorrGroup implements Packable {
-    BigInteger p, q, r, g;
-    Field<BigInteger> modP, modQ;
+public class SchnorrGroup implements Packable, Serializable {
+    private static final long serialVersionUID = -2980881642885431015L;
+    
+    private BigInteger p, q, r, g;
+    private Field<BigInteger> modP, modQ;
 
     public SchnorrGroup(BigInteger p, BigInteger q, BigInteger g) {
         checkArgument(p.subtract(BigInteger.ONE).mod(q).equals(BigInteger.ZERO),

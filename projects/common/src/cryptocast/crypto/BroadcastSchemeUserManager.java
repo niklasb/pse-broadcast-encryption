@@ -1,10 +1,12 @@
 package cryptocast.crypto;
 
+import java.io.Serializable;
+
 /**
  * Manages a set of user identities.
  * @param <ID> The type of the identities
  */
-public interface BroadcastSchemeUserManager<ID> {
+public interface BroadcastSchemeUserManager<ID> extends Serializable {
     /**
      * @param i An index
      * @return The identity with the given index

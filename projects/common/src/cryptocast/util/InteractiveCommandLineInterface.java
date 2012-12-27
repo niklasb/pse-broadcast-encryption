@@ -41,7 +41,11 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
      */
     @Override
     protected void start(String[] args) throws CommandLineInterface.Exit {
+        parseArgs(args);
         mainloop();
+    }
+    
+    protected void parseArgs(String[] args) throws CommandLineInterface.Exit {
     }
 
     /** Starts the interactive Prompt-Read-Evaluate main loop.  */

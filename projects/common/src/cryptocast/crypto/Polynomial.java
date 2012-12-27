@@ -1,5 +1,6 @@
 package cryptocast.crypto;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Random;
 import static com.google.common.base.Preconditions.checkArgument;
@@ -8,7 +9,9 @@ import static com.google.common.base.Preconditions.checkArgument;
  * A polynomial $P$ over a field
  * @param <T> The type of the field's elements
  */
-public class Polynomial<T> {
+public class Polynomial<T> implements Serializable {
+    private static final long serialVersionUID = -1360253235247059379L;
+    
     private Field<T> field;
     private T[] coefficients;
     int degree;
