@@ -41,4 +41,10 @@ public class AudioStreamMediaPlayer implements OnCompletionListener, OnErrorList
     public void onCompletion(MediaPlayer p) {
         worker.interrupt();
     }
+
+    @Override
+    public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }
