@@ -6,8 +6,10 @@ import java.net.InetSocketAddress;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnErrorListener;
 
-public class AudioStreamMediaPlayer {
+public class AudioStreamMediaPlayer implements OnCompletionListener, OnErrorListener {
     private MediaPlayer player = new MediaPlayer();
     private SimpleHttpStreamServer server;
     private InputStream in;
@@ -28,9 +30,15 @@ public class AudioStreamMediaPlayer {
         
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setDataSource("http://127.0.0.1:11337/");
+        player.setOnCompletionListener(this);
     }
 
     public void start() {
         player.start();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer p) {
+        worker.interrupt();
     }
 }
