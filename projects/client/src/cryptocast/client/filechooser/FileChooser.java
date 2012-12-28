@@ -41,10 +41,15 @@ public class FileChooser extends Activity implements OnItemClickListener {
         listView.setOnItemClickListener(this);
     }
 
+<<<<<<< HEAD
     
     private void updateItems(File curDir) {
         currentDirList = listDirectory(curDir);
         currentDirList.add(0, new NavigateUpListElement(curDir.getParentFile()));
+=======
+    private void updateView(File curDir) {
+        currentDirList = listDirectory(curDir);
+>>>>>>> 0229b4a0a5bc1fd3d8d184cfb690f1b674d49d0d
         
         // set title
         TextView textView = (TextView) findViewById(R.id.textView1);
