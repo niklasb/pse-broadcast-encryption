@@ -39,25 +39,8 @@ public class FileChooser extends Activity implements OnItemClickListener {
         listView.setOnItemClickListener(this);
     }
 
-<<<<<<< HEAD
     private void updateView(File curDir) {
         currentDirList = listDirectory(curDir);
-=======
-    private void updateItems(File curDir) {
-        File[] curDirFiles = curDir.listFiles();
-        currentDirList.clear();
-
-        currentDirList.add(new NavigateUpListElement(curDir.getParentFile()));
-        for (File file : curDirFiles) {
-            System.err.println(file + " isdir="+file.isDirectory() + " isfile="+file.isFile() + " listFiles="+file.listFiles());
-            if (file.isDirectory()) {
-                currentDirList.add(new DirectoryListElement(file));
-            } else {
-                currentDirList.add(new FileListElement(file));
-            }
-        }
-        // TODO sort?
->>>>>>> 46b47d3fe18ae80dcecb8f81798ddbd58e4a5a1a
         
         // set title
         TextView textView = (TextView) findViewById(R.id.textView1);
