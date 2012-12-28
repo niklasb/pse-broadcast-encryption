@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
 /**
  * A list element in our file chooser, representing an element on the file system.
  */
-public interface ListElement {
+public interface ListElement {    
     /**
      * @return The path of the element
      */

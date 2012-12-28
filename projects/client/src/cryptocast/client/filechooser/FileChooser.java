@@ -25,76 +25,44 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class FileChooser extends Activity implements OnItemClickListener {
-
-    private File currentDir;
-    private ArrayList<ListElement> currentDirList;
-
+    private FileChooserState state;
+    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_chooser);
-        currentDir = Environment.getExternalStorageDirectory();
-        currentDirList = new ArrayList<ListElement>();
-        
-        updateItems(currentDir);
+        updateState(FileChooserState.fromDirectory(Environment.getExternalStorageDirectory()));
         
         ListView listView = (ListView) findViewById(R.id.listView1);
         listView.setOnItemClickListener(this);
     }
-    
-    private void updateItems(File curDir) {
-        currentDirList = listDirectory(curDir);
-        currentDirList.add(0, new NavigateUpListElement(curDir.getParentFile()));
-        
-     // set title
-        TextView textView = (TextView) findViewById(R.id.textView1);
-        textView.setText("Current Dir: " + currentDir.toString());
-        
-        ListView listView = (ListView) findViewById(R.id.listView1);
-        ArrayAdapter<ListElement> adapter = new ArrayAdapter<ListElement>(this, android.R.layout.simple_list_item_1, 
-                android.R.id.text1, currentDirList);
-        listView.setAdapter(adapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
-    
-    /** Handles a click on the main menu.
-     * @param item The clicked item
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        // Handle menu item click
-        switch (item.getItemId()) {
-            case R.id.itemMain:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.itemOptions:
-                intent = new Intent(this, OptionsActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.itemHelp:
-                intent = new Intent(this, HelpActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.itemPlayer:
-                intent = new Intent(this, StreamViewerActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-        currentDir = enterDirectory(currentDirList.get(pos).getPath());
-        updateItems(currentDir);
+        ListElement item = state.getItems().get(pos);
+        if (item instanceof FileListElement) {
+            handleFileClick(item.getPath());
+        } else {
+            handleDirClick(item.getPath());
+        }
+    }
+    
+    private void handleFileClick(File file) {
+        // TODO
+    }
+    
+    private void handleDirClick(File dir) {
+        updateState(FileChooserState.fromDirectory(dir));
+    }
+    
+    private void updateState(FileChooserState state) {
+        this.state = state;
+        TextView textView = (TextView) findViewById(R.id.textView1);
+        textView.setText("Current Dir: " + state.getCurrentDir().getAbsolutePath());
+        
+        ListView listView = (ListView) findViewById(R.id.listView1);
+        ArrayAdapter<ListElement> adapter = new ArrayAdapter<ListElement>(this, android.R.layout.simple_list_item_1, 
+                android.R.id.text1, state.getItems());
+        listView.setAdapter(adapter);
     }
     
     /**
@@ -137,22 +105,5 @@ public class FileChooser extends Activity implements OnItemClickListener {
         
         Collections.sort(list, new FileComparator());
         return list;
-    }
-}
-
-class FileComparator implements Comparator<ListElement> {
-
-    @Override
-    public int compare(ListElement e1, ListElement e2) {
-        File file1 = e1.getPath();
-        File file2 = e2.getPath();
-        
-        if (file1.isDirectory() && file2.isFile()) {
-            return -1;
-        } else if (file1.isFile() && file2.isDirectory()) {
-            return 1;
-        } else {
-            return file1.getName().compareTo(file2.getName());
-        }
     }
 }

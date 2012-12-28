@@ -1,29 +1,49 @@
 package cryptocast.client;
 
-import java.io.File;
-
-import cryptocast.client.filechooser.FileListElement;
-import com.google.common.base.Optional;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuItem;
+import cryptocast.client.filechooser.FileChooser;
 
 /**
  * This activity lets a user choose an encryption key file
  * which is then sent to the server for authentication.
  */
-public class KeyChoiceActivity {
-    private File chosenFile;
-
-    /** @return The chosen file or absent on abort. */
-    public Optional<File> getChosenFile() {
-        return null;
-    }
-
-    /** Called when the user clicks a file in the list.
-     * @param item The clicked list item.
-     */
-    /*
+public class KeyChoiceActivity extends FileChooser {
     @Override
-    protected void onFileClick(FileListElement o) {
-        
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
     }
-    */
+    
+    /** 
+     * Handles a click on the main menu.
+     * @param item The clicked item
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        // Handle menu item click
+        switch (item.getItemId()) {
+            case R.id.itemMain:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.itemOptions:
+                intent = new Intent(this, OptionsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.itemHelp:
+                intent = new Intent(this, HelpActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.itemPlayer:
+                intent = new Intent(this, StreamViewerActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
