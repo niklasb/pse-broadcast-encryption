@@ -1,0 +1,36 @@
+package cryptocast.client;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+
+public class AudioStreamMediaPlayer {
+    private MediaPlayer player = new MediaPlayer();
+    private SimpleHttpStreamServer server;
+    private InputStream in;
+    private Thread worker;
+
+    public void setDataSource(InputStream in) throws IOException {
+        this.in = in;
+    }
+
+    public void prepare() throws IllegalStateException, IOException {
+        if (in == null) {
+            throw new IllegalStateException("setDataSource() was not called");
+        }
+        server = new SimpleHttpStreamServer(in, 
+                   new InetSocketAddress("127.0.0.1", 11337), "audio/mpeg");
+        worker = new Thread(server);
+        worker.start();
+        
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        player.setDataSource("http://127.0.0.1:11337/");
+    }
+
+    public void start() {
+        player.start();
+    }
+}

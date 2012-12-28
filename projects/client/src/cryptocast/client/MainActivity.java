@@ -37,7 +37,6 @@ public class MainActivity extends FragmentActivity {
         TextView tv1 = (TextView) findViewById(R.id.editHostname);
         tv1.setText(serverName); 
     }
-    
 
     @Override
     protected void onPause() {

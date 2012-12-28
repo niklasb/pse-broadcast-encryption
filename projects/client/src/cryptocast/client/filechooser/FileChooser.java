@@ -39,6 +39,7 @@ public class FileChooser extends Activity implements OnItemClickListener {
 
         currentDirList.add(new NavigateUpListElement(curDir.getParentFile()));
         for (File file : curDirFiles) {
+            System.err.println(file + " isdir="+file.isDirectory() + " isfile="+file.isFile() + " listFiles="+file.listFiles());
             if (file.isDirectory()) {
                 currentDirList.add(new DirectoryListElement(file));
             } else {
