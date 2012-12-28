@@ -27,25 +27,14 @@ public class FileChooser extends Activity implements OnItemClickListener {
         currentDir = Environment.getExternalStorageDirectory();
         currentDirList = new ArrayList<ListElement>();
         
-        updateItems(currentDir);
+        updateView(currentDir);
         
         ListView listView = (ListView) findViewById(R.id.listView1);
         listView.setOnItemClickListener(this);
     }
 
-    private void updateItems(File curDir) {
-        File[] curDirFiles = curDir.listFiles();
-        currentDirList.clear();
-
-        currentDirList.add(new NavigateUpListElement(curDir.getParentFile()));
-        for (File file : curDirFiles) {
-            if (file.isDirectory()) {
-                currentDirList.add(new DirectoryListElement(file));
-            } else {
-                currentDirList.add(new FileListElement(file));
-            }
-        }
-        // TODO sort?
+    private void updateView(File curDir) {
+        currentDirList = listDirectory(curDir);
         
         // set title
         TextView textView = (TextView) findViewById(R.id.textView1);
@@ -66,11 +55,48 @@ public class FileChooser extends Activity implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-        if (currentDirList.get(pos).getPath().isDirectory() 
-                && currentDirList.get(pos).getPath().getParent() != null) {
-            
-            currentDir = currentDirList.get(pos).getPath();
-            updateItems(currentDir);
+        currentDir = enterDirectory(currentDirList.get(pos).getPath());
+        updateView(currentDir);
+    }
+    
+    /**
+     * Tries to enter the given directory.
+     * @param target The directory to enter.
+     * @return The new directory
+     */
+    public File enterDirectory(File target) {
+        File actualTarget = target;
+        if (target == null) {
+            return currentDir;
         }
+        if (target.isDirectory() && target.getParent() != null) {
+            // check if newDir is an actual directory
+            if (target.listFiles() == null) {
+                actualTarget = target.getParentFile();
+            }
+        } else if (!target.isDirectory()) {
+            actualTarget = target.getParentFile();
+        }
+        return actualTarget;
+    }
+    
+    /**
+     * Returns a list of the elements in the gven directory
+     * @param dir  Direcotory to list. Needs to be a valid directory.
+     * @return The listed files
+     */
+    public ArrayList<ListElement> listDirectory(File dir) {
+        ArrayList<ListElement> list = new ArrayList<ListElement>();
+        File[] curDirFiles = dir.listFiles();
+
+        list.add(new NavigateUpListElement(dir.getParentFile()));
+        for (File file : curDirFiles) {
+            if (file.isDirectory()) {
+                list.add(new DirectoryListElement(file));
+            } else {
+                list.add(new FileListElement(file));
+            }
+        }
+        return list;
     }
 }

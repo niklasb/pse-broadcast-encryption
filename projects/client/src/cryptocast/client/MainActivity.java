@@ -35,6 +35,7 @@ public class MainActivity extends FragmentActivity {
         String serverName = loadServerName();
         //write server to textView
         TextView tv1 = (TextView) findViewById(R.id.editHostname);
+        setContentView(R.layout.activity_main);
         tv1.setText(serverName); 
     }
     

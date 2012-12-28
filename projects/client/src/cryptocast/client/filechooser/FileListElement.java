@@ -34,6 +34,6 @@ public class FileListElement implements ListElement {
      * @return A string representation of this element.
      */
     public String toString() {
-        return path.toString();
+        return path.getName();
     }
 }
