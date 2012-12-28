@@ -1,11 +1,9 @@
 package cryptocast.client.filechooser;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import cryptocast.client.R;
-import cryptocast.client.R.id;
-import cryptocast.client.R.layout;
-import cryptocast.client.R.menu;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,36 +19,41 @@ import android.widget.AdapterView.OnItemClickListener;
 public class FileChooser extends Activity implements OnItemClickListener {
 
     private File currentDir;
-    private File[] currentDirData;
-    ArrayAdapter<File> adapter;
+    private ArrayList<ListElement> currentDirList;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_chooser);
         currentDir = Environment.getExternalStorageDirectory();
+        currentDirList = new ArrayList<ListElement>();
+        
         updateItems(currentDir);
         
         ListView listView = (ListView) findViewById(R.id.listView1);
         listView.setOnItemClickListener(this);
-        
-        
     }
 
     private void updateItems(File curDir) {
         File[] curDirFiles = curDir.listFiles();
-        
-        // insert 'up navigation' item
-        currentDirData =  new File[curDirFiles.length + 1];
-        System.arraycopy(curDirFiles, 0, currentDirData, 1, curDirFiles.length);
-        currentDirData[0] = curDir.getParentFile();
+        currentDirList.clear();
 
+        currentDirList.add(new NavigateUpListElement(curDir.getParentFile()));
+        for (File file : curDirFiles) {
+            if (file.isDirectory()) {
+                currentDirList.add(new DirectoryListElement(file));
+            } else {
+                currentDirList.add(new FileListElement(file));
+            }
+        }
+        // TODO sort?
+        
         // set title
         TextView textView = (TextView) findViewById(R.id.textView1);
         textView.setText("Current Dir: " + currentDir.toString());
         
         ListView listView = (ListView) findViewById(R.id.listView1);
-        adapter = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, 
-                android.R.id.text1, currentDirData);
+        ArrayAdapter<ListElement> adapter = new ArrayAdapter<ListElement>(this, android.R.layout.simple_list_item_1, 
+                android.R.id.text1, currentDirList);
         listView.setAdapter(adapter);
     }
 
@@ -63,8 +66,10 @@ public class FileChooser extends Activity implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-        if (currentDirData[pos].isDirectory() && currentDirData[pos].getParent() != null) {
-            currentDir = currentDirData[pos];
+        if (currentDirList.get(pos).getPath().isDirectory() 
+                && currentDirList.get(pos).getPath().getParent() != null) {
+            
+            currentDir = currentDirList.get(pos).getPath();
             updateItems(currentDir);
         }
     }

@@ -30,4 +30,11 @@ public class DirectoryListElement implements ListElement {
     public Bitmap getIcon() {
         return null;
     }
+    
+    /**
+     * @return A string representation of this element.
+     */
+    public String toString() {
+        return path.toString();
+    }
 }
