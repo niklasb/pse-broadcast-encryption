@@ -64,46 +64,4 @@ public class FileChooser extends Activity implements OnItemClickListener {
                 android.R.id.text1, state.getItems());
         listView.setAdapter(adapter);
     }
-    
-    /**
-     * Tries to enter the given directory.
-     * @param target The directory to enter.
-     * @return The new directory
-     */
-    public File enterDirectory(File target) {
-        File actualTarget = target;
-        if (target == null) {
-            return currentDir;
-        }
-        if (target.isDirectory() && target.getParent() != null) {
-            // check if newDir is an actual directory
-            if (target.listFiles() == null) {
-                actualTarget = target.getParentFile();
-            }
-        } else if (!target.isDirectory()) {
-            actualTarget = target.getParentFile();
-        }
-        return actualTarget;
-    }
-    
-    /**
-     * Returns a list of the elements in the gven directory
-     * @param dir  Direcotory to list. Needs to be a valid directory.
-     * @return The listed files
-     */
-    public ArrayList<ListElement> listDirectory(File dir) {
-        ArrayList<ListElement> list = new ArrayList<ListElement>();
-        File[] curDirFiles = dir.listFiles();
-
-        for (File file : curDirFiles) {
-            if (file.isDirectory()) {
-                list.add(new DirectoryListElement(file));
-            } else {
-                list.add(new FileListElement(file));
-            }
-        }
-        
-        Collections.sort(list, new FileComparator());
-        return list;
-    }
 }
