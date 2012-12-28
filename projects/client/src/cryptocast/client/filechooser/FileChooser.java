@@ -3,12 +3,18 @@ package cryptocast.client.filechooser;
 import java.io.File;
 import java.util.ArrayList;
 
+import cryptocast.client.HelpActivity;
+import cryptocast.client.MainActivity;
+import cryptocast.client.OptionsActivity;
 import cryptocast.client.R;
+import cryptocast.client.StreamViewerActivity;
 
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,8 +39,25 @@ public class FileChooser extends Activity implements OnItemClickListener {
         listView.setOnItemClickListener(this);
     }
 
+<<<<<<< HEAD
     private void updateView(File curDir) {
         currentDirList = listDirectory(curDir);
+=======
+    private void updateItems(File curDir) {
+        File[] curDirFiles = curDir.listFiles();
+        currentDirList.clear();
+
+        currentDirList.add(new NavigateUpListElement(curDir.getParentFile()));
+        for (File file : curDirFiles) {
+            System.err.println(file + " isdir="+file.isDirectory() + " isfile="+file.isFile() + " listFiles="+file.listFiles());
+            if (file.isDirectory()) {
+                currentDirList.add(new DirectoryListElement(file));
+            } else {
+                currentDirList.add(new FileListElement(file));
+            }
+        }
+        // TODO sort?
+>>>>>>> 46b47d3fe18ae80dcecb8f81798ddbd58e4a5a1a
         
         // set title
         TextView textView = (TextView) findViewById(R.id.textView1);
@@ -51,6 +74,35 @@ public class FileChooser extends Activity implements OnItemClickListener {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
+    }
+    
+    /** Handles a click on the main menu.
+     * @param item The clicked item
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        // Handle menu item click
+        switch (item.getItemId()) {
+            case R.id.itemMain:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.itemOptions:
+                intent = new Intent(this, OptionsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.itemHelp:
+                intent = new Intent(this, HelpActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.itemPlayer:
+                intent = new Intent(this, StreamViewerActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

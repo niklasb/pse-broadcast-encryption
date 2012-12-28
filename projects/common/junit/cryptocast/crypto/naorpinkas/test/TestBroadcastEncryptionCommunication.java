@@ -33,7 +33,7 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
     @Test
     public void serverBroadcastsKeyRegularly() throws Exception {
         BroadcastEncryptionServer<NaorPinkasIdentity> out = 
-                BroadcastEncryptionServer.start(server, server, 256, fifo, 0, null);
+                BroadcastEncryptionServer.start(server, server, 256, fifo, 100, null);
         NaorPinkasPersonalKey key = server.getPersonalKey(server.getIdentity(0)).get();
         byte[] payload = str2bytes("abcdefg");
         out.write(payload);
@@ -45,7 +45,7 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
                 new BroadcastEncryptionClient(fifo, new NaorPinkasClient(key));
         Thread worker = new Thread(out);
         worker.start();
-        Thread.sleep(100);
+        Thread.sleep(500);
         out.write(payload);
         out.close();
         byte[] read = new byte[payload.length + 10];

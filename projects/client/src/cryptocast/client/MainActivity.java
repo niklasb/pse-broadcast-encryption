@@ -38,7 +38,6 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         tv1.setText(serverName); 
     }
-    
 
     @Override
     protected void onPause() {
@@ -69,13 +68,21 @@ public class MainActivity extends FragmentActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         // Handle menu item click
         switch (item.getItemId()) {
             case R.id.itemOptions:
-                Intent intent = new Intent(this, OptionsActivity.class);
+                intent = new Intent(this, OptionsActivity.class);
                 startActivity(intent);
                 return true;
-            
+            case R.id.itemHelp:
+                intent = new Intent(this, HelpActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.itemPlayer:
+                intent = new Intent(this, StreamViewerActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

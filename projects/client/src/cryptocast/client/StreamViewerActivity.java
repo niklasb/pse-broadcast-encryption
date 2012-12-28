@@ -1,11 +1,8 @@
 package cryptocast.client;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
@@ -14,27 +11,28 @@ import android.view.MenuItem;
  * and viewing it.
  */
 public class StreamViewerActivity extends FragmentActivity {
-    MediaPlayer player;
-    SimpleHttpStreamServer server;
-
-    /**
-     * Initializes a viewer.
-     * @param inputStream The data stream
-     */
-    public StreamViewerActivity(InputStream inputStream) {
+    private AudioStreamMediaPlayer player;
+    private InputStream in;
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_stream_viewer);
+        // TODO initialize `in`
+        player = new AudioStreamMediaPlayer();
+        try {
+            player.setDataSource(in);
+            player.prepare();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void startPlayback(InputStream in) throws IOException {
-        player = new MediaPlayer();
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        player.setDataSource("http://127.0.0.1:21337/");
-        server = new SimpleHttpStreamServer(in, 
-                new InetSocketAddress("127.0.0.1", 21337), "audio/mpeg");
-        new Thread(server).start();
-        player.prepare();
+    @Override
+    protected void onStart() {
         player.start();
     }
-
+    
     /** Handles a click on the bottom menu.
      * @param item The clicked menu item
      */

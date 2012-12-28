@@ -31,12 +31,11 @@ public final class R {
         public static final int checkBox1=0x7f070008;
         public static final int editHostname=0x7f070004;
         public static final int imageView1=0x7f070003;
-        public static final int itemHelp=0x7f07001e;
-        public static final int itemMain=0x7f07001b;
-        public static final int itemOptions=0x7f07001d;
-        public static final int itemPlayer=0x7f07001c;
+        public static final int itemHelp=0x7f07001d;
+        public static final int itemMain=0x7f07001a;
+        public static final int itemOptions=0x7f07001c;
+        public static final int itemPlayer=0x7f07001b;
         public static final int listView1=0x7f070000;
-        public static final int menu_settings=0x7f07001a;
         public static final int tableRow1=0x7f07000b;
         public static final int tableRow2=0x7f07000a;
         public static final int tableRow4=0x7f070007;
@@ -50,14 +49,22 @@ public final class R {
     }
     public static final class layout {
         public static final int activity_file_chooser=0x7f030000;
+<<<<<<< HEAD
         public static final int activity_main=0x7f030001;
         public static final int activity_options=0x7f030002;
+=======
+        public static final int activity_help=0x7f030001;
+        public static final int activity_main=0x7f030002;
+        public static final int activity_options=0x7f030003;
+        public static final int activity_stream_viewer=0x7f030004;
+>>>>>>> 46b47d3fe18ae80dcecb8f81798ddbd58e4a5a1a
     }
     public static final class menu {
         public static final int activity_file_chooser=0x7f060000;
-        public static final int activity_key_chooser=0x7f060001;
-        public static final int activity_main=0x7f060002;
-        public static final int activity_options=0x7f060003;
+        public static final int activity_help=0x7f060001;
+        public static final int activity_key_chooser=0x7f060002;
+        public static final int activity_main=0x7f060003;
+        public static final int activity_options=0x7f060004;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
@@ -69,6 +76,7 @@ public final class R {
         public static final int preference_server_name=0x7f040009;
         public static final int saved_server_main=0x7f04000a;
         public static final int title_activity_file_chooser=0x7f04000b;
+        public static final int title_activity_help=0x7f04000d;
         public static final int title_activity_key_chooser=0x7f04000c;
         public static final int title_activity_options=0x7f040005;
         public static final int traffic_overview=0x7f040007;

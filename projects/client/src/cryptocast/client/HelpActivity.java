@@ -6,24 +6,18 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-/** The option screen. */
-public class OptionsActivity extends Activity {
-    /** Receives the saved option state.
-     * @param savedInstanceState the old state
-     */
+public class HelpActivity extends Activity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_options);
+        setContentView(R.layout.activity_help);
     }
 
-    /** Inflates the option menu.
-     * @param menu The menu
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_options, menu);
+        getMenuInflater().inflate(R.menu.activity_help, menu);
         return true;
     }
     
@@ -39,8 +33,8 @@ public class OptionsActivity extends Activity {
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.itemHelp:
-                intent = new Intent(this, HelpActivity.class);
+            case R.id.itemOptions:
+                intent = new Intent(this, OptionsActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.itemPlayer:
@@ -51,4 +45,5 @@ public class OptionsActivity extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }
