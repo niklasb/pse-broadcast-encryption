@@ -2,6 +2,8 @@ package cryptocast.client.filechooser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import cryptocast.client.HelpActivity;
 import cryptocast.client.MainActivity;
@@ -33,31 +35,16 @@ public class FileChooser extends Activity implements OnItemClickListener {
         currentDir = Environment.getExternalStorageDirectory();
         currentDirList = new ArrayList<ListElement>();
         
-        updateView(currentDir);
+        updateItems(currentDir);
         
         ListView listView = (ListView) findViewById(R.id.listView1);
         listView.setOnItemClickListener(this);
     }
 
-<<<<<<< HEAD
-    private void updateView(File curDir) {
-        currentDirList = listDirectory(curDir);
-=======
+    
     private void updateItems(File curDir) {
-        File[] curDirFiles = curDir.listFiles();
-        currentDirList.clear();
-
-        currentDirList.add(new NavigateUpListElement(curDir.getParentFile()));
-        for (File file : curDirFiles) {
-            System.err.println(file + " isdir="+file.isDirectory() + " isfile="+file.isFile() + " listFiles="+file.listFiles());
-            if (file.isDirectory()) {
-                currentDirList.add(new DirectoryListElement(file));
-            } else {
-                currentDirList.add(new FileListElement(file));
-            }
-        }
-        // TODO sort?
->>>>>>> 46b47d3fe18ae80dcecb8f81798ddbd58e4a5a1a
+        currentDirList = listDirectory(curDir);
+        currentDirList.add(0, new NavigateUpListElement(curDir.getParentFile()));
         
         // set title
         TextView textView = (TextView) findViewById(R.id.textView1);
@@ -108,7 +95,7 @@ public class FileChooser extends Activity implements OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
         currentDir = enterDirectory(currentDirList.get(pos).getPath());
-        updateView(currentDir);
+        updateItems(currentDir);
     }
     
     /**
@@ -141,7 +128,6 @@ public class FileChooser extends Activity implements OnItemClickListener {
         ArrayList<ListElement> list = new ArrayList<ListElement>();
         File[] curDirFiles = dir.listFiles();
 
-        list.add(new NavigateUpListElement(dir.getParentFile()));
         for (File file : curDirFiles) {
             if (file.isDirectory()) {
                 list.add(new DirectoryListElement(file));
@@ -149,6 +135,25 @@ public class FileChooser extends Activity implements OnItemClickListener {
                 list.add(new FileListElement(file));
             }
         }
+        
+        Collections.sort(list, new FileComparator());
         return list;
+    }
+}
+
+class FileComparator implements Comparator<ListElement> {
+
+    @Override
+    public int compare(ListElement e1, ListElement e2) {
+        File file1 = e1.getPath();
+        File file2 = e2.getPath();
+        
+        if (file1.isDirectory() && file2.isFile()) {
+            return -1;
+        } else if (file1.isFile() && file2.isDirectory()) {
+            return 1;
+        } else {
+            return file1.getName().compareTo(file2.getName());
+        }
     }
 }
