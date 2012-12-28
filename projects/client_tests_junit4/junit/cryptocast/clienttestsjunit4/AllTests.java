@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
     cryptocast.comm.test.TestStreamMessageInChannel.class,
     cryptocast.comm.test.TestMessageBuffer.class,
     cryptocast.comm.test.TestStreamMessageChannels.class,
-    cryptocast.comm.test.TestMultiOutChannel.class,
+    cryptocast.comm.test.TestMultiOutputStream.class,
     cryptocast.crypto.test.TestPolynomial.class,
     cryptocast.crypto.test.TestBroadcastEncryptionServer.class,
     cryptocast.crypto.test.TestLagrangeInterpolation.class,

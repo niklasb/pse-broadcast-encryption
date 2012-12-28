@@ -80,6 +80,14 @@ public class Shell extends InteractiveCommandLineInterface {
     }
 
     @Override
+    protected void start() throws Exit {
+        println("Hello from the CryptoCast server. Enjoy.");
+        println();
+        printf("User database: %s\n", control.getDatabaseFile());
+        printf("Listening on %s\n", control.getListenAddress());
+        super.start();
+    }
+    @Override
     protected void performCommand(String cmdName, String[] args) 
             throws CommandError, Exit {
         ShellCommand cmd = commandsByName.get(cmdName);

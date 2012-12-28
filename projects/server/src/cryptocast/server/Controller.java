@@ -26,6 +26,7 @@ public class Controller {
     private MessageOutChannel rawOut;
     private File databaseFile;
     private BroadcastEncryptionServer<NaorPinkasIdentity> encServer;
+    private SocketAddress listenAddr;
 
     /**
      * Initializes a new controller with the given arguments.
@@ -35,15 +36,17 @@ public class Controller {
     private Controller(NaorPinkasServerData data,
                        File databaseFile,
                        MessageOutChannel rawOut,
-                       BroadcastEncryptionServer<NaorPinkasIdentity> encServer) {
+                       BroadcastEncryptionServer<NaorPinkasIdentity> encServer,
+                       SocketAddress listenAddr) {
         this.data = data;
         this.rawOut = rawOut;
         this.databaseFile = databaseFile;
         this.encServer = encServer;
+        this.listenAddr = listenAddr;
     }
 
     public static Controller start(File databaseFile, 
-                                   SocketAddress bindAddress)
+                                   SocketAddress listenAddr)
                 throws IOException, ClassNotFoundException {
         NaorPinkasServerData data;
         if (databaseFile.exists()) {
@@ -52,14 +55,15 @@ public class Controller {
             data = createNewData(0);
         }
         ServerSocket socket = new ServerSocket();
-        socket.bind(bindAddress);
+        socket.bind(listenAddr);
         SocketMulticastServer multicastServer = 
                 new SocketMulticastServer(socket, null);
         new Thread(multicastServer).start();
         MessageOutChannel rawOut = 
                 new StreamMessageOutChannel(multicastServer);
         return new Controller(data, databaseFile, rawOut, 
-                    startBroadcastEncryptionServer(data, rawOut));
+                    startBroadcastEncryptionServer(data, rawOut),
+                    listenAddr);
     }
 
     private static NaorPinkasServerData createNewData(int t) {
@@ -104,8 +108,16 @@ public class Controller {
         return server;
     }
 
+    public File getDatabaseFile() {
+        return databaseFile;
+    }
+    
     public int getT() {
         return data.npServer.getT();
+    }
+    
+    public SocketAddress getListenAddress() {
+        return listenAddr;
     }
     
     public void streamSampleText() throws IOException, InterruptedException {
