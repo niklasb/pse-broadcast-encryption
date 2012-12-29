@@ -1,15 +1,16 @@
 package cryptocast.client.test;
 
 import cryptocast.client.MainActivity;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
+import cryptocast.test.ClientTestRunner;
+
 import org.junit.*;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
-@RunWith(RobolectricTestRunner.class)
+@RunWith(ClientTestRunner.class)
 public class TestMainActivity {
     MainActivity sut;
-    
+
     @Before
     public void setUp() throws Exception {
       sut = new MainActivity();
