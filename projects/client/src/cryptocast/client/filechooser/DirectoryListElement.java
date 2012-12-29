@@ -37,4 +37,11 @@ public class DirectoryListElement implements ListElement {
     public String toString() {
         return path.getName();
     }
+    
+    @Override
+    public boolean equals(Object other_) {
+        if (other_ == null || other_.getClass() != getClass()) { return false; }
+        ListElement other = (ListElement) other_;
+        return getPath() == other.getPath();
+    }
 }

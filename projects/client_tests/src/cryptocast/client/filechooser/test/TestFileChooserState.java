@@ -3,19 +3,23 @@ package cryptocast.client.filechooser.test;
 import java.io.File;
 import java.util.Arrays;
 
+import com.google.common.collect.ImmutableList;
+
 import junit.framework.TestCase;
+import static org.mockito.Mockito.*;
+
 import cryptocast.client.filechooser.*;
 
 public class TestFileChooserState extends TestCase {
     public void testSortsCorrectly() {
         ListElement[] elements = {
-            new FileListElement(new FileMock("/a/Z")),
-            new FileListElement(new FileMock("/b/k")),
-            new FileListElement(new FileMock("/c/A")),
-            new NavigateUpListElement(new DirectoryMock("/")),
-            new DirectoryListElement(new DirectoryMock("/a/Z")),
-            new DirectoryListElement(new DirectoryMock("/b/k")),
-            new DirectoryListElement(new DirectoryMock("/c/A")),
+            new FileListElement(mockRegularFile("/a/Z", null)),
+            new FileListElement(mockRegularFile("/b/k", null)),
+            new FileListElement(mockRegularFile("/c/A", null)),
+            new NavigateUpListElement(mockDirectory("/", null, null)),
+            new DirectoryListElement(mockDirectory("/a/Z", null, null)),
+            new DirectoryListElement(mockDirectory("/a/k", null, null)),
+            new DirectoryListElement(mockDirectory("/a/A", null, null)),
         };
         ListElement[] expected = {
             elements[3], elements[6], elements[5], elements[4],
@@ -24,65 +28,60 @@ public class TestFileChooserState extends TestCase {
         FileChooserState.sortElements(Arrays.asList(elements));
         assertEquals(Arrays.asList(expected), Arrays.asList(elements));
     }
-    
+
     public void testFromDirectoryRegular() {
-        fail("not implemented");
+        File[] dirChildren = new File[2];
+        File[] rootChildren = new File[1];
+        File root = mockDirectory("/", null, rootChildren);
+        File dir = mockDirectory("/foo", root, dirChildren);
+        rootChildren[0] = dir;
+        dirChildren[0] = mockDirectory("/foo/b", dir, null);
+        dirChildren[1] = mockRegularFile("/foo/a", dir);
+        ListElement[] expected = {
+            new NavigateUpListElement(root),
+            new DirectoryListElement(dirChildren[0]),
+            new FileListElement(dirChildren[1]),
+        };
+        FileChooserState state = FileChooserState.fromDirectory(dir);
+        assertEquals(ImmutableList.<ListElement>builder().add(expected).build(),
+                     state.getItems());
+        assertEquals(dir, state.getCurrentDir());
     }
     
-    public void testFromDirectoryDeleted() {
-        fail("not implemented");
-    }
-}
-
-
-class DirectoryMock extends File {
-    private static final long serialVersionUID = 1;
-    private File[] children;
-    
-    public DirectoryMock(String path, File[] children) {
-        super(path);
-        this.children = children;
-    }
-    public DirectoryMock(String path) {
-        super(path);
-        this.children = new File[0];
-    }
-    
-    @Override
-    public boolean isDirectory() {
-        return true;
+    public void testFromDirectoryUnaccessible() {
+        File[] dirChildren = new File[2];
+        File[] rootChildren = new File[1];
+        File root = mockDirectory("/", null, rootChildren);
+        File dir = mockDirectory("/foo", root, dirChildren);
+        rootChildren[0] = dir;
+        dirChildren[0] = mockDirectory("/foo/b", dir, null);
+        dirChildren[1] = mockRegularFile("/foo/a", dir);
+        File failDir = mockDirectory("/foo/b/bar", dirChildren[0], null);
+        ListElement[] expected = {
+            new NavigateUpListElement(root),
+            new DirectoryListElement(dirChildren[0]),
+            new FileListElement(dirChildren[1]),
+        };
+        FileChooserState state = FileChooserState.fromDirectory(failDir);
+        assertEquals(ImmutableList.<ListElement>builder().add(expected).build(),
+                     state.getItems());
+        assertEquals(dir, state.getCurrentDir());
     }
     
-    @Override
-    public boolean isFile() {
-        return false;
+    private File mockRegularFile(String path, File parent) {
+        return mockFile(path, parent, null, false, true);
     }
     
-    @Override
-    public File[] listFiles() {
-        return children;
-    }
-}
-
-class FileMock extends File {
-    private static final long serialVersionUID = 1;
-
-    public FileMock(String path) {
-        super(path);
+    private File mockDirectory(String path, File parent, File[] children) {
+        return mockFile(path, parent, children, true, false);
     }
     
-    @Override
-    public boolean isDirectory() {
-        return false;
-    }
-    
-    @Override
-    public boolean isFile() {
-        return true;
-    }
-    
-    @Override
-    public File[] listFiles() {
-        return null;
+    private File mockFile(String path, File parent, File[] children, boolean isDir, boolean isFile) {
+        File f = spy(new File(path));
+        when(f.getParentFile()).thenReturn(parent);
+        when(f.isFile()).thenReturn(isFile);
+        when(f.isDirectory()).thenReturn(isDir);
+        when(f.listFiles()).thenReturn(children);
+        return f;
     }
 }
