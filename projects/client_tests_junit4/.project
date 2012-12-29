@@ -32,17 +32,47 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>src/cryptocast</name>
+			<name>junit/cryptocast/client</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/src/cryptocast</locationURI>
+			<locationURI>PSE_LOC/tests/junit4/cryptocast/client</locationURI>
 		</link>
 		<link>
-			<name>junit/cryptocast</name>
+			<name>junit/cryptocast/comm</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/tests/junit4/cryptocast</locationURI>
+			<locationURI>PSE_LOC/tests/junit4/cryptocast/comm</locationURI>
 		</link>
 		<link>
-			<name>stubs/cryptocast</name>
+			<name>junit/cryptocast/util</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/tests/junit4/cryptocast/util</locationURI>
+		</link>
+		<link>
+			<name>junit/cryptocast/crypto</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/tests/junit4/cryptocast/crypto</locationURI>
+		</link>
+		<link>
+			<name>src/cryptocast/client</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/src/cryptocast/client</locationURI>
+		</link>
+		<link>
+			<name>src/cryptocast/comm</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/src/cryptocast/comm</locationURI>
+		</link>
+		<link>
+			<name>src/cryptocast/crypto</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/src/cryptocast/crypto</locationURI>
+		</link>
+		<link>
+			<name>src/cryptocast/util</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/src/cryptocast/util</locationURI>
+		</link>
+		<link>
+			<name>gen-client/cryptocast</name>
 			<type>2</type>
 			<locationURI>PSE_LOC/projects/client/gen/cryptocast</locationURI>
 		</link>

@@ -26,7 +26,7 @@
 			<locationURI>PSE_LOC/src/cryptocast</locationURI>
 		</link>
 		<link>
-			<name>stubs/cryptocast</name>
+			<name>gen-client/cryptocast</name>
 			<type>2</type>
 			<locationURI>PSE_LOC/projects/client/gen/cryptocast</locationURI>
 		</link>
