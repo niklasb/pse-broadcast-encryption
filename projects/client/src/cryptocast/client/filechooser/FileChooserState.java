@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
 
 public class FileChooserState {
     private File currentDir;
@@ -50,7 +51,8 @@ class ElementComparator implements Comparator<ListElement> {
     public int compare(ListElement e1, ListElement e2) {
         return ComparisonChain.start()
                 .compare(getTypeId(e1), getTypeId(e2))
-                .compare(e1.toString(), e2.toString())
+                .compare(e1.toString(), e2.toString(), 
+                        Ordering.from(String.CASE_INSENSITIVE_ORDER))
                 .result();
     }
     

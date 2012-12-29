@@ -5,10 +5,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/CryptoCast Client"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="libs/guava-13.0.1.jar"/>
-	<classpathentry kind="lib" path="libs/mockito-core-1.9.5.jar"/>
 	<classpathentry kind="lib" path="libs/com.springsource.org.objenesis-1.0.0.jar"/>
 	<classpathentry kind="lib" path="libs/dexmaker-1.0.jar"/>
 	<classpathentry kind="lib" path="libs/dexmaker-mockito-1.0.jar"/>
+	<classpathentry kind="lib" path="libs/mockito-core-1.9.5.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
