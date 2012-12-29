@@ -34,17 +34,22 @@
 		<link>
 			<name>src/cryptocast/comm</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/common/src/cryptocast/comm</locationURI>
-		</link>
-		<link>
-			<name>src/cryptocast/crypto</name>
-			<type>2</type>
-			<locationURI>PSE_LOC/common/src/cryptocast/crypto</locationURI>
+			<locationURI>PSE_LOC/src/cryptocast/comm</locationURI>
 		</link>
 		<link>
 			<name>src/cryptocast/util</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/common/src/cryptocast/util</locationURI>
+			<locationURI>PSE_LOC/src/cryptocast/util</locationURI>
+		</link>
+		<link>
+			<name>src/cryptocast/crypto</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/src/cryptocast/crypto</locationURI>
+		</link>
+		<link>
+			<name>src/cryptocast/client</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/src/cryptocast/client</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

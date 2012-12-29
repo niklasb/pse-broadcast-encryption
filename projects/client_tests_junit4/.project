@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>CryptoCast Client Tests JUnit4</name>
+	<name>CryptoCast Client Tests - JUnit4</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -34,37 +34,37 @@
 		<link>
 			<name>src/cryptocast/comm</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/common/src/cryptocast/comm</locationURI>
+			<locationURI>PSE_LOC/src/cryptocast/comm</locationURI>
 		</link>
 		<link>
 			<name>src/cryptocast/crypto</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/common/src/cryptocast/crypto</locationURI>
+			<locationURI>PSE_LOC/src/cryptocast/crypto</locationURI>
 		</link>
 		<link>
 			<name>src/cryptocast/util</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/common/src/cryptocast/util</locationURI>
+			<locationURI>PSE_LOC/src/cryptocast/util</locationURI>
 		</link>
 		<link>
 			<name>junit/cryptocast/comm/test</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/common/junit/cryptocast/comm/test</locationURI>
+			<locationURI>PSE_LOC/tests/junit4/cryptocast/comm/test</locationURI>
 		</link>
 		<link>
 			<name>junit/cryptocast/crypto/test</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/common/junit/cryptocast/crypto/test</locationURI>
+			<locationURI>PSE_LOC/tests/junit4/cryptocast/crypto/test</locationURI>
 		</link>
 		<link>
 			<name>junit/cryptocast/util/test</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/common/junit/cryptocast/util/test</locationURI>
+			<locationURI>PSE_LOC/tests/junit4/cryptocast/util/test</locationURI>
 		</link>
 		<link>
 			<name>junit/cryptocast/crypto/naorpinkas/test</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/common/junit/cryptocast/crypto/naorpinkas/test</locationURI>
+			<locationURI>PSE_LOC/tests/junit4/cryptocast/crypto/naorpinkas/test</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

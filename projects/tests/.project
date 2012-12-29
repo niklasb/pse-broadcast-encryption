@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>CryptoCast Server</name>
+	<name>CryptoCast Tests</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -16,24 +16,19 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>src/cryptocast/comm</name>
+			<name>junit/cryptocast</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/src/cryptocast/comm</locationURI>
+			<locationURI>PSE_LOC/tests/junit4/cryptocast</locationURI>
 		</link>
 		<link>
-			<name>src/cryptocast/server</name>
+			<name>src/cryptocast</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/src/cryptocast/server</locationURI>
+			<locationURI>PSE_LOC/src/cryptocast</locationURI>
 		</link>
 		<link>
-			<name>src/cryptocast/crypto</name>
+			<name>stubs/cryptocast</name>
 			<type>2</type>
-			<locationURI>PSE_LOC/src/cryptocast/crypto</locationURI>
-		</link>
-		<link>
-			<name>src/cryptocast/util</name>
-			<type>2</type>
-			<locationURI>PSE_LOC/src/cryptocast/util</locationURI>
+			<locationURI>PSE_LOC/projects/client/gen/cryptocast</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

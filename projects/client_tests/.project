@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>CryptoCast Client Tests</name>
+	<name>CryptoCast Client Tests - Android</name>
 	<comment></comment>
 	<projects>
 		<project>CryptoCast Client</project>
@@ -31,4 +31,11 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/cryptocast</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/tests/android/cryptocast</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
