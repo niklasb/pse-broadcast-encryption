@@ -1,7 +1,6 @@
 package cryptocast.client.test;
 
 import cryptocast.client.MainActivity;
-import cryptocast.test.ClientTestRunner;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
