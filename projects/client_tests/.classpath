@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="junit"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="meta"/>
 	<classpathentry kind="src" path="gen-client"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
