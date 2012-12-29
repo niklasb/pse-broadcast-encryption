@@ -3,6 +3,8 @@
 	<classpathentry kind="src" path="junit"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="meta"/>
+	<classpathentry kind="src" path="stubs"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="lib" path="libs/guava-13.0.1.jar"/>
@@ -12,5 +14,8 @@
 	<classpathentry kind="lib" path="libs/dexmaker-1.0.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-android-1.6.1-RC1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="../../3rd_party/logback-classic-1.0.9.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/logback-core-1.0.9.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/jcommander-1.31-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -1,21 +1,13 @@
 package cryptocast.server.programs;
 
-import java.io.File;
 import java.math.BigInteger;
-import java.net.Socket;
 import java.util.Date;
 import java.util.Random;
 
-import javax.sql.CommonDataSource;
-
 import com.beust.jcommander.*;
 
-import cryptocast.comm.StreamMessageInChannel;
-import cryptocast.crypto.BroadcastEncryptionClient;
 import cryptocast.crypto.IntegersModuloPrime;
 import cryptocast.crypto.LagrangeInterpolation;
-import cryptocast.crypto.Polynomial;
-import cryptocast.crypto.naorpinkas.*;
 import cryptocast.server.OptParse;
 
 class Result {
