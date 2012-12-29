@@ -1,17 +1,19 @@
-package cryptocast.client.filechooser.test;
+package cryptocast.client.filechooser;
 
 import java.io.File;
 import java.util.Arrays;
 
 import com.google.common.collect.ImmutableList;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import cryptocast.client.filechooser.*;
 
-public class TestFileChooserState extends TestCase {
-    public void testSortsCorrectly() {
+public class TestFileChooserState {
+    @Test
+    public void sortsCorrectly() {
         ListElement[] elements = {
             new FileListElement(mockRegularFile("/a/Z", null)),
             new FileListElement(mockRegularFile("/b/k", null)),
@@ -26,10 +28,11 @@ public class TestFileChooserState extends TestCase {
             elements[2], elements[1], elements[0],
         };
         FileChooserState.sortElements(Arrays.asList(elements));
-        assertEquals(Arrays.asList(expected), Arrays.asList(elements));
+        assertArrayEquals(expected, elements);
     }
 
-    public void testFromDirectoryRegular() {
+    @Test
+    public void fromDirectoryWorksWithExistingDir() {
         File[] dirChildren = new File[2];
         File[] rootChildren = new File[1];
         File root = mockDirectory("/", null, rootChildren);
@@ -43,12 +46,12 @@ public class TestFileChooserState extends TestCase {
             new FileListElement(dirChildren[1]),
         };
         FileChooserState state = FileChooserState.fromDirectory(dir);
-        assertEquals(ImmutableList.<ListElement>builder().add(expected).build(),
-                     state.getItems());
+        assertEquals(ImmutableList.copyOf(expected), state.getItems());
         assertEquals(dir, state.getCurrentDir());
     }
     
-    public void testFromDirectoryUnaccessible() {
+    @Test
+    public void fromDirectoryWorksWithBadDir() {
         File[] dirChildren = new File[2];
         File[] rootChildren = new File[1];
         File root = mockDirectory("/", null, rootChildren);
@@ -63,7 +66,7 @@ public class TestFileChooserState extends TestCase {
             new FileListElement(dirChildren[1]),
         };
         FileChooserState state = FileChooserState.fromDirectory(failDir);
-        assertEquals(ImmutableList.<ListElement>builder().add(expected).build(),
+        assertEquals(ImmutableList.copyOf(expected),
                      state.getItems());
         assertEquals(dir, state.getCurrentDir());
     }
