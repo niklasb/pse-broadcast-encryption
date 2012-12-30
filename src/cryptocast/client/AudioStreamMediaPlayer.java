@@ -23,8 +23,11 @@ public class AudioStreamMediaPlayer implements OnCompletionListener, OnErrorList
         if (in == null) {
             throw new IllegalStateException("setDataSource() was not called");
         }
-        server = new SimpleHttpStreamServer(in, 
-                   new InetSocketAddress("127.0.0.1", 11337), "audio/mpeg");
+        server = new SimpleHttpStreamServer(
+                   in, 
+                   new InetSocketAddress("127.0.0.1", 11337), 
+                   "audio/mpeg",
+                   0x4000);
         worker = new Thread(server);
         worker.start();
         

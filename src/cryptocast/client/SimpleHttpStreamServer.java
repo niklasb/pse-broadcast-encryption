@@ -11,50 +11,53 @@ import java.net.SocketAddress;
 import static cryptocast.util.ByteUtils.str2bytes;
 
 public class SimpleHttpStreamServer implements Runnable {
-    InputStream in;
-    ServerSocket sock;
+    private InputStream in;
+    private ServerSocket sock;
     private String contentType;
+    private int bufsize;
 
-    public SimpleHttpStreamServer(InputStream in, SocketAddress addr, String contentType) 
+    public SimpleHttpStreamServer(InputStream in, 
+                                  SocketAddress addr, 
+                                  String contentType,
+                                  int bufsize) 
                         throws IOException {
         this.in = in;
         this.contentType = contentType;
+        this.bufsize = bufsize;
         sock = new ServerSocket();
         sock.bind(addr);
     }
 
     @Override
     public void run() {
-        for (;;) {
-            Socket clientSock;
-            try {
-                clientSock = sock.accept();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
+        Socket clientSock;
+        try {
+            clientSock = sock.accept();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        try {
+            BufferedReader clientIn = new BufferedReader(
+                    new InputStreamReader(clientSock.getInputStream()));
+            while (clientIn.readLine().length() > 1) {
+                // fetch all request headers
             }
-            try {
-                BufferedReader clientIn = new BufferedReader(
-                        new InputStreamReader(clientSock.getInputStream()));
-                while (clientIn.readLine().length() > 1) {
-                    // fetch all request headers
-                }
-                OutputStream clientOut = clientSock.getOutputStream();
-                clientOut.write(getChunkedResponseHeader());
-                sendChunked(clientOut, in);
-                clientSock.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                return;
-            }
+            OutputStream clientOut = clientSock.getOutputStream();
+            clientOut.write(getChunkedResponseHeader());
+            sendChunked(clientOut, in);
+            clientSock.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            return;
         }
     }
     
     private void sendChunked(OutputStream out, InputStream in) 
                 throws InterruptedException, IOException {
         int recv;
-        byte[] buffer = new byte[0x400000];
+        byte[] buffer = new byte[bufsize];
         while ((recv = in.read(buffer)) >= 0) {
             if (recv == 0) {
                 Thread.sleep(10); 
