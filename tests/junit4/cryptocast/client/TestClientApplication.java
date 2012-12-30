@@ -22,13 +22,13 @@ public class TestClientApplication {
 
     @Test
     public void savesAndReloadsState() {
-        sut.getState().getServerHistory().addServer("foo", new File("bar"));
-        sut.getState().setHostname("foobar");
+        sut.getServerHistory().addServer("foo", new File("bar"));
+        sut.setHostname("foobar");
         sut.saveState();
         sut = new ClientApplication();
         sut.onCreate();
-        assertEquals("foobar", sut.getState().getHostname());
+        assertEquals("foobar", sut.getHostname());
         assertEquals(new File("bar"), 
-                sut.getState().getServerHistory().getServers().get("foo"));
+                sut.getServerHistory().getServers().get("foo"));
     }
 }

@@ -35,6 +35,7 @@ public class TestMainActivity {
     @Test
     public void illegalHostnames() {
         assertFalse(sut.checkHostname(""));
+        assertTrue(sut.checkHostname("google.de"));
     }
     
     @Test

@@ -43,7 +43,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        editHostname.setText(app.getState().getHostname());
+        editHostname.setText(app.getHostname());
 
         if (keyFile != null) {
             // this is a signal by onActivityResult which is called after
@@ -57,7 +57,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        app.getState().setHostname(getHostname());
+        app.setHostname(getHostname());
         app.saveState();
     }
     

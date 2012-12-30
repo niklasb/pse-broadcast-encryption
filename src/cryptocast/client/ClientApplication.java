@@ -3,6 +3,7 @@ package cryptocast.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,12 @@ public class ClientApplication extends Application {
     private static final Logger log = LoggerFactory
             .getLogger(ClientApplication.class);
     
-    private ClientState state;
+    private static class State implements Serializable {
+        private static final long serialVersionUID = -147920249222749070L;
+        private String hostname = "";
+        private ServerHistory serverHistory = new ServerHistory();
+    }
+    private State state;
     private static final String STATE_FILE_NAME = "cryptocast_state";
     
     @Override
@@ -27,9 +33,8 @@ public class ClientApplication extends Application {
             log.debug("Loaded application state from internal storage");
         } catch (Exception e) {
             log.warn("Could not load state from interal storage, creating new state", e);
-            state = new ClientState();
+            state = new State();
         }
-        assert state != null;
     }
     
     public void saveState() {
@@ -42,7 +47,20 @@ public class ClientApplication extends Application {
         }
     }
     
-    public ClientState getState() {
-        return state;
+
+    public String getHostname() {
+        return state.hostname;
+    }
+
+    public void setHostname(String hostname) {
+        state.hostname = hostname;
+    }
+
+    public ServerHistory getServerHistory() {
+        return state.serverHistory;
+    }
+
+    public void setServerHistory(ServerHistory serverHistory) {
+        state.serverHistory = serverHistory;
     }
 }
