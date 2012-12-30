@@ -17,7 +17,6 @@ public class MessageFragment extends DialogFragment {
      * @param message Error message describing the error which occured before this fragment pops up.
      */
     public MessageFragment(String message) {
-        //oder methode setMessage
         super();
         this.message = message;
     }

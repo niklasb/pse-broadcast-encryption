@@ -14,5 +14,6 @@
     <string name="title_activity_key_chooser">KeyChooser</string>
     <string name="title_activity_help">HelpActivity</string>
     <string name="title_activity_stream">StreamViewer</string>
+    <string name="invalid_hostname_text">This hostname is not valid, please check your written name.</string>
 
 </resources>

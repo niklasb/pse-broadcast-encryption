@@ -28,7 +28,8 @@ public class ServerHistory implements Serializable {
      * @param hostname The server's hostname
      * @param keyfile The keyfile the user has chosen for this server.
      */
-    public void addServer(String hostname, File keyfile) { 
+    public void addServer(String hostname, File keyfile) {
+        //TODO add server without looking if it was already in this list?
         servers.put(hostname, keyfile);
     }
 }
