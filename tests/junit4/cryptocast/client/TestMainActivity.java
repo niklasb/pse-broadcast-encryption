@@ -19,11 +19,6 @@ public class TestMainActivity {
       sut = new MainActivity();
       sut.onCreate(null);
     }
-    
-    @Test
-    public void preConditions() {
-        assertTrue(sut != null);
-    }
 
     @Test
     public void savesAndRestoresHostname() {
@@ -35,12 +30,6 @@ public class TestMainActivity {
         sut.onResume();
         assertEquals(hostname, tv.getText().toString());
         assertEquals(hostname, sut.getHostname());
-    }
-    
-    @Test
-    public void resumeAndPause() {
-        sut.onPause();
-        sut.onResume();
     }
     
     @Test
