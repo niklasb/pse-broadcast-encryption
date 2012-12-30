@@ -1,5 +1,6 @@
 package cryptocast.client;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,10 +30,12 @@ public class ClientApplication extends Application {
         }
     }
     
-    public void saveState() {
+    public void saveState(Context context) {
         try {
-            OutputStream out = openFileOutput(serverHistoryFName, Context.MODE_PRIVATE);
+            OutputStream out = context.openFileOutput(serverHistoryFName, Context.MODE_PRIVATE);
             SerializationUtils.writeToStream(out, serverHistory);
+        } catch (FileNotFoundException e) {
+            log.error("File to save ServerHistory not found!", e);
         } catch (IOException e) {
             log.error("Cannot save server history!", e);
         }

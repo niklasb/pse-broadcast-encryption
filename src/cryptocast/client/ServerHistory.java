@@ -27,8 +27,13 @@ public class ServerHistory implements Serializable {
      * Adds a server to the list of servers.
      * @param hostname The server's hostname
      * @param keyfile The keyfile the user has chosen for this server.
+     * @throws IllegalArgumentException If hostname or file are null.
      */
-    public void addServer(String hostname, File keyfile) { 
-        
+    public void addServer(String hostname, File keyfile) throws IllegalArgumentException { 
+        if (hostname == null || keyfile == null) {
+            throw new IllegalArgumentException();
+        }
+        //TODO add server without looking if it was already in this list?
+        servers.put(hostname, keyfile);
     }
 }

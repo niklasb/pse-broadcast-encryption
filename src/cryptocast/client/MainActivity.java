@@ -54,7 +54,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        app.saveState();
+        app.saveState(this);
         storeUI();
     }
     
@@ -96,8 +96,22 @@ public class MainActivity extends FragmentActivity {
      */
     public void onConnect(View view) {
         String hostname = getHostname();
-        // TODO check if hostname is valid, look up server
-        startKeyChooserForResult();
+        if (checkHostname(hostname)) {
+            startKeyChooserForResult();
+        } else {
+            //TODO fragment does not show up?
+            MessageFragment frag = new MessageFragment(getString(R.string.invalid_hostname_text));
+            frag.show(getSupportFragmentManager(), null);
+        }
+    }
+    
+    //TODO any other criterion?
+    protected boolean checkHostname(String hostname) {
+        if (hostname == null || hostname == "") {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     protected String getHostname() {
