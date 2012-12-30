@@ -1,11 +1,8 @@
-package cryptocast.crypto.test;
+package cryptocast.crypto;
 
-import static org.junit.Assert.*;
 import org.junit.*;
 import static org.mockito.Mockito.*;
 import org.mockito.*;
-
-import cryptocast.crypto.*;
 
 class Identity { }
 

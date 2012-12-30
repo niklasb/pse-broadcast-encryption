@@ -1,4 +1,4 @@
-package cryptocast.comm.test;
+package cryptocast.comm;
 
 import static org.junit.Assert.*;
 

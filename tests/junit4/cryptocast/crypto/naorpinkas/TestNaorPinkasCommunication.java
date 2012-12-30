@@ -1,4 +1,4 @@
-package cryptocast.crypto.naorpinkas.test;
+package cryptocast.crypto.naorpinkas;
 
 import static org.junit.Assert.*;
 
@@ -7,7 +7,6 @@ import java.math.BigInteger;
 import org.junit.Test;
 
 import cryptocast.crypto.*;
-import cryptocast.crypto.naorpinkas.*;
 import static cryptocast.util.ByteUtils.str2bytes;
 
 public class TestNaorPinkasCommunication extends WithNaorPinkasContext {

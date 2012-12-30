@@ -1,4 +1,4 @@
-package cryptocast.client.filechooser.test;
+package cryptocast.client.filechooser;
 
 import java.io.File;
 import java.util.Arrays;
@@ -8,13 +8,6 @@ import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-
-import cryptocast.client.filechooser.DirectoryListElement;
-import cryptocast.client.filechooser.FileChooserState;
-import cryptocast.client.filechooser.FileListElement;
-import cryptocast.client.filechooser.ListElement;
-import cryptocast.client.filechooser.NavigateUpListElement;
-import cryptocast.client.filechooser.test.*;
 
 public class TestFileChooserState {
     @Test
@@ -36,6 +29,25 @@ public class TestFileChooserState {
         assertArrayEquals(expected, elements);
     }
 
+    @Test
+    public void fromDirectoryFiltersCorrectly() {
+        File[] children = new File[3];
+        File[] rootChildren = new File[1];
+        File root = mockDirectory("/", null, rootChildren);
+        File dir = mockDirectory("/foo", root, children);
+        rootChildren[0] = dir;
+        children[0] = mockDirectory("/foo/bar", dir, null);
+        children[1] = mockRegularFile("/foo/f1.txt", dir);
+        children[2] = mockRegularFile("/foo/f2.png", dir);
+        FileChooserState state = FileChooserState.fromDirectory(dir, ".*f.*\\.png");
+        ListElement[] expected = {
+            new NavigateUpListElement(root),
+            new DirectoryListElement(children[0]),
+            new FileListElement(children[2]),
+        };
+        assertEquals(ImmutableList.copyOf(expected), state.getItems());
+    }
+    
     @Test
     public void fromDirectoryWorksWithExistingDir() {
         File[] dirChildren = new File[2];
@@ -90,6 +102,7 @@ public class TestFileChooserState {
         when(f.isFile()).thenReturn(isFile);
         when(f.isDirectory()).thenReturn(isDir);
         when(f.listFiles()).thenReturn(children);
+        when(f.getAbsolutePath()).thenReturn(path);
         return f;
     }
 }

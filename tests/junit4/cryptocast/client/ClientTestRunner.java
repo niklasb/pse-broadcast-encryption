@@ -1,4 +1,4 @@
-package cryptocast.client.test;
+package cryptocast.client;
 
 import org.junit.runners.model.InitializationError;
 import com.xtremelabs.robolectric.RobolectricTestRunner;

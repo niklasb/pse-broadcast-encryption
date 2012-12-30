@@ -1,4 +1,4 @@
-package cryptocast.comm.test;
+package cryptocast.comm;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import org.junit.*;
 
 import static cryptocast.util.ByteUtils.*;
-import cryptocast.comm.*;
 
 public class TestMultiOutputStream {
     private MultiOutputStream sut =

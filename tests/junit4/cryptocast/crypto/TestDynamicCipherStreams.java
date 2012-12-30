@@ -1,4 +1,4 @@
-package cryptocast.crypto.test;
+package cryptocast.crypto;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
 
-import cryptocast.crypto.*;
 import cryptocast.comm.*;
 import static cryptocast.util.ByteUtils.str2bytes;
 import cryptocast.util.ArrayUtils;

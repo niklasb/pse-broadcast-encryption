@@ -1,4 +1,4 @@
-package cryptocast.crypto.naorpinkas.test;
+package cryptocast.crypto.naorpinkas;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +10,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 import cryptocast.crypto.*;
-import cryptocast.crypto.naorpinkas.*;
 
 public class TestNaorPinkasShareCombinator extends WithNaorPinkasContext {
     

@@ -1,4 +1,4 @@
-package cryptocast.server.test;
+package cryptocast.server;
 
 import static org.junit.Assert.*;
 
@@ -8,7 +8,6 @@ import com.google.common.base.Optional;
 
 import cryptocast.crypto.SchnorrGroup;
 import cryptocast.crypto.naorpinkas.*;
-import cryptocast.server.*;
 
 public class TestNaorPinkasServerData {
     private NaorPinkasServer npServer = 

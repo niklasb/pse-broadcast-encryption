@@ -1,6 +1,7 @@
 package cryptocast.client;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import cryptocast.client.filechooser.FileChooser;
@@ -10,6 +11,12 @@ import cryptocast.client.filechooser.FileChooser;
  * which is then sent to the server for authentication.
  */
 public class KeyChoiceActivity extends FileChooser {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        setFileFilter(".*\\.key");
+        super.onCreate(savedInstanceState);
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

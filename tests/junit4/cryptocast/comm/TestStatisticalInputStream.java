@@ -1,12 +1,10 @@
-package cryptocast.comm.test;
+package cryptocast.comm;
 
 import static org.junit.Assert.*;
 import static cryptocast.util.ByteUtils.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
-import cryptocast.comm.*;
 
 import org.junit.Test;
 

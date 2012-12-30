@@ -19,7 +19,7 @@ public class FileChooserState {
         this.items = items;
     }
     
-    public static FileChooserState fromDirectory(File dir) {
+    public static FileChooserState fromDirectory(File dir, String fileFilter) {
         File[] files;
         while (null == (files = dir.listFiles())) {
             dir = dir.getParentFile();
@@ -30,12 +30,19 @@ public class FileChooserState {
             result.add(new NavigateUpListElement(parent));
         }
         for (File f : files) {
-            result.add(f.isDirectory() ? new DirectoryListElement(f) 
-                                        : new FileListElement(f));
+            if (f.isDirectory()) {
+                result.add(new DirectoryListElement(f));
+            } else if (f.getAbsolutePath().matches(fileFilter)) {
+                result.add(new FileListElement(f));
+            }
         }
         sortElements(result);
         return new FileChooserState(dir, 
                 ImmutableList.<ListElement>builder().addAll(result).build());
+    }
+    
+    public static FileChooserState fromDirectory(File dir) {
+        return fromDirectory(dir, ".*");
     }
     
     public static void sortElements(List<ListElement> list) {

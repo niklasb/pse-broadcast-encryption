@@ -1,9 +1,8 @@
-package cryptocast.crypto.naorpinkas.test;
+package cryptocast.crypto.naorpinkas;
 
 import java.math.BigInteger;
 
 import cryptocast.crypto.*;
-import cryptocast.crypto.naorpinkas.*;
 
 public class WithNaorPinkasContext {
     protected SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();

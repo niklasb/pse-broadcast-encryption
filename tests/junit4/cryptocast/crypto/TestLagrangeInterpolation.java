@@ -1,4 +1,4 @@
-package cryptocast.crypto.test;
+package cryptocast.crypto;
 
 import static org.junit.Assert.*;
 
@@ -6,8 +6,6 @@ import java.math.BigInteger;
 import java.util.Random;
 
 import org.junit.Test;
-
-import cryptocast.crypto.*;
 
 public class TestLagrangeInterpolation {
     @Test

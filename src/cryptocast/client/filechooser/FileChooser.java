@@ -1,22 +1,12 @@
 package cryptocast.client.filechooser;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import cryptocast.client.HelpActivity;
-import cryptocast.client.MainActivity;
-import cryptocast.client.OptionsActivity;
 import cryptocast.client.R;
-import cryptocast.client.StreamViewerActivity;
 
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,11 +16,24 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class FileChooser extends Activity implements OnItemClickListener {
     private FileChooserState state;
+    private String fileFilter;
+
+    public String getFileFilter() {
+        return fileFilter;
+    }
+
+    public void setFileFilter(String fileFilter) {
+        this.fileFilter = fileFilter;
+    }
+
+    private FileChooserState getStateFromDir(File dir) {
+        return FileChooserState.fromDirectory(dir, fileFilter);
+    }
     
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_chooser);
-        updateState(FileChooserState.fromDirectory(Environment.getExternalStorageDirectory()));
+        updateState(getStateFromDir(Environment.getExternalStorageDirectory()));
         
         ListView listView = (ListView) findViewById(R.id.listView1);
         listView.setOnItemClickListener(this);
@@ -45,13 +48,16 @@ public class FileChooser extends Activity implements OnItemClickListener {
             handleDirClick(item.getPath());
         }
     }
-    
+
     private void handleFileClick(File file) {
-        // TODO
+        Intent result = new Intent();
+        result.putExtra("chosenFile", file.getAbsolutePath());
+        setResult(RESULT_OK, result);
+        finish();
     }
-    
+
     private void handleDirClick(File dir) {
-        updateState(FileChooserState.fromDirectory(dir));
+        updateState(getStateFromDir(dir));
     }
     
     private void updateState(FileChooserState state) {

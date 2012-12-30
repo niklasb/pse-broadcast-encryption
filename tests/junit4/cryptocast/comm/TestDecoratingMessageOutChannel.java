@@ -1,9 +1,8 @@
-package cryptocast.comm.test;
+package cryptocast.comm;
 
 import org.junit.Test;
 import static org.mockito.Mockito.*;
 import static cryptocast.util.ByteUtils.*;
-import cryptocast.comm.*;
 
 public class TestDecoratingMessageOutChannel {
     @Test

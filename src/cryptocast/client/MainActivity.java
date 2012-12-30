@@ -1,6 +1,7 @@
 package cryptocast.client;
 
-import cryptocast.client.filechooser.FileChooser;
+import java.io.File;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,8 @@ import android.widget.TextView;
  * stream and show its contents.
  */
 public class MainActivity extends FragmentActivity {
+    private static final int RESULT_KEY_CHOICE = 1;
+    private static File keyFile;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,28 +35,20 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         
-        String serverName = loadServerName();
-        //write server to textView
+        String hostname = loadHostname();
         TextView tv1 = (TextView) findViewById(R.id.editHostname);
-        setContentView(R.layout.activity_main);
-        tv1.setText(serverName); 
-    }
+        tv1.setText(hostname);
 
+        if (keyFile != null) {
+            startStreamViewer(hostname, keyFile);
+            keyFile = null;
+        }
+    }
+    
     @Override
     protected void onPause() {
         super.onPause();
-        
-        //get last server name
-        TextView tv1 = (TextView) findViewById(R.id.editHostname);
-        String serverName =  tv1.getText().toString();
-        storeServerName(serverName);
-    }
-    
-    /**
-     * Connects to a server.
-     * @param view The view from which this method was called.
-     */
-    public void connectToServer(View view) {
+        storeHostname(getHostname());
     }
     
     @Override
@@ -87,21 +82,44 @@ public class MainActivity extends FragmentActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    
+
     /**
      * Shows the KeyChoiceActivity if the hostname seems to be valid
      * @param view The view from which this method was called.
      */
     public void onConnect(View view) {
-        //get text which was typed to hostname textfield
-        EditText editText = (EditText) findViewById(R.id.editHostname);
-        String hostname = editText.getText().toString();
-        //TODO check if hostname is valid
-        Intent intent = new Intent(this, FileChooser.class);
+        String hostname = getHostname();
+        // TODO check if hostname is valid, look up server
+        startKeyChooserForResult();
+    }
+
+    private String getHostname() {
+        return ((EditText) findViewById(R.id.editHostname))
+                .getText().toString();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RESULT_KEY_CHOICE && resultCode == RESULT_OK) {
+            // store key file so that it can be read in onResume(),
+            // when the activity is fully initialized
+            keyFile = new File(data.getStringExtra("chosenFile"));
+        }
+    }
+
+    protected void startKeyChooserForResult() {
+        Intent intent = new Intent(this, KeyChoiceActivity.class);
+        startActivityForResult(intent, RESULT_KEY_CHOICE);
+    }
+
+    protected void startStreamViewer(String hostname, File keyFile) {
+        Intent intent = new Intent(this, StreamViewerActivity.class);
+        intent.putExtra("hostname", hostname);
+        intent.putExtra("keyFile", keyFile.getAbsolutePath());
         startActivity(intent);
     }
     
-    public void storeServerName(String serverName) {
+    protected void storeHostname(String serverName) {
         //saving last server name to shared preference
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_server_name), Context.MODE_PRIVATE);
@@ -111,50 +129,13 @@ public class MainActivity extends FragmentActivity {
         editor.commit();
     }
     
-    public String loadServerName() {
+    protected String loadHostname() {
         //loading last server name from shared preference
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_server_name), Context.MODE_PRIVATE);
         String serverName = sharedPref.getString(getString(R.string.saved_server_main), "");
-        
         return serverName;
     }
-
-    /**
-     * Checks if server address is valid.
-     * @param address The server address
-     */
-    //private void checkValidAddress(String address) {
-    //}
-
-    /**
-     * Shows activity to choose key file.
-     */
-    //private File chooseKeyFile() {
-        ////KeyChoiceActivity act = new KeyChoiceActivity();
-        ////act.show();
-        ////return act.chosenFile;
-    //}
-
-    /**
-     * Saves servers and their corresponding key files.
-     * @param serverAddress The address of the server
-     * @param file The key file
-     */
-    //private void saveServer(String serverAddress, File file) {
-    //}
-
-    /**
-     * Shows activity to view the downloaded data.
-     */
-    //private void showStream(InChannel in_chan) {
-    //}
-
-    /**
-     * Processes any errors.
-     */
-    //public void processError(Error x) {
-    //}
 }
 
 

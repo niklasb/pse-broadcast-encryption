@@ -1,4 +1,4 @@
-package cryptocast.comm.test;
+package cryptocast.comm;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,6 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
 import static cryptocast.util.ByteUtils.*;
-import cryptocast.comm.*;
 
 import org.junit.Test;
 

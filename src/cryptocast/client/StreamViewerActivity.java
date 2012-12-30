@@ -18,19 +18,23 @@ public class StreamViewerActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stream_viewer);
-        // TODO initialize `in`
-        player = new AudioStreamMediaPlayer();
-        try {
-            player.setDataSource(in);
-            player.prepare();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Bundle b = getIntent().getExtras();
+        System.out.println("Hostname: " + b.getString("hostname"));
+        System.out.println("Key file: " + b.getString("keyFile"));
+//        // TODO initialize `in`
+//        player = new AudioStreamMediaPlayer();
+//        try {
+//            player.setDataSource(in);
+//            player.prepare();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
     protected void onStart() {
-        player.start();
+        super.onStart();
+//        player.start();
     }
     
     /** Handles a click on the bottom menu.

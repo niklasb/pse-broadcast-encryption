@@ -1,4 +1,4 @@
-package cryptocast.comm.test;
+package cryptocast.comm;
 
 import static org.junit.Assert.*;
 
@@ -9,7 +9,6 @@ import java.io.InputStream;
 import org.junit.Test;
 
 import static cryptocast.util.ByteUtils.*;
-import cryptocast.comm.*;
 
 public class TestStreamMessageInChannel {
     @Test

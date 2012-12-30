@@ -1,4 +1,4 @@
-package cryptocast.util.test;
+package cryptocast.util;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -6,8 +6,6 @@ import org.mockito.Mockito;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
-
-import cryptocast.util.Generator;
 
 public class TestGenerator {
 
