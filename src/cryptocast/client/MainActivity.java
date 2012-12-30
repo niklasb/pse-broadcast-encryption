@@ -24,23 +24,26 @@ import android.widget.TextView;
 public class MainActivity extends FragmentActivity {
     private static final int RESULT_KEY_CHOICE = 1;
     private static File keyFile;
+    private TextView editHostname;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        editHostname = (TextView) findViewById(R.id.editHostname);
     }
     
     @Override
     protected void onResume() {
         super.onResume();
         
-        String hostname = loadHostname();
-        TextView tv1 = (TextView) findViewById(R.id.editHostname);
-        tv1.setText(hostname);
+        editHostname.setText(loadHostname());
 
         if (keyFile != null) {
-            startStreamViewer(hostname, keyFile);
+            // this is a signal by onActivityResult which is called after
+            // a keyfile was selected. we now have all information to
+            // start the stream
+            startStreamViewer(getHostname(), keyFile);
             keyFile = null;
         }
     }
@@ -94,8 +97,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private String getHostname() {
-        return ((EditText) findViewById(R.id.editHostname))
-                .getText().toString();
+        return editHostname.getText().toString();
     }
 
     @Override
