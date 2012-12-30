@@ -110,11 +110,7 @@ public class MainActivity extends FragmentActivity {
     
     //TODO any other criterion?
     protected boolean checkHostname(String hostname) {
-        if (hostname == null || hostname == "") {
-            return false;
-        } else {
-            return true;
-        }
+        return hostname.length() > 0;
     }
 
     protected String getHostname() {
