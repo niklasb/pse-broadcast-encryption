@@ -1,63 +1,100 @@
 package cryptocast.client;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static cryptocast.util.ByteUtils.str2bytes;
 
 public class SimpleHttpStreamServer implements Runnable {
+    private static final int TIMEOUT_MS = 100;
+
+    private static final Logger log = LoggerFactory
+            .getLogger(SimpleHttpStreamServer.class);
+    
     private InputStream in;
     private ServerSocket sock;
     private String contentType;
     private int bufsize;
+    private SocketAddress addr;
 
     public SimpleHttpStreamServer(InputStream in, 
                                   SocketAddress addr, 
                                   String contentType,
-                                  int bufsize) 
-                        throws IOException {
+                                  int bufsize) {
         this.in = in;
         this.contentType = contentType;
         this.bufsize = bufsize;
-        sock = new ServerSocket();
-        sock.bind(addr);
+        this.addr = addr;
     }
 
+    private static Socket acceptInterruptable(ServerSocket sock) 
+                throws InterruptedException, IOException {
+        for (;;) {
+            try {
+                return sock.accept();
+            } catch (InterruptedIOException e) { }
+            if (Thread.interrupted()) {
+                throw new InterruptedException("Interrupted during accept()");
+            }
+        }
+    }
+    
     @Override
     public void run() {
-        Socket clientSock;
+        ServerSocket sock;
         try {
-            clientSock = sock.accept();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        try {
-            BufferedReader clientIn = new BufferedReader(
-                    new InputStreamReader(clientSock.getInputStream()));
-            while (clientIn.readLine().length() > 1) {
-                // fetch all request headers
-            }
-            OutputStream clientOut = clientSock.getOutputStream();
-            clientOut.write(getChunkedResponseHeader());
-            sendChunked(clientOut, in);
-            clientSock.close();
+            sock = new ServerSocket();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            log.error("Cannot bind to port!", e);
             return;
         }
+        try {
+            sock.setSoTimeout(TIMEOUT_MS);
+            sock.bind(addr);
+            for (;;) {
+                handleNextClient(sock);
+            }
+        } catch (InterruptedException e) {
+        } catch (Exception e) {
+            log.error("Error while accepting or handling client", e);
+        } finally {
+            try {
+                sock.close();
+            } catch (Throwable e) { /* ignore errors */ }
+        }
+    }
+    
+    private void handleNextClient(ServerSocket sock) 
+                   throws InterruptedException, IOException {
+        Socket clientSock = acceptInterruptable(sock);
+        BufferedReader clientIn = new BufferedReader(
+                    new InputStreamReader(clientSock.getInputStream()));
+        while (clientIn.readLine().length() > 1) {
+            // fetch all request headers
+        }
+        OutputStream clientOut = clientSock.getOutputStream();
+        clientOut.write(getChunkedResponseHeader());
+        sendChunked(clientOut, in);
+        clientSock.close();
     }
     
     private void sendChunked(OutputStream out, InputStream in) 
                 throws InterruptedException, IOException {
         int recv;
         byte[] buffer = new byte[bufsize];
+        // TODO make this interruptable?
         while ((recv = in.read(buffer)) >= 0) {
             if (recv == 0) {
                 Thread.sleep(10); 

@@ -9,24 +9,26 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 
-public class AudioStreamMediaPlayer implements OnCompletionListener, OnErrorListener {
+public class AudioStreamMediaPlayer implements OnCompletionListener {
     private MediaPlayer player = new MediaPlayer();
     private SimpleHttpStreamServer server;
     private InputStream in;
     private Thread worker;
+    private String contentType;
 
-    public void setDataSource(InputStream in) throws IOException {
+    public void setRawDataSource(InputStream in, String contentType) throws IOException {
         this.in = in;
+        this.contentType = contentType;
     }
 
     public void prepare() throws IllegalStateException, IOException {
         if (in == null) {
-            throw new IllegalStateException("setDataSource() was not called");
+            throw new IllegalStateException("setRawDataSource() has not been called");
         }
         server = new SimpleHttpStreamServer(
                    in, 
                    new InetSocketAddress("127.0.0.1", 11337), 
-                   "audio/mpeg",
+                   contentType,
                    0x4000);
         worker = new Thread(server);
         worker.start();
@@ -43,11 +45,5 @@ public class AudioStreamMediaPlayer implements OnCompletionListener, OnErrorList
     @Override
     public void onCompletion(MediaPlayer p) {
         worker.interrupt();
-    }
-
-    @Override
-    public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
-        // TODO Auto-generated method stub
-        return false;
     }
 }
