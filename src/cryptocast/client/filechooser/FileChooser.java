@@ -30,8 +30,8 @@ public class FileChooser extends Activity implements OnItemClickListener {
         return FileChooserState.fromDirectory(dir, fileFilter);
     }
     
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
         setContentView(R.layout.activity_file_chooser);
         updateState(getStateFromDir(Environment.getExternalStorageDirectory()));
         

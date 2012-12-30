@@ -40,13 +40,11 @@ public class FileArrayAdapter extends ArrayAdapter<ListElement> {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView != null) { 
-            return convertView; 
-        }
-        convertView = inflater.inflate(RESOURCE, null);
-        TextView text = (TextView) convertView.findViewById(R.id.file_row_text);
-        text.setText(getItem(position).toString());
-        text.setCompoundDrawablesWithIntrinsicBounds(getItem(position).getIcon(res), null, null, null);
-        return convertView;
+        ListElement item = getItem(position);
+        View view = inflater.inflate(RESOURCE, null);
+        TextView text = (TextView) view.findViewById(R.id.file_row_text);
+        text.setText(item.toString());
+        text.setCompoundDrawablesWithIntrinsicBounds(item.getIcon(res), null, null, null);
+        return view;
     }
 }

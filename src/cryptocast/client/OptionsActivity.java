@@ -11,15 +11,20 @@ public class OptionsActivity extends Activity {
     private ClientApplication app;
     
     /** Receives the saved option state.
-     * @param savedInstanceState the old state
+     * @param b the old state
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
         setContentView(R.layout.activity_options);
         app = ((ClientApplication) getApplication());
     }
 
+    @Override
+    protected void onPause() {
+        app.saveState();
+    }
+    
     /** Inflates the option menu.
      * @param menu The menu
      */

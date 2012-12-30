@@ -16,29 +16,33 @@ public class ClientApplication extends Application {
     private static final Logger log = LoggerFactory
             .getLogger(ClientApplication.class);
     
-    private ServerHistory serverHistory;
-    private static final String serverHistoryFName = "server_history";
+    private ClientState state;
+    private static final String STATE_FILE_NAME = "cryptocast_state";
     
     @Override
     public void onCreate() {
         try {
-            InputStream in = openFileInput(serverHistoryFName);
-            serverHistory = SerializationUtils.readFromStream(in);
+            InputStream in = openFileInput(STATE_FILE_NAME);
+            state = SerializationUtils.readFromStream(in);
+            log.debug("Loaded application state from internal storage");
         } catch (Exception e) {
-            serverHistory = new ServerHistory();
+            log.warn("Could not load state from interal storage, creating new state", e);
+            state = new ClientState();
         }
+        assert state != null;
     }
     
     public void saveState() {
+        log.debug("Saving application state to internal storage");
         try {
-            OutputStream out = openFileOutput(serverHistoryFName, Context.MODE_PRIVATE);
-            SerializationUtils.writeToStream(out, serverHistory);
+            OutputStream out = openFileOutput(STATE_FILE_NAME, Context.MODE_PRIVATE);
+            SerializationUtils.writeToStream(out, state);
         } catch (IOException e) {
-            log.error("Cannot save server history!", e);
+            log.error("Cannot save application state!", e);
         }
     }
     
-    public ServerHistory getHistory() {
-        return serverHistory;
+    public ClientState getState() {
+        return state;
     }
 }

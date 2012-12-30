@@ -2,6 +2,9 @@ package cryptocast.client;
 
 import java.io.File;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,26 +24,26 @@ import android.widget.TextView;
  * stream and show its contents.
  */
 public class MainActivity extends FragmentActivity {
+    private static final Logger log = LoggerFactory
+            .getLogger(MainActivity.class);
+    
     private static final int RESULT_KEY_CHOICE = 1;
     private static File keyFile;
     private TextView editHostname;
-    private SharedPreferences sharedPrefs;
     private ClientApplication app;
     
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
         setContentView(R.layout.activity_main);
         editHostname = (TextView) findViewById(R.id.editHostname);
-        sharedPrefs = getSharedPreferences(getString(R.string.preference_server_name), 
-                                          Context.MODE_PRIVATE);
         app = ((ClientApplication) getApplication());
     }
     
     @Override
     protected void onResume() {
         super.onResume();
-        loadUI();
+        editHostname.setText(app.getState().getHostname());
 
         if (keyFile != null) {
             // this is a signal by onActivityResult which is called after
@@ -54,8 +57,8 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        app.getState().setHostname(getHostname());
         app.saveState();
-        storeUI();
     }
     
     @Override
@@ -94,7 +97,7 @@ public class MainActivity extends FragmentActivity {
      * Shows the KeyChoiceActivity if the hostname seems to be valid
      * @param view The view from which this method was called.
      */
-    protected void onConnect(View view) {
+    public void onConnect(View view) {
         String hostname = getHostname();
         // TODO check if hostname is valid, look up server
         startKeyChooserForResult();
@@ -110,6 +113,7 @@ public class MainActivity extends FragmentActivity {
             // store key file so that it can be read in onResume(),
             // when the activity is fully initialized
             keyFile = new File(data.getStringExtra("chosenFile"));
+            log.debug("Got response from key chooser: chosenFile={}", keyFile);
         }
     }
 
@@ -119,23 +123,11 @@ public class MainActivity extends FragmentActivity {
     }
 
     protected void startStreamViewer(String hostname, File keyFile) {
+        log.debug("Starting stream viewer with: hostname={} keyfile={}", hostname, keyFile);
         Intent intent = new Intent(this, StreamViewerActivity.class);
         intent.putExtra("hostname", hostname);
         intent.putExtra("keyFile", keyFile.getAbsolutePath());
         startActivity(intent);
-    }
-    
-    protected void storeUI() {
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        // store hostname
-        editor.putString(getString(R.string.saved_server_main), getHostname());
-        editor.commit();
-    }
-    
-    protected void loadUI() {
-        // load hostname
-        String hostname = sharedPrefs.getString(getString(R.string.saved_server_main), "");
-        editHostname.setText(hostname);
     }
 }
 

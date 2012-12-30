@@ -10,11 +10,11 @@ import cryptocast.client.filechooser.FileChooser;
  * This activity lets a user choose an encryption key file
  * which is then sent to the server for authentication.
  */
-public class KeyChoiceActivity extends FileChooser {
+public class KeyChoiceActivity extends FileChooser {    
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle b) {
         setFileFilter(".*\\.key");
-        super.onCreate(savedInstanceState);
+        super.onCreate(b);
     }
     
     @Override

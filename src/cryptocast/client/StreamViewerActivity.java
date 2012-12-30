@@ -15,12 +15,12 @@ public class StreamViewerActivity extends FragmentActivity {
     private InputStream in;
     
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
         setContentView(R.layout.activity_stream_viewer);
-        Bundle b = getIntent().getExtras();
-        System.out.println("Hostname: " + b.getString("hostname"));
-        System.out.println("Key file: " + b.getString("keyFile"));
+        Bundle args = getIntent().getExtras();
+        System.out.println("Hostname: " + args.getString("hostname"));
+        System.out.println("Key file: " + args.getString("keyFile"));
 //        // TODO initialize `in`
 //        player = new AudioStreamMediaPlayer();
 //        try {
