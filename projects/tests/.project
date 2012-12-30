@@ -16,11 +16,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>gen-client/cryptocast</name>
-			<type>2</type>
-			<locationURI>PSE_LOC/projects/client/gen/cryptocast</locationURI>
-		</link>
-		<link>
 			<name>junit/cryptocast</name>
 			<type>2</type>
 			<locationURI>PSE_LOC/tests/junit4/cryptocast</locationURI>
@@ -29,6 +24,11 @@
 			<name>src/cryptocast</name>
 			<type>2</type>
 			<locationURI>PSE_LOC/src/cryptocast</locationURI>
+		</link>
+		<link>
+			<name>gen-client/cryptocast</name>
+			<type>2</type>
+			<locationURI>PSE_LOC/projects/client/gen/cryptocast</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
