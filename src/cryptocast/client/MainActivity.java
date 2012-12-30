@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
  /**
@@ -25,19 +24,21 @@ public class MainActivity extends FragmentActivity {
     private static final int RESULT_KEY_CHOICE = 1;
     private static File keyFile;
     private TextView editHostname;
+    private SharedPreferences sharedPrefs;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         editHostname = (TextView) findViewById(R.id.editHostname);
+        sharedPrefs = getSharedPreferences(getString(R.string.preference_server_name), 
+                                          Context.MODE_PRIVATE);
     }
     
     @Override
     protected void onResume() {
         super.onResume();
-        
-        editHostname.setText(loadHostname());
+        loadUI();
 
         if (keyFile != null) {
             // this is a signal by onActivityResult which is called after
@@ -51,7 +52,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        storeHostname(getHostname());
+        storeUI();
     }
     
     @Override
@@ -90,13 +91,13 @@ public class MainActivity extends FragmentActivity {
      * Shows the KeyChoiceActivity if the hostname seems to be valid
      * @param view The view from which this method was called.
      */
-    public void onConnect(View view) {
+    protected void onConnect(View view) {
         String hostname = getHostname();
         // TODO check if hostname is valid, look up server
         startKeyChooserForResult();
     }
 
-    private String getHostname() {
+    protected String getHostname() {
         return editHostname.getText().toString();
     }
 
@@ -121,22 +122,17 @@ public class MainActivity extends FragmentActivity {
         startActivity(intent);
     }
     
-    protected void storeHostname(String serverName) {
-        //saving last server name to shared preference
-        SharedPreferences sharedPref = getSharedPreferences(
-                getString(R.string.preference_server_name), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.saved_server_main),
-                serverName);
+    protected void storeUI() {
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        // store hostname
+        editor.putString(getString(R.string.saved_server_main), getHostname());
         editor.commit();
     }
     
-    protected String loadHostname() {
-        //loading last server name from shared preference
-        SharedPreferences sharedPref = getSharedPreferences(
-                getString(R.string.preference_server_name), Context.MODE_PRIVATE);
-        String serverName = sharedPref.getString(getString(R.string.saved_server_main), "");
-        return serverName;
+    protected void loadUI() {
+        // load hostname
+        String hostname = sharedPrefs.getString(getString(R.string.saved_server_main), "");
+        editHostname.setText(hostname);
     }
 }
 
