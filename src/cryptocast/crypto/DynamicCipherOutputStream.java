@@ -2,6 +2,7 @@ package cryptocast.crypto;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -11,6 +12,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.KeyGenerator;
+import javax.crypto.spec.IvParameterSpec;
 
 import cryptocast.comm.MessageOutChannel;
 import cryptocast.util.ByteUtils;
@@ -57,13 +59,17 @@ public class DynamicCipherOutputStream extends OutputStream {
         }
         try {
             cipher = Cipher.getInstance("AES/CFB8/NoPadding");
-            cipher.init(Cipher.ENCRYPT_MODE, key);
+            byte[] ivBytes = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+            cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
         } catch (NoSuchAlgorithmException e) {
             cannotHappen(e);
         } catch (NoSuchPaddingException e) {
             cannotHappen(e);
         } catch (InvalidKeyException e) {
             cannotHappen(e); // because we generated the key by ourselves!
+        } catch (InvalidAlgorithmParameterException e) {
+            cannotHappen(e); // because we used a correct IV!
         }
         DynamicCipherKeyUpdateMessage keyUpdate = 
                 new DynamicCipherKeyUpdateMessage(encryptedKey, cipher.getIV());
