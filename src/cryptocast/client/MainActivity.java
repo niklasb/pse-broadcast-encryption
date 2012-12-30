@@ -94,7 +94,7 @@ public class MainActivity extends FragmentActivity {
      * Shows the KeyChoiceActivity if the hostname seems to be valid
      * @param view The view from which this method was called.
      */
-    protected void onConnect(View view) {
+    public void onConnect(View view) {
         String hostname = getHostname();
         // TODO check if hostname is valid, look up server
         startKeyChooserForResult();
