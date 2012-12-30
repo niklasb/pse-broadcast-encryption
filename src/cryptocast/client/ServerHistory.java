@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import android.content.Context;
-import android.view.View;
 
 /**
  * This class is responsible for saving recently selected servers
@@ -14,7 +13,6 @@ import android.view.View;
  */
 public class ServerHistory implements Serializable {
     private static final long serialVersionUID = 140551767140374605L;
-    public static final String FILENAME = "serverHistory";
     
     // A map for servers and their corresponding key files
     private Map<String, File> servers;
@@ -33,23 +31,6 @@ public class ServerHistory implements Serializable {
      * @param keyfile The keyfile the user has chosen for this server.
      */
     public void addServer(String hostname, File keyfile) { 
-        
-    }
-    
-    /**
-     * Loads an instance of serverHistory with the name specified by FILENAME 
-     * from the app's internal storage.
-     * @return The instance of serverHistory loaded or if a new instance of serverHistory
-     * if it does not exist.
-     */
-    public static ServerHistory loadServerHistory(Context context, String filename) {
-        return null;
-    }
-    
-    /**
-     * Saves this instance at the app's internal storage using FILENAME as name of the file.
-     */
-    public static void saveServerHistory() {
         
     }
 }
