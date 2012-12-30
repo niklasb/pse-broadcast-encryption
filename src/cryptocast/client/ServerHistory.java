@@ -2,6 +2,7 @@ package cryptocast.client;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
@@ -15,10 +16,7 @@ public class ServerHistory implements Serializable {
     private static final long serialVersionUID = 140551767140374605L;
     
     // A map for servers and their corresponding key files
-    private Map<String, File> servers;
-    
-    //server history should only be created if it could not be loaded from storage
-    private ServerHistory() { }
+    private Map<String, File> servers = new HashMap<String, File>();
     
     /**
      * @return The servers

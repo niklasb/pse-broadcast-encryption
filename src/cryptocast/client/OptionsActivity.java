@@ -8,6 +8,8 @@ import android.view.MenuItem;
 
 /** The option screen. */
 public class OptionsActivity extends Activity {
+    private ClientApplication app;
+    
     /** Receives the saved option state.
      * @param savedInstanceState the old state
      */
@@ -15,6 +17,7 @@ public class OptionsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options);
+        app = ((ClientApplication) getApplication());
     }
 
     /** Inflates the option menu.

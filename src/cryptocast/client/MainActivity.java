@@ -25,6 +25,7 @@ public class MainActivity extends FragmentActivity {
     private static File keyFile;
     private TextView editHostname;
     private SharedPreferences sharedPrefs;
+    private ClientApplication app;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class MainActivity extends FragmentActivity {
         editHostname = (TextView) findViewById(R.id.editHostname);
         sharedPrefs = getSharedPreferences(getString(R.string.preference_server_name), 
                                           Context.MODE_PRIVATE);
+        app = ((ClientApplication) getApplication());
     }
     
     @Override
@@ -52,6 +54,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        app.saveState();
         storeUI();
     }
     
