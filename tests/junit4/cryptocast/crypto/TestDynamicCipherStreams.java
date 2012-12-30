@@ -10,7 +10,7 @@ import static org.mockito.Mockito.*;
 import cryptocast.comm.*;
 import static cryptocast.util.ByteUtils.str2bytes;
 import cryptocast.util.ArrayUtils;
-import cryptocast.util.TestUtils;
+import cryptocast.testutils.TestUtils;
 
 public class TestDynamicCipherStreams {
     MessageBuffer fifo = new MessageBuffer();
