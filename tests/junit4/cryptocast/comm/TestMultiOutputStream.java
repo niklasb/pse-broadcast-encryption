@@ -51,11 +51,11 @@ public class TestMultiOutputStream {
         MultiOutputStream sut = new MultiOutputStream(MultiOutputStream.removeOnError);
         OutputStream goodStream = mock(OutputStream.class),
                      badStream = mock(OutputStream.class);
-        doThrow(IOException.class)
+        doThrow(new IOException())
              .when(badStream).write(any(byte[].class), anyInt(), anyInt());
-        doThrow(IOException.class)
+        doThrow(new IOException())
              .when(badStream).write(any(byte[].class));
-        doThrow(IOException.class)
+        doThrow(new IOException())
              .when(badStream).write(anyByte());
         sut.addChannel(goodStream);
         sut.addChannel(badStream);

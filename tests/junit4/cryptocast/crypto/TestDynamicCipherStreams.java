@@ -4,25 +4,30 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.mockito.Mockito.*;
 
 import cryptocast.comm.*;
 import static cryptocast.util.ByteUtils.str2bytes;
 import cryptocast.util.ArrayUtils;
+import cryptocast.util.TestUtils;
 
 public class TestDynamicCipherStreams {
     MessageBuffer fifo = new MessageBuffer();
     DynamicCipherOutputStream out;
     DynamicCipherInputStream in;
-    NullEncryptor encDec;
+    Encryptor<byte[]> enc;
+    Decryptor<byte[]> dec;
     
     @Before
+    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
-        encDec = spy(new NullEncryptor());
-        out = DynamicCipherOutputStream.start(fifo, 256, encDec);
-        in = new DynamicCipherInputStream(fifo, encDec);
+        enc = mock(Encryptor.class, TestUtils.RETURNS_FIRST_ARGUMENT());
+        dec = mock(Decryptor.class, TestUtils.RETURNS_FIRST_ARGUMENT());
+        out = DynamicCipherOutputStream.start(fifo, 256, enc);
+        in = new DynamicCipherInputStream(fifo, dec);
     }
-
+    
     @Test
     public void basicEncryptDecryptWorks() throws Exception {
         byte[] payload = str2bytes("abcdefg");
@@ -88,7 +93,7 @@ public class TestDynamicCipherStreams {
         byte[] read = new byte[expected.length + 10];
         assertEquals(expected.length, StreamUtils.readall(in, read, 0, read.length));
         assertArrayEquals(expected, ArrayUtils.copyOfRange(read, 0, expected.length));
-        verify(encDec, times(1)).encrypt(any(byte[].class));
-        verify(encDec, times(1)).decrypt(any(byte[].class));
+        verify(enc, times(1)).encrypt(any(byte[].class));
+        verify(dec, times(1)).decrypt(any(byte[].class));
     }
 }
