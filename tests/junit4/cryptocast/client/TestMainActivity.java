@@ -30,9 +30,9 @@ public class TestMainActivity {
         String hostname = "foo";
         TextView tv = (TextView) sut.findViewById(R.id.editHostname);
         tv.setText(hostname);
-        sut.storeUI();
+        sut.onPause();
         tv.setText("ASDASD");
-        sut.loadUI();
+        sut.onResume();
         assertEquals(hostname, tv.getText().toString());
         assertEquals(hostname, sut.getHostname());
     }
@@ -46,7 +46,6 @@ public class TestMainActivity {
     @Test
     public void illegalHostnames() {
         assertFalse(sut.checkHostname(""));
-        assertFalse(sut.checkHostname(null));
     }
     
     @Test

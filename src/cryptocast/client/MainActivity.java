@@ -108,7 +108,7 @@ public class MainActivity extends FragmentActivity {
         }
     }
     
-    //TODO any other criterion?
+    // TODO any other criterion?
     protected boolean checkHostname(String hostname) {
         return hostname.length() > 0;
     }
