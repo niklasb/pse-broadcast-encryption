@@ -66,8 +66,11 @@ public class FileChooser extends Activity implements OnItemClickListener {
         textView.setText("Current Dir: " + state.getCurrentDir().getAbsolutePath());
         
         ListView listView = (ListView) findViewById(R.id.listView1);
-        ArrayAdapter<ListElement> adapter = new ArrayAdapter<ListElement>(this, android.R.layout.simple_list_item_1, 
-                android.R.id.text1, state.getItems());
-        listView.setAdapter(adapter);
+//        ArrayAdapter<ListElement> adapter = new ArrayAdapter<ListElement>(
+//                this, 
+//                android.R.layout.simple_list_item_1, 
+//                android.R.id.text1, 
+//                state.getItems());
+        listView.setAdapter(new FileArrayAdapter(this, getResources(), state.getItems()));
     }
 }

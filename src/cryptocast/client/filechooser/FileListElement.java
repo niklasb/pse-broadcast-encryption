@@ -1,7 +1,11 @@
 package cryptocast.client.filechooser;
 
 import java.io.File;
+
+import cryptocast.client.R;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 
 /**
@@ -28,7 +32,9 @@ public class FileListElement implements ListElement {
     /**
      * @return The icon associated with this element.
      */
-    public Bitmap getIcon() { return null; }
+    public Drawable getIcon(Resources res) {
+        return res.getDrawable(R.drawable.file24);
+    }
     
     /**
      * @return A string representation of this element.

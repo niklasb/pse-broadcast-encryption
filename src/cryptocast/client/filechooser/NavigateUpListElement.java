@@ -1,7 +1,11 @@
 package cryptocast.client.filechooser;
 
 import java.io.File;
+
+import cryptocast.client.R;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 /**
  * A list element in our file chooser representing a directory.
@@ -27,8 +31,8 @@ public class NavigateUpListElement implements ListElement {
     /**
      * @return The icon associated with this element.
      */
-    public Bitmap getIcon() {
-        return null;
+    public Drawable getIcon(Resources res) {
+        return res.getDrawable(R.drawable.up24);
     }
     
     /**

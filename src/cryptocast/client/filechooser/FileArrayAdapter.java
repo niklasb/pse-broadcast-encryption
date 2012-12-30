@@ -5,6 +5,7 @@ import java.util.List;
 import cryptocast.client.R;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.view.LayoutInflater;
@@ -15,11 +16,9 @@ import android.view.ViewGroup;
  * An adapter between the ListElements and the view showing them.
  */
 public class FileArrayAdapter extends ArrayAdapter<ListElement> {
-    
-    private Context context;
-    private int textViewResourceId;
-    private List<ListElement> elements;
-    
+    private static final int RESOURCE = R.layout.file_chooser_row;
+    private LayoutInflater inflater;
+    private Resources res;
     
     /**
      * Constructs a new instance with the given attributes.
@@ -27,19 +26,10 @@ public class FileArrayAdapter extends ArrayAdapter<ListElement> {
      * @param textViewResourceId The view showing the data.
      * @param objects List with all elements which will be shown by the view.
      */
-    public FileArrayAdapter(Context context, int textViewResourceId, List<ListElement> objects) {
-        super(context, textViewResourceId, objects);
-        this.context = context;
-        this.textViewResourceId = textViewResourceId;
-        this.elements = objects;
-    }
-
-    /**
-     * @param position The position of the item in the list.
-     * @return The list element at the given position in the list.
-     */
-    public ListElement getItem(int position) {
-        return elements.get(position);
+    public FileArrayAdapter(Context context, Resources res, List<ListElement> elements) {
+        super(context, RESOURCE, elements);
+        this.inflater = LayoutInflater.from(context);
+        this.res = res;
     }
 
     /**
@@ -50,23 +40,13 @@ public class FileArrayAdapter extends ArrayAdapter<ListElement> {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater vi = 
-                (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(textViewResourceId, null);
+        if (convertView != null) { 
+            return convertView; 
         }
-        
-        ListElement elem = elements.get(position);
-        if (elem != null) {
-            TextView t1 = (TextView) convertView.findViewById(R.id.textView1);
-            TextView t2 = (TextView) convertView.findViewById(R.id.textView2);
-            
-            if (t1 != null)
-                t1.setText(elem.getPath().getName());
-            if (t2 != null)
-                t2.setText(elem.getPath().getName());
-        }
-        
-        return parent;
+        convertView = inflater.inflate(RESOURCE, null);
+        TextView text = (TextView) convertView.findViewById(R.id.file_row_text);
+        text.setText(getItem(position).toString());
+        text.setCompoundDrawablesWithIntrinsicBounds(getItem(position).getIcon(res), null, null, null);
+        return convertView;
     }
 }
