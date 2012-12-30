@@ -35,7 +35,7 @@ public final class Server {
         @Parameter(names = { "-p", "--port" }, description = "Listen port")
         private int listenPort = 21337;
 
-        @Parameter(names = { "-b", "--bind-address"}, description = "Listen address")
+        @Parameter(names = { "-l", "--listen-address"}, description = "Listen address")
         private String listenAddr = "127.0.0.1";
     }
     
@@ -43,7 +43,7 @@ public final class Server {
      * @param args command line arguments
      */
     public static void main(String[] argv) throws Exception {
-        Options opts = OptParse.parseArgs(new Options(), "cryptocast-server", argv);
+        Options opts = OptParse.parseArgs(new Options(), "server", argv);
         
         System.out.println("Logging to " + opts.logFile);
         initLogging(opts.logFile, Level.WARN);

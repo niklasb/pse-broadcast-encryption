@@ -5,8 +5,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.content.Context;
-
 /**
  * This class is responsible for saving recently selected servers
  * and their corresponding key files.

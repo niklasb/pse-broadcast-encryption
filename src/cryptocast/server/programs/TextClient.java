@@ -23,7 +23,7 @@ public final class TextClient {
         @Parameter(names = { "-p", "--port" }, description = "Connect port")
         private int connectPort = 21337;
 
-        @Parameter(names = { "-b", "--bind-address"}, description = "Connect host")
+        @Parameter(names = { "-c", "--host"}, description = "Connect host")
         private String connectHost = "127.0.0.1";
     }
     
@@ -31,7 +31,7 @@ public final class TextClient {
      * @param args command line arguments
      */
     public static void main(String[] argv) throws Exception {
-        Options opts = OptParse.parseArgs(new Options(), "cryptocast-text-client", argv);
+        Options opts = OptParse.parseArgs(new Options(), "text-client", argv);
         
         NaorPinkasPersonalKey key = SerializationUtils.readFromFile(opts.keyFile);
         Socket sock = new Socket(opts.connectHost, opts.connectPort);

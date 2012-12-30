@@ -17,11 +17,13 @@ public class ClientApplication extends Application {
     private static final Logger log = LoggerFactory
             .getLogger(ClientApplication.class);
     
+    // the global application state with the respective default values
     private static class State implements Serializable {
         private static final long serialVersionUID = -147920249222749070L;
-        private ServerHistory serverHistory = new ServerHistory();
-        private String hostname = "";
-        private int port = 21337;
+        
+        ServerHistory serverHistory = new ServerHistory();
+        String hostname = "";
+        int port = 21337;
     }
     
     private State state;
