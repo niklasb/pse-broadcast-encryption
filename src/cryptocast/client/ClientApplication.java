@@ -19,9 +19,11 @@ public class ClientApplication extends Application {
     
     private static class State implements Serializable {
         private static final long serialVersionUID = -147920249222749070L;
-        private String hostname = "";
         private ServerHistory serverHistory = new ServerHistory();
+        private String hostname = "";
+        private int port = 21337;
     }
+    
     private State state;
     private static final String STATE_FILE_NAME = "cryptocast_state";
     
@@ -56,6 +58,14 @@ public class ClientApplication extends Application {
         state.hostname = hostname;
     }
 
+    public int getPort() {
+        return state.port;
+    }
+
+    public void setPort(int port) {
+        state.port = port;
+    }
+    
     public ServerHistory getServerHistory() {
         return state.serverHistory;
     }
