@@ -30,4 +30,5 @@ public class ServerHistory implements Serializable {
         //TODO add server without looking if it was already in this list?
         servers.put(hostname, keyfile);
     }
+    
 }

@@ -67,10 +67,16 @@ public class MainActivity extends ClientActivity {
      */
     public void onConnect(View view) {
         String hostname = getHostname();
-        if (checkHostname(hostname)) {
-            startKeyChooserForResult();
+        ServerHistory history = app.getServerHistory();
+        if (!checkHostname(hostname)) {
+            log.debug("Button connect clicked and invalid hostname.");
+            showErrorDialog(getString(R.string.invalid_hostname_text));       
+        } else if (history.getServers().containsKey(hostname)) {
+            log.debug("Button connect clicked and server in history.");
+            startStreamViewer(hostname, history.getServers().get(hostname));
         } else {
-            showErrorDialog(getString(R.string.invalid_hostname_text));
+            log.debug("Button connect clicked, hostname valid and filechooser necessary.");
+            startKeyChooserForResult();
         }
     }
     
@@ -90,6 +96,7 @@ public class MainActivity extends ClientActivity {
             // when the activity is fully initialized
             keyFile = new File(data.getStringExtra("chosenFile"));
             log.debug("Got response from key chooser: chosenFile={}", keyFile);
+            app.getServerHistory().addServer(getHostname(), keyFile);
         }
     }
 
