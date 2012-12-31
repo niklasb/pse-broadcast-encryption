@@ -15,5 +15,8 @@
     <string name="title_activity_help">HelpActivity</string>
     <string name="title_activity_stream">StreamViewer</string>
     <string name="invalid_hostname_text">This hostname is not valid, please check your written name.</string>
+    <string name="port_hint">Port</string>
+    <string name="content_descr_imagemain">Cryptocast Logo</string>
+    <string name="invalid_port">Please give me a valid port.</string>
 
 </resources>

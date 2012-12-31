@@ -26,18 +26,22 @@ public class MainActivity extends ClientActivity {
     private static final int RESULT_KEY_CHOICE = 1;
     private static File keyFile;
     private TextView editHostname;
+    private TextView editPort;
     
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_main);
         editHostname = (TextView) findViewById(R.id.editHostname);
+        editPort = (TextView) findViewById(R.id.editPort);
     }
     
     @Override
     protected void onResume() {
         super.onResume();
         editHostname.setText(app.getHostname());
+        //TODO the following line makes client crash on start
+        //editPort.setText(app.getPort());
 
         if (keyFile != null) {
             // this is a signal by onActivityResult which is called after
@@ -51,6 +55,7 @@ public class MainActivity extends ClientActivity {
     @Override
     protected void onPause() {
         app.setHostname(getHostname());
+        app.setPort(getPort());
         super.onPause();
     }
     
@@ -67,10 +72,14 @@ public class MainActivity extends ClientActivity {
      */
     public void onConnect(View view) {
         String hostname = getHostname();
+        int port = getPort();
         ServerHistory history = app.getServerHistory();
         if (!checkHostname(hostname)) {
             log.debug("Button connect clicked and invalid hostname.");
             showErrorDialog(getString(R.string.invalid_hostname_text));       
+        } else if (!checkPort(port)) {
+            log.debug("Button connect clicked and invalid port: " + port);
+            showErrorDialog(getString(R.string.invalid_port));
         } else if (history.getServers().containsKey(hostname)) {
             log.debug("Button connect clicked and server in history.");
             startStreamViewer(hostname, history.getServers().get(hostname));
@@ -84,9 +93,25 @@ public class MainActivity extends ClientActivity {
     protected boolean checkHostname(String hostname) {
         return hostname.length() > 0;
     }
+    
+    protected boolean checkPort(int port) {
+        return port >= 0;
+    }
 
     protected String getHostname() {
         return editHostname.getText().toString();
+    }
+
+    /**
+     * @return the current port or -1 if there is an error.
+     */
+    protected int getPort() {
+        try {
+            return Integer.parseInt(editPort.getText().toString());
+        } catch (NumberFormatException e) {
+            log.error("Could not parse port.", e);
+            return -1;
+        }
     }
 
     @Override

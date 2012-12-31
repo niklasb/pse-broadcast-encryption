@@ -1,6 +1,6 @@
-<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/AbsoluteLayout1"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context=".MainActivity" >
@@ -9,37 +9,52 @@
         android:id="@+id/imageView1"
         android:layout_width="231dp"
         android:layout_height="331dp"
-        android:layout_x="47dp"
-        android:layout_y="-20dp"
-        android:maxHeight="200dp"
-        android:maxWidth="200dp"
-        android:scaleType="fitCenter"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/content_descr_imagemain"
+        android:maxHeight="150dp"
+        android:maxWidth="150dp"
+        android:scaleType="fitStart"
         android:src="@drawable/logo_transparent" />
 
     <EditText
         android:id="@+id/editHostname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="40dp"
-        android:layout_y="278dp"
+        android:layout_alignBottom="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp"
+        android:ems="10"
         android:hint="@string/hostname_hint"
-        android:singleLine="true"
         android:maxLines="1"
         android:maxWidth="250dp"
-        android:minWidth="250dp" >
+        android:minWidth="250dp"
+        android:singleLine="true" >
 
         <requestFocus />
     </EditText>
+
+    <EditText
+        android:id="@+id/editPort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="@string/port_hint"
+        android:inputType="number"
+        android:minWidth="248dp" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="37dp"
-        android:layout_y="332dp"
+        android:layout_alignLeft="@+id/editPort"
+        android:layout_below="@+id/imageView1"
+        android:gravity="center_vertical|center_horizontal"
         android:minWidth="252dp"
         android:onClick="onConnect"
         android:text="@string/connect_button"
         android:textSize="20sp" />
 
-</AbsoluteLayout>
+</RelativeLayout>
