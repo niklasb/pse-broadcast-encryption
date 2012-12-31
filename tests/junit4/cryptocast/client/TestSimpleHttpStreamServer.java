@@ -3,7 +3,6 @@ package cryptocast.client;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.URL;
 
 import org.junit.*;

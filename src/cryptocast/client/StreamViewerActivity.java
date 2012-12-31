@@ -7,6 +7,7 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
@@ -40,6 +41,15 @@ public class StreamViewerActivity extends ClientActivity {
     @Override
     protected void onStart() {
         super.onStart();
+//        InputStream in = getResources().openRawResource(R.raw.song);
+//        AudioStreamMediaPlayer player = new AudioStreamMediaPlayer();
+//        try {
+//            player.setRawDataSource(in, "audio/mpeg");
+//            player.prepare();
+//            player.start();
+//        } catch (Exception e) {
+//            log.error("Could not play", e);
+//        }
         log.debug("Connecting to {}:{}", hostname, port);
         Socket sock;
         try {
@@ -62,7 +72,8 @@ public class StreamViewerActivity extends ClientActivity {
             player.start();
         } finally {
             try {
-                sock.close();
+                // TODO close *somewhere*
+                //sock.close();
             } catch (Throwable e) { }
         }
     }

@@ -29,7 +29,7 @@ public class AudioStreamMediaPlayer implements OnCompletionListener {
                    in, 
                    new InetSocketAddress("127.0.0.1", 11337), 
                    contentType,
-                   0x4000);
+                   0x400000);
         worker = new Thread(server);
         worker.start();
         try {
@@ -38,6 +38,7 @@ public class AudioStreamMediaPlayer implements OnCompletionListener {
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setDataSource("http://127.0.0.1:11337/");
         player.setOnCompletionListener(this);
+        player.prepare();
     }
 
     public void start() {
