@@ -1,15 +1,10 @@
 package cryptocast.client;
 
 import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
 import android.view.Menu;
-import android.view.MenuItem;
 
 /** The option screen. */
-public class OptionsActivity extends Activity {
-    private ClientApplication app;
-    
+public class OptionsActivity extends ClientActivity {
     /** Receives the saved option state.
      * @param b the old state
      */
@@ -17,12 +12,6 @@ public class OptionsActivity extends Activity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_options);
-        app = ((ClientApplication) getApplication());
-    }
-
-    @Override
-    protected void onPause() {
-        app.saveState();
     }
     
     /** Inflates the option menu.
@@ -33,30 +22,5 @@ public class OptionsActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_options, menu);
         return true;
-    }
-    
-    /** Handles a click on the main menu.
-     * @param item The clicked item
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        // Handle menu item click
-        switch (item.getItemId()) {
-            case R.id.itemMain:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.itemHelp:
-                intent = new Intent(this, HelpActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.itemPlayer:
-                intent = new Intent(this, StreamViewerActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

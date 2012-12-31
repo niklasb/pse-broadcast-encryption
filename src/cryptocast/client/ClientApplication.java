@@ -28,7 +28,7 @@ public class ClientApplication extends Application {
     
     private State state;
     private static final String STATE_FILE_NAME = "cryptocast_state";
-    
+
     @Override
     public void onCreate() {
         try {
@@ -40,7 +40,7 @@ public class ClientApplication extends Application {
             state = new State();
         }
     }
-    
+
     public void saveState() {
         log.debug("Saving application state to internal storage");
         try {

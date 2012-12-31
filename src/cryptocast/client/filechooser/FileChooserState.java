@@ -19,7 +19,7 @@ public class FileChooserState {
         this.items = items;
     }
     
-    public static FileChooserState fromDirectory(File dir, String fileFilter) {
+    public static FileChooserState fromDirectory(File dir, String filePattern) {
         File[] files;
         while (null == (files = dir.listFiles())) {
             dir = dir.getParentFile();
@@ -32,7 +32,7 @@ public class FileChooserState {
         for (File f : files) {
             if (f.isDirectory()) {
                 result.add(new DirectoryListElement(f));
-            } else if (f.getAbsolutePath().matches(fileFilter)) {
+            } else if (f.getAbsolutePath().matches(filePattern)) {
                 result.add(new FileListElement(f));
             }
         }

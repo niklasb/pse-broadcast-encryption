@@ -5,14 +5,10 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,21 +19,19 @@ import android.widget.TextView;
  * data stream an instance of a {@link StreamViewerActivity} is started to process the
  * stream and show its contents.
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends ClientActivity {
     private static final Logger log = LoggerFactory
             .getLogger(MainActivity.class);
     
     private static final int RESULT_KEY_CHOICE = 1;
     private static File keyFile;
     private TextView editHostname;
-    private ClientApplication app;
     
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_main);
         editHostname = (TextView) findViewById(R.id.editHostname);
-        app = ((ClientApplication) getApplication());
     }
     
     @Override
@@ -56,9 +50,8 @@ public class MainActivity extends FragmentActivity {
     
     @Override
     protected void onPause() {
-        super.onPause();
         app.setHostname(getHostname());
-        app.saveState();
+        super.onPause();
     }
     
     @Override
@@ -66,31 +59,6 @@ public class MainActivity extends FragmentActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main, menu);
         return true;
-    }
-
-    /** Handles a click on the main menu.
-     * @param item The clicked item
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        // Handle menu item click
-        switch (item.getItemId()) {
-            case R.id.itemOptions:
-                intent = new Intent(this, OptionsActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.itemHelp:
-                intent = new Intent(this, HelpActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.itemPlayer:
-                intent = new Intent(this, StreamViewerActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     /**
@@ -102,9 +70,7 @@ public class MainActivity extends FragmentActivity {
         if (checkHostname(hostname)) {
             startKeyChooserForResult();
         } else {
-            //TODO fragment does not show up?
-            MessageFragment frag = new MessageFragment(getString(R.string.invalid_hostname_text));
-            frag.show(getSupportFragmentManager(), null);
+            showErrorDialog(getString(R.string.invalid_hostname_text));
         }
     }
     

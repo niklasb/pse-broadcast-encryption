@@ -32,7 +32,9 @@ public class AudioStreamMediaPlayer implements OnCompletionListener {
                    0x4000);
         worker = new Thread(server);
         worker.start();
-        
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) { }
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setDataSource("http://127.0.0.1:11337/");
         player.setOnCompletionListener(this);

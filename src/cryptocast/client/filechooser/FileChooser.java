@@ -3,40 +3,43 @@ package cryptocast.client.filechooser;
 import java.io.File;
 import cryptocast.client.R;
 
-import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class FileChooser extends Activity implements OnItemClickListener {
+public class FileChooser implements OnItemClickListener {
+    private String filePattern;
     private FileChooserState state;
-    private String fileFilter;
-
-    public String getFileFilter() {
-        return fileFilter;
+    private Activity act;
+    private TextView currentDir;
+    private ListView listing;
+    
+    public FileChooser(String filePattern) {
+        this.filePattern = filePattern;
+        this.state = FileChooserState.fromDirectory(
+                Environment.getExternalStorageDirectory());
     }
-
-    public void setFileFilter(String fileFilter) {
-        this.fileFilter = fileFilter;
+    
+    public String getFilePattern() {
+        return filePattern;
     }
 
     private FileChooserState getStateFromDir(File dir) {
-        return FileChooserState.fromDirectory(dir, fileFilter);
+        return FileChooserState.fromDirectory(dir, filePattern);
     }
     
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
-        setContentView(R.layout.activity_file_chooser);
+    public void init(Activity act) {
+        this.act = act;
+        act.setContentView(R.layout.activity_file_chooser);
+        currentDir = (TextView) act.findViewById(R.id.textView1);
+        listing = (ListView) act.findViewById(R.id.listView1);
+        listing.setOnItemClickListener(this);
         updateState(getStateFromDir(Environment.getExternalStorageDirectory()));
-        
-        ListView listView = (ListView) findViewById(R.id.listView1);
-        listView.setOnItemClickListener(this);
     }
 
     @Override
@@ -52,8 +55,8 @@ public class FileChooser extends Activity implements OnItemClickListener {
     private void handleFileClick(File file) {
         Intent result = new Intent();
         result.putExtra("chosenFile", file.getAbsolutePath());
-        setResult(RESULT_OK, result);
-        finish();
+        act.setResult(Activity.RESULT_OK, result);
+        act.finish();
     }
 
     private void handleDirClick(File dir) {
@@ -62,15 +65,8 @@ public class FileChooser extends Activity implements OnItemClickListener {
     
     private void updateState(FileChooserState state) {
         this.state = state;
-        TextView textView = (TextView) findViewById(R.id.textView1);
-        textView.setText("Current Dir: " + state.getCurrentDir().getAbsolutePath());
         
-        ListView listView = (ListView) findViewById(R.id.listView1);
-//        ArrayAdapter<ListElement> adapter = new ArrayAdapter<ListElement>(
-//                this, 
-//                android.R.layout.simple_list_item_1, 
-//                android.R.id.text1, 
-//                state.getItems());
-        listView.setAdapter(new FileArrayAdapter(this, getResources(), state.getItems()));
+        currentDir.setText("Current Dir: " + state.getCurrentDir().getAbsolutePath());
+        listing.setAdapter(new FileArrayAdapter(act, act.getResources(), state.getItems()));
     }
 }

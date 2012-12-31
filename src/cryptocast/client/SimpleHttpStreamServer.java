@@ -24,7 +24,6 @@ public class SimpleHttpStreamServer implements Runnable {
             .getLogger(SimpleHttpStreamServer.class);
     
     private InputStream in;
-    private ServerSocket sock;
     private String contentType;
     private int bufsize;
     private SocketAddress addr;

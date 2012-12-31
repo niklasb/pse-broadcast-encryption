@@ -1,6 +1,11 @@
 package cryptocast.client;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.Socket;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -10,31 +15,56 @@ import android.view.MenuItem;
  * This activity is responsible for decrypting the received data
  * and viewing it.
  */
-public class StreamViewerActivity extends FragmentActivity {
-    private AudioStreamMediaPlayer player;
+public class StreamViewerActivity extends ClientActivity {
+    private static final Logger log = LoggerFactory
+            .getLogger(StreamViewerActivity.class);
+    
+    private AudioStreamMediaPlayer player = new AudioStreamMediaPlayer();
     private InputStream in;
+    private String hostname;
+    private int port;
+    private File keyFile;
     
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_stream_viewer);
         Bundle args = getIntent().getExtras();
-        System.out.println("Hostname: " + args.getString("hostname"));
-        System.out.println("Key file: " + args.getString("keyFile"));
-//        // TODO initialize `in`
-//        player = new AudioStreamMediaPlayer();
-//        try {
-//            player.setDataSource(in);
-//            player.prepare();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        hostname = args.getString("hostname");
+        keyFile = new File(args.getString("keyFile"));
+        port = 21337;
+        log.debug("Created with: hostname={} keyFile={} port={}", 
+                new Object[] { hostname, keyFile, port });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        player.start();
+        log.debug("Connecting to {}:{}", hostname, port);
+        Socket sock;
+        try {
+            sock = new Socket(hostname, port);
+        } catch (Exception e) {
+            log.error("Could not connect to target server", e);
+            showErrorDialog("Could not connect to server!", finishOnClick);
+            return;
+        }
+        try {
+            log.debug("Starting media player");
+            try {
+                player.setRawDataSource(sock.getInputStream(), "audio/mpeg");
+                player.prepare();
+            } catch (Exception e) {
+                log.error("Error while playing stream", e);
+                showErrorDialog("Error while playing stream!", finishOnClick);
+                return;
+            }
+            player.start();
+        } finally {
+            try {
+                sock.close();
+            } catch (Throwable e) { }
+        }
     }
     
     /** Handles a click on the bottom menu.
