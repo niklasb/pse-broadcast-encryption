@@ -14,7 +14,6 @@
 	<classpathentry kind="lib" path="../../3rd_party/android.jar"/>
 	<classpathentry kind="lib" path="../../3rd_party/android-support-v4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/Tobi/android-sdks/add-ons/addon-google_apis-google-7/libs/maps.jar"/>
 	<classpathentry kind="lib" path="../../3rd_party/robolectric-1.2-SNAPSHOT-all.jar" sourcepath="/home/niklas/kit/pse/repo/3rd_party/robolectric-1.2-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
