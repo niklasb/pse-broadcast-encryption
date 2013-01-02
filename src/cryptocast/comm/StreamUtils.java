@@ -2,6 +2,7 @@ package cryptocast.comm;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import static cryptocast.util.ErrorUtils.throwWithCause;
 
@@ -38,6 +39,15 @@ public class StreamUtils {
             } catch (InterruptedException e) {
                 throwWithCause(new IOException("Interrupted during busy waiting"), e);
             }
+        }
+    }
+    
+    public static void shovel(InputStream in, OutputStream out, int bufsize) 
+            throws IOException {
+        byte[] buffer = new byte[bufsize];
+        int received;
+        while ((received = in.read(buffer)) >= 0) {
+            out.write(buffer, 0, received);
         }
     }
 }

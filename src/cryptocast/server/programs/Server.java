@@ -35,7 +35,7 @@ public final class Server {
         @Parameter(names = { "-p", "--port" }, description = "Listen port")
         private int listenPort = 21337;
 
-        @Parameter(names = { "-l", "--listen-address"}, description = "Listen address")
+        @Parameter(names = { "-b", "--listen-address"}, description = "Listen address")
         private String listenAddr = "127.0.0.1";
     }
     
@@ -46,7 +46,7 @@ public final class Server {
         Options opts = OptParse.parseArgs(new Options(), "server", argv);
         
         System.out.println("Logging to " + opts.logFile);
-        initLogging(opts.logFile, Level.WARN);
+        initLogging(opts.logFile, Level.DEBUG);
         
         Controller control = Controller.start(
                 opts.databaseFile,

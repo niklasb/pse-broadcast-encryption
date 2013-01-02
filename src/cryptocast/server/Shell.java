@@ -6,10 +6,15 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
@@ -24,37 +29,42 @@ import static cryptocast.util.FileUtils.expandPath;
  * Implements the user interface of the server as an interactive console application.
  */
 public class Shell extends InteractiveCommandLineInterface {
+    private static final Logger log = LoggerFactory.getLogger(Shell.class);
+    
     private static ShellCommand commands[] = {
         new ShellCommand("help",
                          "[<command>]",
-                         "Shows the command line help"),
+                         "Show the command line help"),
         new ShellCommand("add",
                          "<name>",
-                         "Adds a new user to the group of recipients"),
+                         "Add a new user to the group of recipients"),
         new ShellCommand("revoke",
                          "<name>",
-                         "Revokes a user"),
+                         "Revoke a user"),
         new ShellCommand("unrevoke",
                          "<name>",
-                         "Unrevokes a user"),
+                         "Unrevoke a user"),
         new ShellCommand("users",
                          "",
-                         "Lists users"),
+                         "List users"),
         new ShellCommand("save",
                          "",
-                         "Saves the current crypto context and users"),
+                         "Save the current crypto context and users"),
         new ShellCommand("save-keys",
                          "dir [<user>, [<user>, ...]]",
-                         "Saves user keys to a directory"),
+                         "Save user keys to a directory"),
         new ShellCommand("stream-stdin",
                          "",
                          "Captures input from STDIN and broadcasts it"),
         new ShellCommand("stream-sample-text",
                          "",
-                         "Streams an infinite stream of sample text"),
+                         "Stream an infinite stream of sample text"),
+        new ShellCommand("stream-mp3",
+                         "<file>",
+                         "Stream an MPEG-3 audio file"),
         new ShellCommand("init",
                          "<t>",
-                         "Creates a whole new crypto context"),
+                         "Create a whole new crypto context"),
     };
 
     private static SortedMap<String, ShellCommand> commandsByName = 
@@ -94,17 +104,36 @@ public class Shell extends InteractiveCommandLineInterface {
         if (cmd == null) {
             error("No such command! Type `help' to get an overview of the available commands.");
         }
-        if (cmd.getName() == "help") { cmdHelp(cmd, args); }
-        else if (cmd.getName() == "save") { cmdSave(cmd, args); }
-        else if (cmd.getName() == "init") { cmdInit(cmd, args); }
-        else if (cmd.getName() == "users") { cmdUsers(cmd, args); }
-        else if (cmd.getName() == "add") { cmdAddUser(cmd, args); }
-        else if (cmd.getName() == "revoke") { cmdRevokeUser(cmd, args); }
-        else if (cmd.getName() == "unrevoke") { cmdUnrevokeUser(cmd, args); }
-        else if (cmd.getName() == "save-keys") { cmdSaveKeys(cmd, args); }
-        else if (cmd.getName() == "stream-stdin") { cmdStreamStdin(cmd, args); }
-        else if (cmd.getName() == "stream-sample-text") { cmdStreamSampleText(cmd, args); }
-        else { cannotHappen(); }
+        
+        Method method = null;
+        try {
+            method = getClass().getDeclaredMethod(
+                    "cmd" + capitalizeCmdName(cmd.getName()), 
+                    ShellCommand.class, String[].class);
+        } catch (NoSuchMethodException e) {
+            cannotHappen(e);
+        }
+        try {
+            method.invoke(this, cmd, args);
+        } catch (InvocationTargetException e) {
+            if (e.getCause() instanceof CommandError) {
+                throw (CommandError) e.getCause();
+            } else if (e.getCause() instanceof Exit) {
+                throw (Exit) e.getCause();
+            }
+            cannotHappen(e);
+        } catch (Exception e) {
+            log.error("Could not execute command", e);
+        }
+    }
+    
+    private String capitalizeCmdName(String name) {
+        String[] parts = name.split("-");
+        String result = "";
+        for (String p : parts) {
+            result += p.substring(0, 1).toUpperCase() + p.substring(1);
+        }
+        return result;
     }
     
     /**
@@ -282,6 +311,18 @@ public class Shell extends InteractiveCommandLineInterface {
         reader.start();
         try {
             control.stream(pipeIn);
+        } catch (Exception e) {
+            fatalError(e);
+        }
+    }
+    
+    private void cmdStreamMp3(ShellCommand cmd, String[] args) throws CommandError, Exit {
+        if (args.length != 1) {
+            commandSyntaxError(cmd);
+        }
+        File file = expandPath(args[0]);
+        try {
+            control.streamAudio(file);
         } catch (Exception e) {
             fatalError(e);
         }

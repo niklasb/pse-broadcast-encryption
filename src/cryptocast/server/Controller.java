@@ -1,11 +1,22 @@
 package cryptocast.server;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.util.List;
+import java.util.Map;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import org.tritonus.share.sampled.TAudioFormat;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
@@ -19,6 +30,8 @@ import cryptocast.comm.*;
  * @param <ID> The type of the user identities
  */
 public class Controller {
+    private static final Logger log = LoggerFactory.getLogger(Controller.class);
+    
     // don't use AES-256 because that would require all users 
     // to have the Unlimited Strength Jurisdiction Policy Files installed.
     // Also, AES-128 seems to be more secure
@@ -132,16 +145,38 @@ public class Controller {
         }
     }
     
+    public void streamAudio(File file) throws IOException, UnsupportedAudioFileException {
+        AudioFormat baseFormat = AudioSystem.getAudioFileFormat(file).getFormat();
+        int bitrate = -1;
+        boolean vbr = false;
+        if (baseFormat instanceof TAudioFormat) {
+            Map<String, Object> properties = ((TAudioFormat) baseFormat).properties();
+            if (properties.containsKey("bitrate")) {
+                bitrate = (Integer) properties.get("bitrate");
+            }
+            if (properties.containsKey("vbr")) {
+                vbr = (Boolean) properties.get("vbr");
+            }
+        }
+        log.info("Bitrate: {}", bitrate);
+        if (bitrate < 0 || vbr) {
+            throw new IOException("Could not figure out the bitrate of the file. "
+                                + "Variable bitrates are not supported!");
+        }
+        InputStream in = new FileInputStream(file);
+        stream(in, bitrate / 8, 0x4000);
+    }
+    
     /**
      * Starts the data stream.
      * @param data The file from which the data is read.
      */
-    public void stream(InputStream in) throws IOException {
-        int received;
-        byte[] buffer = new byte[4096];
-        while ((received = in.read(buffer)) >= 0) {
-            encServer.write(buffer, 0, received);
-            encServer.flush();
-        }
+    public void stream(InputStream in, long maxBytesPerSec, int bufsize) throws IOException {
+        OutputStream out = new ThrottledOutputStream(encServer, maxBytesPerSec);
+        StreamUtils.shovel(in, out, bufsize);
+    }
+    
+    public void stream(InputStream in, int bufsize) throws IOException {
+        StreamUtils.shovel(in, encServer, bufsize);
     }
 }

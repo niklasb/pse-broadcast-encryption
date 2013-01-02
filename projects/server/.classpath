@@ -7,5 +7,8 @@
 	<classpathentry kind="lib" path="../../3rd_party/slf4j-api-1.7.2.jar"/>
 	<classpathentry kind="lib" path="../../3rd_party/logback-core-1.0.9.jar"/>
 	<classpathentry kind="lib" path="../../3rd_party/logback-classic-1.0.9.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/tritonus_share-0.3.6.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/mp3spi1.9.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

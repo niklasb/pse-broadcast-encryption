@@ -2,8 +2,6 @@ package cryptocast.crypto;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -17,35 +15,50 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cryptocast.comm.MessageInChannel;
+import cryptocast.util.ArrayUtils;
 import cryptocast.util.ByteUtils;
 
 import static cryptocast.util.ErrorUtils.*;
 
 public class DynamicCipherInputStream extends InputStream {
+    private static final Logger log = LoggerFactory
+            .getLogger(DynamicCipherInputStream.class);
+    
     MessageInChannel inner;
     SecretKey key;
     byte[] lastEncryptedKey;
     Cipher cipher;
-    PipedInputStream pipeIn;
-    PipedOutputStream pipeOut;
     private Decryptor<byte[]> dec;
+    byte[] rest;
     boolean eof = false;
     
     public DynamicCipherInputStream(MessageInChannel inner,
                                     Decryptor<byte[]> dec) throws IOException {
         this.inner = inner;
         this.dec = dec;
-        this.pipeIn = new PipedInputStream();
-        this.pipeOut = new PipedOutputStream(pipeIn);
     }
 
     @Override
     public int read(byte[] buffer, int offset, int len) throws IOException {
-        while (!eof && pipeIn.available() == 0) {
+        while (!eof && (rest == null || rest.length == 0)) {
             processMessage();
         }
-        return pipeIn.read(buffer, offset, len);
+        if (eof && (rest == null || rest.length == 0)) {
+            return -1;
+        }
+        int size = Math.min(len, rest.length);
+        assert size > 0;
+        System.arraycopy(rest, 0, buffer, offset, size);
+        if (size < rest.length) {
+            rest = ArrayUtils.copyOfRange(rest, size, rest.length);
+        } else {
+            rest = null;
+        }
+        return size;
     }
     
     @Override
@@ -58,10 +71,11 @@ public class DynamicCipherInputStream extends InputStream {
     }
 
     private void processMessage() throws IOException {
-        //System.out.println("[client] processMessage");
         byte[] msg = inner.recvMessage();
-        assert msg != null;
-        //System.out.println("[client] received message type=" + msg[0] + " length=" + (msg.length - 1));
+        if (msg == null) {
+            // stream should be terminated by a special EOF message
+            throw new IOException("Unexpected EOF");
+        }
         
         switch (msg[0]) { // switch on the message type
         case DynamicCipherOutputStream.CTRL_CIPHER_DATA:
@@ -70,10 +84,7 @@ public class DynamicCipherInputStream extends InputStream {
                 return;
                 //throw new IllegalStateException("Cannot yet decrypt data");
             }
-            byte[] plainData = cipher.update(msg, 1, msg.length - 1);
-            if (plainData != null) {
-                pipeOut.write(plainData);
-            }
+            rest = cipher.update(msg, 1, msg.length - 1);
             return;
         case DynamicCipherOutputStream.CTRL_UPDATE_KEY:
             if (cipher != null) {
@@ -100,7 +111,6 @@ public class DynamicCipherInputStream extends InputStream {
             return;
         case DynamicCipherOutputStream.CTRL_EOF:
             finalizeCipher();
-            pipeOut.close();
             eof = true;
             return;
         default:
@@ -110,7 +120,7 @@ public class DynamicCipherInputStream extends InputStream {
 
     private void finalizeCipher() throws IOException {
         try {
-            pipeOut.write(cipher.doFinal());
+            rest = cipher.doFinal();
         } catch (BadPaddingException e) {
             cannotHappen(e);
         } catch (IllegalBlockSizeException e) {

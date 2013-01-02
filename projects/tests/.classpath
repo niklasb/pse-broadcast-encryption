@@ -15,5 +15,8 @@
 	<classpathentry kind="lib" path="../../3rd_party/android-support-v4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="../../3rd_party/robolectric-1.2-SNAPSHOT-all.jar" sourcepath="/home/niklas/kit/pse/repo/3rd_party/robolectric-1.2-SNAPSHOT-sources.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/tritonus_share-0.3.6.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/mp3spi1.9.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

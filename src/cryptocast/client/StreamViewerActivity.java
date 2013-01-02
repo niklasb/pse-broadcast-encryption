@@ -8,6 +8,12 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cryptocast.comm.StreamMessageInChannel;
+import cryptocast.crypto.BroadcastEncryptionClient;
+import cryptocast.crypto.naorpinkas.NaorPinkasClient;
+import cryptocast.crypto.naorpinkas.NaorPinkasPersonalKey;
+import cryptocast.util.SerializationUtils;
+
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -41,15 +47,16 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onStart() {
         super.onStart();
-//        InputStream in = getResources().openRawResource(R.raw.song);
-//        AudioStreamMediaPlayer player = new AudioStreamMediaPlayer();
-//        try {
-//            player.setRawDataSource(in, "audio/mpeg");
-//            player.prepare();
-//            player.start();
-//        } catch (Exception e) {
-//            log.error("Could not play", e);
-//        }
+        NaorPinkasPersonalKey key;
+        try {
+            key = SerializationUtils.readFromFile(keyFile);
+        } catch (Exception e) {
+            log.error("Could not load key from file: ", e);
+            showErrorDialog("Invalid key file!", finishOnClick);
+            app.getServerHistory().invalidateKeyFile(connectAddr);
+            return;
+        }
+
         log.debug("Connecting to {}", connectAddr);
         Socket sock = new Socket();
         try {
@@ -60,18 +67,21 @@ public class StreamViewerActivity extends ClientActivity
             return;
         }
         try {
+            BroadcastEncryptionClient in =
+                    new BroadcastEncryptionClient(
+                            new StreamMessageInChannel(sock.getInputStream()), 
+                            new NaorPinkasClient(key));
+            log.debug("Waiting for first byte");
+            in.read();
             log.debug("Starting media player");
-            try {
-                player.setRawDataSource(sock.getInputStream(), "audio/mpeg");
-                player.setOnCompletionListener(this);
-                player.setOnErrorListener(this);
-                player.prepare();
-            } catch (Exception e) {
-                log.error("Error while playing stream", e);
-                showErrorDialog("Error while playing stream!", finishOnClick);
-                return;
-            }
-        } finally {
+            player.setRawDataSource(in, "audio/mpeg");
+            player.setOnCompletionListener(this);
+            player.setOnErrorListener(this);
+            player.prepare();
+        } catch (Exception e) {
+            log.error("Error while playing stream", e);
+            showErrorDialog("Error while playing stream!", finishOnClick);
+            return;
         }
     }
     
