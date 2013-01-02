@@ -1,6 +1,7 @@
 package cryptocast.client;
 
 import java.io.File;
+import java.net.InetSocketAddress;
 
 import android.widget.TextView;
 import cryptocast.client.MainActivity;
@@ -8,6 +9,9 @@ import cryptocast.client.R;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
+
+import com.google.common.base.Optional;
+
 import static org.junit.Assert.*;
 
 @RunWith(ClientTestRunner.class)
@@ -22,13 +26,16 @@ public class TestClientApplication {
 
     @Test
     public void savesAndReloadsState() {
-        sut.getServerHistory().addServer("foo", new File("bar"));
-        sut.setHostname("foobar");
+        InetSocketAddress addr = new InetSocketAddress("foo", 1234);
+        sut.getServerHistory().addServer(addr, new File("bar"));
+        sut.setHostnameInput("foobar");
+        sut.setPortInput("-333333333333");
         sut.saveState();
         sut = new ClientApplication();
         sut.onCreate();
-        assertEquals("foobar", sut.getHostname());
-        assertEquals(new File("bar"), 
-                sut.getServerHistory().getServers().get("foo"));
+        assertEquals("foobar", sut.getHostnameInput());
+        assertEquals("-333333333333", sut.getPortInput());
+        assertEquals(Optional.of(new File("bar")), 
+                sut.getServerHistory().getKeyFile(addr));
     }
 }

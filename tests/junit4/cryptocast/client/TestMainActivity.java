@@ -29,13 +29,13 @@ public class TestMainActivity {
         tv.setText("ASDASD");
         sut.onResume();
         assertEquals(hostname, tv.getText().toString());
-        assertEquals(hostname, sut.getHostname());
     }
     
     @Test
     public void illegalHostnames() {
         assertFalse(sut.checkHostname(""));
         assertTrue(sut.checkHostname("google.de"));
+        assertTrue(sut.checkHostname("some invalid name, which will still get accepted"));
     }
     
     @Test

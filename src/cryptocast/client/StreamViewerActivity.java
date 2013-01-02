@@ -8,16 +8,17 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
 /**
  * This activity is responsible for decrypting the received data
  * and viewing it.
  */
-public class StreamViewerActivity extends ClientActivity {
+public class StreamViewerActivity extends ClientActivity
+                                  implements AudioStreamMediaPlayer.OnCompletionListener,
+                                             AudioStreamMediaPlayer.OnErrorListener {
     private static final Logger log = LoggerFactory
             .getLogger(StreamViewerActivity.class);
     
@@ -25,6 +26,7 @@ public class StreamViewerActivity extends ClientActivity {
     private InputStream in;
     private InetSocketAddress connectAddr;
     private File keyFile;
+    private Socket sock;
     
     @Override
     protected void onCreate(Bundle b) {
@@ -61,19 +63,57 @@ public class StreamViewerActivity extends ClientActivity {
             log.debug("Starting media player");
             try {
                 player.setRawDataSource(sock.getInputStream(), "audio/mpeg");
+                player.setOnCompletionListener(this);
+                player.setOnErrorListener(this);
                 player.prepare();
             } catch (Exception e) {
                 log.error("Error while playing stream", e);
                 showErrorDialog("Error while playing stream!", finishOnClick);
                 return;
             }
-            player.start();
         } finally {
-            try {
-                // TODO close *somewhere*
-                //sock.close();
-            } catch (Throwable e) { }
         }
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        player.start();
+    }
+    
+    @Override
+    protected void onPause() {
+        player.pause();
+        super.onPause();
+    }
+
+    @Override
+    public void onCompletion(AudioStreamMediaPlayer p) {
+        try {
+            sock.close();
+        } catch (Throwable e) { }
+    }
+    
+    @Override
+    public boolean onError(AudioStreamMediaPlayer p, int what, int extra) {
+        log.error("MediaPlayer error: {} {}", formatError(what), formatError(extra));
+        return false;
+    }
+    
+    private String formatError(int what) {
+        switch (what) {
+        case MediaPlayer.MEDIA_ERROR_UNKNOWN: return "MEDIA_ERROR_UNKNOWN";
+        case MediaPlayer.MEDIA_ERROR_SERVER_DIED: return "MEDIA_ERROR_SERVER_DIED";
+        case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK: 
+            return "MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK";
+        default: return "MediaError(" + what + ")";
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        player.stop();
+        super.onStop();
     }
     
     /** Handles a click on the bottom menu.

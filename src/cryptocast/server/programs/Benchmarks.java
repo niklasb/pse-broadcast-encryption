@@ -112,10 +112,9 @@ public final class Benchmarks {
     private static Result measure(Runnable run, int rep, int freq) {
         Result res = new Result(freq);
         for (int i = 0; i < rep; ++i) {
-            long t1 = new Date().getTime();
+            long start = System.currentTimeMillis();
             run.run();
-            long t2 = new Date().getTime();
-            res.report((t2 - t1)/1000.0);
+            res.report((System.currentTimeMillis() - start) / 1000.0);
         }
         return res;
     }

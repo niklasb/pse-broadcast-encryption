@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.Parameter;
 
+import cryptocast.comm.ThrottledOutputStream;
 import cryptocast.server.OptParse;
 
 /**
@@ -32,23 +33,38 @@ public final class TcpStreamer {
         
         @Parameter(required = true, names = { "-f", "--file" }, description = "The file to stream")
         private File file;
+        
+        @Parameter(names = { "-t", "--throttle" }, description = "Throttle to the given number of bytes per second")
+        private long maxBps = 0;
+        
+        @Parameter(names = { "-s", "--skip" }, description = "Number of bytes to skip")
+        private int skip = 0;
     }
-    
-    /**
-     * @param args command line arguments
-     */
-    public static void main(String[] argv) throws Exception {
-        Options opts = OptParse.parseArgs(new Options(), "tcp-streamer", argv);
-        ServerSocket sock = new ServerSocket();
-        SocketAddress addr = new InetSocketAddress(opts.listenAddr, opts.listenPort);
-        sock.bind(addr);
-        for (;;) {
-            log.info("Waiting on {} for client to connect...", addr);
-            Socket client = sock.accept();
-            log.info("Got client connection, sending file {}", opts.file);
+
+    private static class ConnectionHandler implements Runnable {
+        private Socket sock;
+        private File file;
+        private int skip;
+        private long maxBps;
+        
+        public ConnectionHandler(Socket sock, File file, int skip, long maxBps) {
+            this.sock = sock;
+            this.file = file;
+            this.skip = skip;
+            this.maxBps = maxBps;
+        }
+        
+        public void run() {
             try {
-                OutputStream out = client.getOutputStream();
-                InputStream in = new FileInputStream(opts.file);
+                OutputStream out = sock.getOutputStream();
+                if (maxBps > 0) {
+                    out = new ThrottledOutputStream(out, maxBps);
+                }
+                InputStream in = new FileInputStream(file);
+                log.debug("Skipping {} bytes", skip);
+                for (int i = 0; i < skip; ++i) {
+                    in.read();
+                }
                 try {
                     byte[] buffer = new byte[0x1000];
                     int received;
@@ -61,6 +77,22 @@ public final class TcpStreamer {
             } catch (Exception e) {
                 log.error("An error occured while handling a client connection:", e);
             }
+        }
+    }
+    
+    /**
+     * @param args command line arguments
+     */
+    public static void main(String[] argv) throws Exception {
+        Options opts = OptParse.parseArgs(new Options(), "tcp-streamer", argv);
+        ServerSocket sock = new ServerSocket();
+        SocketAddress addr = new InetSocketAddress(opts.listenAddr, opts.listenPort);
+        sock.bind(addr);
+        for (;;) {
+            log.info("Waiting at {} for client to connect...", addr);
+            Socket client = sock.accept();
+            log.info("Got client connection, sending file {}", opts.file);
+            new Thread(new ConnectionHandler(client, opts.file, opts.skip, opts.maxBps)).start();
         }
     }
 }

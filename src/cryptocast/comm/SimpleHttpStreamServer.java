@@ -1,4 +1,4 @@
-package cryptocast.client;
+package cryptocast.comm;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.concurrent.CountDownLatch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,8 @@ public class SimpleHttpStreamServer implements Runnable {
     private String contentType;
     private int bufsize;
     private SocketAddress addr;
+    private ServerSocket sock;
+    private CountDownLatch listeningEvent = new CountDownLatch(1);
 
     public SimpleHttpStreamServer(InputStream in, 
                                   SocketAddress addr, 
@@ -35,22 +38,14 @@ public class SimpleHttpStreamServer implements Runnable {
         this.bufsize = bufsize;
         this.addr = addr;
     }
-
-    private static Socket acceptInterruptable(ServerSocket sock) 
-                throws InterruptedException, IOException {
-        for (;;) {
-            try {
-                return sock.accept();
-            } catch (InterruptedIOException e) { }
-            if (Thread.interrupted()) {
-                throw new InterruptedException("Interrupted during accept()");
-            }
-        }
+    
+    public int waitForListener() throws InterruptedException {
+        listeningEvent.await();
+        return sock.getLocalPort();
     }
     
     @Override
     public void run() {
-        ServerSocket sock;
         try {
             sock = new ServerSocket();
         } catch (IOException e) {
@@ -60,12 +55,22 @@ public class SimpleHttpStreamServer implements Runnable {
         try {
             sock.setSoTimeout(TIMEOUT_MS);
             sock.bind(addr);
-            for (;;) {
-                handleNextClient(sock);
-            }
-        } catch (InterruptedException e) {
         } catch (Exception e) {
-            log.error("Error while accepting or handling client", e);
+            log.error("Error while binding to socket", e);
+        }
+        // inform a client sticking at waitForListener()
+        // that we are ready for a connection
+        listeningEvent.countDown();
+        try {
+            for (;;) {
+                try {
+                    handleNextClient(sock);
+                } catch (InterruptedException e) {
+                    break;
+                } catch (Exception e) {
+                    log.error("Error while accepting or handling client", e);
+                }
+            }
         } finally {
             try {
                 sock.close();
@@ -86,6 +91,16 @@ public class SimpleHttpStreamServer implements Runnable {
         sendChunked(clientOut, in);
         clientSock.close();
     }
+
+    private static Socket acceptInterruptable(ServerSocket sock) 
+                throws InterruptedException, IOException {
+        for (;;) {
+            try {
+                return sock.accept();
+            } catch (InterruptedIOException e) { }
+            checkInterrupt();
+        }
+    }
     
     private void sendChunked(OutputStream out, InputStream in) 
                 throws InterruptedException, IOException {
@@ -100,13 +115,17 @@ public class SimpleHttpStreamServer implements Runnable {
             out.write((Integer.toHexString(recv) + "\r\n").getBytes());
             out.write(buffer, 0, recv);
             out.write("\r\n".getBytes());
-            if (Thread.interrupted()) {
-                throw new InterruptedException();
-            }
+            checkInterrupt();
         }
         out.write("0\r\n\r\n".getBytes());
     }
 
+    private static void checkInterrupt() throws InterruptedException {
+        if (Thread.interrupted()) {
+            throw new InterruptedException();
+        }
+    }
+    
     private byte[] getChunkedResponseHeader() {
         return str2bytes(
              "HTTP/1.1 200 OK\r\n" +
