@@ -19,11 +19,11 @@ public class ClientApplication extends Application {
     
     // the global application state with the respective default values
     private static class State implements Serializable {
-        private static final long serialVersionUID = -147920249222749070L;
+        private static final long serialVersionUID = 6185775452467276764L;
         
         ServerHistory serverHistory = new ServerHistory();
-        String hostname = "";
-        int port = 21337;
+        String hostnameInput = "";
+        String portInput = "";
     }
     
     private State state;
@@ -52,20 +52,20 @@ public class ClientApplication extends Application {
     }
     
 
-    public String getHostname() {
-        return state.hostname;
+    public String getHostnameInput() {
+        return state.hostnameInput;
     }
 
-    public void setHostname(String hostname) {
-        state.hostname = hostname;
+    public void setHostnameInput(String hostname) {
+        state.hostnameInput = hostname;
     }
 
-    public int getPort() {
-        return state.port;
+    public String getPortInput() {
+        return state.portInput;
     }
 
-    public void setPort(int port) {
-        state.port = port;
+    public void setPortInput(String port) {
+        state.portInput = port;
     }
     
     public ServerHistory getServerHistory() {

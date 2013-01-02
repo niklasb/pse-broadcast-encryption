@@ -54,7 +54,7 @@ public class FileChooser implements OnItemClickListener {
 
     private void handleFileClick(File file) {
         Intent result = new Intent();
-        result.putExtra("chosenFile", file.getAbsolutePath());
+        result.putExtra("chosenFile", file);
         act.setResult(Activity.RESULT_OK, result);
         act.finish();
     }

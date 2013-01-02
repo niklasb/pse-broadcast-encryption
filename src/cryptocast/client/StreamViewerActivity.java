@@ -2,6 +2,7 @@ package cryptocast.client;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import org.slf4j.Logger;
@@ -22,8 +23,7 @@ public class StreamViewerActivity extends ClientActivity {
     
     private AudioStreamMediaPlayer player = new AudioStreamMediaPlayer();
     private InputStream in;
-    private String hostname;
-    private int port;
+    private InetSocketAddress connectAddr;
     private File keyFile;
     
     @Override
@@ -31,11 +31,9 @@ public class StreamViewerActivity extends ClientActivity {
         super.onCreate(b);
         setContentView(R.layout.activity_stream_viewer);
         Bundle args = getIntent().getExtras();
-        hostname = args.getString("hostname");
-        keyFile = new File(args.getString("keyFile"));
-        port = 21337;
-        log.debug("Created with: hostname={} keyFile={} port={}", 
-                new Object[] { hostname, keyFile, port });
+        connectAddr = (InetSocketAddress) args.getSerializable("connectAddr");
+        keyFile = (File) args.getSerializable("keyFile");
+        log.debug("Created with: connectAddr={} keyFile={}", connectAddr, keyFile);
     }
 
     @Override
@@ -50,10 +48,10 @@ public class StreamViewerActivity extends ClientActivity {
 //        } catch (Exception e) {
 //            log.error("Could not play", e);
 //        }
-        log.debug("Connecting to {}:{}", hostname, port);
-        Socket sock;
+        log.debug("Connecting to {}", connectAddr);
+        Socket sock = new Socket();
         try {
-            sock = new Socket(hostname, port);
+            sock.connect(connectAddr);
         } catch (Exception e) {
             log.error("Could not connect to target server", e);
             showErrorDialog("Could not connect to server!", finishOnClick);

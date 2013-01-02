@@ -1,9 +1,12 @@
 package cryptocast.client;
 
 import java.io.File;
+import java.net.InetSocketAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Optional;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,9 +27,9 @@ public class MainActivity extends ClientActivity {
             .getLogger(MainActivity.class);
     
     private static final int RESULT_KEY_CHOICE = 1;
-    private static File keyFile;
-    private TextView editHostname;
-    private TextView editPort;
+    private TextView editHostname, editPort;
+    private File keyFile;
+    private InetSocketAddress addr;
     
     @Override
     protected void onCreate(Bundle b) {
@@ -39,23 +42,25 @@ public class MainActivity extends ClientActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        editHostname.setText(app.getHostname());
-        //TODO the following line makes client crash on start
-        //editPort.setText(app.getPort());
+        editHostname.setText(app.getHostnameInput());
+        editPort.setText(app.getPortInput());
 
         if (keyFile != null) {
             // this is a signal by onActivityResult which is called after
             // a keyfile was selected. we now have all information to
             // start the stream
-            startStreamViewer(getHostname(), keyFile);
+            startStreamViewer(addr, keyFile);
+            // save connection info for the future
+            app.getServerHistory().addServer(addr, keyFile);
+            addr = null;
             keyFile = null;
         }
     }
     
     @Override
     protected void onPause() {
-        app.setHostname(getHostname());
-        app.setPort(getPort());
+        app.setHostnameInput(getHostnameInput());
+        app.setPortInput(getPortInput());
         super.onPause();
     }
     
@@ -67,26 +72,45 @@ public class MainActivity extends ClientActivity {
     }
 
     /**
-     * Shows the KeyChoiceActivity if the hostname seems to be valid
+     * Validates the input and connects to the specified server,
+     * possibly after letting the user choose a key file.
      * @param view The view from which this method was called.
      */
     public void onConnect(View view) {
-        String hostname = getHostname();
-        int port = getPort();
-        ServerHistory history = app.getServerHistory();
-        if (!checkHostname(hostname)) {
-            log.debug("Button connect clicked and invalid hostname.");
-            showErrorDialog(getString(R.string.invalid_hostname_text));       
-        } else if (!checkPort(port)) {
-            log.debug("Button connect clicked and invalid port: " + port);
-            showErrorDialog(getString(R.string.invalid_port));
-        } else if (history.getServers().containsKey(hostname)) {
-            log.debug("Button connect clicked and server in history.");
-            startStreamViewer(hostname, history.getServers().get(hostname));
+        Optional<InetSocketAddress> mAddr = getConnectAddr();
+        if (!mAddr.isPresent()) {
+            showErrorDialog("Invalid hostname/port");
+            return;
+        }
+        // TODO what if you don't have a network?
+        if (mAddr.get().isUnresolved()) {
+            showErrorDialog("Could not resolve hostname!");
+            return;
+        }
+        Optional<File> mFile = app.getServerHistory().getKeyFile(mAddr.get());
+        if (mFile.isPresent()) {
+            log.debug("Server already in history, using key file {}", mFile.get());
+            startStreamViewer(mAddr.get(), mFile.get());
         } else {
-            log.debug("Button connect clicked, hostname valid and filechooser necessary.");
+            log.debug("Server unknown, asking for key file");
+            // save temporarily, so we can extract it in onResume
+            this.addr = mAddr.get();
             startKeyChooserForResult();
         }
+    }
+    
+    protected Optional<InetSocketAddress> getConnectAddr() {
+        String hostname = getHostnameInput();
+        int port;
+        try {
+            port = Integer.parseInt(getPortInput());
+        } catch (NumberFormatException e) {
+            return Optional.absent();
+        }
+        if (!checkHostname(hostname) || !checkPort(port)) {
+            return Optional.absent();
+        }
+        return Optional.of(new InetSocketAddress(hostname, port));
     }
     
     // TODO any other criterion?
@@ -95,48 +119,38 @@ public class MainActivity extends ClientActivity {
     }
     
     protected boolean checkPort(int port) {
-        return port >= 0;
+        return port > 0 && port < 0x10000;
     }
 
-    protected String getHostname() {
+    protected String getHostnameInput() {
         return editHostname.getText().toString();
     }
-
-    /**
-     * @return the current port or -1 if there is an error.
-     */
-    protected int getPort() {
-        try {
-            return Integer.parseInt(editPort.getText().toString());
-        } catch (NumberFormatException e) {
-            log.error("Could not parse port.", e);
-            return -1;
-        }
+    
+    protected String getPortInput() {
+        return editPort.getText().toString();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RESULT_KEY_CHOICE && resultCode == RESULT_OK) {
+            log.debug("Got response from key chooser: chosenFile={}", keyFile);
             // store key file so that it can be read in onResume(),
             // when the activity is fully initialized
-            keyFile = new File(data.getStringExtra("chosenFile"));
-            log.debug("Got response from key chooser: chosenFile={}", keyFile);
-            app.getServerHistory().addServer(getHostname(), keyFile);
+            keyFile = (File) data.getSerializableExtra("chosenFile");
         }
     }
 
     protected void startKeyChooserForResult() {
+        log.debug("Starting key chooser");
         Intent intent = new Intent(this, KeyChoiceActivity.class);
         startActivityForResult(intent, RESULT_KEY_CHOICE);
     }
 
-    protected void startStreamViewer(String hostname, File keyFile) {
-        log.debug("Starting stream viewer with: hostname={} keyfile={}", hostname, keyFile);
+    protected void startStreamViewer(InetSocketAddress addr, File keyFile) {
+        log.debug("Starting stream viewer with: connectAddr={} keyFile={}", addr, keyFile);
         Intent intent = new Intent(this, StreamViewerActivity.class);
-        intent.putExtra("hostname", hostname);
-        intent.putExtra("keyFile", keyFile.getAbsolutePath());
+        intent.putExtra("connectAddr", addr);
+        intent.putExtra("keyFile", keyFile);
         startActivity(intent);
     }
 }
-
-
