@@ -2,7 +2,6 @@ package cryptocast.crypto;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -12,12 +11,11 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.KeyGenerator;
-import javax.crypto.spec.IvParameterSpec;
 
 import cryptocast.comm.MessageOutChannel;
 import cryptocast.util.ByteUtils;
 
-import static cryptocast.util.ErrorUtils.cannotHappen;
+import static cryptocast.util.ErrorUtils.*;
 
 public class DynamicCipherOutputStream extends OutputStream {
     public static final byte CTRL_CIPHER_DATA = 0;
@@ -58,18 +56,9 @@ public class DynamicCipherOutputStream extends OutputStream {
             finalizeCipher();
         }
         try {
-            cipher = Cipher.getInstance("AES/CFB8/NoPadding");
-            byte[] ivBytes = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
-            cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
-        } catch (NoSuchAlgorithmException e) {
-            cannotHappen(e);
-        } catch (NoSuchPaddingException e) {
-            cannotHappen(e);
+            cipher = createCipher(key);
         } catch (InvalidKeyException e) {
-            cannotHappen(e); // because we generated the key by ourselves!
-        } catch (InvalidAlgorithmParameterException e) {
-            cannotHappen(e); // because we used a correct IV!
+            cannotHappen(e); // because we generated the key by ourselves
         }
         DynamicCipherKeyUpdateMessage keyUpdate = 
                 new DynamicCipherKeyUpdateMessage(encryptedKey, cipher.getIV());
@@ -107,7 +96,6 @@ public class DynamicCipherOutputStream extends OutputStream {
     }
 
     private void sendTypedMessage(byte type, byte[] msg) throws IOException {
-        //System.out.println("[server] sending message type=" + type + " length=" + msg.length);
         byte[] realMsg = new byte[msg.length + 1];
         realMsg[0] = type;
         System.arraycopy(msg, 0, realMsg, 1, msg.length);
@@ -119,13 +107,34 @@ public class DynamicCipherOutputStream extends OutputStream {
     }
 
     private KeyGenerator createKeygen(int keyBits) {
+        KeyGenerator gen = null;
         try {
-            KeyGenerator gen = KeyGenerator.getInstance("AES");
-            gen.init(keyBits);
-            return gen;
+            gen = KeyGenerator.getInstance("AES");
         } catch (NoSuchAlgorithmException e) {
             cannotHappen(e);
         }
-        return null; // just to make the compiler happy
+        gen.init(keyBits);
+        try {
+            createCipher(gen.generateKey());
+        } catch (InvalidKeyException e) {
+            throwWithCause(new IllegalArgumentException(
+                    "Creating a cipher failed, if you specified a key size over "
+                  + "128 bits, please make sure that you have the Unlimited Strength "
+                  + "Jurisdiction Policy Files installed"), e);
+        }
+        return gen;
+    }
+    
+    private Cipher createCipher(SecretKey key) throws InvalidKeyException {
+        Cipher cipher = null;
+        try {
+            cipher = Cipher.getInstance("AES/CFB8/NoPadding");
+        } catch (NoSuchAlgorithmException e) {
+            cannotHappen(e);
+        } catch (NoSuchPaddingException e) {
+            cannotHappen(e);
+        }
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher;
     }
 }

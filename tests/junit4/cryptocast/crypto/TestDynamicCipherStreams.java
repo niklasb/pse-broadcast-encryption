@@ -24,7 +24,7 @@ public class TestDynamicCipherStreams {
     public void setUp() throws Exception {
         enc = mock(Encryptor.class, TestUtils.RETURNS_FIRST_ARGUMENT());
         dec = mock(Decryptor.class, TestUtils.RETURNS_FIRST_ARGUMENT());
-        out = DynamicCipherOutputStream.start(fifo, 256, enc);
+        out = DynamicCipherOutputStream.start(fifo, 128, enc);
         in = new DynamicCipherInputStream(fifo, dec);
     }
     

@@ -92,7 +92,6 @@ public class DynamicCipherInputStream extends InputStream {
             lastEncryptedKey = keyUpdate.getEncryptedKey();
             try {
                 cipher = createCipher(key, new IvParameterSpec(keyUpdate.getIv()));
-                //System.out.printf("[client] cipher.ivsize=%d\n", cipher.getIV().length);
             } catch (InvalidKeyException e) {
                 throwWithCause(new IOException("The other side sent an invalid session key"), e);
             } catch (InvalidAlgorithmParameterException e) {

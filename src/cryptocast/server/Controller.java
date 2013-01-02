@@ -19,7 +19,10 @@ import cryptocast.comm.*;
  * @param <ID> The type of the user identities
  */
 public class Controller {
-    private static final int AES_KEY_BITS = 256;
+    // don't use AES-256 because that would require all users 
+    // to have the Unlimited Strength Jurisdiction Policy Files installed.
+    // Also, AES-128 seems to be more secure
+    private static final int AES_KEY_BITS = 128;
     private static final int KEY_BROADCAST_INTERVAL_SEC = 5;
     
     private NaorPinkasServerData data;
