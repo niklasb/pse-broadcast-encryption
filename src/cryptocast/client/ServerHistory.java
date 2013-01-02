@@ -20,6 +20,10 @@ public class ServerHistory implements Serializable {
     private Map<InetSocketAddress, File> servers = 
             new HashMap<InetSocketAddress, File>();
     
+    public Map<InetSocketAddress, File> getServers() {
+        return servers;
+    }
+    
     public Optional<File> getKeyFile(InetSocketAddress addr) {
         return Optional.fromNullable(servers.get(addr));
     }
