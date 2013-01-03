@@ -2,52 +2,74 @@ package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Ordering;
 
 /**
  * Allows to restore a number from a sufficient number of Naor-Pinkas shares.
  */
-public class NaorPinkasShareCombinator implements ShareCombinator<BigInteger, NaorPinkasShare> {
+public class NaorPinkasShareCombinator implements 
+             ShareCombinator<BigInteger, 
+                             NaorPinkasShare, 
+                             LagrangeInterpolation<BigInteger>> {
     /**
      * Restores a secret from several Naor-Pinkas shares.
      * @param shares The shares
+     * @param additionalInfo the precomputed Lagrange coefficients
      * @return The reconstructed secret or absent if the information represented
      * by the given shares is insufficient to restore it.
      */
     @Override
-    public Optional<BigInteger> restore(List<NaorPinkasShare> shares) {
-        int t = shares.get(0).getT();
-        SchnorrGroup schnorr = shares.get(0).getGroup();
-        if (shares.size() < t + 1) {
-            // missing information
+    public Optional<BigInteger> restore(ImmutableList<NaorPinkasShare> shares,
+                                        LagrangeInterpolation<BigInteger> lagrange) {
+        if (hasMissingShares(shares) || hasRedundantShares(shares)) {
             return Optional.absent();
         }
-        List<NaorPinkasShare> sharesCopy = new ArrayList<NaorPinkasShare>(shares);
-        Collections.sort(sharesCopy);
-        BigInteger[] xs = new BigInteger[t + 1];
-        int i = 0;
-        for (NaorPinkasShare share : sharesCopy) {
-            if (i >= t + 1) { break; }
-            xs[i] = share.getI();
-            if (i > 0 && xs[i].equals(xs[i-1])) {
-                // redundant information
-                return Optional.absent();
-            }
-            i++;
-        }
-        Field<BigInteger> modQ = schnorr.getFieldModQ(),
-                          modP = schnorr.getFieldModP();
-        BigInteger[] lambdas = LagrangeInterpolation.computeCoefficients(modQ, xs);
+
+        Field<BigInteger> modP = shares.get(0).getGroup().getFieldModP();
+        
+        lagrange.setXs(ImmutableSet.copyOf(NaorPinkasShare.getXsFromShares(shares)));
+        Map<BigInteger, BigInteger> coeffs = lagrange.getCoefficients();
         BigInteger res = modP.one();
-        i = 0;
-        for (NaorPinkasShare share : sharesCopy) {
-            res = modP.multiply(res, modP.pow(share.getGRPI(), lambdas[i]));
-            i++;
+        for (NaorPinkasShare share : shares) {
+            BigInteger c = coeffs.get(share.getI());
+            res = modP.multiply(res, modP.pow(share.getGRPI(), c));
         }
         return Optional.of(res);
+    }
+    
+    public Optional<BigInteger> restore(ImmutableList<NaorPinkasShare> shares, 
+                                        SchnorrGroup schnorr) {
+        if (hasMissingShares(shares) || hasRedundantShares(shares)) {
+            return Optional.absent();
+        }
+        return restore(shares, new LagrangeInterpolation<BigInteger>(schnorr.getFieldModQ()));
+    }
+    
+    public boolean hasMissingShares(ImmutableList<NaorPinkasShare> shares) {
+        int t = shares.get(0).getT();
+        if (shares.size() < t + 1) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean hasRedundantShares(ImmutableList<NaorPinkasShare> shares) {
+        ImmutableList<NaorPinkasShare> sortedShares = 
+                Ordering.natural().immutableSortedCopy(shares);
+        BigInteger lastX = null;
+        for (NaorPinkasShare share : sortedShares) {
+            BigInteger x = share.getI();
+            if (x.equals(lastX)) {
+                return true;
+            }
+            lastX = x;
+        }
+        return false;
     }
 }

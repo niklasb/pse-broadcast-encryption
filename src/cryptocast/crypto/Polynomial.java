@@ -1,8 +1,11 @@
 package cryptocast.crypto;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.Random;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
@@ -13,8 +16,8 @@ public class Polynomial<T> implements Serializable {
     private static final long serialVersionUID = -1360253235247059379L;
     
     private Field<T> field;
-    private T[] coefficients;
-    int degree;
+    private ImmutableList<T> coefficients;
+    int size;
 
     /**
      * Initializes a polynomial.
@@ -23,13 +26,13 @@ public class Polynomial<T> implements Serializable {
      * The polynomial is defined as $P(x) := \sum_{i=0}^n c_i x^i = c_0 + c_1
      * x + ... + c_n x^n$.
      */
-    public Polynomial(Field<T> field, T[] coefficients) {
+    public Polynomial(Field<T> field, ImmutableList<T> coefficients) {
         this.field = field;
         this.coefficients = coefficients;
-        degree = -1;
-        for (int i = coefficients.length - 1; i >= 0; --i) {
-            if (!coefficients[i].equals(field.zero())) {
-                degree = i;
+        size = 0;
+        for (int i = coefficients.size() - 1; i >= 0; --i) {
+            if (!coefficients.get(i).equals(field.zero())) {
+                size = i + 1;
                 break;
             }
         }
@@ -49,24 +52,31 @@ public class Polynomial<T> implements Serializable {
      */
     public T evaluate(T x) {
         T result = field.zero();
-        for (int i = degree; i >= 0; --i) {
-            result = field.add(coefficients[i], field.multiply(result, x));
+        for (int i = size - 1; i >= 0; --i) {
+            result = field.add(coefficients.get(i), field.multiply(result, x));
         }
         return result;
     }
 
+    public Function<T, T> getEvaluator() {
+        return new Function<T, T>() {
+            public T apply(T x) {
+                return evaluate(x);
+            }
+        };
+    }
+    
     /**
      * Evaluates the polynomial at multiple points.
      * @param xs The points $x_i$ to evaluate
      * @return The array a defined by $a_i := P(x_i)$.
      */
-    public T[] evaluateMulti(T[] xs) {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[])Array.newInstance(field.getElementClass(), xs.length);
-        for (int i = 0, len = xs.length; i < len; ++i) {
-            result[i] = evaluate(xs[i]);
+    public ImmutableList<T> evaluateMulti(ImmutableList<T> xs) {
+        ImmutableList.Builder<T> builder = ImmutableList.builder();
+        for (T x : xs) {
+            builder.add(evaluate(x));
         }
-        return result;
+        return builder.build();
     }
 
     /**
@@ -75,15 +85,15 @@ public class Polynomial<T> implements Serializable {
      * @return $c_i$
      */
     public T getCoefficient(int i) {
-        return coefficients[i];
+        return coefficients.get(i);
     }
 
     /**
-     * @return The degree of the polynomial or -1 if the polynomial has
-     *         no degree (which is the case only for the zero polynomial)
+     * @return The size of the polynomial (degree plus one or 0 if the polynomial
+     * is constant zero).
      */
-    public int getDegree() {
-        return degree;
+    public int getSize() {
+        return size;
     }
 
     /**
@@ -91,23 +101,20 @@ public class Polynomial<T> implements Serializable {
      * @param <T> The type of the field's elements over which the random polynomial is formed.
      * @param rnd The source of randomness
      * @param field An instance of the field over which the polynomial is formed.
-     * @param degree The degree of the generated polynomial (can be -1, see getDegree())
+     * @param size The size of the polynomial (see {@link getSize})
      * @return The generated polynomial
      */
-    public static <T> Polynomial<T> createRandomPolynomial(Random rnd, Field<T> field, int degree) {
-        checkArgument(degree >= -1, "Degree must be >= -1, but is " + degree);
-        // the cast is ugly, but okay here because we explicitely
-        // initialize every element before accessing it again
-        @SuppressWarnings("unchecked")
-        T[] coefficients = (T[])Array.newInstance(field.getElementClass(), degree + 1);
-        for (int i = 0; i <= degree; ++i) {
-            coefficients[i] = field.randomElement(rnd);
+    public static <T> Polynomial<T> createRandomPolynomial(Random rnd, Field<T> field, int size) {
+        checkArgument(size >= 0, "Size must be >= 0, but is " + size);
+        ImmutableList.Builder<T> coefficients = ImmutableList.builder();
+        for (int i = 0; i < size - 1; ++i) {
+            coefficients.add(field.randomElement(rnd));
         }
-        if (degree >= 0) {
-            do {
-                coefficients[degree] = field.randomElement(rnd);
-            } while (coefficients[degree].equals(field.zero()));
+        T highest = field.zero();
+        while (size > 0 && highest.equals(field.zero())) {
+            highest = field.randomElement(rnd);
         }
-        return new Polynomial<T>(field, coefficients);
+        coefficients.add(highest);
+        return new Polynomial<T>(field, coefficients.build());
     }
 }

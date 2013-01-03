@@ -21,7 +21,9 @@ public class TestNaorPinkasMessage extends WithNaorPinkasContext {
         shares.add(makeShare(poly, r, 123));
         shares.add(makeShare(poly, r, 123123123));
         NaorPinkasMessage expected = 
-                new NaorPinkasMessage(poly.getDegree(), r, xor, schnorr, shares.build());
+                new NaorPinkasMessage(poly.getSize() - 1, r, xor, schnorr, 
+                        LagrangeInterpolation.fromXs(modQ, NaorPinkasShare.getXsFromShares(shares.build())),
+                        shares.build());
         byte[] packed = ByteUtils.pack(expected);
         assertEquals(expected, 
                      NaorPinkasMessage.unpack(ByteUtils.startUnpack(packed)));
@@ -31,9 +33,11 @@ public class TestNaorPinkasMessage extends WithNaorPinkasContext {
     public void canPackEmptyMessage() {
         BigInteger r = BigInteger.valueOf(111111),
                    xor = BigInteger.valueOf(222222);
+        ImmutableList<NaorPinkasShare> noShares = ImmutableList.of();
         NaorPinkasMessage expected = 
                 new NaorPinkasMessage(0, r, xor, schnorr,
-                        ImmutableList.<NaorPinkasShare>builder().build());
+                        LagrangeInterpolation.fromXs(modQ, ImmutableList.<BigInteger>of()),
+                        noShares);
         byte[] packed = ByteUtils.pack(expected);
         assertEquals(expected, 
                      NaorPinkasMessage.unpack(ByteUtils.startUnpack(packed)));

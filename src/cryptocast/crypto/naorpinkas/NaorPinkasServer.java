@@ -55,7 +55,7 @@ public class NaorPinkasServer
     
     public static NaorPinkasServer generate(int t, SchnorrGroup schnorr) {
         Polynomial<BigInteger> poly = 
-                Polynomial.createRandomPolynomial(rnd, schnorr.getFieldModQ(), t);
+                Polynomial.createRandomPolynomial(rnd, schnorr.getFieldModQ(), t + 1);
         Generator<NaorPinkasPersonalKey> keyGen = 
                 new OptimisticGenerator<NaorPinkasPersonalKey>(
                         new NaorPinkasKeyGenerator(
@@ -70,14 +70,13 @@ public class NaorPinkasServer
      */
     public byte[] encrypt(byte[] secret) {
         byte[] bytes = new byte[secret.length + 1];
+        // explicitly set the sign bit so we can safely remove it on the other side
         bytes[0] = 0x01;
         System.arraycopy(secret, 0, bytes, 1, secret.length);
         return ByteUtils.pack(encryptNumber(new BigInteger(bytes)));
     }
 
     public NaorPinkasMessage encryptNumber(BigInteger secret) {
-        // interpret bytes as the one's complement 
-        // representation of a number
         BigInteger r = schnorr.getFieldModP().randomElement(rnd),
                    grp0 = schnorr.getFieldModP().pow(gp0, r), // g^{r P(0)}
                    xor = grp0.xor(secret);
@@ -86,13 +85,20 @@ public class NaorPinkasServer
         int i = 0;
         int dummies = t - revokedUsers.size();
         while (i < dummies) {
-            shares.add(getDummyKey(i).getShare(r));
+            NaorPinkasShare share = getDummyKey(i).getShare(r);
+            shares.add(share);
             ++i;
         }
         for (NaorPinkasIdentity id : revokedUsers) {
-            shares.add(getPersonalKey(id).get().getShare(r));
+            NaorPinkasShare share = getPersonalKey(id).get().getShare(r);
+            shares.add(share);
         }
-        return new NaorPinkasMessage(t, r, xor, schnorr, shares.build());
+        
+        return new NaorPinkasMessage(
+                t, r, xor, schnorr, 
+                LagrangeInterpolation.fromXs(schnorr.getFieldModQ(), 
+                                             NaorPinkasShare.getXsFromShares(shares.build())), 
+                shares.build());
     }
 
     /**

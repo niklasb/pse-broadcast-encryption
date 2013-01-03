@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 
 import static cryptocast.util.ErrorUtils.cannotHappen;
 
@@ -37,6 +40,22 @@ public class ByteUtils {
         byte[] bytes = i.toByteArray();
         buf.putInt(bytes.length);
         buf.put(bytes);
+    }
+    
+    public static void putBigInts(ByteBuffer buf, List<BigInteger> lst) {
+        buf.putInt(lst.size());
+        for (BigInteger x : lst) {
+            putBigInt(buf, x);
+        }
+    }
+    
+    public static ImmutableList<BigInteger> getBigInts(ByteBuffer buf) {
+        int size = buf.getInt();
+        ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
+        for (int i = 0; i < size; ++i) {
+            builder.add(getBigInt(buf));
+        }
+        return builder.build();
     }
     
     public static byte[] pack(Packable p) {

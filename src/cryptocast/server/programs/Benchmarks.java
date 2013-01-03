@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Random;
 
 import com.beust.jcommander.*;
+import com.google.common.collect.ImmutableList;
 
 import cryptocast.crypto.IntegersModuloPrime;
 import cryptocast.crypto.LagrangeInterpolation;
@@ -63,17 +64,18 @@ public final class Benchmarks {
         
         BigInteger p;
         IntegersModuloPrime field;
-        BigInteger[] xs;
+        ImmutableList<BigInteger> xs;
         
         public void prepare() {
             p = makePrime(b);
             field =  new IntegersModuloPrime(p);
             System.out.printf("Lagrange options: t=%d b=%d\n", t, b);
             Random rnd = new Random();
-            xs = new BigInteger[t];
-            for (int i = 0; i < xs.length; i++) {
-                xs[i] = field.randomElement(rnd);
+            ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
+            for (int i = 0; i < t; i++) {
+                builder.add(field.randomElement(rnd));
             }
+            xs = builder.build();
         }
         
         public void run() {
@@ -97,6 +99,7 @@ public final class Benchmarks {
             benchmark = lagrange;
         } else {
             System.err.println("Available benchmarks: lagrange");
+            return;
         }
         benchmark.prepare();
         runBenchmark(benchmark, opts.n, opts.f);

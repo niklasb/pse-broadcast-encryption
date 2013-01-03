@@ -13,7 +13,7 @@ public class SchnorrGroup implements Packable, Serializable {
     private static final long serialVersionUID = -2980881642885431015L;
     
     private BigInteger p, q, r, g;
-    private Field<BigInteger> modP, modQ;
+    private IntegersModuloPrime modP, modQ;
 
     public SchnorrGroup(BigInteger p, BigInteger q, BigInteger g) {
         checkArgument(p.subtract(BigInteger.ONE).mod(q).equals(BigInteger.ZERO),
@@ -26,11 +26,11 @@ public class SchnorrGroup implements Packable, Serializable {
         modQ = new IntegersModuloPrime(q);
     }
     
-    public Field<BigInteger> getFieldModP() {
+    public IntegersModuloPrime getFieldModP() {
         return modP;
     }
     
-    public Field<BigInteger> getFieldModQ() {
+    public IntegersModuloPrime getFieldModQ() {
         return modQ;
     }
 
@@ -59,15 +59,9 @@ public class SchnorrGroup implements Packable, Serializable {
         return modP.pow(g, k);
     }
 
-    public int getMaxNumberSpace() {
-        // round up to next int: (a + b - 1) / b = ceil(a / b)
-        // also add 4 bytes for size information and 1 byte for the sign bit
-        return 4 + 1 + (getP().bitLength() + 7) / 8;
-    }
-
     @Override
     public int getMaxSpace() {
-        return 3 * getMaxNumberSpace();
+        return 3 * modP.getMaxNumberSpace();
     }
     
     @Override

@@ -67,11 +67,6 @@ public class IntegersModuloPrime extends Field<BigInteger>
     }
 
     @Override
-    public Class<BigInteger> getElementClass() {
-        return BigInteger.class;
-    }
-
-    @Override
     public BigInteger randomElement(Random rnd) {
         BigInteger r;
         // TODO improve performance. Check out 
@@ -86,5 +81,11 @@ public class IntegersModuloPrime extends Field<BigInteger>
     public boolean equals(Object other) {
         if (other == null || other.getClass() != getClass()) { return false; }
         return p.equals(((IntegersModuloPrime)other).p);
+    }
+
+    public int getMaxNumberSpace() {
+        // round up to next int: (a + b - 1) / b = ceil(a / b)
+        // also add 4 bytes for size information and 1 byte for the sign bit
+        return 4 + 1 + (getP().bitLength() + 7) / 8;
     }
 }

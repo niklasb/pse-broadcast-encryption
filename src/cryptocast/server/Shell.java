@@ -310,7 +310,7 @@ public class Shell extends InteractiveCommandLineInterface {
         });
         reader.start();
         try {
-            control.stream(pipeIn);
+            control.stream(pipeIn, 0x1000);
         } catch (Exception e) {
             fatalError(e);
         }

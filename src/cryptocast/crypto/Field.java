@@ -11,8 +11,6 @@ import java.util.Random;
 public abstract class Field<T> implements Serializable {
     private static final long serialVersionUID = -5044040558567213861L;
 
-    public abstract Class<T> getElementClass();
-
     /**
      * Adds two elements of the field.
      * @param a First element

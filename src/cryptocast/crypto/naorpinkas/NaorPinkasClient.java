@@ -4,19 +4,16 @@ import cryptocast.crypto.*;
 import cryptocast.util.ByteUtils;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 
 /**
  * A client in the Naor-Pinkas broadcast encryption scheme.
  */
 public class NaorPinkasClient implements Decryptor<byte[]> {
-
     private NaorPinkasPersonalKey key;
-    private NaorPinkasShareCombinator combinator =
-                 new NaorPinkasShareCombinator();
+    private NaorPinkasShareCombinator combinator = new NaorPinkasShareCombinator();
     
     /**
      * Initializes a Naor-Pinkas broadcast client.
@@ -42,9 +39,11 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
     
     public BigInteger decryptNumber(NaorPinkasMessage msg) throws InsufficientInformationError {
         // make a mutable copy, so we can add our own share
-        List<NaorPinkasShare> shares = new ArrayList<NaorPinkasShare>(msg.getShares());
-        shares.add(key.getShare(msg.getR()));
-        Optional<BigInteger> mInterpol = combinator.restore(shares);
+        ImmutableList<NaorPinkasShare> shares = ImmutableList.<NaorPinkasShare>builder()
+                .addAll(msg.getShares())
+                .add(key.getShare(msg.getR()))
+                .build();
+        Optional<BigInteger> mInterpol = combinator.restore(shares, msg.getLagrange());
         if (!mInterpol.isPresent()) {
             throw new InsufficientInformationError(
                     "Cannot restore secret: Redundant or missing information");

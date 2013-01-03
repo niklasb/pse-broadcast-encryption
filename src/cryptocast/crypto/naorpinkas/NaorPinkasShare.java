@@ -2,6 +2,10 @@ package cryptocast.crypto.naorpinkas;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 import cryptocast.crypto.SchnorrGroup;
 import cryptocast.util.Packable;
@@ -43,7 +47,7 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
 
     @Override
     public int getMaxSpace() {
-        return 2 * schnorr.getMaxNumberSpace();
+        return 2 * schnorr.getFieldModP().getMaxNumberSpace();
     }
 
     @Override
@@ -70,5 +74,14 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
             && i.equals(other.i)
             && grpi.equals(other.grpi)
             && schnorr.equals(other.schnorr);
+    }
+    
+    public static ImmutableList<BigInteger> getXsFromShares(
+            ImmutableList<NaorPinkasShare> shares) {
+        ImmutableList.Builder<BigInteger> xs = ImmutableList.builder();
+        for (NaorPinkasShare share : shares) {
+            xs.add(share.getI());
+        }
+        return xs.build();
     }
 }

@@ -44,15 +44,16 @@ public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey>
 
     @Override
     public ImmutableList<NaorPinkasPersonalKey> getRange(int a, int b) {
-        BigInteger[] xs = new BigInteger[b - a];
-        int len = xs.length;
+        ImmutableList.Builder<BigInteger> xsBuilder = ImmutableList.builder();
+        int len = b - a;
         for (int i = 0; i < len; ++i) {
-            xs[i] = poly.getField().randomElement(rnd);
+            xsBuilder.add(poly.getField().randomElement(rnd));
         }
-        BigInteger[] ys = poly.evaluateMulti(xs);
+        ImmutableList<BigInteger> xs = xsBuilder.build();
+        ImmutableList<BigInteger> ys = poly.evaluateMulti(xs);
         ImmutableList.Builder<NaorPinkasPersonalKey> keys = ImmutableList.builder();
         for (int i = 0; i < len; ++i) {
-            NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, xs[i], ys[i], schnorr);
+            NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, xs.get(i), ys.get(i), schnorr);
             keys.add(key);
             addKey(key);
         }
