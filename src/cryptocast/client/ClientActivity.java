@@ -49,20 +49,12 @@ public class ClientActivity extends FragmentActivity {
         Intent intent;
         // Handle menu item click
         switch (item.getItemId()) {
-        case R.id.itemMain:
-            intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            return true;
         case R.id.itemOptions:
             intent = new Intent(this, OptionsActivity.class);
             startActivity(intent);
             return true;
         case R.id.itemHelp:
             intent = new Intent(this, HelpActivity.class);
-            startActivity(intent);
-            return true;
-        case R.id.itemPlayer:
-            intent = new Intent(this, StreamViewerActivity.class);
             startActivity(intent);
             return true;
         default:
