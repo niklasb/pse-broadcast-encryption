@@ -29,7 +29,6 @@ public class StreamViewerActivity extends ClientActivity
             .getLogger(StreamViewerActivity.class);
     
     private AudioStreamMediaPlayer player = new AudioStreamMediaPlayer();
-    private InputStream in;
     private InetSocketAddress connectAddr;
     private File keyFile;
     private Socket sock;

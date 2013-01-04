@@ -3,7 +3,6 @@ package cryptocast.crypto.naorpinkas;
 import cryptocast.crypto.*;
 import java.math.BigInteger;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;

@@ -13,6 +13,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
@@ -28,7 +31,9 @@ public class NaorPinkasServer
                  Serializable,
                  Encryptor<byte[]> {
     private static final long serialVersionUID = -6864326409385317975L;
-
+    private static final Logger log = LoggerFactory
+            .getLogger(NaorPinkasServer.class);
+    
     private int t;
     private SchnorrGroup schnorr;
     private Map<NaorPinkasIdentity, NaorPinkasPersonalKey> keyByIdentity =
@@ -79,26 +84,28 @@ public class NaorPinkasServer
     public NaorPinkasMessage encryptNumber(BigInteger secret) {
         BigInteger r = schnorr.getFieldModP().randomElement(rnd),
                    grp0 = schnorr.getFieldModP().pow(gp0, r), // g^{r P(0)}
-                   xor = grp0.xor(secret);
+                   xor = grp0.xor(secret),
+                   gr = schnorr.getPowerOfG(r);
         checkArgument(xor.compareTo(schnorr.getP()) < 0, "Secret is too large to encrypt");
+        
         ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
         int i = 0;
         int dummies = t - revokedUsers.size();
         while (i < dummies) {
-            NaorPinkasShare share = getDummyKey(i).getShare(r);
+            NaorPinkasShare share = getDummyKey(i).getShare(r, gr);
             shares.add(share);
             ++i;
         }
         for (NaorPinkasIdentity id : revokedUsers) {
-            NaorPinkasShare share = getPersonalKey(id).get().getShare(r);
+            NaorPinkasShare share = getPersonalKey(id).get().getShare(r, gr);
             shares.add(share);
         }
         
-        return new NaorPinkasMessage(
-                t, r, xor, schnorr, 
-                LagrangeInterpolation.fromXs(schnorr.getFieldModQ(), 
-                                             NaorPinkasShare.getXsFromShares(shares.build())), 
-                shares.build());
+        LagrangeInterpolation<BigInteger> lagrange = LagrangeInterpolation.fromXs(
+                schnorr.getFieldModQ(), 
+                NaorPinkasShare.getXsFromShares(shares.build()));
+        
+        return new NaorPinkasMessage(t, r, xor, schnorr, lagrange, shares.build());
     }
 
     /**

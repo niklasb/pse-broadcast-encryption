@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableList;
 public class NaorPinkasClient implements Decryptor<byte[]> {
     private NaorPinkasPersonalKey key;
     private NaorPinkasShareCombinator combinator = new NaorPinkasShareCombinator();
+    private SchnorrGroup schnorr;
     
     /**
      * Initializes a Naor-Pinkas broadcast client.
@@ -21,6 +22,7 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
      */
     public NaorPinkasClient(NaorPinkasPersonalKey key) {
         this.key = key;
+        schnorr = key.getSchnorr();
     }
 
     /**
@@ -38,10 +40,12 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
     }
     
     public BigInteger decryptNumber(NaorPinkasMessage msg) throws InsufficientInformationError {
+        BigInteger r = msg.getR();
+        
         // make a mutable copy, so we can add our own share
         ImmutableList<NaorPinkasShare> shares = ImmutableList.<NaorPinkasShare>builder()
                 .addAll(msg.getShares())
-                .add(key.getShare(msg.getR()))
+                .add(key.getShare(r, schnorr.getPowerOfG(r)))
                 .build();
         Optional<BigInteger> mInterpol = combinator.restore(shares, msg.getLagrange());
         if (!mInterpol.isPresent()) {

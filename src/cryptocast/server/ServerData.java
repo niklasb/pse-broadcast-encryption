@@ -2,7 +2,6 @@ package cryptocast.server;
 
 import cryptocast.crypto.BroadcastSchemeUserManager;
 import cryptocast.crypto.BroadcastSchemeKeyManager;
-import cryptocast.crypto.Encryptor;
 import cryptocast.crypto.NoMoreRevocationsPossibleError;
 
 import com.google.common.base.Optional;

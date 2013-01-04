@@ -4,7 +4,6 @@ import java.io.File;
 
 import cryptocast.client.R;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 /**

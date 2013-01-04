@@ -2,10 +2,8 @@ package cryptocast.crypto.naorpinkas;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 import cryptocast.crypto.SchnorrGroup;
 import cryptocast.util.Packable;

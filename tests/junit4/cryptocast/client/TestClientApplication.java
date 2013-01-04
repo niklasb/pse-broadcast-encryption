@@ -3,10 +3,6 @@ package cryptocast.client;
 import java.io.File;
 import java.net.InetSocketAddress;
 
-import android.widget.TextView;
-import cryptocast.client.MainActivity;
-import cryptocast.client.R;
-
 import org.junit.*;
 import org.junit.runner.RunWith;
 

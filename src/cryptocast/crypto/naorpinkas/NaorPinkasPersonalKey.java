@@ -25,8 +25,12 @@ public class NaorPinkasPersonalKey implements PrivateKey {
         this.schnorr = schnorr;
     }
 
-    public NaorPinkasShare getShare(BigInteger r) {
-        BigInteger x = schnorr.getFieldModP().pow(schnorr.getPowerOfG(pi), r);
+    public SchnorrGroup getSchnorr() {
+        return schnorr;
+    }
+    
+    public NaorPinkasShare getShare(BigInteger r, BigInteger gr) {
+        BigInteger x = schnorr.getFieldModP().pow(gr, pi);
         return new NaorPinkasShare(t, r, i, x, schnorr);
     }
 
