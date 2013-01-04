@@ -1,4 +1,4 @@
 #!/bin/sh
 cd $(dirname "$0")/..
-CP=$(find 3rd_party -name "*.jar" | grep -v android | tr "\n" ":")
-rlwrap java -cp ${CP}projects/server/bin cryptocast.server.programs.TcpStreamer "$@"
+source bin/common.sh
+$JAVA cryptocast.server.programs.TcpStreamer "$@"
