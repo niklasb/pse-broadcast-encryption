@@ -6,6 +6,9 @@ import java.util.Random;
 
 import javax.crypto.KeyGenerator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.beust.jcommander.*;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -52,6 +55,8 @@ interface Benchmark extends Runnable {
  * The main method to start the server.
  */
 public final class Benchmarks {
+    private static final Logger log = LoggerFactory.getLogger(Benchmarks.class);
+    
     private static class OptsCommon extends OptParse.WithHelp {
         @Parameter(names = { "-n" }, description = "Number of repetitions")
         public int n = 100;
@@ -60,7 +65,7 @@ public final class Benchmarks {
     }
     
     @Parameters(commandDescription = "Calculate the lagrange coefficients")
-    private static class LagrangeBenchmark implements Benchmark {        
+    private static class LagrangeBenchmark implements Benchmark {
         @Parameter(names = { "-t" }, description = "Degree of the polynomial")
         private int t = 100;
         @Parameter(names = { "-b" }, description = "The bit size of the modulus")
@@ -87,35 +92,74 @@ public final class Benchmarks {
     }
     
     @Parameters(commandDescription = "Encrypt a 128-bit key using Naor-Pinkas")
-    private static class EncryptBenchmark implements Benchmark {        
+    private static class EncryptBenchmark implements Benchmark {
+        private static final Logger log = LoggerFactory
+                .getLogger(Benchmarks.EncryptBenchmark.class);
+        
         @Parameter(names = { "-t" }, description = "Number of revocable users")
         private int t = 100;
         
         NaorPinkasServer server;
-        byte[] data;
+        byte[] plain;
         
         public void prepare() throws Exception {
             SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
+            log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
+                        t, schnorr.getQ().bitLength(), schnorr.getP().bitLength());
+            log.info("Generating server instance and setting up dummy keys");
             server = NaorPinkasServer.generate(t, schnorr);
-            System.out.printf("Naor-Pinkas options: t=%d qbits=%d pbits=%d\n", 
-                    t, schnorr.getQ().bitLength(), schnorr.getP().bitLength());
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);
-            data = gen.generateKey().getEncoded();
+            plain = gen.generateKey().getEncoded();
             // do an initial encryption to set up the dummy keys
-            server.encrypt(data);
+            server.encrypt(plain);
         }
         
         public void run() {
-            server.encrypt(data);
+            byte[] cipher = server.encrypt(plain);
+            log.debug("128-bit key was encrypted to {} bytes of Naor-Pinkas ciphertext", cipher.length);
+        }
+    }
+    
+    @Parameters(commandDescription = "Decrypt a 128-bit key using Naor-Pinkas")
+    private static class DecryptBenchmark implements Benchmark {
+        private static final Logger log = LoggerFactory
+                .getLogger(Benchmarks.DecryptBenchmark.class);
+        
+        @Parameter(names = { "-t" }, description = "Number of revocable users")
+        private int t = 100;
+        
+        NaorPinkasClient client;
+        byte[] cipher;
+        
+        public void prepare() throws Exception {
+            SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
+            log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
+                    t, schnorr.getQ().bitLength(), schnorr.getP().bitLength());
+            log.info("Generating server and client and doing the initial encryption");
+            NaorPinkasServer server = NaorPinkasServer.generate(t, schnorr);
+            client = new NaorPinkasClient(server.getPersonalKey(server.getIdentity(0)).get());
+            KeyGenerator gen = KeyGenerator.getInstance("AES");
+            gen.init(128);
+            byte[] plain = gen.generateKey().getEncoded();
+            cipher = server.encrypt(plain);
+        }
+        
+        public void run() {
+            try {
+                byte[] plain = client.decrypt(cipher);
+            } catch (Exception e) {
+                log.error("Error while decrypting", e);
+            }
         }
     }
 
     static Map<String, Benchmark> commands = ImmutableMap.of(
               "lagrange", new LagrangeBenchmark(),
-              "encrypt", new EncryptBenchmark()
+              "encrypt", new EncryptBenchmark(),
+              "decrypt", new DecryptBenchmark()
               );
-    
+
     private static void printCommands() {
         System.err.println("Available benchmarks: " + Joiner.on(", ").join(commands.keySet()));
         return;
@@ -141,8 +185,10 @@ public final class Benchmarks {
             printCommands();
             return;
         }
-        System.out.printf("Running with n=%d  f=%d\n", opts.n, opts.f);
+        log.info("Running with n={}  f={}", opts.n, opts.f);
+        long start = System.currentTimeMillis();
         benchmark.prepare();
+        log.info("Preparation took {} ms, starting tests!", System.currentTimeMillis() - start);
         runBenchmark(benchmark, opts.n, opts.f);
     }
     
