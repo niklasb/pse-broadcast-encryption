@@ -1,5 +1,6 @@
 package cryptocast.crypto;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +15,9 @@ import cryptocast.util.MapUtils;
  * Performs a Lagrange interpolation of a polynomial.
  * @param <T> The type of items of the polynomial over a field.
  */
-public class LagrangeInterpolation<T> {
+public class LagrangeInterpolation<T> implements Serializable {
+    private static final long serialVersionUID = 4096286734152138209L;
+    
     private Map<T, T> coefficients;
     private Field<T> field;
     

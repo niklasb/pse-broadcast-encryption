@@ -3,6 +3,7 @@ package cryptocast.crypto.naorpinkas;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -21,7 +22,7 @@ public class TestNaorPinkasServer {
     }
     
     @Test
-    public void serverBroadcastsTheCorrectNumberOfShares() throws Exception {
+    public void broadcastsTheCorrectNumberOfShares() throws Exception {
         assertEquals(t, server.encryptNumber(BigInteger.valueOf(111111)).getShares().size());
     }
     
@@ -57,7 +58,7 @@ public class TestNaorPinkasServer {
     }
 
     @Test
-    public void serverBroadcastsRevokedUserShares() throws Exception {
+    public void broadcastsRevokedUserShares() throws Exception {
         int[] revoked = { 0, 2, 4 };
         for (int i : revoked) {
             server.revoke(server.getIdentity(i));
@@ -65,6 +66,25 @@ public class TestNaorPinkasServer {
         NaorPinkasMessage msg = server.encryptNumber(BigInteger.valueOf(111111));
         for (int i : revoked) {
             assertTrue(containsShareForUser(msg, server.getIdentity(i)));
+        }
+    }
+    
+    @Test
+    public void sendsCorrectLagrangeCoefficients() throws Exception {
+        for (int i = 2; i <= 4; ++i) {
+            server.revoke(server.getIdentity(i));
+        }
+        server.unrevoke(server.getIdentity(3));
+        server.revoke(server.getIdentity(9));
+        server.revoke(server.getIdentity(8));
+        server.unrevoke(server.getIdentity(9));
+        server.unrevoke(server.getIdentity(2));
+        
+        NaorPinkasMessage msg = server.encryptNumber(BigInteger.ONE);
+        Map<BigInteger, BigInteger> coefficients = msg.getLagrange().getCoefficients();
+        assertEquals(t, coefficients.size());
+        for (NaorPinkasShare share : msg.getShares()) {
+            assertTrue(coefficients.containsKey(share.getI()));
         }
     }
     

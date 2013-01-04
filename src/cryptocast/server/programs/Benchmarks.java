@@ -48,7 +48,8 @@ class Result {
 }
 
 interface Benchmark extends Runnable {
-    public void prepare() throws Exception;
+    public void beforeAll() throws Exception;
+    public void before() throws Exception;
 }
 
 /**
@@ -66,6 +67,9 @@ public final class Benchmarks {
     
     @Parameters(commandDescription = "Calculate the lagrange coefficients")
     private static class LagrangeBenchmark implements Benchmark {
+        private static final Logger log = LoggerFactory
+                .getLogger(Benchmarks.LagrangeBenchmark.class);
+        
         @Parameter(names = { "-t" }, description = "Degree of the polynomial")
         private int t = 100;
         @Parameter(names = { "-b" }, description = "The bit size of the modulus")
@@ -74,10 +78,10 @@ public final class Benchmarks {
         IntegersModuloPrime field;
         ImmutableList<BigInteger> xs;
         
-        public void prepare() throws Exception {
+        public void beforeAll() throws Exception {
             BigInteger p = makePrime(b);
             field =  new IntegersModuloPrime(p);
-            System.out.printf("Lagrange options: t=%d b=%d\n", t, b);
+            log.info("Lagrange options: t={} pbits={}\n", t, p.bitLength());
             Random rnd = new Random();
             ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
             for (int i = 0; i < t; i++) {
@@ -85,6 +89,8 @@ public final class Benchmarks {
             }
             xs = builder.build();
         }
+        
+        public void before() {}
         
         public void run() {
             LagrangeInterpolation.computeCoefficients(field, xs);
@@ -102,7 +108,7 @@ public final class Benchmarks {
         NaorPinkasServer server;
         byte[] plain;
         
-        public void prepare() throws Exception {
+        public void beforeAll() throws Exception {
             SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
             log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
                         t, schnorr.getQ().bitLength(), schnorr.getP().bitLength());
@@ -115,9 +121,53 @@ public final class Benchmarks {
             server.encrypt(plain);
         }
         
+        public void before() {}
+        
         public void run() {
             byte[] cipher = server.encrypt(plain);
             log.debug("128-bit key was encrypted to {} bytes of Naor-Pinkas ciphertext", cipher.length);
+        }
+    }
+    
+    @Parameters(commandDescription = "Encrypt a 128-bit key using Naor-Pinkas multiple times, with revocations in between")
+    private static class MultiEncryptBenchmark implements Benchmark {
+        private static final Logger log = LoggerFactory
+                .getLogger(Benchmarks.MultiEncryptBenchmark.class);
+        
+        @Parameter(names = { "-t" }, description = "Number of revocable users")
+        private int t = 100;
+        
+        SchnorrGroup schnorr;
+        NaorPinkasServer server;
+        byte[] plain;
+        
+        public void beforeAll() throws Exception {
+            schnorr = SchnorrGroup.getP1024Q160();
+            log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
+                        t, schnorr.getQ().bitLength(), schnorr.getP().bitLength());
+            KeyGenerator gen = KeyGenerator.getInstance("AES");
+            gen.init(128);
+            plain = gen.generateKey().getEncoded();
+        }
+        
+        public void before() {
+            server = NaorPinkasServer.generate(t, schnorr);
+        }
+        
+        public void run() {
+            try {
+                server.encrypt(plain);
+                for (int i = 1; i <= 100; ++i) {
+                    server.revoke(server.getIdentity(i));
+                }
+                server.encrypt(plain);
+                for (int i = 30; i <= 80; ++i) {
+                    server.unrevoke(server.getIdentity(i));
+                }
+                server.encrypt(plain);
+            } catch (Exception e) {
+                log.error("Error while encrypting", e);
+            }
         }
     }
     
@@ -132,7 +182,7 @@ public final class Benchmarks {
         NaorPinkasClient client;
         byte[] cipher;
         
-        public void prepare() throws Exception {
+        public void beforeAll() throws Exception {
             SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
             log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
                     t, schnorr.getQ().bitLength(), schnorr.getP().bitLength());
@@ -145,9 +195,11 @@ public final class Benchmarks {
             cipher = server.encrypt(plain);
         }
         
+        public void before() {}
+        
         public void run() {
             try {
-                byte[] plain = client.decrypt(cipher);
+                client.decrypt(cipher);
             } catch (Exception e) {
                 log.error("Error while decrypting", e);
             }
@@ -157,6 +209,7 @@ public final class Benchmarks {
     static Map<String, Benchmark> commands = ImmutableMap.of(
               "lagrange", new LagrangeBenchmark(),
               "encrypt", new EncryptBenchmark(),
+              "multi-encrypt", new MultiEncryptBenchmark(),
               "decrypt", new DecryptBenchmark()
               );
 
@@ -187,23 +240,24 @@ public final class Benchmarks {
         }
         log.info("Running with n={}  f={}", opts.n, opts.f);
         long start = System.currentTimeMillis();
-        benchmark.prepare();
-        log.info("Preparation took {} ms, starting tests!", System.currentTimeMillis() - start);
+        benchmark.beforeAll();
+        log.info("beforeAll took {} ms, starting tests!", System.currentTimeMillis() - start);
         runBenchmark(benchmark, opts.n, opts.f);
     }
     
-    private static void runBenchmark(Runnable run, int rep, int freq) {
-        Result res = measure(run, rep, freq);
+    private static void runBenchmark(Benchmark benchmark, int rep, int freq) throws Exception {
+        Result res = measure(benchmark, rep, freq);
         if (rep % freq != 0) { 
             res.print();
         }
     }
     
-    private static Result measure(Runnable run, int rep, int freq) {
+    private static Result measure(Benchmark benchmark, int rep, int freq) throws Exception {
         Result res = new Result(freq);
         for (int i = 0; i < rep; ++i) {
+            benchmark.before();
             long start = System.currentTimeMillis();
-            run.run();
+            benchmark.run();
             res.report((System.currentTimeMillis() - start) / 1000.0);
         }
         return res;

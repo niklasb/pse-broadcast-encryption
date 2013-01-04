@@ -42,16 +42,19 @@ public class NaorPinkasServer
                  new HashSet<NaorPinkasIdentity>();
     private Generator<NaorPinkasPersonalKey> keyGen;
     private BigInteger gp0;  // $g^P(0)$
+    private LagrangeInterpolation<BigInteger> lagrange;
 
     private static SecureRandom rnd = new SecureRandom();
 
     private NaorPinkasServer(int t, SchnorrGroup schnorr,
                              Generator<NaorPinkasPersonalKey> keyGen,
-                             Polynomial<BigInteger> poly) {
+                             Polynomial<BigInteger> poly,
+                             LagrangeInterpolation<BigInteger> lagrange) {
         this.t = t;
         this.schnorr = schnorr;
         this.keyGen = keyGen;
         this.gp0 = schnorr.getPowerOfG(poly.evaluate(BigInteger.ZERO));
+        this.lagrange = lagrange;
     }
 
     public int getT() {
@@ -59,13 +62,20 @@ public class NaorPinkasServer
     }
     
     public static NaorPinkasServer generate(int t, SchnorrGroup schnorr) {
+        Field<BigInteger> modQ = schnorr.getFieldModQ();
         Polynomial<BigInteger> poly = 
-                Polynomial.createRandomPolynomial(rnd, schnorr.getFieldModQ(), t + 1);
+                Polynomial.createRandomPolynomial(rnd, modQ, t + 1);
         Generator<NaorPinkasPersonalKey> keyGen = 
                 new OptimisticGenerator<NaorPinkasPersonalKey>(
                         new NaorPinkasKeyGenerator(
                                 t, new SecureRandom(), schnorr, poly));
-        return new NaorPinkasServer(t, schnorr, keyGen, poly);
+        ImmutableList.Builder<BigInteger> dummyXs = ImmutableList.builder();
+        for (int i = 0; i < t; ++i) {
+            dummyXs.add(keyGen.get(i).getIdentity().getI());
+        }
+        LagrangeInterpolation<BigInteger> lagrange = 
+                LagrangeInterpolation.fromXs(modQ, dummyXs.build());
+        return new NaorPinkasServer(t, schnorr, keyGen, poly, lagrange);
     }
 
     /**
@@ -101,10 +111,6 @@ public class NaorPinkasServer
             shares.add(share);
         }
         
-        LagrangeInterpolation<BigInteger> lagrange = LagrangeInterpolation.fromXs(
-                schnorr.getFieldModQ(), 
-                NaorPinkasShare.getXsFromShares(shares.build()));
-        
         return new NaorPinkasMessage(t, r, xor, schnorr, lagrange, shares.build());
     }
 
@@ -132,13 +138,21 @@ public class NaorPinkasServer
         if (revokedUsers.size() == t) {
             throw new NoMoreRevocationsPossibleError();
         }
+        // TODO abstract this away
+        // remove highest dummy key and add new identity
+        lagrange.removeX(getDummyKey(t - revokedUsers.size() - 1).getIdentity().getI());
+        lagrange.addX(id.getI());
         return revokedUsers.add(id);
     }
     
     public boolean unrevoke(NaorPinkasIdentity id) {
+        // TODO abstract this away
+        // remove old identity and add new dummy
+        lagrange.removeX(id.getI());
+        lagrange.addX(getDummyKey(t - revokedUsers.size()).getIdentity().getI());
         return revokedUsers.remove(id);
     }
-
+    
     /**
      * @param id The identity of the user
      * @return Whether the user is revoked.
