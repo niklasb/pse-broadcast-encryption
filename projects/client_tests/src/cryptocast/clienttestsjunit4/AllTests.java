@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     cryptocast.comm.TestStreamUtils.class,
+    cryptocast.comm.TestSimpleHttpStreamServer.class,
     cryptocast.comm.TestStatisticalInputStream.class,
     cryptocast.comm.TestMultiOutputStream.class,
     cryptocast.comm.TestDecoratingMessageOutChannel.class,
@@ -23,6 +24,7 @@ import org.junit.runners.Suite;
     cryptocast.crypto.TestLagrangeInterpolation.class,
     cryptocast.crypto.TestModularExponentiationGroup.class,
     cryptocast.crypto.TestDynamicCipherStreams.class,
+    cryptocast.util.TestSerializationUtils.class,
     cryptocast.util.TestOptimisticGenerator.class,
     cryptocast.util.TestGenerator.class,
 })
