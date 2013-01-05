@@ -22,6 +22,7 @@ import org.junit.runners.Suite;
     cryptocast.crypto.TestPolynomial.class,
     cryptocast.crypto.TestBroadcastEncryptionServer.class,
     cryptocast.crypto.TestLagrangeInterpolation.class,
+    cryptocast.crypto.TestSubproductTree.class,
     cryptocast.crypto.TestModularExponentiationGroup.class,
     cryptocast.crypto.TestDynamicCipherStreams.class,
     cryptocast.util.TestSerializationUtils.class,
