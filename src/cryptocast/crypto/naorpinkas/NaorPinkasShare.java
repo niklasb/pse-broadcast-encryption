@@ -2,6 +2,7 @@ package cryptocast.crypto.naorpinkas;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
@@ -75,7 +76,7 @@ public class NaorPinkasShare implements Comparable<NaorPinkasShare>, Packable {
     }
     
     public static ImmutableList<BigInteger> getXsFromShares(
-            ImmutableList<NaorPinkasShare> shares) {
+                                  List<NaorPinkasShare> shares) {
         ImmutableList.Builder<BigInteger> xs = ImmutableList.builder();
         for (NaorPinkasShare share : shares) {
             xs.add(share.getI());

@@ -18,6 +18,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
+import ch.qos.logback.core.spi.LogbackLock;
 
 import com.beust.jcommander.Parameter;
 
@@ -37,6 +38,13 @@ public final class Server {
 
         @Parameter(names = { "-b", "--listen-address"}, description = "Listen address")
         private String listenAddr = "127.0.0.1";
+        
+        @Parameter(names = { "-i", "--key-broadcast-interval" }, description = "Key broadcast interval in seconds")
+        private int keyBroadcastIntervalSecs = 15;
+        
+        @Parameter(names = { "-v", "--verbosity" }, 
+                   description = "Control the level of debug output on STDERR (trace, debug, info, warn, error)")
+        private String verbosity = "info";
     }
     
     /**
@@ -44,13 +52,15 @@ public final class Server {
      */
     public static void main(String[] argv) throws Exception {
         Options opts = OptParse.parseArgs(new Options(), "server", argv);
+        Level logLevel = Level.toLevel(opts.verbosity);
         
-        System.out.println("Logging to " + opts.logFile);
-        initLogging(opts.logFile, Level.DEBUG);
+        System.out.printf("Logging to STDERR (level %s) and %s\n", logLevel, opts.logFile);
+        initLogging(opts.logFile, logLevel);
         
         Controller control = Controller.start(
                 opts.databaseFile,
-                new InetSocketAddress(opts.listenAddr, opts.listenPort));
+                new InetSocketAddress(opts.listenAddr, opts.listenPort),
+                opts.keyBroadcastIntervalSecs);
         new Shell(new BufferedReader(new InputStreamReader(System.in)), 
                   System.out, System.err, control).run();
     }

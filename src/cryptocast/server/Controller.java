@@ -9,6 +9,8 @@ import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -29,21 +31,21 @@ import cryptocast.comm.*;
 /** Deals with user-interactions and therefore changes data in the model if necessary.
  * @param <ID> The type of the user identities
  */
-public class Controller {
+public class Controller implements Observer {
     private static final Logger log = LoggerFactory.getLogger(Controller.class);
     
     // don't use AES-256 because that would require all users 
     // to have the Unlimited Strength Jurisdiction Policy Files installed.
     // Also, AES-128 seems to be more secure
     private static final int AES_KEY_BITS = 128;
-    private static final int KEY_BROADCAST_INTERVAL_SEC = 5;
     
     private NaorPinkasServerData data;
     private MessageOutChannel rawOut;
     private File databaseFile;
     private BroadcastEncryptionServer<NaorPinkasIdentity> encServer;
     private SocketAddress listenAddr;
-
+    private int keyBroadcastIntervalSecs;
+    
     /**
      * Initializes a new controller with the given arguments.
      * @param data The data managed by this controller.
@@ -53,16 +55,20 @@ public class Controller {
                        File databaseFile,
                        MessageOutChannel rawOut,
                        BroadcastEncryptionServer<NaorPinkasIdentity> encServer,
-                       SocketAddress listenAddr) {
+                       SocketAddress listenAddr,
+                       int keyBroadcastIntervalSecs) {
         this.data = data;
+        data.addObserver(this);
         this.rawOut = rawOut;
         this.databaseFile = databaseFile;
         this.encServer = encServer;
         this.listenAddr = listenAddr;
+        this.keyBroadcastIntervalSecs = keyBroadcastIntervalSecs;
     }
 
     public static Controller start(File databaseFile, 
-                                   SocketAddress listenAddr)
+                                   SocketAddress listenAddr,
+                                   int keyBroadcastIntervalSecs)
                 throws IOException, ClassNotFoundException {
         NaorPinkasServerData data;
         if (databaseFile.exists()) {
@@ -78,8 +84,9 @@ public class Controller {
         MessageOutChannel rawOut = 
                 new StreamMessageOutChannel(multicastServer);
         return new Controller(data, databaseFile, rawOut, 
-                    startBroadcastEncryptionServer(data, rawOut),
-                    listenAddr);
+                    startBroadcastEncryptionServer(data, rawOut, keyBroadcastIntervalSecs),
+                    listenAddr,
+                    keyBroadcastIntervalSecs);
     }
 
     private static NaorPinkasServerData createNewData(int t) {
@@ -99,26 +106,31 @@ public class Controller {
     }
     
     public void saveDatabase() throws IOException {
+        log.debug("Saving database to {}", databaseFile);
         SerializationUtils.writeToFile(databaseFile, data);
     }
 
-    public ServerData<NaorPinkasIdentity> getModel() {
+    public NaorPinkasServerData getModel() {
         return data;
     }
 
-    public void reinitializeCrypto(int t) throws IOException {
+    public void reinitializeCrypto(int t) 
+            throws IOException {
         data = createNewData(t);
-        encServer = startBroadcastEncryptionServer(data, rawOut);
+        encServer = startBroadcastEncryptionServer(
+                data, rawOut, keyBroadcastIntervalSecs);
+        saveDatabase();
     }
 
     private static BroadcastEncryptionServer<NaorPinkasIdentity> 
-    startBroadcastEncryptionServer(
-            NaorPinkasServerData data, MessageOutChannel rawOut)
+    startBroadcastEncryptionServer(NaorPinkasServerData data, 
+                                   MessageOutChannel rawOut,
+                                   int keyBroadcastIntervalSecs)
                     throws IOException {
         BroadcastEncryptionServer<NaorPinkasIdentity> server = 
                 BroadcastEncryptionServer.start(
                         data.userManager, data.npServer, AES_KEY_BITS, rawOut,
-                        KEY_BROADCAST_INTERVAL_SEC * 1000, // update every 15 seconds
+                        keyBroadcastIntervalSecs * 1000, // update every 15 seconds
                         null);
         new Thread(server).start();
         return server;
@@ -178,5 +190,14 @@ public class Controller {
     
     public void stream(InputStream in, int bufsize) throws IOException {
         StreamUtils.shovel(in, encServer, bufsize);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        try {
+            saveDatabase();
+        } catch (Exception e) {
+            log.error("Error while saving database", e);
+        }
     }
 }

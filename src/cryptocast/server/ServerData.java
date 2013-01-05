@@ -5,26 +5,31 @@ import cryptocast.crypto.BroadcastSchemeKeyManager;
 import cryptocast.crypto.NoMoreRevocationsPossibleError;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.List;
 import java.io.Serializable;
 import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Contains the data which is managed by the controller and presented by the view.
  * @param <ID> The type of the user identities
+ * @param <T> The type of the model
  */
-public class ServerData<ID> implements Serializable {
+public class ServerData<ID> extends Observable implements Serializable {
     private static final long serialVersionUID = -4614028292663697207L;
+    private static final Logger log = LoggerFactory.getLogger(ServerData.class);
 
-    private Map<String, User<ID>> userByName = new HashMap<String, User<ID>>();
-    private Map<ID, User<ID>> userById = new HashMap<ID, User<ID>>();
+    private Map<String, User<ID>> userByName = Maps.newHashMap();
+    private Map<ID, User<ID>> userById = Maps.newHashMap();
+    protected List<User<ID>> users = Lists.newArrayList();
     protected BroadcastSchemeUserManager<ID> userManager;
     protected BroadcastSchemeKeyManager<ID> keyManager;
-    protected List<User<ID>> users = new ArrayList<User<ID>>();
-    //the amount of all users added
     private int addedUsers = 0;
 
     public ServerData(BroadcastSchemeUserManager<ID> userManager, 
@@ -50,6 +55,8 @@ public class ServerData<ID> implements Serializable {
         userByName.put(name, newOne);
         userById.put(userIdent, newOne);
         users.add(newOne);
+        setChanged();
+        notifyObservers();
         return Optional.of(newOne);
     }
 
@@ -72,11 +79,17 @@ public class ServerData<ID> implements Serializable {
     }
 
     public boolean revoke(User<ID> user) throws NoMoreRevocationsPossibleError {
-        return userManager.revoke(user.getIdentity());
+        boolean res = userManager.revoke(user.getIdentity());
+        setChanged();
+        notifyObservers();
+        return res;
     }
 
     public boolean unrevoke(User<ID> user) {
-        return userManager.unrevoke(user.getIdentity());
+        boolean res = userManager.unrevoke(user.getIdentity());
+        setChanged();
+        notifyObservers();
+        return res;
     }
 
     public boolean isRevoked(User<ID> user) {

@@ -2,6 +2,7 @@ package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Optional;
@@ -24,7 +25,7 @@ public class NaorPinkasShareCombinator implements
      * by the given shares is insufficient to restore it.
      */
     @Override
-    public Optional<BigInteger> restore(ImmutableList<NaorPinkasShare> shares,
+    public Optional<BigInteger> restore(List<NaorPinkasShare> shares,
                                         LagrangeInterpolation<BigInteger> lagrange) {
         if (hasMissingShares(shares) || hasRedundantShares(shares)) {
             return Optional.absent();
@@ -42,7 +43,7 @@ public class NaorPinkasShareCombinator implements
         return Optional.of(res);
     }
     
-    public Optional<BigInteger> restore(ImmutableList<NaorPinkasShare> shares, 
+    public Optional<BigInteger> restore(List<NaorPinkasShare> shares, 
                                         SchnorrGroup schnorr) {
         if (hasMissingShares(shares) || hasRedundantShares(shares)) {
             return Optional.absent();
@@ -50,7 +51,7 @@ public class NaorPinkasShareCombinator implements
         return restore(shares, new LagrangeInterpolation<BigInteger>(schnorr.getFieldModQ()));
     }
     
-    public boolean hasMissingShares(ImmutableList<NaorPinkasShare> shares) {
+    public boolean hasMissingShares(List<NaorPinkasShare> shares) {
         int t = shares.get(0).getT();
         if (shares.size() < t + 1) {
             return true;
@@ -58,7 +59,7 @@ public class NaorPinkasShareCombinator implements
         return false;
     }
     
-    public boolean hasRedundantShares(ImmutableList<NaorPinkasShare> shares) {
+    public boolean hasRedundantShares(List<NaorPinkasShare> shares) {
         ImmutableList<NaorPinkasShare> sortedShares = 
                 Ordering.natural().immutableSortedCopy(shares);
         BigInteger lastX = null;

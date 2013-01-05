@@ -1,7 +1,8 @@
 package cryptocast.crypto;
 
+import java.util.List;
+
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 
 /**
  * Implements a strategy to restore a secret from a number of shares.
@@ -17,5 +18,5 @@ public interface ShareCombinator<S, T, A> {
    * @return The reconstructed secret or absent if the information represented
    * by the given shares is insufficient to restore it.
    */
-  public Optional<S> restore(ImmutableList<T> shares, A additionalInfo);
+  public Optional<S> restore(List<T> shares, A additionalInfo);
 }

@@ -47,9 +47,6 @@ public class Shell extends InteractiveCommandLineInterface {
         new ShellCommand("users",
                          "",
                          "List users"),
-        new ShellCommand("save",
-                         "",
-                         "Save the current crypto context and users"),
         new ShellCommand("save-keys",
                          "dir [<user>, [<user>, ...]]",
                          "Save user keys to a directory"),
@@ -161,17 +158,6 @@ public class Shell extends InteractiveCommandLineInterface {
             println("Use `help <cmd>' to get more information about a specific command");
         }
     }
-
-    private void cmdSave(ShellCommand cmd, String[] args) throws CommandError {
-        if (args.length != 0) {
-            commandSyntaxError(cmd);
-        }
-        try {
-            control.saveDatabase();
-        } catch (Exception e) {
-            error("Cannot save database: " + e.getMessage());
-        }
-    }
     
     private void cmdInit(ShellCommand cmd, String[] args) throws CommandError, Exit {
         if (args.length != 1) {
@@ -208,7 +194,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdAddUser(ShellCommand cmd, String[] args) throws CommandError {
+    private void cmdAdd(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length != 1) {
             commandSyntaxError(cmd);
         }
@@ -219,7 +205,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdRevokeUser(ShellCommand cmd, String[] args) throws CommandError {
+    private void cmdRevoke(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length != 1) {
             commandSyntaxError(cmd);
         }
@@ -234,7 +220,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdUnrevokeUser(ShellCommand cmd, String[] args) throws CommandError {
+    private void cmdUnrevoke(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length != 1) {
             commandSyntaxError(cmd);
         }

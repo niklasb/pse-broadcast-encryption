@@ -1,10 +1,13 @@
 package cryptocast.crypto;
 
+import java.util.List;
 import java.io.Serializable;
 import java.util.Random;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.base.Preconditions;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -26,9 +29,9 @@ public class Polynomial<T> implements Serializable {
      * The polynomial is defined as $P(x) := \sum_{i=0}^n c_i x^i = c_0 + c_1
      * x + ... + c_n x^n$.
      */
-    public Polynomial(Field<T> field, ImmutableList<T> coefficients) {
+    public Polynomial(Field<T> field, List<T> coefficients) {
         this.field = field;
-        this.coefficients = coefficients;
+        this.coefficients = ImmutableList.copyOf(coefficients);
         size = 0;
         for (int i = coefficients.size() - 1; i >= 0; --i) {
             if (!coefficients.get(i).equals(field.zero())) {
@@ -36,6 +39,20 @@ public class Polynomial<T> implements Serializable {
                 break;
             }
         }
+    }
+    
+    public static <T> Polynomial<T> zero(Field<T> field) {
+        return new Polynomial<T>(field, ImmutableList.<T>of());
+    }
+    
+    public static <T> Polynomial<T> monomial(Field<T> field, T coeff, int exp) {
+        Preconditions.checkArgument(exp >= 0, "Exponent must be >= 0");
+        ImmutableList.Builder<T> coeffs = ImmutableList.builder();
+        for (int i = 0; i < exp; ++i) {
+            coeffs.add(field.zero());
+        }
+        coeffs.add(coeff);
+        return new Polynomial<T>(field, coeffs.build());
     }
 
     /**
@@ -64,6 +81,90 @@ public class Polynomial<T> implements Serializable {
                 return evaluate(x);
             }
         };
+    }
+    
+    public Polynomial<T> add(Polynomial<T> other) {
+        assert field.equals(other.field);
+        int newSize = size + other.size;
+        ImmutableList.Builder<T> sumCoeffs = ImmutableList.builder();
+        for (int i = 0; i < newSize; ++i) {
+            T x = field.zero();
+            if (i < size) {
+                x = field.add(x, getCoefficient(i));
+            }
+            if (i < other.size) {
+                x = field.add(x, other.getCoefficient(i));
+            }
+            sumCoeffs.add(x);
+        }
+        return new Polynomial<T>(field, sumCoeffs.build());
+    }
+    
+    public Polynomial<T> multiply(T scalar) {
+        ImmutableList.Builder<T> newCoeffs = ImmutableList.builder();
+        for (T c : coefficients) {
+            newCoeffs.add(field.multiply(c, scalar));
+        }
+        return new Polynomial<T>(field, newCoeffs.build());
+    }
+
+    public Polynomial<T> negate() {
+        return multiply(field.negate(field.one()));
+    }
+    
+    public Polynomial<T> subtract(Polynomial<T> other) {
+        return add(other.negate());
+    }
+    
+    public Polynomial<T> multiply(Polynomial<T> other) {
+        assert field.equals(other.field);
+        int newSize = size + other.size;
+        List<T> prodCoeffs = Lists.newArrayListWithCapacity(newSize);
+        for (int i = 0; i < newSize; ++i) {
+            prodCoeffs.add(field.zero());
+        }
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < other.size; ++j) {
+                int k = i + j;
+                T x = field.multiply(coefficients.get(i), other.coefficients.get(j));
+                prodCoeffs.set(k, field.add(prodCoeffs.get(k), x));
+            }
+        }
+        return new Polynomial<T>(field, prodCoeffs);
+    }
+    
+    public static class DivMod<T> {
+        public Polynomial<T> div, mod;
+        public DivMod(Polynomial<T> div, Polynomial<T> mod) {
+            this.div = div;
+            this.mod = mod;
+        }
+    }
+    
+    public DivMod<T> divMod(Polynomial<T> other) {
+        assert field.equals(other.field);
+        int d = other.getDegree();
+        Preconditions.checkArgument(d >= 0, "divisor must be != 0");
+        Polynomial<T> r = this,
+                      q = zero(field);
+        T c = other.getCoefficient(d);
+        while (r.getDegree() >= d) {
+            Polynomial<T> s = monomial(
+                    field, 
+                    field.divide(r.getCoefficient(r.getDegree()), c),
+                    r.getDegree() - d);
+            q = q.add(s);
+            r = r.subtract(s.multiply(other));
+        }
+        return new DivMod<T>(q, r);
+    }
+    
+    public Polynomial<T> div(Polynomial<T> other) {
+        return divMod(other).div;
+    }
+    
+    public Polynomial<T> mod(Polynomial<T> other) {
+        return divMod(other).mod;
     }
     
     /**
@@ -95,6 +196,14 @@ public class Polynomial<T> implements Serializable {
     public int getSize() {
         return size;
     }
+    
+    /**
+     * @return The degree of the polynomial or -1 if the polynomial 
+     * is zero.
+     */
+    public int getDegree() {
+        return size - 1;
+    }
 
     /**
      * Generates a random polynomial over the field.
@@ -116,5 +225,33 @@ public class Polynomial<T> implements Serializable {
         }
         coefficients.add(highest);
         return new Polynomial<T>(field, coefficients.build());
+    }
+    
+    @Override
+    public boolean equals(Object other_) {
+        if (other_ == null || other_.getClass() != getClass()) { return false; }
+        @SuppressWarnings("unchecked")
+        Polynomial<T> other = (Polynomial<T>) other_;
+        if (size != other.size) { return false; }
+        for (int i = 0; i < size; ++i) {
+            if (!getCoefficient(i).equals(other.getCoefficient(i))) {
+                return false;
+            }
+        }
+        return field.equals(other.field);
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Polynomial over ");
+        builder.append(field);
+        builder.append(" (");
+        for (int i = 0; i < size; ++i) {
+            builder.append(coefficients.get(i));
+            builder.append(' ');
+        }
+        builder.append(')');
+        return builder.toString();
     }
 }
