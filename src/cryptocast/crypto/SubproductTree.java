@@ -39,8 +39,8 @@ public class SubproductTree<T> {
         assert field.equals(poly.getField());
         assert poly.getDegree() < us.size();
         if (i >= n - 1) {
-            assert poly.getDegree() == 0;
-            return ImmutableList.of(poly.getCoefficient(0));
+            assert poly.getDegree() <= 0;
+            return ImmutableList.of(poly.getDegree() == 0 ? poly.getCoefficient(0) : field.zero());
         }
         Polynomial<T> r0 = poly.mod(tree.get(left(i))),
                       r1 = poly.mod(tree.get(right(i)));

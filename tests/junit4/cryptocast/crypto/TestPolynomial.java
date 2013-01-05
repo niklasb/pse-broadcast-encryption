@@ -89,6 +89,9 @@ public class TestPolynomial {
 	    testDivMod(
                 makePolynomial(mod11, new int[] { 2, 3, 5, 7, 0, 2, 4 }),
                 makePolynomial(mod11, new int[] { 6, 1, 2, 0, 3 }));
+	    testDivMod(
+                makePolynomial(mod11, new int[] { 2, 3, 5, 7, 0, 2, 4, 0, 6 }),
+                makePolynomial(mod11, new int[] { 6, 1, 2, 0, 3 }));
 	}
 	
 	private void testDivMod(Polynomial<BigInteger> a, Polynomial<BigInteger> b) {
