@@ -78,7 +78,7 @@ struct subproduct_tree {
 //const int t = 5, n = 8;
 const int t = 1000, n = 1<<17;
 
-const int num_threads = 2, num_chunks = 128;
+const int num_threads = 2, chunk_size = 1024;
 
 int main(int argc, char* argv[]) {
   flint_rand_t rnd;
@@ -116,14 +116,13 @@ int main(int argc, char* argv[]) {
     //fmpz_mod_poly_evaluate_fmpz(res, x, &xs[i]);
   //}
 
-  int chunk = n / num_chunks;
   thread *threads[num_threads];
   for (int i = 0; i < num_threads; ++i) {
     threads[i] = new thread([=,&xs,&ys,&x,&q] {
       int l = i * (n / num_threads);
       int r = (i + 1) * (n / num_threads);
-      for (int j = l; j < r; j += chunk) {
-        subproduct_tree tree(xs + j, chunk, q);
+      for (int j = l; j < r; j += chunk_size) {
+        subproduct_tree tree(xs + j, chunk_size, q);
         tree.evaluate(ys + j, x);
       }
     });
