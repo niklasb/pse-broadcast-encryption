@@ -11,7 +11,8 @@ import com.google.common.collect.ImmutableList;
 
 public class TestPolynomial {
     Field<BigInteger> mod11 = new IntegersModuloPrime(BigInteger.valueOf(11));
-
+    Field<BigInteger> mod3 = new IntegersModuloPrime(BigInteger.valueOf(3));
+    
 	@Test
 	public void degreeIsDetectedCorrectly() {
 	    assertEquals(0, makePolynomial(mod11, new int[] { 0, 0, 0 }).getSize());
@@ -28,7 +29,7 @@ public class TestPolynomial {
 	    }
 	}
 
-	@Test 
+	@Test
 	public void evaluateMultiWorks() {
 	    Polynomial<BigInteger> poly = makePolynomial(mod11, new int[] { 2, 3, 5, 7 });
 	    int[] xs = { 6, 7, 3, 8, 9, 0, 10, 5, 2, 1, 4 };
@@ -79,10 +80,24 @@ public class TestPolynomial {
 	}
 	
 	@Test
-	public void canDoDivMod() {
+	public void reverse() {
+	    assertEquals(makePolynomial(mod11, new int[] { 3, 2, 1 }),
+	                 makePolynomial(mod11, new int[] { 1, 2, 3 }).reverse());
+	    assertEquals(makePolynomial(mod11, new int[] { 0, 0, 3, 2, 1 }),
+                     makePolynomial(mod11, new int[] { 1, 2, 3 }).reverse(4));
+	}
+	
+	@Test
+    public void divMod() {	    
 	    testDivMod(
-	            makePolynomial(mod11, new int[] { 2, 1 }),
+                makePolynomial(mod3, new int[] { 2, 1, 2, 1 }),
+                makePolynomial(mod3, new int[] { 2, 1, 1 }));
+	    testDivMod(
+                makePolynomial(mod11, new int[] { 2, 1 }),
                 makePolynomial(mod11, new int[] { 1 }));
+	    testDivMod(
+                makePolynomial(mod11, new int[] { 2, }),
+                makePolynomial(mod11, new int[] { 1, 2, 3, 4 }));
 	    testDivMod(
                 makePolynomial(mod11, new int[] { 1 }),
                 makePolynomial(mod11, new int[] { 1, 2 }));
@@ -92,12 +107,41 @@ public class TestPolynomial {
 	    testDivMod(
                 makePolynomial(mod11, new int[] { 2, 3, 5, 7, 0, 2, 4, 0, 6 }),
                 makePolynomial(mod11, new int[] { 6, 1, 2, 0, 3 }));
+    }
+	
+	@Test
+    public void modPowerOfX() throws Exception {
+        assertEquals(makePolynomial(mod11, new int[] { 1, 2 }),
+                     makePolynomial(mod11, new int[] { 1, 2, 3, 4 }).modPowerOfX(2));
+        assertEquals(makePolynomial(mod11, new int[0]),
+                makePolynomial(mod11, new int[] { 1, 2, 3, 4 }).modPowerOfX(0));
+        assertEquals(makePolynomial(mod11, new int[] { 3, 2, 3, 4 }),
+                makePolynomial(mod11, new int[] { 3, 2, 3, 4 }).modPowerOfX(10));
+    }
+	
+	@Test
+	public void inversePolyModPowerOfX() throws Exception {
+	    testInversePolyModPowerOfX(makePolynomial(mod11, new int[] { 1, 2, 3 }), 2);
+	    testInversePolyModPowerOfX(makePolynomial(mod11, new int[] { 2, 0, 2, 2, 3 }), 3);
+	    testInversePolyModPowerOfX(makePolynomial(mod11, new int[] { 10, 6, 3, 2, 10 }), 4);
+	    testInversePolyModPowerOfX(makePolynomial(mod11, new int[] { 9, 0, 2, 2 }), 10);
+	    testInversePolyModPowerOfX(makePolynomial(mod11, new int[] { 2, 0, 2, 2 }), 1);
+	    testInversePolyModPowerOfX(makePolynomial(mod11, new int[] { 1, 0, 2, 2 }), 0);
+	    testInversePolyModPowerOfX(makePolynomial(mod11, new int[] { 1 }), 2);
 	}
 	
+	private void testInversePolyModPowerOfX(Polynomial<BigInteger> p, int k) {
+        Polynomial<BigInteger> u = p.inversePolyModPowerOfX(k);
+        assertEquals(Polynomial.zero(mod11),
+                makePolynomial(p.getField(), new int[] { 1 }).subtract(p.multiply(u)).modPowerOfX(k));
+        assertTrue(u.getDegree() < k);
+    }
+	
 	private void testDivMod(Polynomial<BigInteger> a, Polynomial<BigInteger> b) {
-	    Polynomial.DivMod<BigInteger> divMod = a.divMod(b);
-	    assertEquals(a, b.multiply(divMod.div).add(divMod.mod));
-	}
+        Polynomial.DivMod<BigInteger> divMod = a.divMod(b);
+        assertEquals(a, b.multiply(divMod.div).add(divMod.mod));
+        assertTrue(divMod.mod.getDegree() < b.getDegree());
+    }
 	
 	private ImmutableList<BigInteger> intArrayToBigIntList(int[] xs) {
 	    ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();

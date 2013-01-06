@@ -2,6 +2,7 @@ package cryptocast.crypto;
 
 import java.util.List;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Random;
 
 import com.google.common.base.Function;
@@ -39,10 +40,15 @@ public class Polynomial<T> implements Serializable {
                 break;
             }
         }
+        this.coefficients = this.coefficients.subList(0, size);
     }
     
     public static <T> Polynomial<T> zero(Field<T> field) {
         return new Polynomial<T>(field, ImmutableList.<T>of());
+    }
+    
+    public static <T> Polynomial<T> one(Field<T> field) {
+        return new Polynomial<T>(field, ImmutableList.of(field.one()));
     }
     
     public static <T> Polynomial<T> monomial(Field<T> field, T coeff, int exp) {
@@ -116,8 +122,7 @@ public class Polynomial<T> implements Serializable {
         return add(other.negate());
     }
     
-    public Polynomial<T> multiply(Polynomial<T> other) {
-        assert field.equals(other.field);
+    private Polynomial<T> multiplyClassical(Polynomial<T> other) {
         int newSize = size + other.size;
         List<T> prodCoeffs = Lists.newArrayListWithCapacity(newSize);
         for (int i = 0; i < newSize; ++i) {
@@ -133,6 +138,68 @@ public class Polynomial<T> implements Serializable {
         return new Polynomial<T>(field, prodCoeffs);
     }
     
+    public Polynomial<T> multiply(Polynomial<T> other) {
+        assert field.equals(other.field);
+        if (field instanceof IntegersModuloPrime) {
+            BigInteger mod = ((IntegersModuloPrime) field).getP();
+            return (Polynomial<T>)new Polynomial<BigInteger>((Field<BigInteger>)field, FastPolynomialMultiplication.multiply(
+                    (List<BigInteger>)coefficients, 
+                    (List<BigInteger>)other.coefficients, mod));
+        }
+        return multiplyClassical(other);
+    }
+    
+    public Polynomial<T> reverse() {
+        return new Polynomial<T>(field, coefficients.reverse());
+    }
+    
+    public Polynomial<T> reverse(int k) {
+        Preconditions.checkArgument(k >= getDegree());
+        ImmutableList.Builder<T> coeffs = ImmutableList.builder();
+        for (int i = k - getDegree(); i > 0; --i) {
+            coeffs.add(field.zero());
+        }
+        return new Polynomial<T>(field, coeffs.addAll(coefficients.reverse()).build());
+    }
+    
+    /**
+     * @param k The exponent of x
+     * @return $P \mod x^k$
+     */
+    public Polynomial<T> modPowerOfX(int k) {
+        if (k >= size) {
+            return this;
+        } else {
+            return new Polynomial<T>(field, coefficients.subList(0, k));
+        }
+    }
+    
+    public Polynomial<T> square() {
+        return multiply(this);
+    }
+    
+    /**
+     * Precondition: size > 0 and coefficients[0] != 0
+     * @param k must be non-negative
+     * @return Polynomial $U$ with $1 - PU \equiv 0 \mod{x^k}$
+     */
+    public Polynomial<T> inversePolyModPowerOfX(int k) {
+        assert k >= 0;
+        assert size > 0;
+        T firstCoeff = getCoefficient(0),
+          firstCoeffInv = field.invert(firstCoeff);
+        assert !firstCoeff.equals(field.zero());
+        Polynomial<T> g = multiply(firstCoeffInv);
+        Polynomial<T> h = one(field);
+        for (int i = 0;; ++i) {
+            int e = 1 << i;
+            h = h.multiply(field.two()).subtract(
+                    g.multiply(h.square())).modPowerOfX(e);
+            if (k < e) { break; }
+        }
+        return h.modPowerOfX(k).multiply(firstCoeffInv);
+    }
+    
     public static class DivMod<T> {
         public Polynomial<T> div, mod;
         public DivMod(Polynomial<T> div, Polynomial<T> mod) {
@@ -142,20 +209,15 @@ public class Polynomial<T> implements Serializable {
     }
     
     public DivMod<T> divMod(Polynomial<T> other) {
+        assert other.getSize() > 0;
         assert field.equals(other.field);
-        int d = other.getDegree();
-        Preconditions.checkArgument(d >= 0, "divisor must be != 0");
-        Polynomial<T> r = this,
-                      q = zero(field);
-        T c = other.getCoefficient(d);
-        while (r.getDegree() >= d) {
-            Polynomial<T> s = monomial(
-                    field, 
-                    field.divide(r.getCoefficient(r.getDegree()), c),
-                    r.getDegree() - d);
-            q = q.add(s);
-            r = r.subtract(s.multiply(other));
+        if (other.getDegree() > getDegree()) {
+            return new DivMod<T>(Polynomial.zero(field), this);
         }
+        int n = getDegree(), m = other.getDegree();
+        Polynomial<T> brev = other.reverse().inversePolyModPowerOfX(n - m + 1),
+                      q = reverse().multiply(brev).modPowerOfX(n - m + 1).reverse(n - m),
+                      r = subtract(q.multiply(other));
         return new DivMod<T>(q, r);
     }
     

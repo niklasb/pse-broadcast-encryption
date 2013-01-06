@@ -44,6 +44,11 @@ public abstract class Field<T> implements Serializable {
      * @return The one element of the field
      */
     public abstract T one();
+    
+    public T two() {
+        return add(one(), one());
+    }
+    
     /**
      * @param rnd A randomness provider
      * @return A random element of the field

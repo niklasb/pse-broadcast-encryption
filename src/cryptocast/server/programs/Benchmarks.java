@@ -81,7 +81,7 @@ public final class Benchmarks {
         public void beforeAll() throws Exception {
             BigInteger p = makePrime(b);
             field =  new IntegersModuloPrime(p);
-            log.info("Lagrange options: t={} pbits={}\n", t, p.bitLength());
+            log.info("Lagrange options: t={} pbits={}", t, p.bitLength());
             Random rnd = new Random();
             ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
             for (int i = 0; i < t; i++) {
@@ -206,11 +206,54 @@ public final class Benchmarks {
         }
     }
 
+    @Parameters(commandDescription = "Evaluate a polynomial")
+    private static class MultiEvalBenchmark implements Benchmark {
+        private static final Logger log = LoggerFactory
+                .getLogger(Benchmarks.MultiEvalBenchmark.class);
+        
+        @Parameter(names = { "-t" }, description = "Degree of the polynomial")
+        private int t = 100;
+        @Parameter(names = { "-b" }, description = "The bit size of the modulus")
+        private int b = 160;
+        @Parameter(names = { "-n" }, description = "The number of evaluation points (will be rounded to the next power of 2)")
+        private int n = 1024;
+        
+        IntegersModuloPrime field;
+        ImmutableList<BigInteger> xs;
+        Polynomial<BigInteger> poly;
+        
+        public void beforeAll() throws Exception {
+            int realN = 1;
+            while (realN < n) {
+                realN <<= 1;
+            }
+            BigInteger p = makePrime(b);
+            field =  new IntegersModuloPrime(p);
+            log.info("Multi-eval options: t={} b={} n={}", t, p.bitLength(), realN);
+            Random rnd = new Random();
+            ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
+            for (int i = 0; i < realN; i++) {
+                builder.add(field.randomElement(rnd));
+            }
+            xs = builder.build();
+            poly = Polynomial.createRandomPolynomial(rnd, field, t);
+        }
+        
+        public void before() {}
+        
+        public void run() {
+            SubproductTree<BigInteger> tree = SubproductTree.buildPow2(field, xs);
+            tree.evaluate(poly);
+//            poly.evaluateMulti(xs);
+        }
+    }
+    
     static Map<String, Benchmark> commands = ImmutableMap.of(
               "lagrange", new LagrangeBenchmark(),
               "encrypt", new EncryptBenchmark(),
               "multi-encrypt", new MultiEncryptBenchmark(),
-              "decrypt", new DecryptBenchmark()
+              "decrypt", new DecryptBenchmark(),
+              "multi-eval", new MultiEvalBenchmark()
               );
 
     private static void printCommands() {
