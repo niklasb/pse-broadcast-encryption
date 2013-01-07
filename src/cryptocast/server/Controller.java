@@ -117,6 +117,7 @@ public class Controller implements Observer {
     public void reinitializeCrypto(int t) 
             throws IOException {
         data = createNewData(t);
+        data.addObserver(this);
         encServer = startBroadcastEncryptionServer(
                 data, rawOut, keyBroadcastIntervalSecs);
         saveDatabase();
