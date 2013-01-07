@@ -37,7 +37,7 @@ public final class Server {
         private int listenPort = 21337;
 
         @Parameter(names = { "-b", "--listen-address"}, description = "Listen address")
-        private String listenAddr = "127.0.0.1";
+        private String listenAddr = "0.0.0.0";
         
         @Parameter(names = { "-i", "--key-broadcast-interval" }, description = "Key broadcast interval in seconds")
         private int keyBroadcastIntervalSecs = 15;

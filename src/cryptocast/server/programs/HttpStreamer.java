@@ -26,7 +26,7 @@ public final class HttpStreamer {
         private int listenPort = 21337;
 
         @Parameter(names = { "-b", "--listen-address"}, description = "Bind address")
-        private String listenAddr = "127.0.0.1";
+        private String listenAddr = "0.0.0.0";
         
         @Parameter(required = true, names = { "-f", "--file" }, description = "The file to stream")
         private File file;
