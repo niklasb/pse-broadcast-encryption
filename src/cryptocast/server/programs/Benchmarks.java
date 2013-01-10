@@ -242,9 +242,7 @@ public final class Benchmarks {
         public void before() {}
         
         public void run() {
-            SubproductTree<BigInteger> tree = SubproductTree.buildPow2(field, xs);
-            tree.evaluate(poly);
-//            poly.evaluateMulti(xs);
+            poly.evaluateMulti(xs);
         }
     }
     
