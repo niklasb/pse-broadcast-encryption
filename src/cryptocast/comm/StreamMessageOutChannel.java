@@ -17,7 +17,7 @@ public class StreamMessageOutChannel extends MessageOutChannel {
      * @param inner The OutChannel which will be wrapped.
      */
     public StreamMessageOutChannel(OutputStream inner) {
-        this.inner = inner; 
+        this.inner = inner;
     }
 
     /**
@@ -25,10 +25,11 @@ public class StreamMessageOutChannel extends MessageOutChannel {
      * @param data The data to send.
      */
     public void sendMessage(byte[] data, int offset, int len) throws IOException {
-        ByteBuffer packedSize = ByteBuffer.allocate(4);
-        packedSize.order(ByteOrder.BIG_ENDIAN);
-        packedSize.putInt(len);
-        inner.write(packedSize.array());
-        inner.write(data, offset, len);
+        ByteBuffer msg = ByteBuffer.allocate(4 + len);
+        msg.order(ByteOrder.BIG_ENDIAN);
+        msg.putInt(len);
+        msg.put(data);
+        inner.write(msg.array());
+        //inner.write(data, offset, len);
     }
 }

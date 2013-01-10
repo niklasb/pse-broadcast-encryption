@@ -28,8 +28,8 @@ import cryptocast.util.ByteUtils;
 import cryptocast.util.SerializationUtils;
 import cryptocast.comm.*;
 
-/** Deals with user-interactions and therefore changes data in the model if necessary.
- * @param <ID> The type of the user identities
+/**
+ * Deals with user-interactions and therefore changes data in the model if necessary.
  */
 public class Controller implements Observer {
     private static final Logger log = LoggerFactory.getLogger(Controller.class);
@@ -78,13 +78,11 @@ public class Controller implements Observer {
         }
         ServerSocket socket = new ServerSocket();
         socket.bind(listenAddr);
-        SocketMulticastServer multicastServer = 
-                new SocketMulticastServer(socket, null);
+        ServerMultiMessageOutChannel multicastServer =
+                new ServerMultiMessageOutChannel(socket, null);
         new Thread(multicastServer).start();
-        MessageOutChannel rawOut = 
-                new StreamMessageOutChannel(multicastServer);
-        return new Controller(data, databaseFile, rawOut, 
-                    startBroadcastEncryptionServer(data, rawOut, keyBroadcastIntervalSecs),
+        return new Controller(data, databaseFile, multicastServer,
+                    startBroadcastEncryptionServer(data, multicastServer, keyBroadcastIntervalSecs),
                     listenAddr,
                     keyBroadcastIntervalSecs);
     }
