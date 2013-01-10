@@ -7,13 +7,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef cryptocast_crypto_PolynomialMultiEvaluation_CHUNK_SIZE
+#define cryptocast_crypto_PolynomialMultiEvaluation_CHUNK_SIZE 1024L
+#undef cryptocast_crypto_PolynomialMultiEvaluation_NUM_THREADS
+#define cryptocast_crypto_PolynomialMultiEvaluation_NUM_THREADS 4L
 /*
  * Class:     cryptocast_crypto_PolynomialMultiEvaluation
  * Method:    nativeMultiEval
- * Signature: ([[B[[B[B)[[B
+ * Signature: ([[B[[B[BII)[[B
  */
 JNIEXPORT jobjectArray JNICALL Java_cryptocast_crypto_PolynomialMultiEvaluation_nativeMultiEval
-  (JNIEnv *, jclass, jobjectArray, jobjectArray, jbyteArray);
+  (JNIEnv *, jclass, jobjectArray, jobjectArray, jbyteArray, jint, jint);
 
 #ifdef __cplusplus
 }

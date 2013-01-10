@@ -67,13 +67,25 @@ struct subproduct_tree {
   fmpz_t mod, zero;
 };
 
-// must be powers of two!
-const int num_threads = 4, chunk_size = 1024;
+int next_power_of_two(int x) {
+  int n = 1;
+  while (n < x)
+    n <<= 1;
+  return n;
+}
 
 extern "C"
-JNIEXPORT jobjectArray JNICALL Java_cryptocast_crypto_PolynomialMultiEvaluation_nativeMultiEval
-  (JNIEnv * env, jclass cls, jobjectArray jxs, jobjectArray jcoeffs, jbyteArray jmod)
+JNIEXPORT jobjectArray JNICALL
+Java_cryptocast_crypto_PolynomialMultiEvaluation_nativeMultiEval
+    (JNIEnv * env, jclass cls, jobjectArray jxs, jobjectArray jcoeffs, jbyteArray jmod,
+     jint num_threads, jint chunk_size)
 {
+  if (next_power_of_two(num_threads) != num_threads ||
+      next_power_of_two(chunk_size) != chunk_size) {
+    env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"),
+                  "numThreads and chunkSize must be powers of two");
+    return NULL;
+  }
   jclass byteArrayClass = env->GetObjectClass(jmod);
 
   fmpz_t fmod;
@@ -95,9 +107,7 @@ JNIEXPORT jobjectArray JNICALL Java_cryptocast_crypto_PolynomialMultiEvaluation_
     fmpz_mod_poly_set_coeff_fmpz(fpoly, i, fcoeff);
   }
 
-  int n = 1;
-  while (n < len_xs)
-    n <<= 1;
+  int n = next_power_of_two(len_xs);
 
   fmpz *fxs = new fmpz[n],
        *fys = new fmpz[n];

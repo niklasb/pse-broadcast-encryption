@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableList;
 
 public class PolynomialMultiEvaluation {
+    private static final int CHUNK_SIZE = 1024,
+                             NUM_THREADS = 4;
+
     private static final Logger log = LoggerFactory
             .getLogger(PolynomialMultiEvaluation.class);
     
@@ -35,7 +38,8 @@ public class PolynomialMultiEvaluation {
             BigInteger mod = ((IntegersModuloPrime) poly.getField()).getP();
             byte[][] points = getPointsTwoComplements();
             byte[][] coeffs = bigIntListToTwoComplements(poly.getCoefficients());
-            byte[][] result = nativeMultiEval(points, coeffs, mod.toByteArray());
+            byte[][] result = nativeMultiEval(points, coeffs, mod.toByteArray(), 
+                                              NUM_THREADS, CHUNK_SIZE);
             ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
             for (int i = 0, len = result.length; i < len; ++i) {
                 builder.add(new BigInteger(result[i]));
@@ -47,7 +51,7 @@ public class PolynomialMultiEvaluation {
     }
     
     private static native byte[][] nativeMultiEval(
-            byte[][] points, byte[][] coefficients, byte[] mod);
+            byte[][] points, byte[][] coefficients, byte[] mod, int numThreads, int chunkSize);
     
     private byte[][] bigIntListToTwoComplements(List<BigInteger> bigInts) {
         int len = bigInts.size();

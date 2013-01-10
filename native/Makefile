@@ -16,6 +16,7 @@ headers:
 
 lib/libIntegersModuloPrime.so: src/cryptocast/crypto/IntegersModuloPrime.cpp \
                                src/cryptocast/crypto/IntegersModuloPrime.h
+	mkdir -p lib
 	${GPP} -fPIC -I${JDK_HOME}/include -I${JDK_HOME}/include/linux -shared \
 	  -lgmp \
 	  src/cryptocast/crypto/IntegersModuloPrime.cpp \
@@ -24,6 +25,7 @@ lib/libIntegersModuloPrime.so: src/cryptocast/crypto/IntegersModuloPrime.cpp \
 
 lib/libPolynomialMultiEvaluation.so: src/cryptocast/crypto/PolynomialMultiEvaluation.cpp \
                                      src/cryptocast/crypto/PolynomialMultiEvaluation.h
+	mkdir -p lib
 	${GPP} -fPIC -I${JDK_HOME}/include -I${JDK_HOME}/include/linux -shared \
 	  -lgmp -lflint \
 	  src/cryptocast/crypto/PolynomialMultiEvaluation.cpp \
