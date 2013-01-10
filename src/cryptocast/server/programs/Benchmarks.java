@@ -223,16 +223,12 @@ public final class Benchmarks {
         Polynomial<BigInteger> poly;
         
         public void beforeAll() throws Exception {
-            int realN = 1;
-            while (realN < n) {
-                realN <<= 1;
-            }
             BigInteger p = makePrime(b);
             field =  new IntegersModuloPrime(p);
-            log.info("Multi-eval options: t={} b={} n={}", t, p.bitLength(), realN);
+            log.info("Multi-eval options: t={} b={} n={}", t, p.bitLength(), n);
             Random rnd = new Random();
             ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
-            for (int i = 0; i < realN; i++) {
+            for (int i = 0; i < n; i++) {
                 builder.add(field.randomElement(rnd));
             }
             xs = builder.build();
@@ -242,7 +238,8 @@ public final class Benchmarks {
         public void before() {}
         
         public void run() {
-            poly.evaluateMulti(xs);
+            PolynomialMultiEvaluation eval = new PolynomialMultiEvaluation(xs);
+            eval.evaluate(poly);
         }
     }
     

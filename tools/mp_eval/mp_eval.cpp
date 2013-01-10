@@ -1,4 +1,3 @@
-#include <mpir.h>
 #include <sys/time.h>
 #include <unistd.h>
 
@@ -6,8 +5,8 @@
 #include <iostream>
 #include <thread>
 
-#include "flint/flint.h"
-#include "flint/fmpz_mod_poly.h"
+#include <flint/flint.h>
+#include <flint/fmpz_mod_poly.h>
 
 using namespace std;
 

@@ -107,8 +107,8 @@ public class Polynomial<T> implements Serializable {
      *          $n$ is the degree of the polynomial.
      * @return $c_i$
      */
-    public T getCoefficient(int i) {
-        return coefficients.get(i);
+    public ImmutableList<T> getCoefficients() {
+        return coefficients;
     }
 
     /**
@@ -156,7 +156,7 @@ public class Polynomial<T> implements Serializable {
         Polynomial<T> other = (Polynomial<T>) other_;
         if (size != other.size) { return false; }
         for (int i = 0; i < size; ++i) {
-            if (!getCoefficient(i).equals(other.getCoefficient(i))) {
+            if (!coefficients.get(i).equals(other.coefficients.get(i))) {
                 return false;
             }
         }
