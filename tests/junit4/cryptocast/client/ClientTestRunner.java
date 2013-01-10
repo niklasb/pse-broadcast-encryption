@@ -17,11 +17,7 @@ public class ClientTestRunner extends RobolectricTestRunner {
     public ClientTestRunner(Class<?> testClass) throws InitializationError {
         // use the client project root as the working directory for
         // out client tests
-        super(testClass, new RobolectricConfig(new File("../client")) {
-            @Override public String getApplicationName() {
-                return ClientApplication.class.getSimpleName();
-            }
-        });
+        super(testClass, new RobolectricConfig(new File("../client")));
     }
 
     // for some reasons, Robolectric doesn't call onCreate() on
@@ -35,7 +31,6 @@ public class ClientTestRunner extends RobolectricTestRunner {
     
     @Override
     public void beforeTest(Method method) {
-        System.out.println(Robolectric.application);
         application = (ClientApplication) Robolectric.application;
     }
 }
