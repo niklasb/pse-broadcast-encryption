@@ -74,6 +74,8 @@ public final class Benchmarks {
         private int t = 100;
         @Parameter(names = { "-b" }, description = "The bit size of the modulus")
         private int b = 160;
+        @Parameter(names = { "-x" }, description = "The bit size of the modulus")
+        private int numThreads = 2;
         
         IntegersModuloPrime field;
         ImmutableList<BigInteger> xs;
@@ -81,7 +83,7 @@ public final class Benchmarks {
         public void beforeAll() throws Exception {
             BigInteger p = makePrime(b);
             field =  new IntegersModuloPrime(p);
-            log.info("Lagrange options: t={} pbits={}", t, p.bitLength());
+            log.info("Lagrange options: t={} pbits={} numThreads={}", t, p.bitLength(), numThreads);
             Random rnd = new Random();
             ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
             for (int i = 0; i < t; i++) {
@@ -93,7 +95,7 @@ public final class Benchmarks {
         public void before() {}
         
         public void run() {
-            LagrangeInterpolation.computeCoefficients(field, xs);
+            LagrangeInterpolation.computeCoefficients(field, xs, numThreads);
         }
     }
     

@@ -1,20 +1,16 @@
 #include <iostream>
+#include <thread>
 
 #include "LagrangeInterpolation.h"
 #include "bigint_conversions.h"
 
-void compute_coefficients(int n, mpz_t xs[], mpz_t cs[], mpz_t mod) {
-  mpz_t z, diff;
-  mpz_init(z);
+using namespace std;
+
+void compute_chunk(int n, mpz_t xs[], mpz_t cs[], mpz_t mod,
+                   mpz_t z, int l, int r) {
+  mpz_t diff;
   mpz_init(diff);
-
-  mpz_set_ui(z, 1);
-  for (int i = 0; i < n; ++i) {
-    mpz_mul(z, z, xs[i]);
-    mpz_mod(z, z, mod);
-  }
-
-  for (int i = 0; i < n; ++i) {
+  for (int i = l; i < r; i++) {
     mpz_set(cs[i], xs[i]);
     for (int j = 0; j < n; ++j) {
       if (i == j) continue;
@@ -26,14 +22,45 @@ void compute_coefficients(int n, mpz_t xs[], mpz_t cs[], mpz_t mod) {
     mpz_mul(cs[i], cs[i], z);
     mpz_mod(cs[i], cs[i], mod);
   }
-
   mpz_clear(diff);
+}
+
+void compute_coefficients(int n, mpz_t xs[], mpz_t cs[], mpz_t mod,
+                          int num_threads) {
+  mpz_t z;
+  mpz_init(z);
+
+  mpz_set_ui(z, 1);
+  for (int i = 0; i < n; ++i) {
+    mpz_mul(z, z, xs[i]);
+    mpz_mod(z, z, mod);
+  }
+
+  if (num_threads > 1) {
+    int chunk_size = (n + num_threads - 1) / num_threads;
+    thread *threads[num_threads];
+    for (int t = 0; t < num_threads; ++t) {
+      threads[t] = new thread([=,&z,&xs,&mod,&cs] {
+        int l = t * chunk_size;
+        int r = min(n, (t + 1) * chunk_size);
+        if (r > l)
+          compute_chunk(n, xs, cs, mod, z, l, r);
+      });
+    }
+    for (int t = 0; t < num_threads; ++t) {
+      threads[t]->join();
+      delete threads[t];
+    }
+  } else {
+    compute_chunk(n, xs, cs, mod, z, 0, n);
+  }
+
   mpz_clear(z);
 }
 
 extern "C"
 JNIEXPORT jobjectArray JNICALL Java_cryptocast_crypto_LagrangeInterpolation_nativeComputeCoefficients
-  (JNIEnv * env, jclass cls, jobjectArray jxs, jbyteArray jmod)
+  (JNIEnv * env, jclass cls, jobjectArray jxs, jbyteArray jmod, jint num_threads)
 {
   jclass byteArrayClass = env->GetObjectClass(jmod);
 
@@ -50,7 +77,7 @@ JNIEXPORT jobjectArray JNICALL Java_cryptocast_crypto_LagrangeInterpolation_nati
     convert_j2mp(env, (jbyteArray)env->GetObjectArrayElement(jxs, i), mxs[i]);
   }
 
-  compute_coefficients(n, mxs, mcs, mmod);
+  compute_coefficients(n, mxs, mcs, mmod, num_threads);
 
   jobjectArray jcs = env->NewObjectArray(n, byteArrayClass, NULL);
   jbyteArray jc;

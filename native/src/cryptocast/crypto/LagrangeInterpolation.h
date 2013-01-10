@@ -12,10 +12,10 @@ extern "C" {
 /*
  * Class:     cryptocast_crypto_LagrangeInterpolation
  * Method:    nativeComputeCoefficients
- * Signature: ([[B[B)[[B
+ * Signature: ([[B[BI)[[B
  */
 JNIEXPORT jobjectArray JNICALL Java_cryptocast_crypto_LagrangeInterpolation_nativeComputeCoefficients
-  (JNIEnv *, jclass, jobjectArray, jbyteArray);
+  (JNIEnv *, jclass, jobjectArray, jbyteArray, jint);
 
 #ifdef __cplusplus
 }

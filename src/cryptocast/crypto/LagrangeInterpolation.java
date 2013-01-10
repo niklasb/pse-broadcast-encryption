@@ -21,6 +21,8 @@ import cryptocast.util.NativeUtils;
  * @param <T> The type of items of the polynomial over a field.
  */
 public class LagrangeInterpolation<T> implements Serializable {
+    private static int DEFAULT_NUM_THREADS = 2;
+    
     private static final long serialVersionUID = 4096286734152138209L;
     private static final Logger log = LoggerFactory
             .getLogger(LagrangeInterpolation.class);
@@ -56,9 +58,14 @@ public class LagrangeInterpolation<T> implements Serializable {
         this.coefficients = Maps.newHashMap(coefficients);
     }
     
-    public static <T> LagrangeInterpolation<T> fromXs(Field<T> field, ImmutableList<T> xs) {
-        ImmutableList<T> coeffs = computeCoefficients(field, xs);
+    public static <T> LagrangeInterpolation<T> fromXs(Field<T> field, ImmutableList<T> xs,
+                                                      int numThreads) {
+        ImmutableList<T> coeffs = computeCoefficients(field, xs, numThreads);
         return new LagrangeInterpolation<T>(field, MapUtils.zip(xs, coeffs));
+    }
+    
+    public static <T> LagrangeInterpolation<T> fromXs(Field<T> field, ImmutableList<T> xs) {
+        return fromXs(field, xs, DEFAULT_NUM_THREADS);
     }
     
     public T interpolateP0(Function<? super T, T> evaluate) {
@@ -142,12 +149,13 @@ public class LagrangeInterpolation<T> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <T> ImmutableList<T> computeCoefficients(
-            Field<T> field, ImmutableList<T> xs) {
+            Field<T> field, ImmutableList<T> xs, int numThreads) {
         if (haveNative && field instanceof IntegersModuloPrime) {
             BigInteger mod = ((IntegersModuloPrime) field).getP();
             byte[][] xsTwoComplements = NativeUtils.bigIntListToTwoComplements(
                     (ImmutableList<BigInteger>) xs);
-            byte[][] result = nativeComputeCoefficients(xsTwoComplements, mod.toByteArray());
+            byte[][] result = nativeComputeCoefficients(
+                    xsTwoComplements, mod.toByteArray(), numThreads);
             return (ImmutableList<T>) NativeUtils.twoComplementsToBigIntList(result);
         }
         return genericComputeCoefficients(field, xs);
@@ -172,7 +180,7 @@ public class LagrangeInterpolation<T> implements Serializable {
         return cs.build();
     }
     
-    private static native byte[][] nativeComputeCoefficients(byte[][] xs, byte[] mod);
+    private static native byte[][] nativeComputeCoefficients(byte[][] xs, byte[] mod, int numThreads);
     
     @Override
     public boolean equals(Object other_) {

@@ -1,4 +1,6 @@
-JAVAH := javah -classpath ../projects/server/bin
+ROOT := ..
+CLASSPATH := ${ROOT}/projects/server/bin:${ROOT}/3rd_party/guava-13.0.1.jar
+JAVAH := javah -classpath ${CLASSPATH}
 GPP := g++ -O3 -std=c++11 -lpthread
 
 .PHONE: all clean
