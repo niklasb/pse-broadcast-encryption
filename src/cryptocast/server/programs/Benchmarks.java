@@ -217,6 +217,10 @@ public final class Benchmarks {
         private int b = 160;
         @Parameter(names = { "-n" }, description = "The number of evaluation points (will be rounded to the next power of 2)")
         private int n = 1024;
+        @Parameter(names = { "-x" }, description = "The number of threads")
+        private int numThreads = 4;
+        @Parameter(names = { "-c" }, description = "The number of points to evaluate at once")
+        private int chunkSize = 1024;
         
         IntegersModuloPrime field;
         ImmutableList<BigInteger> xs;
@@ -225,7 +229,8 @@ public final class Benchmarks {
         public void beforeAll() throws Exception {
             BigInteger p = makePrime(b);
             field =  new IntegersModuloPrime(p);
-            log.info("Multi-eval options: t={} b={} n={}", t, p.bitLength(), n);
+            log.info("Multi-eval options: t={} b={} n={} numThreads={}, chunkSize={}", 
+                    t, p.bitLength(), n, numThreads, chunkSize);
             Random rnd = new Random();
             ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
             for (int i = 0; i < n; i++) {
@@ -238,7 +243,7 @@ public final class Benchmarks {
         public void before() {}
         
         public void run() {
-            PolynomialMultiEvaluation eval = new PolynomialMultiEvaluation(xs);
+            PolynomialMultiEvaluation eval = new PolynomialMultiEvaluation(xs, numThreads, chunkSize);
             eval.evaluate(poly);
         }
     }

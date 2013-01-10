@@ -74,6 +74,31 @@ int next_power_of_two(int x) {
   return n;
 }
 
+void evaluate(fmpz_mod_poly_t poly, fmpz_t mod, int n, fmpz xs[], fmpz ys[],
+              int num_threads, int chunk_size) {
+  if (n < chunk_size) {
+    subproduct_tree tree(xs, n, mod);
+    tree.evaluate(poly, ys);
+  } else {
+    // distribute task over over multiple processes
+    thread *threads[num_threads];
+    for (int i = 0; i < num_threads; ++i) {
+      threads[i] = new thread([=,&xs,&ys,&poly,&mod] {
+        int l = i * (n / num_threads);
+        int r = (i + 1) * (n / num_threads);
+        for (int j = l; j < r; j += chunk_size) {
+          subproduct_tree tree(xs + j, chunk_size, mod);
+          tree.evaluate(poly, ys + j);
+        }
+      });
+    }
+    for (int i = 0; i < num_threads; ++i) {
+      threads[i]->join();
+      delete threads[i];
+    }
+  }
+}
+
 extern "C"
 JNIEXPORT jobjectArray JNICALL
 Java_cryptocast_crypto_PolynomialMultiEvaluation_nativeMultiEval
@@ -88,27 +113,27 @@ Java_cryptocast_crypto_PolynomialMultiEvaluation_nativeMultiEval
   }
   jclass byteArrayClass = env->GetObjectClass(jmod);
 
-  fmpz_t fmod;
-  convert_j2fmp(env, jmod, fmod);
-
   jsize len_xs = env->GetArrayLength(jxs),
         len_coeffs = env->GetArrayLength(jcoeffs);
 
-  jobjectArray jys = env->NewObjectArray(len_xs, byteArrayClass, NULL);
+  // convert modulus to fmpz
+  fmpz_t fmod;
+  fmpz_init(fmod);
+  convert_j2fmp(env, jmod, fmod);
 
+  // convert polynomial to flint's representation
   fmpz_mod_poly_t fpoly;
   fmpz_mod_poly_init2(fpoly, fmod, len_coeffs);
 
   fmpz_t fcoeff;
   fmpz_init(fcoeff);
   for (int i = 0; i < len_coeffs; ++i) {
-    convert_j2fmp(env, (jbyteArray)env->GetObjectArrayElement(jcoeffs, i),
-                  fcoeff);
+    convert_j2fmp(env, (jbyteArray)env->GetObjectArrayElement(jcoeffs, i), fcoeff);
     fmpz_mod_poly_set_coeff_fmpz(fpoly, i, fcoeff);
   }
 
+  // prepare xs and ys, arrays of fmpz's
   int n = next_power_of_two(len_xs);
-
   fmpz *fxs = new fmpz[n],
        *fys = new fmpz[n];
   for (int i = 0; i < n; ++i) {
@@ -117,41 +142,24 @@ Java_cryptocast_crypto_PolynomialMultiEvaluation_nativeMultiEval
   }
 
   int i = 0;
-  for (; i < len_xs; ++i) {
-    convert_j2fmp(env, (jbyteArray)env->GetObjectArrayElement(jxs, i),
-                  &fxs[i]);
-  }
-  for (; i < n; ++i) {
+  for (; i < len_xs; ++i)
+    convert_j2fmp(env, (jbyteArray)env->GetObjectArrayElement(jxs, i), &fxs[i]);
+  // fill the rest with dummy x values
+  for (; i < n; ++i)
     fmpz_set_ui(&fxs[i], 0);
-  }
 
-  if (n < chunk_size) {
-    subproduct_tree tree(fxs, n, fmod);
-    tree.evaluate(fpoly, fys);
-  } else {
-    thread *threads[num_threads];
-    for (int i = 0; i < num_threads; ++i) {
-      threads[i] = new thread([=,&fxs,&fys,&fpoly,&fmod] {
-        int l = i * (n / num_threads);
-        int r = (i + 1) * (n / num_threads);
-        for (int j = l; j < r; j += chunk_size) {
-          subproduct_tree tree(fxs + j, chunk_size, fmod);
-          tree.evaluate(fpoly, fys + j);
-        }
-      });
-    }
-    for (int i = 0; i < num_threads; ++i) {
-      threads[i]->join();
-      delete threads[i];
-    }
-  }
+  evaluate(fpoly, fmod, n, fxs, fys, num_threads, chunk_size);
 
+  // convert ys to Java array of byte[], each of which represents a bigint in
+  // two's complement
+  jobjectArray jys = env->NewObjectArray(len_xs, byteArrayClass, NULL);
   jbyteArray jy;
   for (int i = 0; i < len_xs; ++i) {
     convert_fmp2j(env, &fys[i], &jy);
     env->SetObjectArrayElement(jys, i, jy);
   }
 
+  // clean up
   for (int i = 0; i < n; ++i) {
     fmpz_clear(&fxs[i]);
     fmpz_clear(&fys[i]);
