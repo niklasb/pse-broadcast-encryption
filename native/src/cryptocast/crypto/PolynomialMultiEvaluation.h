@@ -7,10 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#undef cryptocast_crypto_PolynomialMultiEvaluation_CHUNK_SIZE
-#define cryptocast_crypto_PolynomialMultiEvaluation_CHUNK_SIZE 1024L
-#undef cryptocast_crypto_PolynomialMultiEvaluation_NUM_THREADS
-#define cryptocast_crypto_PolynomialMultiEvaluation_NUM_THREADS 4L
 /*
  * Class:     cryptocast_crypto_PolynomialMultiEvaluation
  * Method:    nativeMultiEval

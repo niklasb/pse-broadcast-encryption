@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 
+import cryptocast.util.NativeUtils;
+
 public class PolynomialMultiEvaluation {
     // set some fast defaults
     private int numThreads = 4, 
@@ -44,14 +46,10 @@ public class PolynomialMultiEvaluation {
         if (haveNative && poly.getField() instanceof IntegersModuloPrime && xs.size() > 0) {
             BigInteger mod = ((IntegersModuloPrime) poly.getField()).getP();
             byte[][] points = getPointsTwoComplements();
-            byte[][] coeffs = bigIntListToTwoComplements(poly.getCoefficients());
+            byte[][] coeffs = NativeUtils.bigIntListToTwoComplements(poly.getCoefficients());
             byte[][] result = nativeMultiEval(points, coeffs, mod.toByteArray(), 
                     numThreads, chunkSize);
-            ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
-            for (int i = 0, len = result.length; i < len; ++i) {
-                builder.add(new BigInteger(result[i]));
-            }
-            return builder.build();
+            return NativeUtils.twoComplementsToBigIntList(result);
         } else {
             return poly.evaluateMulti(xs);
         }
@@ -60,20 +58,10 @@ public class PolynomialMultiEvaluation {
     private static native byte[][] nativeMultiEval(
             byte[][] points, byte[][] coefficients, byte[] mod, int numThreads, int chunkSize);
     
-    private byte[][] bigIntListToTwoComplements(List<BigInteger> bigInts) {
-        int len = bigInts.size();
-        byte[][] result = new byte[len][];
-        Iterator<BigInteger> x = bigInts.iterator();
-        for (int i = 0; i < len; ++i) {
-            result[i] = x.next().toByteArray();
-        }
-        return result;
-    }
-    
     private byte[][] getPointsTwoComplements() {
         if (pointsTwoComplements != null) {
             return pointsTwoComplements;
         }
-        return pointsTwoComplements = bigIntListToTwoComplements(xs);
+        return pointsTwoComplements = NativeUtils.bigIntListToTwoComplements(xs);
     }
 }
