@@ -47,6 +47,10 @@ public class StreamUtils {
         byte[] buffer = new byte[bufsize];
         int received;
         while ((received = in.read(buffer)) >= 0) {
+            if(Thread.interrupted()) {
+                //dont stream anmore if thread has been interrupted
+                return;
+            }
             out.write(buffer, 0, received);
         }
     }

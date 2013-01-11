@@ -45,6 +45,7 @@ public class Controller implements Observer {
     private BroadcastEncryptionServer<NaorPinkasIdentity> encServer;
     private SocketAddress listenAddr;
     private int keyBroadcastIntervalSecs;
+    private Thread streamer;
     
     /**
      * Initializes a new controller with the given arguments.
@@ -116,6 +117,7 @@ public class Controller implements Observer {
 
     public void reinitializeCrypto(int t) 
             throws IOException {
+        stopStream();
         data = createNewData(t);
         encServer = startBroadcastEncryptionServer(
                 data, rawOut, keyBroadcastIntervalSecs);
@@ -179,17 +181,47 @@ public class Controller implements Observer {
         stream(in, bitrate / 8, 0x4000);
     }
     
+    public void stream(InputStream in, int bufsize) throws IOException {
+        startStreamThread(in, encServer, bufsize);
+    }
+
     /**
      * Starts the data stream.
      * @param data The file from which the data is read.
      */
     public void stream(InputStream in, long maxBytesPerSec, int bufsize) throws IOException {
         OutputStream out = new ThrottledOutputStream(encServer, maxBytesPerSec);
-        StreamUtils.shovel(in, out, bufsize);
+        startStreamThread(in, out, bufsize);
     }
     
-    public void stream(InputStream in, int bufsize) throws IOException {
-        StreamUtils.shovel(in, encServer, bufsize);
+    private void startStreamThread(final InputStream in, final OutputStream out, final int bufsize) {
+        //stop stream if one is already running
+        if (streamer != null && !streamer.isInterrupted()) {
+            stopStream();
+        }
+        //start stream if there is none or it has been interrupted
+        if (streamer == null || streamer.isInterrupted()) {
+            streamer = new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        StreamUtils.shovel(in, out, bufsize);
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        log.debug("stream crashed", e);
+                        e.printStackTrace();
+                    }
+                }
+            });
+            streamer.start();
+        }
+    }
+    
+    /**
+     * Stops the stream
+     */
+    public void stopStream() {
+        log.debug("stoping current stream");
+        streamer.interrupt();
     }
 
     @Override
