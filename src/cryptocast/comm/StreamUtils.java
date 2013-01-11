@@ -16,8 +16,12 @@ public class StreamUtils {
      * Receives data. Will read exactly the given number of bytes or 
      * less on EOF.
      * 
-     * @param size The exact amount of bytes to read
-     * @param buffer The target buffer
+     * @param in The stream of data which comes via network.
+     * @param buffer The target buffer.
+     * @param offset The start offset in array buffer at which the data is written.
+     * @param len The maximum number of bytes to read.
+     * @return The number of bytes actually read is returned as an integer.
+     * @throws IOException thrown when interrupted during busy waiting
      */
     public static int readall(InputStream in, byte[] buffer, int offset, int len) 
                                   throws IOException {
@@ -42,6 +46,14 @@ public class StreamUtils {
         }
     }
     
+    /**
+     * Directs the data from input stream into output stream .
+     * 
+     * @param in The input stream.
+     * @param out The output steam.
+     * @param bufsize The length of buffer array.
+     * @throws IOException
+     */
     public static void shovel(InputStream in, OutputStream out, int bufsize) 
             throws IOException {
         byte[] buffer = new byte[bufsize];

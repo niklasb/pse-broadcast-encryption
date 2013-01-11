@@ -6,30 +6,45 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.google.common.collect.ImmutableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Multiplexes several instances of {@link OutputStream}s so that they can be used as a single
  * destination.
  */
 public class MultiOutputStream extends OutputStream {
-    static Logger log = LoggerFactory.getLogger(MultiOutputStream.class);
-
-    public static interface ErrorHandler {
-        public void handle(MultiOutputStream multi, OutputStream channel, 
+    
+	/**
+	 * 
+	 *	Define an interface of an error handler
+	 */
+	public static interface ErrorHandler {
+       
+		/**
+         * Handle errors.
+         * 
+         * @param multi The multi output stream.
+         * @param channel The channel.
+         * @param exc The exception to throw. 
+         * @throws IOException
+         */
+		public void handle(MultiOutputStream multi, OutputStream channel, 
                 IOException exc) throws IOException;
     }
     
+	/**
+	 * Creates an instance of ErrorHandler.
+	 */
     public static ErrorHandler propagateError = new ErrorHandler() {
         @Override
         public void handle(MultiOutputStream multi, OutputStream channel, 
                 IOException exc) throws IOException {
-            log.debug("Channel removed because of error", exc);
             throw exc;
         }
     };
     
+    /**
+     * Creates an instance of ErrorHandler.
+     */
     public static ErrorHandler removeOnError = new ErrorHandler() {
         @Override
         public void handle(MultiOutputStream multi, OutputStream channel, 
@@ -41,15 +56,27 @@ public class MultiOutputStream extends OutputStream {
     List<OutputStream> channels = new ArrayList<OutputStream>();
     ErrorHandler errHandler;
 
+    /**
+     * Creates an instance of MultiOutputStream with the given parameter.
+     * 
+     * @param errHandler The error
+     */
     public MultiOutputStream(ErrorHandler errHandler) {
         this.errHandler = errHandler;
     }
     
+    /**
+     * Creates an instance of MultiOutputStream.
+     */
     public MultiOutputStream() {
         this.errHandler = propagateError;
     }
 
-    public synchronized ImmutableList<OutputStream> getChannels() {
+    /**
+     * Returns an immutable list of all output channels
+     * @return an immutable list of all output channels
+     */
+    public ImmutableList<OutputStream> getChannels() {
         return ImmutableList.copyOf(channels);
     }
 
@@ -57,7 +84,7 @@ public class MultiOutputStream extends OutputStream {
      * Adds the given channel to the list of receivers.
      * @param channel The channel to add
      */
-    public synchronized void addChannel(OutputStream channel) {
+    public void addChannel(OutputStream channel) {
         channels.add(channel);
     }
     /**
@@ -69,7 +96,7 @@ public class MultiOutputStream extends OutputStream {
     }
 
     @Override
-    public synchronized void write(byte[] data, int offset, int len) throws IOException {
+    public void write(byte[] data, int offset, int len) throws IOException {
         for (OutputStream chan : getChannels()) {
             try {
                 chan.write(data, offset, len);

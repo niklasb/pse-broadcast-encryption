@@ -6,7 +6,9 @@ import java.io.OutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+/**
+ * Controls the speed of the sending data not to exceed the sending limit.
+ */
 public class ThrottledOutputStream extends FilterOutputStream {
     private static final Logger log = LoggerFactory
             .getLogger(ThrottledOutputStream.class);
@@ -15,6 +17,12 @@ public class ThrottledOutputStream extends FilterOutputStream {
     private long bytes = 0;
     private long start;
     
+    /**
+     * Creates a new instance of ThrottledOutputStream with the given parameter.
+     *
+     * @param out The output stream.
+     * @param maxBytesPerSec The speed limit.
+     */
     public ThrottledOutputStream(OutputStream out, long maxBytesPerSec) {
         super(out);
         this.maxBytesPerSec = maxBytesPerSec;

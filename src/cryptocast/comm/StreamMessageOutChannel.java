@@ -14,22 +14,25 @@ public class StreamMessageOutChannel extends MessageOutChannel {
 
     /**
      * Creates a new instance of MessageOutChannel with the given OutChannel as inner channel.
+     * 
      * @param inner The OutChannel which will be wrapped.
      */
     public StreamMessageOutChannel(OutputStream inner) {
-        this.inner = inner;
+        this.inner = inner; 
     }
 
     /**
      * Sends the given message via the channel.
+     * 
      * @param data The data to send.
+     * @param offset The start offset in array data at which the data is written.
+     * @param len The maximum number of bytes to read.
      */
     public void sendMessage(byte[] data, int offset, int len) throws IOException {
-        ByteBuffer msg = ByteBuffer.allocate(4 + len);
-        msg.order(ByteOrder.BIG_ENDIAN);
-        msg.putInt(len);
-        msg.put(data);
-        inner.write(msg.array());
-        //inner.write(data, offset, len);
+        ByteBuffer packedSize = ByteBuffer.allocate(4);
+        packedSize.order(ByteOrder.BIG_ENDIAN);
+        packedSize.putInt(len);
+        inner.write(packedSize.array());
+        inner.write(data, offset, len);
     }
 }
