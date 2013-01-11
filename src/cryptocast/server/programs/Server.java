@@ -55,7 +55,9 @@ public final class Server {
         Level logLevel = Level.toLevel(opts.verbosity);
         
         System.out.printf("Logging to STDERR (level %s) and %s\n", logLevel, opts.logFile);
-        initLogging(opts.logFile, logLevel);
+        LogbackUtils.removeAllAppenders();
+        LogbackUtils.addFileAppender(opts.logFile, Level.ALL);
+        LogbackUtils.addStderrLogger(logLevel);
         
         Controller control = Controller.start(
                 opts.databaseFile,
@@ -63,43 +65,5 @@ public final class Server {
                 opts.keyBroadcastIntervalSecs);
         new Shell(new BufferedReader(new InputStreamReader(System.in)), 
                   System.out, System.err, control).run();
-    }
-    
-    private static void initLogging(File logFile, Level stderrLevel) {
-        LoggerContext ctx = (LoggerContext)LoggerFactory.getILoggerFactory();
-        Logger rootLogger = ctx.getLogger(Logger.ROOT_LOGGER_NAME);
-        
-        rootLogger.detachAndStopAllAppenders();
-
-        PatternLayoutEncoder plFile = new PatternLayoutEncoder();
-        plFile.setContext(ctx);
-        plFile.setPattern("%d %5p %t [%c:%L] %m%n)");
-        plFile.start();
-        
-        FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
-        fileAppender.setContext(ctx);
-        fileAppender.setName("file");
-        fileAppender.setFile(logFile.getAbsolutePath());
-        fileAppender.setEncoder(plFile);
-        fileAppender.start();
-        rootLogger.addAppender(fileAppender);
-        
-        PatternLayoutEncoder plCon = new PatternLayoutEncoder();
-        plCon.setContext(ctx);
-        plCon.setPattern("%5p %t [%c:%L] %m%n)");
-        plCon.start();
-        
-        ThresholdFilter conFilter = new ThresholdFilter();
-        conFilter.setContext(ctx);
-        conFilter.setLevel(stderrLevel.toString());
-        conFilter.start();
-        
-        ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<ILoggingEvent>();
-        consoleAppender.setContext(ctx);
-        consoleAppender.setEncoder(plCon);
-        consoleAppender.setName("console");
-        consoleAppender.addFilter(conFilter);
-        consoleAppender.start();
-        rootLogger.addAppender(consoleAppender);
     }
 }

@@ -74,9 +74,17 @@ int next_power_of_two(int x) {
   return n;
 }
 
+static int threshold_n = 33;
+
 void evaluate(fmpz_mod_poly_t poly, fmpz_t mod, int n, fmpz xs[], fmpz ys[],
               int num_threads, int chunk_size) {
-  if (n < chunk_size) {
+  if (n < threshold_n) {
+    for (int i = 0; i < n; ++i)
+      fmpz_mod_poly_evaluate_fmpz(&ys[i], poly, &xs[i]);
+    return;
+  }
+
+  if (n < chunk_size * num_threads) {
     subproduct_tree tree(xs, n, mod);
     tree.evaluate(poly, ys);
   } else {
@@ -100,6 +108,7 @@ void evaluate(fmpz_mod_poly_t poly, fmpz_t mod, int n, fmpz xs[], fmpz ys[],
 }
 
 extern "C"
+// does NOT work for n <= 1!
 JNIEXPORT jobjectArray JNICALL
 Java_cryptocast_crypto_PolynomialMultiEvaluation_nativeMultiEval
     (JNIEnv * env, jclass cls, jobjectArray jxs, jobjectArray jcoeffs, jbyteArray jmod,

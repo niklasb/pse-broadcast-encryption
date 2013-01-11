@@ -50,7 +50,7 @@ public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey>
             xsBuilder.add(poly.getField().randomElement(rnd));
         }
         ImmutableList<BigInteger> xs = xsBuilder.build();
-        ImmutableList<BigInteger> ys = poly.evaluateMulti(xs);
+        ImmutableList<BigInteger> ys = new PolynomialMultiEvaluation(xs).evaluate(poly);
         ImmutableList.Builder<NaorPinkasPersonalKey> keys = ImmutableList.builder();
         for (int i = 0; i < len; ++i) {
             NaorPinkasPersonalKey key = new NaorPinkasPersonalKey(t, xs.get(i), ys.get(i), schnorr);
