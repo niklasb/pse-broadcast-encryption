@@ -15,6 +15,7 @@ public class StreamMessageInChannel implements MessageInChannel {
     /**
      * Creates an instance of MessageInChannel which wraps the given inner
      * channel.
+     * 
      * @param inner The wrapped channel
      */
     public StreamMessageInChannel(InputStream inner) {
@@ -23,8 +24,9 @@ public class StreamMessageInChannel implements MessageInChannel {
 
     /**
      * Receives a message via the channel or null on EOF.
-     * @return The received data
-     * @throws IOException if the message header or the message is malformed
+     * 
+     * @return The received data.
+     * @throws IOException if the message header or the message is malformed.
      */
     @Override
     public byte[] recvMessage() throws IOException {

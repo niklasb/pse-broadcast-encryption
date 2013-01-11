@@ -63,18 +63,27 @@ public class NaorPinkasServer
     
     public static NaorPinkasServer generate(int t, SchnorrGroup schnorr) {
         Field<BigInteger> modQ = schnorr.getFieldModQ();
+        log.debug("Generating random polynomial");
+        long start = System.currentTimeMillis();
         Polynomial<BigInteger> poly = 
                 Polynomial.createRandomPolynomial(rnd, modQ, t + 1);
+        log.debug("Took {} ms", System.currentTimeMillis() - start);
+        log.debug("Setting up dummy keys");
+        start = System.currentTimeMillis();
         Generator<NaorPinkasPersonalKey> keyGen = 
                 new OptimisticGenerator<NaorPinkasPersonalKey>(
                         new NaorPinkasKeyGenerator(
-                                t, new SecureRandom(), schnorr, poly));
+                                t, rnd, schnorr, poly));
         ImmutableList.Builder<BigInteger> dummyXs = ImmutableList.builder();
         for (int i = 0; i < t; ++i) {
             dummyXs.add(keyGen.get(i).getIdentity().getI());
         }
+        log.debug("Took {} ms", System.currentTimeMillis() - start);
+        log.debug("Computing initial lagrange coefficients");
+        start = System.currentTimeMillis();
         LagrangeInterpolation<BigInteger> lagrange = 
                 LagrangeInterpolation.fromXs(modQ, dummyXs.build());
+        log.debug("Took {} ms", System.currentTimeMillis() - start);
         return new NaorPinkasServer(t, schnorr, keyGen, poly, lagrange);
     }
 

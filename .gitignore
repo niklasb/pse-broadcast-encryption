@@ -10,7 +10,10 @@
 *.class
 *~
 *.hprof.txt
+*.so
 .svn
 javadoc.xml
 TODO
 tmp
+.idea
+.settings

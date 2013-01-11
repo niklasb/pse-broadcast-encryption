@@ -1,7 +1,6 @@
 package cryptocast.comm;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -13,20 +12,22 @@ import cryptocast.util.Callback;
 /**
  * This class implements channel-based communication via TCP.
  */
-public class SocketMulticastServer extends OutputStream implements Runnable {
+public class ServerMultiMessageOutChannel extends MessageOutChannel implements Runnable {
     private MultiOutputStream multi;
     private Callback<Throwable> excHandler;
     private ServerSocket server;
+    private MessageOutChannel out;
     private static final Logger log = LoggerFactory
-            .getLogger(SocketMulticastServer.class);
+            .getLogger(ServerMultiMessageOutChannel.class);
     
     /**
      * Creates an instance of a multicast server which uses the given socket.
-     * @param socket Server socket
+     * @param server Server socket
      */
-    public SocketMulticastServer(ServerSocket server,
-                                 Callback<Throwable> excHandler) {
+    public ServerMultiMessageOutChannel(ServerSocket server,
+                                        Callback<Throwable> excHandler) {
         this.multi = new MultiOutputStream(MultiOutputStream.removeOnError);
+        this.out = new StreamMessageOutChannel(multi);
         this.server = server;
         this.excHandler = excHandler;
     };
@@ -48,22 +49,7 @@ public class SocketMulticastServer extends OutputStream implements Runnable {
     }
 
     @Override
-    public void write(byte[] data, int offset, int len) throws IOException {
-        multi.write(data, offset, len);
-    }
-    
-    @Override
-    public void write(int b) throws IOException {
-        multi.write(b);
-    }
-    
-    @Override
-    public void close() throws IOException {
-        multi.close();
-    }
-    
-    @Override
-    public void flush() throws IOException {
-        multi.flush();
+    public void sendMessage(byte[] data, int offset, int len) throws IOException {
+        out.sendMessage(data, offset, len);
     }
 }

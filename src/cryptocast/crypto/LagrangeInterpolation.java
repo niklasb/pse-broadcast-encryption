@@ -1,8 +1,12 @@
 package cryptocast.crypto;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Map;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
@@ -10,13 +14,28 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import cryptocast.util.MapUtils;
+import cryptocast.util.NativeUtils;
 
 /**
  * Performs a Lagrange interpolation of a polynomial.
  * @param <T> The type of items of the polynomial over a field.
  */
 public class LagrangeInterpolation<T> implements Serializable {
+    private static int DEFAULT_NUM_THREADS = 2;
+    
     private static final long serialVersionUID = 4096286734152138209L;
+    private static final Logger log = LoggerFactory
+            .getLogger(LagrangeInterpolation.class);
+    
+    private static boolean haveNative = false;
+    static {
+        try {
+            System.loadLibrary("LagrangeInterpolation");
+            haveNative = true;
+        } catch (Error e) {
+            log.warn("Could not load native LagrangeInterpolation library", e);
+        }
+    }
     
     private Map<T, T> coefficients;
     private Field<T> field;
@@ -39,9 +58,14 @@ public class LagrangeInterpolation<T> implements Serializable {
         this.coefficients = Maps.newHashMap(coefficients);
     }
     
-    public static <T> LagrangeInterpolation<T> fromXs(Field<T> field, ImmutableList<T> xs) {
-        ImmutableList<T> coeffs = computeCoefficients(field, xs);
+    public static <T> LagrangeInterpolation<T> fromXs(Field<T> field, ImmutableList<T> xs,
+                                                      int numThreads) {
+        ImmutableList<T> coeffs = computeCoefficients(field, xs, numThreads);
         return new LagrangeInterpolation<T>(field, MapUtils.zip(xs, coeffs));
+    }
+    
+    public static <T> LagrangeInterpolation<T> fromXs(Field<T> field, ImmutableList<T> xs) {
+        return fromXs(field, xs, DEFAULT_NUM_THREADS);
     }
     
     public T interpolateP0(Function<? super T, T> evaluate) {
@@ -123,7 +147,21 @@ public class LagrangeInterpolation<T> implements Serializable {
      * @return The Lagrange coefficients $\c_i$ of the associated polynomial,
      *         where $\c_i = prod_{j \neq i} \frac{x_j}{x_j - x_i}$
      */
+    @SuppressWarnings("unchecked")
     public static <T> ImmutableList<T> computeCoefficients(
+            Field<T> field, ImmutableList<T> xs, int numThreads) {
+        if (haveNative && field instanceof IntegersModuloPrime) {
+            BigInteger mod = ((IntegersModuloPrime) field).getP();
+            byte[][] xsTwoComplements = NativeUtils.bigIntListToTwoComplements(
+                    (ImmutableList<BigInteger>) xs);
+            byte[][] result = nativeComputeCoefficients(
+                    xsTwoComplements, mod.toByteArray(), numThreads);
+            return (ImmutableList<T>) NativeUtils.twoComplementsToBigIntList(result);
+        }
+        return genericComputeCoefficients(field, xs);
+    }
+    
+    private static <T> ImmutableList<T> genericComputeCoefficients(
             Field<T> field, ImmutableList<T> xs) {
         T z = field.one();
         for (T x : xs) {
@@ -141,6 +179,8 @@ public class LagrangeInterpolation<T> implements Serializable {
         }
         return cs.build();
     }
+    
+    private static native byte[][] nativeComputeCoefficients(byte[][] xs, byte[] mod, int numThreads);
     
     @Override
     public boolean equals(Object other_) {

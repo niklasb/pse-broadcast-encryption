@@ -89,146 +89,6 @@ public class Polynomial<T> implements Serializable {
         };
     }
     
-    public Polynomial<T> add(Polynomial<T> other) {
-        assert field.equals(other.field);
-        int newSize = size + other.size;
-        ImmutableList.Builder<T> sumCoeffs = ImmutableList.builder();
-        for (int i = 0; i < newSize; ++i) {
-            T x = field.zero();
-            if (i < size) {
-                x = field.add(x, getCoefficient(i));
-            }
-            if (i < other.size) {
-                x = field.add(x, other.getCoefficient(i));
-            }
-            sumCoeffs.add(x);
-        }
-        return new Polynomial<T>(field, sumCoeffs.build());
-    }
-    
-    public Polynomial<T> multiply(T scalar) {
-        ImmutableList.Builder<T> newCoeffs = ImmutableList.builder();
-        for (T c : coefficients) {
-            newCoeffs.add(field.multiply(c, scalar));
-        }
-        return new Polynomial<T>(field, newCoeffs.build());
-    }
-
-    public Polynomial<T> negate() {
-        return multiply(field.negate(field.one()));
-    }
-    
-    public Polynomial<T> subtract(Polynomial<T> other) {
-        return add(other.negate());
-    }
-    
-    private Polynomial<T> multiplyClassical(Polynomial<T> other) {
-        int newSize = size + other.size;
-        List<T> prodCoeffs = Lists.newArrayListWithCapacity(newSize);
-        for (int i = 0; i < newSize; ++i) {
-            prodCoeffs.add(field.zero());
-        }
-        for (int i = 0; i < size; ++i) {
-            for (int j = 0; j < other.size; ++j) {
-                int k = i + j;
-                T x = field.multiply(coefficients.get(i), other.coefficients.get(j));
-                prodCoeffs.set(k, field.add(prodCoeffs.get(k), x));
-            }
-        }
-        return new Polynomial<T>(field, prodCoeffs);
-    }
-    
-    public Polynomial<T> multiply(Polynomial<T> other) {
-        assert field.equals(other.field);
-        if (field instanceof IntegersModuloPrime) {
-            BigInteger mod = ((IntegersModuloPrime) field).getP();
-            return (Polynomial<T>)new Polynomial<BigInteger>((Field<BigInteger>)field, FastPolynomialMultiplication.multiply(
-                    (List<BigInteger>)coefficients, 
-                    (List<BigInteger>)other.coefficients, mod));
-        }
-        return multiplyClassical(other);
-    }
-    
-    public Polynomial<T> reverse() {
-        return new Polynomial<T>(field, coefficients.reverse());
-    }
-    
-    public Polynomial<T> reverse(int k) {
-        Preconditions.checkArgument(k >= getDegree());
-        ImmutableList.Builder<T> coeffs = ImmutableList.builder();
-        for (int i = k - getDegree(); i > 0; --i) {
-            coeffs.add(field.zero());
-        }
-        return new Polynomial<T>(field, coeffs.addAll(coefficients.reverse()).build());
-    }
-    
-    /**
-     * @param k The exponent of x
-     * @return $P \mod x^k$
-     */
-    public Polynomial<T> modPowerOfX(int k) {
-        if (k >= size) {
-            return this;
-        } else {
-            return new Polynomial<T>(field, coefficients.subList(0, k));
-        }
-    }
-    
-    public Polynomial<T> square() {
-        return multiply(this);
-    }
-    
-    /**
-     * Precondition: size > 0 and coefficients[0] != 0
-     * @param k must be non-negative
-     * @return Polynomial $U$ with $1 - PU \equiv 0 \mod{x^k}$
-     */
-    public Polynomial<T> inversePolyModPowerOfX(int k) {
-        assert k >= 0;
-        assert size > 0;
-        T firstCoeff = getCoefficient(0),
-          firstCoeffInv = field.invert(firstCoeff);
-        assert !firstCoeff.equals(field.zero());
-        Polynomial<T> g = multiply(firstCoeffInv);
-        Polynomial<T> h = one(field);
-        for (int i = 0;; ++i) {
-            int e = 1 << i;
-            h = h.multiply(field.two()).subtract(
-                    g.multiply(h.square())).modPowerOfX(e);
-            if (k < e) { break; }
-        }
-        return h.modPowerOfX(k).multiply(firstCoeffInv);
-    }
-    
-    public static class DivMod<T> {
-        public Polynomial<T> div, mod;
-        public DivMod(Polynomial<T> div, Polynomial<T> mod) {
-            this.div = div;
-            this.mod = mod;
-        }
-    }
-    
-    public DivMod<T> divMod(Polynomial<T> other) {
-        assert other.getSize() > 0;
-        assert field.equals(other.field);
-        if (other.getDegree() > getDegree()) {
-            return new DivMod<T>(Polynomial.zero(field), this);
-        }
-        int n = getDegree(), m = other.getDegree();
-        Polynomial<T> brev = other.reverse().inversePolyModPowerOfX(n - m + 1),
-                      q = reverse().multiply(brev).modPowerOfX(n - m + 1).reverse(n - m),
-                      r = subtract(q.multiply(other));
-        return new DivMod<T>(q, r);
-    }
-    
-    public Polynomial<T> div(Polynomial<T> other) {
-        return divMod(other).div;
-    }
-    
-    public Polynomial<T> mod(Polynomial<T> other) {
-        return divMod(other).mod;
-    }
-    
     /**
      * Evaluates the polynomial at multiple points.
      * @param xs The points $x_i$ to evaluate
@@ -247,8 +107,8 @@ public class Polynomial<T> implements Serializable {
      *          $n$ is the degree of the polynomial.
      * @return $c_i$
      */
-    public T getCoefficient(int i) {
-        return coefficients.get(i);
+    public ImmutableList<T> getCoefficients() {
+        return coefficients;
     }
 
     /**
@@ -296,7 +156,7 @@ public class Polynomial<T> implements Serializable {
         Polynomial<T> other = (Polynomial<T>) other_;
         if (size != other.size) { return false; }
         for (int i = 0; i < size; ++i) {
-            if (!getCoefficient(i).equals(other.getCoefficient(i))) {
+            if (!coefficients.get(i).equals(other.coefficients.get(i))) {
                 return false;
             }
         }

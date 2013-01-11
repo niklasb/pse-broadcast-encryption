@@ -1,4 +1,3 @@
-#include <mpir.h>
 #include <sys/time.h>
 #include <unistd.h>
 
@@ -6,8 +5,8 @@
 #include <iostream>
 #include <thread>
 
-#include "flint/flint.h"
-#include "flint/fmpz_mod_poly.h"
+#include <flint/flint.h>
+#include <flint/fmpz_mod_poly.h>
 
 using namespace std;
 
@@ -42,16 +41,16 @@ struct subproduct_tree {
     }
   }
 
-  //~subproduct_tree() {
-    //delete[] polys;
-  //}
+  ~subproduct_tree() {
+    delete[] polys;
+  }
 
-  void evaluate(fmpz ys[], fmpz_mod_poly_t poly) {
-    evaluate(ys, poly, 0);
+  void evaluate(fmpz_mod_poly_t poly, fmpz ys[]) {
+    evaluate(poly, ys, 0);
   }
 
  private:
-  void evaluate(fmpz ys[], fmpz_mod_poly_t poly, int i) {
+  void evaluate(fmpz_mod_poly_t poly, fmpz ys[], int i) {
     if (i >= n - 1) {
       fmpz_mod_poly_evaluate_fmpz(&ys[i - n + 1], poly, zero);
       return;
@@ -61,8 +60,8 @@ struct subproduct_tree {
     fmpz_mod_poly_init(r1, mod);
     fmpz_mod_poly_rem(r0, poly, &polys[left(i)]);
     fmpz_mod_poly_rem(r1, poly, &polys[right(i)]);
-    evaluate(ys, r0, left(i));
-    evaluate(ys, r1, right(i));
+    evaluate(r0, ys, left(i));
+    evaluate(r1, ys, right(i));
     fmpz_mod_poly_clear(r0);
     fmpz_mod_poly_clear(r1);
   }
@@ -78,7 +77,7 @@ struct subproduct_tree {
 //const int t = 5, n = 8;
 const int t = 1000, n = 1<<17;
 
-const int num_threads = 2, chunk_size = 1024;
+const int num_threads = 4, chunk_size = 1024;
 
 int main(int argc, char* argv[]) {
   flint_rand_t rnd;
@@ -123,7 +122,7 @@ int main(int argc, char* argv[]) {
       int r = (i + 1) * (n / num_threads);
       for (int j = l; j < r; j += chunk_size) {
         subproduct_tree tree(xs + j, chunk_size, q);
-        tree.evaluate(ys + j, x);
+        tree.evaluate(x, ys + j);
       }
     });
   }

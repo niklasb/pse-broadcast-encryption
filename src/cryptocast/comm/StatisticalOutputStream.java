@@ -11,15 +11,15 @@ public class StatisticalOutputStream extends OutputStream {
     private int sentBytes = 0;
 
     /**
-     * Initializes the proxy
-     * @param inner The wrapped channel
+     * Initializes the proxy.
+     * @param inner The wrapped channel.
      */
     public StatisticalOutputStream(OutputStream inner) {
         this.inner = inner; 
     }
 
     /**
-     * @return The number of sent bytes
+     * @return The number of sent bytes.
      */
     public int getSentBytes() {
         return sentBytes;

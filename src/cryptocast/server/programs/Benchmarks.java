@@ -9,6 +9,8 @@ import javax.crypto.KeyGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.classic.Level;
+
 import com.beust.jcommander.*;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -16,6 +18,7 @@ import com.google.common.collect.ImmutableMap;
 
 import cryptocast.crypto.*;
 import cryptocast.crypto.naorpinkas.*;
+import cryptocast.server.LogbackUtils;
 import cryptocast.server.OptParse;
 
 class Result {
@@ -62,7 +65,7 @@ public final class Benchmarks {
         @Parameter(names = { "-n" }, description = "Number of repetitions")
         public int n = 100;
         @Parameter(names = { "-f" }, description = "Report frequency")
-        public int f = 10;
+        public int f = 1;
     }
     
     @Parameters(commandDescription = "Calculate the lagrange coefficients")
@@ -74,6 +77,8 @@ public final class Benchmarks {
         private int t = 100;
         @Parameter(names = { "-b" }, description = "The bit size of the modulus")
         private int b = 160;
+        @Parameter(names = { "-x" }, description = "The bit size of the modulus")
+        private int numThreads = 2;
         
         IntegersModuloPrime field;
         ImmutableList<BigInteger> xs;
@@ -81,7 +86,7 @@ public final class Benchmarks {
         public void beforeAll() throws Exception {
             BigInteger p = makePrime(b);
             field =  new IntegersModuloPrime(p);
-            log.info("Lagrange options: t={} pbits={}", t, p.bitLength());
+            log.info("Lagrange options: t={} pbits={} numThreads={}", t, p.bitLength(), numThreads);
             Random rnd = new Random();
             ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
             for (int i = 0; i < t; i++) {
@@ -93,7 +98,7 @@ public final class Benchmarks {
         public void before() {}
         
         public void run() {
-            LagrangeInterpolation.computeCoefficients(field, xs);
+            LagrangeInterpolation.computeCoefficients(field, xs, numThreads);
         }
     }
     
@@ -109,16 +114,21 @@ public final class Benchmarks {
         byte[] plain;
         
         public void beforeAll() throws Exception {
+            long start;
             SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
             log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
                         t, schnorr.getQ().bitLength(), schnorr.getP().bitLength());
-            log.info("Generating server instance and setting up dummy keys");
+            log.info("Generating server instance");
+            start = System.currentTimeMillis();
             server = NaorPinkasServer.generate(t, schnorr);
+            log.info("Took {} ms", System.currentTimeMillis() - start);
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);
             plain = gen.generateKey().getEncoded();
-            // do an initial encryption to set up the dummy keys
+            log.info("Doing an initial encryption");
+            start = System.currentTimeMillis();
             server.encrypt(plain);
+            log.info("Took {} ms", System.currentTimeMillis() - start);
         }
         
         public void before() {}
@@ -151,7 +161,10 @@ public final class Benchmarks {
         }
         
         public void before() {
+            log.info("Generating server...");
+            long t1 = System.currentTimeMillis();
             server = NaorPinkasServer.generate(t, schnorr);
+            log.info("Done! Took {} ms", System.currentTimeMillis() - t1);
         }
         
         public void run() {
@@ -215,24 +228,25 @@ public final class Benchmarks {
         private int t = 100;
         @Parameter(names = { "-b" }, description = "The bit size of the modulus")
         private int b = 160;
-        @Parameter(names = { "-n" }, description = "The number of evaluation points (will be rounded to the next power of 2)")
-        private int n = 1024;
+        @Parameter(names = { "-n" }, description = "The number of evaluation points")
+        private int n = 1000;
+        @Parameter(names = { "-x" }, description = "The number of threads")
+        private int numThreads = 4;
+        @Parameter(names = { "-c" }, description = "The number of points to evaluate at once")
+        private int chunkSize = 1024;
         
         IntegersModuloPrime field;
         ImmutableList<BigInteger> xs;
         Polynomial<BigInteger> poly;
         
         public void beforeAll() throws Exception {
-            int realN = 1;
-            while (realN < n) {
-                realN <<= 1;
-            }
             BigInteger p = makePrime(b);
             field =  new IntegersModuloPrime(p);
-            log.info("Multi-eval options: t={} b={} n={}", t, p.bitLength(), realN);
+            log.info("Multi-eval options: t={} b={} n={} numThreads={}, chunkSize={}", 
+                    t, p.bitLength(), n, numThreads, chunkSize);
             Random rnd = new Random();
             ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
-            for (int i = 0; i < realN; i++) {
+            for (int i = 0; i < n; i++) {
                 builder.add(field.randomElement(rnd));
             }
             xs = builder.build();
@@ -242,19 +256,57 @@ public final class Benchmarks {
         public void before() {}
         
         public void run() {
-            SubproductTree<BigInteger> tree = SubproductTree.buildPow2(field, xs);
-            tree.evaluate(poly);
-//            poly.evaluateMulti(xs);
+            PolynomialMultiEvaluation eval = new PolynomialMultiEvaluation(xs, numThreads, chunkSize);
+            eval.evaluate(poly);
         }
     }
     
-    static Map<String, Benchmark> commands = ImmutableMap.of(
-              "lagrange", new LagrangeBenchmark(),
-              "encrypt", new EncryptBenchmark(),
-              "multi-encrypt", new MultiEncryptBenchmark(),
-              "decrypt", new DecryptBenchmark(),
-              "multi-eval", new MultiEvalBenchmark()
-              );
+    @Parameters(commandDescription = "Generate client keys")
+    private static class KeygenBenchmark implements Benchmark {
+        private static final Logger log = LoggerFactory
+                .getLogger(Benchmarks.KeygenBenchmark.class);
+        
+        @Parameter(names = { "-t" }, description = "Degree of the polynomial")
+        private int t = 100;
+        @Parameter(names = { "-n" }, description = "The number of users")
+        private int n = 1000;
+        
+        NaorPinkasServer server;
+        
+        public void beforeAll() throws Exception { }
+        
+        public void before() throws Exception {
+            long start;
+            SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
+            log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
+                        t, schnorr.getQ().bitLength(), schnorr.getP().bitLength());
+            log.info("Generating server instance");
+            start = System.currentTimeMillis();
+            server = NaorPinkasServer.generate(t, schnorr);
+            log.info("Took {} ms", System.currentTimeMillis() - start);
+            KeyGenerator gen = KeyGenerator.getInstance("AES");
+            gen.init(128);
+            log.info("Doing an initial encryption");
+            start = System.currentTimeMillis();
+            server.encrypt(new byte[] { 0x1 });
+            log.info("Took {} ms", System.currentTimeMillis() - start);
+        }
+        
+        public void run() {
+            for (int i = 0; i < n; ++i) {
+                server.getPersonalKey(server.getIdentity(i));
+            }
+        }
+    }
+    
+    static Map<String, Benchmark> commands = ImmutableMap.<String, Benchmark>builder()
+            .put("lagrange", new LagrangeBenchmark())
+            .put("encrypt", new EncryptBenchmark())
+            .put("multi-encrypt", new MultiEncryptBenchmark())
+            .put("decrypt", new DecryptBenchmark())
+            .put("multi-eval", new MultiEvalBenchmark())
+            .put("keygen", new KeygenBenchmark())
+            .build();
 
     private static void printCommands() {
         System.err.println("Available benchmarks: " + Joiner.on(", ").join(commands.keySet()));
@@ -265,6 +317,9 @@ public final class Benchmarks {
      * @param args command line arguments
      */
     public static void main(String[] argv) throws Exception {
+        LogbackUtils.removeAllAppenders();
+        LogbackUtils.addStderrLogger(Level.DEBUG);
+        
         OptsCommon opts = new OptsCommon();
         JCommander jc = new JCommander(opts);
         for (Map.Entry<String, Benchmark> entry : commands.entrySet()) {

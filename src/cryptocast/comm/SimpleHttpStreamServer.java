@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static cryptocast.util.ByteUtils.str2bytes;
-
+/**
+ * A simple tcp based http server
+ */
 public class SimpleHttpStreamServer implements Runnable {
     private static final int TIMEOUT_MS = 100;
 
@@ -28,7 +30,14 @@ public class SimpleHttpStreamServer implements Runnable {
     private SocketAddress addr;
     private ServerSocket sock;
     private CountDownLatch listeningEvent = new CountDownLatch(1);
-
+    
+    /**
+     * 
+     * @param in
+     * @param addr
+     * @param contentType
+     * @param bufsize
+     */
     public SimpleHttpStreamServer(InputStream in, 
                                   SocketAddress addr, 
                                   String contentType,
@@ -38,7 +47,12 @@ public class SimpleHttpStreamServer implements Runnable {
         this.bufsize = bufsize;
         this.addr = addr;
     }
-    
+    /**
+     * Waits for a client to send a request. 
+     * 
+     * @return The local port of the server.
+     * @throws InterruptedException
+     */
     public int waitForListener() throws InterruptedException {
         listeningEvent.await();
         return sock.getLocalPort();

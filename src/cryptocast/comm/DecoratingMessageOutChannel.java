@@ -1,12 +1,22 @@
 package cryptocast.comm;
 
 import java.io.IOException;
-
+/**
+ * This class is for decorating a message to send with a certain prefix and suffix
+ *
+ */
 public class DecoratingMessageOutChannel extends MessageOutChannel {
     private MessageOutChannel inner;
     private byte[] prefix;
     private byte[] suffix;
 
+    /**
+     * Creates an instance of DecoratingMessageOutChannel.
+     * 
+     * @param inner The channel
+     * @param prefix attached at the front of the data.
+     * @param suffix attached at the end of the data.
+     */
     public DecoratingMessageOutChannel(MessageOutChannel inner,
                                        byte[] prefix,
                                        byte[] suffix) {

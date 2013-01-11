@@ -12,11 +12,28 @@ import com.google.common.collect.ImmutableList;
  * destination.
  */
 public class MultiOutputStream extends OutputStream {
-    public static interface ErrorHandler {
-        public void handle(MultiOutputStream multi, OutputStream channel, 
+    
+	/**
+	 * 
+	 *	Define an interface of an error handler
+	 */
+	public static interface ErrorHandler {
+       
+		/**
+         * Handle errors.
+         * 
+         * @param multi The multi output stream.
+         * @param channel The channel.
+         * @param exc The exception to throw. 
+         * @throws IOException
+         */
+		public void handle(MultiOutputStream multi, OutputStream channel, 
                 IOException exc) throws IOException;
     }
     
+	/**
+	 * Creates an instance of ErrorHandler.
+	 */
     public static ErrorHandler propagateError = new ErrorHandler() {
         @Override
         public void handle(MultiOutputStream multi, OutputStream channel, 
@@ -25,6 +42,9 @@ public class MultiOutputStream extends OutputStream {
         }
     };
     
+    /**
+     * Creates an instance of ErrorHandler.
+     */
     public static ErrorHandler removeOnError = new ErrorHandler() {
         @Override
         public void handle(MultiOutputStream multi, OutputStream channel, 
@@ -36,14 +56,26 @@ public class MultiOutputStream extends OutputStream {
     List<OutputStream> channels = new ArrayList<OutputStream>();
     ErrorHandler errHandler;
 
+    /**
+     * Creates an instance of MultiOutputStream with the given parameter.
+     * 
+     * @param errHandler The error
+     */
     public MultiOutputStream(ErrorHandler errHandler) {
         this.errHandler = errHandler;
     }
     
+    /**
+     * Creates an instance of MultiOutputStream.
+     */
     public MultiOutputStream() {
         this.errHandler = propagateError;
     }
 
+    /**
+     * Returns an immutable list of all output channels
+     * @return an immutable list of all output channels
+     */
     public ImmutableList<OutputStream> getChannels() {
         return ImmutableList.copyOf(channels);
     }

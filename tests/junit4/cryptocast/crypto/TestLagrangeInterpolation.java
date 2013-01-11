@@ -25,7 +25,7 @@ public class TestLagrangeInterpolation {
                 BigInteger.valueOf(22222222),
         };
         ImmutableList<BigInteger> lambdas = 
-                LagrangeInterpolation.computeCoefficients(modQ, ImmutableList.copyOf(xs));
+                LagrangeInterpolation.computeCoefficients(modQ, ImmutableList.copyOf(xs), 2);
         BigInteger prod = modP.one();
         for (int i = 0; i < xs.length; ++i) {
             BigInteger share = schnorr.getPowerOfG(poly.evaluate(xs[i]));

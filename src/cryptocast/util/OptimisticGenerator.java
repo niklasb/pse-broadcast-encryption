@@ -3,9 +3,15 @@ package cryptocast.util;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableList;
 
 public class OptimisticGenerator<T> extends Generator<T> implements Serializable {
+    private static final Logger log = LoggerFactory
+            .getLogger(OptimisticGenerator.class);
+    
     private static final long serialVersionUID = -544402880183253672L;
     
     ArrayList<T> values = new ArrayList<T>();
@@ -43,8 +49,13 @@ public class OptimisticGenerator<T> extends Generator<T> implements Serializable
         while (newSize < minLen) {
             newSize <<= 1;
         }
-        for (T x : inner.getRange(values.size(), newSize)) {
+        
+        int a = values.size(), b = newSize;
+        log.trace("Generating range [{}, {})", a, b);
+        long start = System.currentTimeMillis();
+        for (T x : inner.getRange(a, b)) {
             values.add(x);
         }
+        log.trace("Took {} ms", System.currentTimeMillis() - start);
     }
 }

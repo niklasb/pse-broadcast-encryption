@@ -12,14 +12,15 @@ public class StatisticalInputStream extends InputStream {
     
     /**
      * Initializes the proxy.
-     * @param inner The wrapped channel
+     * 
+     * @param inner The wrapped channel.
      */
     public StatisticalInputStream(InputStream inner) {
         this.inner = inner;
     }
 
     /**
-     * @return The number of received bytes
+     * @return The number of received bytes.
      */
     public int getReceivedBytes() {
         return receivedBytes;

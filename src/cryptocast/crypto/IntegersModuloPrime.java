@@ -4,15 +4,30 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$.
  */
 public class IntegersModuloPrime extends Field<BigInteger> 
                                  implements Serializable {
     private static final long serialVersionUID = -2607220779180962188L;
-    
+    private static final Logger log = LoggerFactory
+            .getLogger(IntegersModuloPrime.class);
+
     private BigInteger p;
-   
+
+    private static boolean haveNative = false;
+    static {
+        try {
+            System.loadLibrary("IntegersModuloPrime");
+            haveNative = true;
+        } catch (Error e) {
+            log.warn("Could not load native IntegersModuloPrime library", e);
+        }
+    }
+
     /**
      * Initializes the field.
      * @param p A prime number
@@ -42,7 +57,7 @@ public class IntegersModuloPrime extends Field<BigInteger>
     }
 
     @Override
-    public BigInteger invert(BigInteger a) throws ArithmeticException { 
+    public BigInteger invert(BigInteger a) throws ArithmeticException {
         return a.modInverse(p);
     }
 
@@ -63,9 +78,15 @@ public class IntegersModuloPrime extends Field<BigInteger>
 
     @Override
     public BigInteger pow(BigInteger a, BigInteger e) {
-        return a.modPow(e, p);
+        if (haveNative) {
+            return new BigInteger(nativeModPow(a.toByteArray(), e.toByteArray(), getP().toByteArray()));
+        } else {
+            return a.modPow(e, p);
+        }
     }
 
+    private static native byte[] nativeModPow(byte[] x, byte[] e, byte[] m);
+    
     @Override
     public BigInteger randomElement(Random rnd) {
         BigInteger r;

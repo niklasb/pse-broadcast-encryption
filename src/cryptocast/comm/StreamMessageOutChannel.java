@@ -14,6 +14,7 @@ public class StreamMessageOutChannel extends MessageOutChannel {
 
     /**
      * Creates a new instance of MessageOutChannel with the given OutChannel as inner channel.
+     * 
      * @param inner The OutChannel which will be wrapped.
      */
     public StreamMessageOutChannel(OutputStream inner) {
@@ -22,7 +23,10 @@ public class StreamMessageOutChannel extends MessageOutChannel {
 
     /**
      * Sends the given message via the channel.
+     * 
      * @param data The data to send.
+     * @param offset The start offset in array data at which the data is written.
+     * @param len The maximum number of bytes to read.
      */
     public void sendMessage(byte[] data, int offset, int len) throws IOException {
         ByteBuffer packedSize = ByteBuffer.allocate(4);
