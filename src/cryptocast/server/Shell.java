@@ -62,6 +62,9 @@ public class Shell extends InteractiveCommandLineInterface {
         new ShellCommand("init",
                          "<t>",
                          "Create a whole new crypto context"),
+        new ShellCommand("stop-stream",
+                         "",
+                         "Stops the current stream"),
     };
 
     private static SortedMap<String, ShellCommand> commandsByName = 
@@ -309,6 +312,17 @@ public class Shell extends InteractiveCommandLineInterface {
         File file = expandPath(args[0]);
         try {
             control.streamAudio(file);
+        } catch (Exception e) {
+            fatalError(e);
+        }
+    }
+    
+    private void cmdStopStream(ShellCommand cmd, String[] args) throws CommandError, Exit {
+        if (args.length > 0) {
+            commandSyntaxError(cmd);
+        }
+        try {
+            control.stopStream();
         } catch (Exception e) {
             fatalError(e);
         }

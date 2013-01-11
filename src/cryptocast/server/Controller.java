@@ -220,7 +220,9 @@ public class Controller implements Observer {
      */
     public void stopStream() {
         log.debug("stoping current stream");
-        streamer.interrupt();
+        if (streamer != null && !streamer.isInterrupted()) {
+            streamer.interrupt();
+        }
     }
 
     @Override
