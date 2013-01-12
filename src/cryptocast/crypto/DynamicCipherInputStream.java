@@ -2,10 +2,6 @@ package cryptocast.crypto;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -39,15 +35,11 @@ public class DynamicCipherInputStream extends InputStream {
     private Decryptor<byte[]> dec;
     byte[] rest;
     boolean eof = false;
-    private OutputStream traceFile;
-    private int counter;
     
     public DynamicCipherInputStream(MessageInChannel inner,
                                     Decryptor<byte[]> dec) throws IOException {
         this.inner = inner;
         this.dec = dec;
-        this.traceFile = new FileOutputStream("/mnt/sdcard/cryptocastTrace.log");
-        this.counter = 0;
     }
 
     @Override
@@ -80,12 +72,6 @@ public class DynamicCipherInputStream extends InputStream {
 
     private void processMessage() throws IOException {
         byte[] msg = inner.recvMessage();
-        log.debug("[processMessage] id={} size={}", ++counter, msg.length);
-        ByteBuffer buf = ByteBuffer.allocate(4);
-        buf.order(ByteOrder.BIG_ENDIAN);
-        buf.putInt(msg.length);
-        traceFile.write(buf.array());
-        traceFile.write(msg);
         if (msg == null) {
             // stream should be terminated by a special EOF message
             throw new IOException("Unexpected EOF");
@@ -93,7 +79,6 @@ public class DynamicCipherInputStream extends InputStream {
         
         switch (msg[0]) { // switch on the message type
         case DynamicCipherOutputStream.CTRL_CIPHER_DATA:
-            log.debug("[processMessage] CTRL_CIPHER_DATA");
             if (cipher == null) {
                 // ignore data before we got the key!
                 return;
@@ -102,7 +87,6 @@ public class DynamicCipherInputStream extends InputStream {
             rest = cipher.update(msg, 1, msg.length - 1);
             return;
         case DynamicCipherOutputStream.CTRL_UPDATE_KEY:
-            log.debug("[processMessage] CTRL_UPDATE_KEY");
             if (cipher != null) {
                 finalizeCipher();
             }
@@ -126,7 +110,6 @@ public class DynamicCipherInputStream extends InputStream {
             }
             return;
         case DynamicCipherOutputStream.CTRL_EOF:
-            log.debug("[processMessage] CTRL_EOF");
             finalizeCipher();
             eof = true;
             return;

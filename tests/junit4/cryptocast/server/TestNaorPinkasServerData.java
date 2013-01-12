@@ -6,6 +6,7 @@ import org.junit.*;
 
 import com.google.common.base.Optional;
 
+import cryptocast.crypto.NoMoreRevocationsPossibleError;
 import cryptocast.crypto.SchnorrGroup;
 import cryptocast.crypto.naorpinkas.*;
 
@@ -29,6 +30,12 @@ public class TestNaorPinkasServerData {
     }
     
     @Test
+    public void userCreationFail() {
+        Optional<User<NaorPinkasIdentity>> result = sut.createNewUser("bob");
+        assertFalse(result.isPresent());
+    }
+    
+    @Test
     public void getExistingUser() {
         Optional<User<NaorPinkasIdentity>> mUser = sut.getUserByName("alice");
         assertTrue(mUser.isPresent());
@@ -46,5 +53,34 @@ public class TestNaorPinkasServerData {
         sut.createNewUser("foo");
         assertEquals(3, sut.getUsers().size());
         assertEquals("bob", sut.getUsers().get(1).getName());
+    }
+    
+    @Test
+    public void userHasKey() {
+        Optional<User<NaorPinkasIdentity>> mUser = sut.getUserByName("alice");
+        assertTrue(mUser.isPresent());
+        assertTrue(mUser.get().getIdentity() != null);
+    }
+    
+    @Test
+    public void revokeUser() {
+        Optional<User<NaorPinkasIdentity>> mUser = sut.getUserByName("alice");
+        assertTrue(mUser.isPresent());
+        try {
+            sut.revoke(mUser.get());
+        } catch (NoMoreRevocationsPossibleError e) {
+            // cannot happen
+            e.printStackTrace();
+        }
+        assertTrue(sut.isRevoked(mUser.get()));
+    }
+    
+    @Test
+    public void unrevokeUser() {
+        revokeUser();
+        Optional<User<NaorPinkasIdentity>> mUser = sut.getUserByName("alice");
+        assertTrue(mUser.isPresent());
+        sut.unrevoke(mUser.get());
+        assertFalse(sut.isRevoked(mUser.get()));
     }
 }
