@@ -24,15 +24,8 @@ public class PolynomialMultiEvaluation {
     private ImmutableList<BigInteger> xs;
     private byte[][] pointsTwoComplements;
     
-    private static boolean haveNative = false;
-    static {
-        try {
-            System.loadLibrary("PolynomialMultiEvaluation");
-            haveNative = true;
-        } catch (Error e) {
-            log.warn("Could not load native PolynomialMultiEvaluation library", e);
-        }
-    }
+    private static boolean haveNative = 
+            NativeUtils.tryToLoadNativeLibOrLogFailure("PolynomialMultiEvaluation", log);
     
     public PolynomialMultiEvaluation(List<BigInteger> xs, int numThreads, int chunkSize) {
         this.xs = ImmutableList.copyOf(xs);

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
 
 public class NativeUtils {
     public static byte[][] bigIntListToTwoComplements(List<BigInteger> bigInts) {
@@ -23,5 +24,16 @@ public class NativeUtils {
             builder.add(new BigInteger(twoComplements[i]));
         }
         return builder.build();
+    }
+    
+    public static boolean tryToLoadNativeLibOrLogFailure(String lib, Logger log) {
+        try {
+            System.loadLibrary(lib);
+            return true;
+        } catch (Error e) {
+            log.warn("Could not load native library `" + lib + "'. Using slower Java implementation");
+            log.debug("Loading failed because of", e);
+            return false;
+        }
     }
 }

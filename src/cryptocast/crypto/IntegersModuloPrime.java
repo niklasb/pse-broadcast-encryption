@@ -7,6 +7,8 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cryptocast.util.NativeUtils;
+
 /**
  * The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$.
  */
@@ -18,15 +20,8 @@ public class IntegersModuloPrime extends Field<BigInteger>
 
     private BigInteger p;
 
-    private static boolean haveNative = false;
-    static {
-        try {
-            System.loadLibrary("IntegersModuloPrime");
-            haveNative = true;
-        } catch (Error e) {
-            log.warn("Could not load native IntegersModuloPrime library", e);
-        }
-    }
+    private static boolean haveNative = 
+            NativeUtils.tryToLoadNativeLibOrLogFailure("IntegersModuloPrime", log);
 
     /**
      * Initializes the field.

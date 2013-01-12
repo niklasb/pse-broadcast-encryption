@@ -27,15 +27,8 @@ public class LagrangeInterpolation<T> implements Serializable {
     private static final Logger log = LoggerFactory
             .getLogger(LagrangeInterpolation.class);
     
-    private static boolean haveNative = false;
-    static {
-        try {
-            System.loadLibrary("LagrangeInterpolation");
-            haveNative = true;
-        } catch (Error e) {
-            log.warn("Could not load native LagrangeInterpolation library", e);
-        }
-    }
+    private static boolean haveNative = 
+            NativeUtils.tryToLoadNativeLibOrLogFailure("LagrangeInterpolation", log);
     
     private Map<T, T> coefficients;
     private Field<T> field;
