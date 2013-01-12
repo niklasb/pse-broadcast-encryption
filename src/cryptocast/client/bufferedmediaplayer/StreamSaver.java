@@ -58,6 +58,8 @@ public class StreamSaver implements Runnable {
     private void bufferStreamInFile() {
         try {
             FileOutputStream outStream = new FileOutputStream(currentBufferFile);
+            bytesWritten = 0;
+
             while (bytesWritten < FILE_SIZE) {
                 if (stream.available() >= INPUT_BUFFER_SIZE) {
                     

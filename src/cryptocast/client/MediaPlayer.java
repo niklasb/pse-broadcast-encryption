@@ -1,12 +1,16 @@
 package cryptocast.client;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import cryptocast.client.bufferedmediaplayer.BufferedMediaPlayer;
 import cryptocast.client.bufferedmediaplayer.OnStatusChangeListener;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -23,8 +27,14 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_player);
-        
         init();
+        try {
+            player.setDataSource(new FileInputStream(new File("/mnt/sdcard/whistle_long.mp3")));
+            player.prepare();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -38,7 +48,7 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
         play = (Button) findViewById(R.id.button1);
         pause = (Button) findViewById(R.id.button2);
         stop = (Button) findViewById(R.id.Button01);
-        status = (Button) findViewById(R.id.textView2);
+        status = (TextView) findViewById(R.id.textView2);
         
         play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +81,6 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
 
     @Override
     public void bufferUpdate(int percentage) {
-        // TODO Auto-generated method stub
-        
+        //status.setText("Buffer status: " + percentage + "%");
     }
 }

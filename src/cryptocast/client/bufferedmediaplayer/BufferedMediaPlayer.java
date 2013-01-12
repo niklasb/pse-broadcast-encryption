@@ -101,7 +101,9 @@ BufferedFileListener, Runnable, OnPreparedListener {
      */
     public void pause() {
         shouldBePlaying = false;
-        playingPlayer.stop();
+        if (playingPlayer != null) {
+            playingPlayer.stop();
+        }
     }
     
     /**
@@ -231,7 +233,9 @@ BufferedFileListener, Runnable, OnPreparedListener {
 
     @Override
     public void updateBufferProgress(int percentage) {
-        // TODO Auto-generated method stub
+        for (OnStatusChangeListener listener : statusListeners) {
+            listener.bufferUpdate(percentage);
+        }
         
     }
 }
