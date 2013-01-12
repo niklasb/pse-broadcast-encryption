@@ -99,6 +99,10 @@ public class MainActivity extends ClientActivity {
         }
     }
     
+    /**
+     * Gets the socket address and checks, if the hostname and the port number are valid.
+     * @return The socket address.
+     */
     protected Optional<InetSocketAddress> getConnectAddr() {
         String hostname = getHostnameInput();
         int port;
@@ -114,18 +118,40 @@ public class MainActivity extends ClientActivity {
     }
     
     // TODO any other criterion?
+    /**
+     * Checks whether the hostname is correct.
+     * 
+     * @param hostname The hostname.
+     * @return <code>true</code>, if the hostname is correct; <code>false</code> otherwise.
+     */
     protected boolean checkHostname(String hostname) {
         return hostname.length() > 0;
     }
     
+    /**
+    * Checks whether the port number is correct.
+    * 
+    * @param port The port number.
+    * @return <code>true</code>, if the the port number; <code>false</code> otherwise.
+    */
     protected boolean checkPort(int port) {
         return port > 0 && port < 0x10000;
     }
 
+    /**
+     * Displays text to the user and optionally allows them to edit it.
+	 * 
+	 * @return String representation of the hostname.
+     */
     protected String getHostnameInput() {
         return editHostname.getText().toString();
     }
     
+    /**
+     * Displays text to the user and optionally allows them to edit it.
+	 * 
+	 * @return String representation of the port number.
+     */
     protected String getPortInput() {
         return editPort.getText().toString();
     }
@@ -140,12 +166,22 @@ public class MainActivity extends ClientActivity {
         }
     }
 
+    /**
+     * Stars the {@link KeyChoiceActivity} to let the user choose an key file.
+     */
     protected void startKeyChooserForResult() {
         log.debug("Starting key chooser");
         Intent intent = new Intent(this, KeyChoiceActivity.class);
         startActivityForResult(intent, RESULT_KEY_CHOICE);
     }
 
+    /**
+     * Stars the {@link StreamViewerActivity} to process the stream after 
+     * the key file was chosen.
+     * 
+     * @param addr The socket address.
+     * @param keyFile The key file.
+     */
     protected void startStreamViewer(InetSocketAddress addr, File keyFile) {
         log.debug("Starting stream viewer with: connectAddr={} keyFile={}", addr, keyFile);
         Intent intent = new Intent(this, StreamViewerActivity.class);

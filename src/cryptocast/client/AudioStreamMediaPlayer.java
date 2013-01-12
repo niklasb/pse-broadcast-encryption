@@ -11,16 +11,36 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 import cryptocast.comm.SimpleHttpStreamServer;
-
+/**
+ * Media player to playing a audio stream.
+ */
 public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
                                                MediaPlayer.OnErrorListener,
                                                MediaPlayer.OnBufferingUpdateListener,
                                                MediaPlayer.OnInfoListener {
+	/** 
+	 * Interface for completion callback.
+	 */
     public static interface OnCompletionListener {
+    	/**
+    	 * Called after completion.
+    	 * 
+    	 * @param p The media player.
+    	 */
         public void onCompletion(AudioStreamMediaPlayer p);
     }
-    
+    /**
+     * Interface for error callback.
+     */
     public static interface OnErrorListener {
+    	/**
+    	 * Called if any error occurs.
+    	 * 
+    	 * @param p The media player.
+    	 * @param what The error code.
+    	 * @param extra Extra info
+    	 * @return <code>true</code>, if any error occurs or <code>false</code> otherwise. 
+    	 */
         public boolean onError(AudioStreamMediaPlayer p, int what, int extra);
     }
     
@@ -35,19 +55,42 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     private OnCompletionListener completionListener;
     private OnErrorListener errorListener;
 
+    /**
+     * Sets the raw data.
+     * 
+     * @param in The input stream.
+     * @param contentType The type of content. 
+     * @throws IOException
+     */
     public void setRawDataSource(InputStream in, String contentType) throws IOException {
         this.in = in;
         this.contentType = contentType;
     }
 
+    /**
+     * 
+     * @param completionListener
+     */
     public void setOnCompletionListener(OnCompletionListener completionListener) {
         this.completionListener = completionListener;
     }
     
+    /**
+     * Set the error listener object.
+     * 
+     * @param errorListener error listener object to set.
+     */
     public void setOnErrorListener(OnErrorListener errorListener) {
         this.errorListener = errorListener;
     }
     
+    /**
+     * Prepares the player with a data source and event listeners.
+     * 
+     * @throws IllegalStateException
+     * @throws InterruptedException
+     * @throws IOException
+     */
     public void prepare() throws IllegalStateException, InterruptedException, IOException {
         if (in == null) {
             throw new IllegalStateException("setRawDataSource() has not been called");
@@ -70,14 +113,23 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
         player.prepare();
     }
 
+    /**
+     * Starts the media player
+     */
     public void start() {
         player.start();
     }
 
+    /**
+     * Stops the media player.
+     */
     public void stop() {
         player.stop();
     }
     
+    /**
+     * Pauses the media player.
+     */
     public void pause() {
         player.pause();
     }

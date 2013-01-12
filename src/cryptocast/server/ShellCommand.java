@@ -19,6 +19,13 @@ public class ShellCommand {
         this.longDesc = longDesc;
     }
     
+    /**
+     * Creates a new Command with the given values.
+     * 
+     * @param name The name of the command.
+     * @param syntax The syntax of the command.
+     * @param description A short description of the functionality.
+     */
     public ShellCommand(String name, String syntax, String shortDesc) {
         this.name = name;
         this.syntax = syntax;

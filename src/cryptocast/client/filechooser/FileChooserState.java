@@ -10,6 +10,9 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
 
+/**
+ * Represents the state of a file chooser.
+ */
 public class FileChooserState {
     private File currentDir;
     private ImmutableList<ListElement> items;
@@ -19,6 +22,14 @@ public class FileChooserState {
         this.items = items;
     }
     
+
+    /**
+     * Returns the state of the file chooser from the given directory and file pattern.
+     * 
+     * @param dir The directory of the file.
+     * @param filePattern The pattern of the file.
+     * @return the state of the file chooser from the given directory and file pattern.
+     */
     public static FileChooserState fromDirectory(File dir, String filePattern) {
         File[] files;
         while (null == (files = dir.listFiles())) {
@@ -41,18 +52,37 @@ public class FileChooserState {
                 ImmutableList.<ListElement>builder().addAll(result).build());
     }
     
+    /**
+     * Returns the state of the file chooser from the given directory.
+     * 
+     * @param dir The directory of the file.
+     * @return the state of the file chooser from the given directory.
+     */
     public static FileChooserState fromDirectory(File dir) {
         return fromDirectory(dir, ".*");
     }
     
+    /**
+     * Sorts the given list.
+     * 
+     * @param list The list to sort.
+     */
     public static void sortElements(List<ListElement> list) {
         Collections.sort(list, new ElementComparator());
     }
     
+    /**
+     * Returns the directory of the file.
+     * 
+     * @return The directory of the file.
+     */
     public File getCurrentDir() { return currentDir; }
     public ImmutableList<ListElement> getItems() { return items; }
 }
 
+/**
+ * A comparator for ListElements based on their type id.
+ */
 class ElementComparator implements Comparator<ListElement> {
     @Override
     public int compare(ListElement e1, ListElement e2) {

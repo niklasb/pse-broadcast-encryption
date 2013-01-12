@@ -3,10 +3,14 @@ package cryptocast.client;
 import android.os.Bundle;
 import android.view.Menu;
 
-/** The option screen. */
+/** 
+ * The option screen. 
+ * 
+ */
 public class OptionsActivity extends ClientActivity {
-    /** Receives the saved option state.
-     * @param b the old state
+    /** 
+     * Receives the saved option state.
+     * @param b the old state.
      */
     @Override
     protected void onCreate(Bundle b) {
@@ -14,8 +18,9 @@ public class OptionsActivity extends ClientActivity {
         setContentView(R.layout.activity_options);
     }
     
-    /** Inflates the option menu.
-     * @param menu The menu
+    /** 
+     * Inflates the option menu.
+     * @param menu The menu.
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

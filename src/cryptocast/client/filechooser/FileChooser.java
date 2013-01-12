@@ -12,6 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+/**
+ * A file chooser that is used to choose a key file from the filesystem.
+ */
 public class FileChooser implements OnItemClickListener {
     private String filePattern;
     private FileChooserState state;
@@ -19,12 +22,22 @@ public class FileChooser implements OnItemClickListener {
     private TextView currentDir;
     private ListView listing;
     
+    /**
+     * Initializes a file withe the given file pattern.
+     * 
+     * @param filePattern The pattern of the file.
+     */
     public FileChooser(String filePattern) {
         this.filePattern = filePattern;
         this.state = FileChooserState.fromDirectory(
                 Environment.getExternalStorageDirectory());
     }
     
+    /**
+     * Returns the pattern of the file.
+     * 
+     * @return The pattern of the file.
+     */
     public String getFilePattern() {
         return filePattern;
     }
@@ -33,6 +46,11 @@ public class FileChooser implements OnItemClickListener {
         return FileChooserState.fromDirectory(dir, filePattern);
     }
     
+    /**
+     * initializes the file chooser for the given activity.
+     * 
+     * @param act The activity.
+     */
     public void init(Activity act) {
         this.act = act;
         act.setContentView(R.layout.activity_file_chooser);

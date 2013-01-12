@@ -26,17 +26,28 @@ public class ServerHistory implements Serializable {
     private Map<InetSocketAddress, File> servers = 
             new HashMap<InetSocketAddress, File>();
     
+    /**
+     * Returns the servers and their corresponding key files. 
+     * 
+     * @return The servers and their corresponding key files.
+     */
     public Map<InetSocketAddress, File> getServers() {
         return servers;
     }
     
+    /**
+     * Gets the key file of the given server.
+     * 
+     * @param addr The socket address of the server.
+     * @return The key file of the corresponding server.
+     */
     public Optional<File> getKeyFile(InetSocketAddress addr) {
         return Optional.fromNullable(servers.get(addr));
     }
 
     /**
      * Adds a server to the list of servers.
-     * @param hostname The server's hostname
+     * @param addr The socket address of the server.
      * @param keyfile The keyfile the user has chosen for this server.
      */
     public void addServer(InetSocketAddress addr, File keyFile) {
@@ -44,6 +55,12 @@ public class ServerHistory implements Serializable {
         servers.put(addr, keyFile);
     }
     
+    
+    /**
+     * Removes a saved key file of the server.
+     * 
+     * @param addr The socket address of the server.
+     */
     public void invalidateKeyFile(InetSocketAddress addr) {
         log.debug("Removing saved key file for server {}", addr);
         servers.remove(addr);

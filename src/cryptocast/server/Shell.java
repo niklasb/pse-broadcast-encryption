@@ -79,6 +79,7 @@ public class Shell extends InteractiveCommandLineInterface {
 
     /**
      * Creates a new Shell object with the given parameters.
+     * 
      * @param in The input stream
      * @param out Stream to write normal output to.
      * @param err Stream to write error messages to.
@@ -344,6 +345,12 @@ public class Shell extends InteractiveCommandLineInterface {
         error("Invalid Syntax! Usage: %s %s", cmd.getName(), cmd.getSyntax());
     }
     
+    /**
+     * Parses the string.
+     * 
+     * @param str The string to be parsed.
+     * @return An integer.
+     */
     public static Optional<Integer> parseInt(String str) {
         try {
             return Optional.of(Integer.parseInt(str));

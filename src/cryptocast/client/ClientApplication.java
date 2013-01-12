@@ -13,6 +13,9 @@ import cryptocast.util.SerializationUtils;
 import android.app.Application;
 import android.content.Context;
 
+/**
+ * Maintains the global application state.
+ */
 public class ClientApplication extends Application {
     private static final Logger log = LoggerFactory
             .getLogger(ClientApplication.class);
@@ -41,6 +44,9 @@ public class ClientApplication extends Application {
         }
     }
 
+    /**
+     * Saves the application state.
+     */
     public void saveState() {
         log.debug("Saving application state to internal storage");
         try {
@@ -52,26 +58,56 @@ public class ClientApplication extends Application {
     }
     
 
+    /**
+     * Returns the hostname input.
+	 * 
+	 * @return The hostname input.
+     */
     public String getHostnameInput() {
         return state.hostnameInput;
     }
 
+    /**
+	 * Sets the hostname input.
+	 *
+     * @param hostname The hostname to set.
+     */
     public void setHostnameInput(String hostname) {
         state.hostnameInput = hostname;
     }
 
+    /**
+     * Returns the port input.
+	 * 
+	 * @return The port input.
+     */
     public String getPortInput() {
         return state.portInput;
     }
 
+    /**
+	 * Sets the port input.
+	 * 
+	 * @param port The port to set.
+     */
     public void setPortInput(String port) {
         state.portInput = port;
     }
     
+    /**
+     * Returns the server history.
+	 * 
+	 * @return The server history.
+     */
     public ServerHistory getServerHistory() {
         return state.serverHistory;
     }
 
+    /**
+     * Sets the server history
+     * 
+     * @param serverHistory The server history to set.
+     */
     public void setServerHistory(ServerHistory serverHistory) {
         state.serverHistory = serverHistory;
     }

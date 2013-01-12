@@ -15,7 +15,9 @@ public class MessageFragment extends DialogFragment {
 
     /**
      * Creates a new ErrorFragment which can be used to print the given error message.
+     * 
      * @param message Error message describing the error which occured before this fragment pops up.
+     * @param clickHandler The click handler.
      */
     public MessageFragment(String message, DialogInterface.OnClickListener clickHandler) {
         super();
@@ -23,6 +25,11 @@ public class MessageFragment extends DialogFragment {
         this.clickHandler = clickHandler;
     }
     
+    /**
+     * Creates a new ErrorFragment which can be used to print the given error message.
+     * 
+     * @param message Error message describing the error which occured before this fragment pops up.
+     */
     public MessageFragment(String message) {
         super();
         this.message = message;

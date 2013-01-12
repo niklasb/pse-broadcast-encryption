@@ -32,11 +32,12 @@ public class SimpleHttpStreamServer implements Runnable {
     private CountDownLatch listeningEvent = new CountDownLatch(1);
     
     /**
+     * Creates SimpleHttpStreamServer with the given parameter.
      * 
-     * @param in
-     * @param addr
-     * @param contentType
-     * @param bufsize
+     * @param in The input stream.
+     * @param addr the socket address.
+     * @param contentType The type of the content.
+     * @param bufsize The buffer size.
      */
     public SimpleHttpStreamServer(InputStream in, 
                                   SocketAddress addr, 

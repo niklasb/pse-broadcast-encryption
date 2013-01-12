@@ -7,8 +7,18 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
+/**
+ * Defines a client activity. Other activities extend this base activity, which provides basic
+ * basic common functionality.
+ */
 public class ClientActivity extends FragmentActivity {
-    protected ClientApplication app;
+	/**
+     * The client application.
+	 */
+	protected ClientApplication app;
+	/**
+	 * Finish by click.
+	 */
     protected DialogInterface.OnClickListener finishOnClick;
 
     @Override
@@ -30,19 +40,31 @@ public class ClientActivity extends FragmentActivity {
         super.onPause();
     }
     
+    /**
+     * Shows a error message dialog. 
+     * 
+     * @param msg The error message.
+     */
     protected void showErrorDialog(String msg) {
         MessageFragment frag = new MessageFragment(msg);
         frag.show(getSupportFragmentManager(), null);
     }
     
+    /**
+     * Shows a error message dialog by clicking a button.
+     * 
+     * @param msg The error message.
+     * @param clickHandler The click handler.
+     */
     protected void showErrorDialog(String msg, 
             DialogInterface.OnClickListener clickHandler) {
         MessageFragment frag = new MessageFragment(msg, clickHandler);
         frag.show(getSupportFragmentManager(), null);
     }
     
-    /** Handles a click on the main menu.
-     * @param item The clicked item
+    /** 
+     * Handles a click on the main menu.
+     * @param item The clicked item.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
