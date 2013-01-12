@@ -40,6 +40,7 @@ BufferedFileListener, Runnable, OnPreparedListener {
     private InputStream stream;
     private StreamSaver saver;
     private boolean shouldBePlaying;
+    private LinkedList<OnStatusChangeListener> statusListeners;
     
     /**
      * Creates a new BufferedMediaPlayer.
@@ -50,6 +51,7 @@ BufferedFileListener, Runnable, OnPreparedListener {
         preparingPlayers = new LinkedList<MediaPlayer>();
         preparedPlayers = new LinkedList<MediaPlayer>();
         playedFiles = new HashMap<MediaPlayer, File>();
+        statusListeners = new LinkedList<OnStatusChangeListener>();
         
         for (int i = 0; i < AMOUNT_BUFFERED_PLAYERS; i++) {
            MediaPlayer player = new MediaPlayer();
@@ -119,6 +121,10 @@ BufferedFileListener, Runnable, OnPreparedListener {
         } else {
             playNextFile();
         }
+    }
+    
+    public void addOnStatusChangeListener(OnStatusChangeListener listener) {
+        statusListeners.add(listener);
     }
     
     @Override
@@ -221,5 +227,11 @@ BufferedFileListener, Runnable, OnPreparedListener {
         }
         player.reset();
         idlePlayers.add(player);
+    }
+
+    @Override
+    public void updateBufferProgress(int percentage) {
+        // TODO Auto-generated method stub
+        
     }
 }
