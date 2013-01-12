@@ -12,7 +12,7 @@ public abstract class CommandLineInterface {
     /**
      * Signals the exit of the application.
      */
-    protected class Exit extends Throwable {
+    public class Exit extends Throwable {
         private static final long serialVersionUID = 6306942436754821406L;
         
         private int status;
