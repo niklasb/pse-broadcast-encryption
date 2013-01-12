@@ -1,29 +1,26 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/RelativeLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".MainActivity" >
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="231dp"
-        android:layout_height="331dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:contentDescription="@string/content_descr_imagemain"
-        android:maxHeight="150dp"
-        android:maxWidth="150dp"
-        android:scaleType="fitStart"
+        android:scaleType="fitCenter"
         android:src="@drawable/logo_transparent" />
+    
 
     <EditText
         android:id="@+id/editHostname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="45dp"
+        android:layout_marginBottom="5dp"
         android:ems="10"
         android:hint="@string/hostname_hint"
         android:maxLines="1"
@@ -38,8 +35,7 @@
         android:id="@+id/editPort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView1"
-        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
         android:ems="10"
         android:hint="@string/port_hint"
         android:inputType="number"
@@ -49,12 +45,10 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editPort"
-        android:layout_below="@+id/imageView1"
         android:gravity="center_vertical|center_horizontal"
         android:minWidth="252dp"
         android:onClick="onConnect"
         android:text="@string/connect_button"
         android:textSize="20sp" />
-
-</RelativeLayout>
+    
+</LinearLayout>
