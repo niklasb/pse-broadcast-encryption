@@ -1,0 +1,31 @@
+import argparse
+
+parser = argparse.ArgumentParser(description='Compute the Naor-Pinkas overhead')
+parser.add_argument('-a', '--algorithm', help='the algorithm (default: exp)',
+                    choices=('ec', 'exp'), default='exp')
+parser.add_argument('-t', type=int, help='the number of revocable users')
+parser.add_argument('-b', type=int, help='the bitrate')
+parser.add_argument('-o', type=int, help='the overhead in percent')
+parser.add_argument('-i', type=int, help='the key broadcast interval in seconds')
+args = parser.parse_args()
+
+q = 160
+p = 1024
+if args.algorithm == 'exp':
+  overhead = lambda t: t * (q + p)
+  overhead_rev = lambda bits: bits // (q + p)
+else:
+  overhead = lambda t: 2 * t * q
+  overhead_rev = lambda bits: bits // (2 * q)
+
+t, b, o, i = args.t, args.b, args.o, args.i
+if t != None and b != None and i != None and o is None:
+  print "Overhead: %.2f%%" % (overhead(t) * 100.0 / (b * i))
+elif t != None and b != None and i is None and o != None:
+  print "Interval: %.2fs" % (overhead(t) * 100.0 / (b * o))
+elif t != None and b is None and i != None and o != None:
+  print "Bitrate: %d bits/s" % (overhead(t) * 100.0 / (i * o))
+elif t is None and b != None and i != None and o != None:
+  print "t = %d" % overhead_rev(float(b) * o * i / 100)
+else:
+  print "You need to supply exactly one less value than there are variables"
