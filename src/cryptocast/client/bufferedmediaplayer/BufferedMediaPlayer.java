@@ -52,6 +52,8 @@ BufferedFileListener, Runnable, OnPreparedListener {
         preparedPlayers = new LinkedList<MediaPlayer>();
         playedFiles = new HashMap<MediaPlayer, File>();
         statusListeners = new LinkedList<OnStatusChangeListener>();
+        saver = new StreamSaver();
+
         
         for (int i = 0; i < AMOUNT_BUFFERED_PLAYERS; i++) {
            MediaPlayer player = new MediaPlayer();
@@ -94,7 +96,15 @@ BufferedFileListener, Runnable, OnPreparedListener {
      */
     public void stop() {
         pause();
-        saver.stopStreaming();
+        if (saver != null) {
+            saver.stopStreaming();
+        }
+    }
+    /**
+     * @return is playing
+     */
+    public boolean isPlaying() {
+        return playingPlayer != null &&playingPlayer.isPlaying();
     }
     /**
      * Pauses the player but keeps streaming and buffering.
@@ -106,11 +116,15 @@ BufferedFileListener, Runnable, OnPreparedListener {
         }
     }
     
+    public boolean isBuffering() {
+        return saver.isStreaming();
+    }
+    
     /**
      * Prepares the player and starts streaming.
      */
     public void prepare() {
-        saver = new StreamSaver(stream, emptyBufferFiles);
+        saver.prepare(stream, emptyBufferFiles);
         saver.addBufferedFileListener(this);
         new Thread(saver).start();
         new Thread(this).start();
@@ -236,6 +250,5 @@ BufferedFileListener, Runnable, OnPreparedListener {
         for (OnStatusChangeListener listener : statusListeners) {
             listener.bufferUpdate(percentage);
         }
-        
     }
 }
