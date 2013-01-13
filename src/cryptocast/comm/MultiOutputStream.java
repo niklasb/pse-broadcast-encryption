@@ -73,7 +73,6 @@ public class MultiOutputStream extends OutputStream {
     }
 
     /**
-     * Returns an immutable list of all output channels
      * @return an immutable list of all output channels
      */
     public ImmutableList<OutputStream> getChannels() {

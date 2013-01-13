@@ -12,7 +12,7 @@ public abstract class CommandLineInterface {
     /**
      * Signals the exit of the application.
      */
-    protected class Exit extends Throwable {
+    public class Exit extends Throwable {
         private static final long serialVersionUID = 6306942436754821406L;
         
         private int status;
@@ -84,6 +84,9 @@ public abstract class CommandLineInterface {
      * @param str The string to print.
      */
     protected void println(String str) { out.println(str); }
+    /**
+     * Prints the out stream.
+     */
     protected void println() { out.println(); }
 
     /**
@@ -103,6 +106,12 @@ public abstract class CommandLineInterface {
         exit(1);
     }
 
+    /**
+     * Prints an error message.
+     * 
+     * @param e The causing exception
+     * @throws Exit
+     */
     protected void fatalError(Throwable e) throws Exit {
         err.printf(getErrorFormat() + "\n", "Fatal error!");
         err.println(Throwables.getStackTraceAsString(e));

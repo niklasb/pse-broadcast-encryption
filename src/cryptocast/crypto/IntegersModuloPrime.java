@@ -7,6 +7,8 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cryptocast.util.NativeUtils;
+
 /**
  * The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$.
  */
@@ -18,15 +20,8 @@ public class IntegersModuloPrime extends Field<BigInteger>
 
     private BigInteger p;
 
-    private static boolean haveNative = false;
-    static {
-        try {
-            System.loadLibrary("IntegersModuloPrime");
-            haveNative = true;
-        } catch (Error e) {
-            log.warn("Could not load native IntegersModuloPrime library", e);
-        }
-    }
+    private static boolean haveNative = 
+            NativeUtils.tryToLoadNativeLibOrLogFailure("IntegersModuloPrime", log);
 
     /**
      * Initializes the field.
@@ -63,12 +58,27 @@ public class IntegersModuloPrime extends Field<BigInteger>
 
     @Override
     public BigInteger zero() {
-        return BigInteger.valueOf(0);
+        return BigInteger.ZERO;
     }
 
     @Override
     public BigInteger one() {
-        return BigInteger.valueOf(1);
+        return BigInteger.ONE;
+    }
+    
+    @Override
+    public BigInteger two() {
+        return BigInteger.valueOf(2).mod(p);
+    }
+    
+    @Override
+    public BigInteger three() {
+        return BigInteger.valueOf(3).mod(p);
+    }
+    
+    @Override
+    public BigInteger four() {
+        return BigInteger.valueOf(4).mod(p);
     }
 
     @Override
@@ -99,11 +109,20 @@ public class IntegersModuloPrime extends Field<BigInteger>
     }
     
     @Override
+    public boolean isZero(BigInteger a) {
+        return a.signum() == 0;
+    }
+    
+    @Override
     public boolean equals(Object other) {
         if (other == null || other.getClass() != getClass()) { return false; }
         return p.equals(((IntegersModuloPrime)other).p);
     }
 
+    /**
+     * Returns the maximum space.
+     * @return the maximum space.
+     */
     public int getMaxNumberSpace() {
         // round up to next int: (a + b - 1) / b = ceil(a / b)
         // also add 4 bytes for size information and 1 byte for the sign bit

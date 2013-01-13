@@ -13,7 +13,7 @@ import com.google.common.base.Preconditions;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * A polynomial $P$ over a field
+ * A polynomial $P$ over a field.
  * @param <T> The type of the field's elements
  */
 public class Polynomial<T> implements Serializable {
@@ -43,14 +43,33 @@ public class Polynomial<T> implements Serializable {
         this.coefficients = this.coefficients.subList(0, size);
     }
     
+    /**
+     * Returns a polynomial over the zero element of the field.
+     * 
+     * @param field An instance of the field over which the polynomial is formed. 
+     * @return A polynomial over the zero element of the field.
+     */
     public static <T> Polynomial<T> zero(Field<T> field) {
         return new Polynomial<T>(field, ImmutableList.<T>of());
     }
     
+    /**
+     * Returns a polynomial over the one element of the field.
+     * 
+     * @param field An instance of the field over which the polynomial is formed.
+     * @return A polynomial over the one element of the field.
+     */
     public static <T> Polynomial<T> one(Field<T> field) {
         return new Polynomial<T>(field, ImmutableList.of(field.one()));
     }
-    
+    /**
+     * Returns a new monomial with the given values.
+     * 
+     * @param field An instance of the field over which the monomial is formed.
+     * @param coeff The coefficients $c_i$ of the monomial.
+     * @param exp The exponential for the coefficients.
+     * @return A new monomial.
+     */
     public static <T> Polynomial<T> monomial(Field<T> field, T coeff, int exp) {
         Preconditions.checkArgument(exp >= 0, "Exponent must be >= 0");
         ImmutableList.Builder<T> coeffs = ImmutableList.builder();
@@ -71,7 +90,7 @@ public class Polynomial<T> implements Serializable {
     /**
      * Evaluates the polynomial at a single point x.
      * @param x The point
-     * @return P(x)
+     * @return P(x) the evaluation result.
      */
     public T evaluate(T x) {
         T result = field.zero();
@@ -81,6 +100,11 @@ public class Polynomial<T> implements Serializable {
         return result;
     }
 
+    /**
+     * Returns the evaluation function for this polynomial.
+     * 
+     * @return The evaluation function for this polynomial.
+     */
     public Function<T, T> getEvaluator() {
         return new Function<T, T>() {
             public T apply(T x) {
@@ -103,8 +127,8 @@ public class Polynomial<T> implements Serializable {
     }
 
     /**
-     * @param i The index of the coefficient to get ($0 \leq i \leq n$), where
-     *          $n$ is the degree of the polynomial.
+     * Returns the coefficients list of this polynomial.
+     * 
      * @return $c_i$
      */
     public ImmutableList<T> getCoefficients() {

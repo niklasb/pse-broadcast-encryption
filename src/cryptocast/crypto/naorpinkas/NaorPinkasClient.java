@@ -27,8 +27,8 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
 
     /**
       * Decrypts a secret.
-      * @param cipher The encrypted secret
-      * @return The decrypted secret
+      * @param cipher The encrypted secret.
+      * @return The decrypted secret.
       */
     public byte[] decrypt(byte[] cipher) throws InsufficientInformationError {
         NaorPinkasMessage msg = NaorPinkasMessage.unpack(
@@ -38,7 +38,13 @@ public class NaorPinkasClient implements Decryptor<byte[]> {
         System.arraycopy(bytes, 1, secret, 0, secret.length);
         return secret;
     }
-    
+    /**
+     * Decrypts a message into corresponding code.
+     * 
+     * @param msg The message to decrypt.
+     * @return The decrypted message code.
+     * @throws InsufficientInformationError
+     */
     public BigInteger decryptNumber(NaorPinkasMessage msg) throws InsufficientInformationError {
         BigInteger r = msg.getR();
         

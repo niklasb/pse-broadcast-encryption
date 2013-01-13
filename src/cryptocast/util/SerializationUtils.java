@@ -9,7 +9,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-
+/**
+ * Provides several serialization utility methods.
+ */
 public class SerializationUtils {    
     @SuppressWarnings("unchecked")
     public static <T extends Serializable> T readFromStream(InputStream in) 
@@ -22,6 +24,14 @@ public class SerializationUtils {
         }
     }
 
+    /**
+     * Reads a file and returns a serializable object.
+     * 
+     * @param file The file to read from.
+     * @return A serializable object.
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static <T extends Serializable> T readFromFile(File file) 
                throws IOException, ClassNotFoundException {
         InputStream fis = new FileInputStream(file);
@@ -32,6 +42,13 @@ public class SerializationUtils {
         }
     }
 
+    /**
+     * Writes a serializable object into an output stream.
+     * 
+     * @param out The output stream.
+     * @param obj The object to write.
+     * @throws IOException
+     */
     public static void writeToStream(OutputStream out, Serializable obj)
                                         throws IOException {
         ObjectOutputStream objOut = new ObjectOutputStream(out);
@@ -41,7 +58,14 @@ public class SerializationUtils {
             objOut.close();
         }
     }
-    
+   
+    /**
+     * Writes a serializable object into a file.
+     * 
+     * @param file The file to write in.
+     * @param obj The object to write.
+     * @throws IOException
+     */
     public static void writeToFile(File file, Serializable obj) 
                                         throws IOException {
         FileOutputStream fos = new FileOutputStream(file);

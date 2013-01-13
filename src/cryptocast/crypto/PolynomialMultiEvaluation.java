@@ -10,6 +10,10 @@ import com.google.common.collect.ImmutableList;
 
 import cryptocast.util.NativeUtils;
 
+/**
+ * Used to evaluate a polynomial at multiple points. A native function is used, if n 
+ * is bigger than a specific threshold.
+ */
 public class PolynomialMultiEvaluation {
     // only use native function if n is large enough
     private static int NATIVE_THRESHOLD_N = 1;
@@ -24,26 +28,40 @@ public class PolynomialMultiEvaluation {
     private ImmutableList<BigInteger> xs;
     private byte[][] pointsTwoComplements;
     
-    private static boolean haveNative = false;
-    static {
-        try {
-            System.loadLibrary("PolynomialMultiEvaluation");
-            haveNative = true;
-        } catch (Error e) {
-            log.warn("Could not load native PolynomialMultiEvaluation library", e);
-        }
-    }
+
+    private static boolean haveNative = 
+            NativeUtils.tryToLoadNativeLibOrLogFailure("PolynomialMultiEvaluation", log);
     
+    
+    
+    /**
+     * Creates an instance of the polynomial multi evaluation.
+     * 
+     * @param xs The list of the polynomial points.
+     * @param numThreads The number of threads for the concurrent native function.
+     * @param chunkSize The chunk size for each thread.
+     */
     public PolynomialMultiEvaluation(List<BigInteger> xs, int numThreads, int chunkSize) {
         this.xs = ImmutableList.copyOf(xs);
         this.chunkSize = chunkSize;
         this.numThreads = numThreads;
     }
     
+    /**
+     * Creates an instance of the polynomial multi evaluation.
+     * 
+     * @param xs The list of the polynomial points.
+     */
     public PolynomialMultiEvaluation(List<BigInteger> xs) {
         this.xs = ImmutableList.copyOf(xs);
     }
     
+    /**
+     * Evaluates the polynomial.
+     * 
+     * @param poly The polynomial to evaluate.
+     * @return The evaluation result.
+     */
     public ImmutableList<BigInteger> evaluate(Polynomial<BigInteger> poly) {
         if (haveNative && poly.getField() instanceof IntegersModuloPrime 
                 && xs.size() >= NATIVE_THRESHOLD_N) {

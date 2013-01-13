@@ -15,10 +15,14 @@ import java.util.Queue;
 public class StreamSaver implements Runnable {
     
     private static int FILE_SIZE = 50000;
+    private static int INPUT_BUFFER_SIZE = 1024;
+    private int bytesWritten = 0;
     
     private InputStream stream;
-    private byte[] input;
+    private byte[] inputBuffer;
+
     private Queue<File> usableBufferFiles;
+    private File currentBufferFile;
     
     private ArrayList<BufferedFileListener> listeners;
 
@@ -30,12 +34,10 @@ public class StreamSaver implements Runnable {
      * @param stream the stream
      * @param usableBufferFiles the buffer files
      */
-    public StreamSaver(InputStream stream, Queue<File> usableBufferFiles) {
-        this.stream = stream;
-        this.usableBufferFiles = usableBufferFiles;
+    public StreamSaver() {
         isRunning = true;
         
-        input = new byte[FILE_SIZE];
+        inputBuffer = new byte[INPUT_BUFFER_SIZE];
         listeners = new ArrayList<BufferedFileListener>();
     }
 
@@ -43,26 +45,52 @@ public class StreamSaver implements Runnable {
     public void run() {
         while(isRunning) {
             while (isStreaming) {
-                try {
-                    if (!usableBufferFiles.isEmpty() && stream.available() > 0) {
-                        stream.read(input);
-                        File bufferFile = usableBufferFiles.remove();
-                        FileOutputStream outStream = new FileOutputStream(bufferFile);
-                        outStream.write(input);
-                        outStream.flush();
-                        outStream.close();
-                        
-                        for (BufferedFileListener listener : listeners) {
-                            listener.addBufferedFile(bufferFile);
-                        }
-                    }
-                }catch (IOException e) {
-                    e.printStackTrace();
+                if (!usableBufferFiles.isEmpty()) {
+                    currentBufferFile = usableBufferFiles.remove();
+                    bufferStreamInFile();
                 }
             }
         }
     }
     
+    private void bufferStreamInFile() {
+        try {
+            FileOutputStream outStream = new FileOutputStream(currentBufferFile);
+            bytesWritten = 0;
+
+            while (bytesWritten < FILE_SIZE) {
+                if (stream.available() >= INPUT_BUFFER_SIZE) {
+                    
+                    stream.read(inputBuffer);
+                    outStream.write(inputBuffer);
+                    bytesWritten += inputBuffer.length;
+                    
+                    for (BufferedFileListener listener : listeners) {
+                        listener.updateBufferProgress( (int) ((float) bytesWritten * 100F /
+                                (float)FILE_SIZE));
+                    }
+                    
+                    
+//                    stream.read(input);
+//                    File bufferFile = usableBufferFiles.remove();
+//                    FileOutputStream outStream = new FileOutputStream(bufferFile);
+//                    outStream.write(input);
+//                    outStream.flush();
+//                    outStream.close();
+//                    
+                }
+            }
+            outStream.flush();
+            outStream.close();
+            for (BufferedFileListener listener : listeners) {
+              listener.addBufferedFile(currentBufferFile);
+            }
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 
      * @return is streaming
@@ -94,5 +122,15 @@ public class StreamSaver implements Runnable {
      */
     public void addBufferedFileListener(BufferedFileListener listener) {
         this.listeners.add(listener);
+    }
+    /**
+     * Prepares the streaming.
+     * @param stream the stream
+     * @param files the files to buffer the stream to
+     */
+    public void prepare(InputStream stream, Queue<File> files) {
+        this.stream = stream;
+        this.usableBufferFiles = files;
+        
     }
 }
