@@ -11,7 +11,7 @@ import java.io.PrintStream;
  */
 public abstract class InteractiveCommandLineInterface extends CommandLineInterface {
     /** An error within one of the commands. Will be caught by the main loop. */
-    protected class CommandError extends Throwable {
+    public class CommandError extends Throwable {
         private static final long serialVersionUID = -4421363972121773980L;
         
         public String msg;

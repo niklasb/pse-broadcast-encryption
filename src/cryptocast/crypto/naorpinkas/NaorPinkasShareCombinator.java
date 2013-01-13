@@ -43,6 +43,14 @@ public class NaorPinkasShareCombinator implements
         return Optional.of(res);
     }
     
+    /**
+     * Restores a secret from several Naor-Pinkas shares and a shnorr group.
+     * 
+     * @param shares The shares.
+     * @param schnorr The scnorr group.
+     * @return The reconstructed secret or absent if the information represented
+     * by the given shares is insufficient to restore it.
+     */
     public Optional<BigInteger> restore(List<NaorPinkasShare> shares, 
                                         SchnorrGroup schnorr) {
         if (hasMissingShares(shares) || hasRedundantShares(shares)) {
@@ -51,6 +59,12 @@ public class NaorPinkasShareCombinator implements
         return restore(shares, new LagrangeInterpolation<BigInteger>(schnorr.getFieldModQ()));
     }
     
+    /**
+     * Checks whether missing shares exist.
+     * 
+     * @param shares The shares to check.
+     * @return <code>true</code> if there are any missing shares, <code>false</code> otherwise.
+     */
     public boolean hasMissingShares(List<NaorPinkasShare> shares) {
         int t = shares.get(0).getT();
         if (shares.size() < t + 1) {
@@ -59,6 +73,12 @@ public class NaorPinkasShareCombinator implements
         return false;
     }
     
+    /**
+     * Checks whether redundant shares exist.
+     * 
+     * @param shares The shares.
+     * @return <code>true</code> if there are any redundant shares, <code>false</code> otherwise.
+     */
     public boolean hasRedundantShares(List<NaorPinkasShare> shares) {
         ImmutableList<NaorPinkasShare> sortedShares = 
                 Ordering.natural().immutableSortedCopy(shares);

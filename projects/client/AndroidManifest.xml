@@ -42,6 +42,10 @@
             android:name="cryptocast.client.StreamViewerActivity"
             android:label="@string/title_activity_stream" >
         </activity>
+        <activity
+            android:name="cryptocast.client.MediaPlayer"
+            android:label="@string/title_activity_media_player" >
+        </activity>
     </application>
 
 </manifest>

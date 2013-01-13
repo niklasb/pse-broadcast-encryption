@@ -12,6 +12,9 @@ import com.google.common.collect.ImmutableList;
 import cryptocast.crypto.*;
 import cryptocast.util.Generator;
 
+/**
+ * This class is for generatingnaor-pinkas keys.
+ */
 public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey> 
                                     implements Serializable {
     private static final long serialVersionUID = 2925906243884263202L;
@@ -22,7 +25,14 @@ public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey>
     private Polynomial<BigInteger> poly;
     private Map<NaorPinkasIdentity, NaorPinkasPersonalKey> keyByIdentity =
                new HashMap<NaorPinkasIdentity, NaorPinkasPersonalKey>();
-    
+    /**
+     * Creates a new instance of NaorPinkasKeyGenerator with the given parameter.
+     * 
+     * @param t The degree of the polynomial.
+     * @param rnd The secure random number generator.
+     * @param schnorr The schnorr group.
+     * @param poly The polynomial.
+     */
     public NaorPinkasKeyGenerator(int t,
                                   SecureRandom rnd, 
                                   SchnorrGroup schnorr, 
@@ -59,7 +69,12 @@ public class NaorPinkasKeyGenerator extends Generator<NaorPinkasPersonalKey>
         }
         return keys.build();
     }
-    
+    /**
+     * Returns the key for the given identity.
+     * 
+     * @param id An identity.
+     * @return naor-pinkas key.
+     */
     public Optional<NaorPinkasPersonalKey> getKey(NaorPinkasIdentity id) {
         return Optional.fromNullable(keyByIdentity.get(id));
     }

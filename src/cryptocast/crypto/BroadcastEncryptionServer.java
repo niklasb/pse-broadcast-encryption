@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The server side of a broadcast encryption scheme
+ * The server side of a broadcast encryption scheme.
  * @param <ID> The type of the identities
  */
 public class BroadcastEncryptionServer<ID> extends OutputStream
@@ -25,9 +25,11 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
     
     /**
      * Initializes a broadcast encryption server.
-     * @param inner The message-based communication channel to send outgoing data to
-     * @param context The user management context
-     * @param enc The encryption context
+     * 
+     * @param context The user management context.
+     * @param cipherStream The ciphered input stream.
+     * @param intervalMilliseconds The broadcast time interval in millis.
+     * @param excHandler Handler callback.
      */
     public BroadcastEncryptionServer(BroadcastSchemeUserManager<ID> context,
                                      DynamicCipherOutputStream cipherStream,
@@ -39,6 +41,18 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
         this.excHandler = excHandler;
     }
 
+    /**
+     * Returns a broadcast encyption server with the given values.
+     * 
+     * @param context The user management context.
+     * @param enc The encryption context.
+     * @param symmetricKeyBits Symmetric key bits used to init a key generator for a certain size.
+     * @param inner The message-based communication channel to send outgoing data to.
+     * @param intervalMilliseconds The broadcast time interval in millis.
+     * @param excHandler The exceptions handler callback.
+     * @return A broadcast encyption server with the given values.
+     * @throws IOException
+     */
     public static <ID> BroadcastEncryptionServer<ID> start(
             BroadcastSchemeUserManager<ID> context,
             Encryptor<byte[]> enc,
@@ -71,17 +85,28 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
         }
     }
     
+    /**
+     * Updates the key.
+     * @throws IOException
+     */
     public synchronized void updateKey() throws IOException {
         cipherStream.updateKey();
     }
 
+    /**
+     * Broadcasts the key.
+     * @throws IOException
+     */
     public synchronized void broadcastKey() throws IOException {
         cipherStream.reinitializeCipher();
     }
 
     /**
      * Revokes a user.
-     * @param id The identity of the user
+     * 
+     * @param id The identity of the user.
+     * @throws NoMoreRevocationsPossibleError
+     * @throws IOException
      */
     public synchronized void revoke(ID id) throws NoMoreRevocationsPossibleError, IOException {
         if (context.revoke(id)) {
@@ -89,6 +114,12 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
         }
     }
     
+    /**
+     * Authorizes a user.
+     * 
+     * @param id The identity of the user.
+     * @throws IOException
+     */
     public synchronized void unrevoke(ID id) throws IOException {
         if (context.unrevoke(id)) {
             updateKey();

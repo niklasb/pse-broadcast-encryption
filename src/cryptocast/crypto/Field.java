@@ -25,6 +25,11 @@ public abstract class Field<T> implements Serializable {
      * @return The value $a \cdot b$
      */
     public abstract T multiply(T a, T b);
+    
+    public T square(T x) {
+        return multiply(x, x);
+    }
+    
     /**
      * @param a An element of the field
      * @return The additive inverse $-a$ of $a$
@@ -45,8 +50,19 @@ public abstract class Field<T> implements Serializable {
      */
     public abstract T one();
     
+    /**
+     * @return The result of adding the first element of the field to itself.
+     */
     public T two() {
         return add(one(), one());
+    }
+    
+    public T three() {
+        return add(two(), one());
+    }
+    
+    public T four() {
+        return add(two(), two());
     }
     
     /**
@@ -73,6 +89,10 @@ public abstract class Field<T> implements Serializable {
      */
     public T divide(T a, T b) {
         return multiply(a, invert(b));
+    }
+    
+    public boolean isZero(T a) {
+        return a.equals(zero());
     }
     
     /**

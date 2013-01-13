@@ -12,14 +12,18 @@ public class BroadcastEncryptionClient extends InputStream {
     private DynamicCipherInputStream cipherStream;
 
     /**
-     * Initializes a broadcast encryption client.
-     * @param inner The message-based underlying communication channel.
-     * @param dec The decryption context
+     * Initializes a broadcast encryption client. 
+     * @param cipherStream The ciphered input stream.
      */
     public BroadcastEncryptionClient(DynamicCipherInputStream cipherStream) {
         this.cipherStream = cipherStream;
     }
 
+    /**
+     * Initializes a broadcast encryption client.
+     * @param inner The message-based underlying communication channel.
+     * @param dec The decryption context
+     */
     public BroadcastEncryptionClient(MessageInChannel inner, Decryptor<byte[]> dec) 
                                            throws IOException {
         this.cipherStream = new DynamicCipherInputStream(inner, dec);
