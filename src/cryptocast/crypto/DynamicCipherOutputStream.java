@@ -17,9 +17,22 @@ import cryptocast.util.ByteUtils;
 
 import static cryptocast.util.ErrorUtils.*;
 
+/**
+ * Represents a dynamic cipher output stream, which is an output stream that is decrypted upon writing.
+ * This stream uses a message-based communication channel.
+ */
 public class DynamicCipherOutputStream extends OutputStream {
+	/**
+	 * Constant for cipher data.
+	 */
     public static final byte CTRL_CIPHER_DATA = 0;
+    /**
+     * Constant for the update key.
+     */
     public static final byte CTRL_UPDATE_KEY = 1;
+    /**
+     * Constant for the update key.
+     */
     public static final byte CTRL_EOF = 2;
 
     private MessageOutChannel inner;
@@ -38,6 +51,15 @@ public class DynamicCipherOutputStream extends OutputStream {
         updateKey();
     }
 
+    /**
+     * Returns a new dynamic cipher output stream with the given values. 
+     * 
+     * @param inner The message-based communication channel.
+     * @param keyBits key bits used to init a key generator for a certain size.
+     * @param enc The encryption context.
+     * @return a new dynamic cipher output stream.
+     * @throws IOException
+     */
     public static DynamicCipherOutputStream start(MessageOutChannel inner,
                                                   int keyBits,
                                                   Encryptor<byte[]> enc) 
@@ -45,12 +67,20 @@ public class DynamicCipherOutputStream extends OutputStream {
         return new DynamicCipherOutputStream(inner, keyBits, enc);
     }
 
+    /**
+     * Updates the key.
+     * @throws IOException
+     */
     public void updateKey() throws IOException {
         key = keyGen.generateKey();
         encryptedKey = enc.encrypt(key.getEncoded());
         reinitializeCipher();
     }
     
+    /**
+     * Reinitializes the cipher.
+     * @throws IOException
+     */
     public void reinitializeCipher() throws IOException {
         if (cipher != null) {
             finalizeCipher();

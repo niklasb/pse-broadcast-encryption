@@ -50,6 +50,9 @@ public abstract class Field<T> implements Serializable {
      */
     public abstract T one();
     
+    /**
+     * @return The result of adding the first element of the field to itself.
+     */
     public T two() {
         return add(one(), one());
     }

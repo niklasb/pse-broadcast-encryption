@@ -119,6 +119,10 @@ public class IntegersModuloPrime extends Field<BigInteger>
         return p.equals(((IntegersModuloPrime)other).p);
     }
 
+    /**
+     * Returns the maximum space.
+     * @return the maximum space.
+     */
     public int getMaxNumberSpace() {
         // round up to next int: (a + b - 1) / b = ceil(a / b)
         // also add 4 bytes for size information and 1 byte for the sign bit

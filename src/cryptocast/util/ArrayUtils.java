@@ -1,5 +1,8 @@
 package cryptocast.util;
 
+/**
+ * Provides copy of a specific range functionality for arrays.
+ */
 public class ArrayUtils {
     // this is in fact Arrays.copyOfRange from OpenJDK, but it was 
     // not included in Android API level < 9

@@ -9,12 +9,23 @@ import cryptocast.util.Packable;
 
 import static com.google.common.base.Preconditions.*;
 
+/**
+ * Represents a schnorr group.
+ */
 public class SchnorrGroup implements Packable, Serializable {
     private static final long serialVersionUID = -2980881642885431015L;
     
     private BigInteger p, q, r, g;
     private IntegersModuloPrime modP, modQ;
 
+    /**
+     * Creates a schnorr group with the given values:
+     * ($p$ = $q$ * $r$ +1), with $p$ and $q$ prime and 1 < $h$ < p,
+     * $h$^$r$ != 1(mod $p$), $g$ = $h$^$r$ mod $p$
+     * @param p the $p$ argument
+     * @param q the $q$ argument
+     * @param g the $g$ argument
+     */
     public SchnorrGroup(BigInteger p, BigInteger q, BigInteger g) {
         checkArgument(p.subtract(BigInteger.ONE).mod(q).equals(BigInteger.ZERO),
                           "q must divide (p - 1) without remainder");
@@ -25,11 +36,19 @@ public class SchnorrGroup implements Packable, Serializable {
         modP = new IntegersModuloPrime(p);
         modQ = new IntegersModuloPrime(q);
     }
-    
+    /**
+     * Returns modulo $p$ 
+     * 
+     * @return Modulo $p$ 
+     */
     public IntegersModuloPrime getFieldModP() {
         return modP;
     }
-    
+    /**
+     * Returns module $q$
+     * 
+     * @return Module $q$
+     */
     public IntegersModuloPrime getFieldModQ() {
         return modQ;
     }
@@ -71,6 +90,12 @@ public class SchnorrGroup implements Packable, Serializable {
         putBigInt(buf, g);
     }
 
+    /**
+     * Unpacks a byte buffer into a schnorr group.
+     * 
+     * @param buf A byte buffer.
+     * @return A schnorr group.
+     */
     public static SchnorrGroup unpack(ByteBuffer buf) {
         BigInteger p = getBigInt(buf),
                    q = getBigInt(buf),
