@@ -58,12 +58,27 @@ public class IntegersModuloPrime extends Field<BigInteger>
 
     @Override
     public BigInteger zero() {
-        return BigInteger.valueOf(0);
+        return BigInteger.ZERO;
     }
 
     @Override
     public BigInteger one() {
-        return BigInteger.valueOf(1);
+        return BigInteger.ONE;
+    }
+    
+    @Override
+    public BigInteger two() {
+        return BigInteger.valueOf(2).mod(p);
+    }
+    
+    @Override
+    public BigInteger three() {
+        return BigInteger.valueOf(3).mod(p);
+    }
+    
+    @Override
+    public BigInteger four() {
+        return BigInteger.valueOf(4).mod(p);
     }
 
     @Override
@@ -91,6 +106,11 @@ public class IntegersModuloPrime extends Field<BigInteger>
             r = new BigInteger(p.bitLength(), rnd);
         } while (r.compareTo(p) >= 0);
         return r;
+    }
+    
+    @Override
+    public boolean isZero(BigInteger a) {
+        return a.signum() == 0;
     }
     
     @Override
