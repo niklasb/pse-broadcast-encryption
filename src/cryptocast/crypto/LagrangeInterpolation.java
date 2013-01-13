@@ -34,8 +34,6 @@ public class LagrangeInterpolation<T> implements Serializable {
     private Field<T> field;
     
     /**
-     * Returns the coefficients of the polynomial. 
-     * 
      * @return The coefficients of the polynomial.
      */
     public Map<T, T> getCoefficients() {
@@ -43,8 +41,6 @@ public class LagrangeInterpolation<T> implements Serializable {
     }
     
     /**
-     * Returns the field of the polynomial.
-     * 
      * @return The field of the polynomial.
      */
     public Field<T> getField() {

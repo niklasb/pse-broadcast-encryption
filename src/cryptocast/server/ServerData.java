@@ -134,8 +134,6 @@ public class ServerData<ID> extends Observable implements Serializable {
     }
 
     /**
-     * Returns all users.
-     * 
      * @return all users.
      */
     public List<User<ID>> getUsers() {
