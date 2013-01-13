@@ -24,6 +24,10 @@ import cryptocast.util.ByteUtils;
 
 import static cryptocast.util.ErrorUtils.*;
 
+/**
+ * Represents a dynamic cipher input stream, which is an input stream that needs to be decrypted.
+ * This stream uses a message-based communication channel.
+ */
 public class DynamicCipherInputStream extends InputStream {
     private static final Logger log = LoggerFactory
             .getLogger(DynamicCipherInputStream.class);
@@ -36,6 +40,13 @@ public class DynamicCipherInputStream extends InputStream {
     byte[] rest;
     boolean eof = false;
     
+    /**
+     * Initializes a new instance of DynamicCipherInputStream.
+     * 
+     * @param inner The message-based underlying communication channel.
+     * @param dec The decryption context.
+     * @throws IOException
+     */
     public DynamicCipherInputStream(MessageInChannel inner,
                                     Decryptor<byte[]> dec) throws IOException {
         this.inner = inner;

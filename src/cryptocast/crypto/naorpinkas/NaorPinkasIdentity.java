@@ -11,10 +11,19 @@ public class NaorPinkasIdentity implements Serializable {
     
     BigInteger i;
 
+    /**
+     * initializes NaorPinkasIdentity
+     * @param i The identity code.
+     */
     protected NaorPinkasIdentity(BigInteger i) {
         this.i = i;
     }
 
+    /**
+     * Returns the identity code.
+     * 
+     * @return identity code.
+     */
     protected BigInteger getI() { 
         return i; 
     }

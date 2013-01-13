@@ -11,7 +11,9 @@ import com.google.common.collect.ImmutableList;
 import cryptocast.crypto.*;
 import cryptocast.util.MapUtils;
 import cryptocast.util.Packable;
-
+/**
+ * This class represents a naor-pinkas message.
+ */
 public class NaorPinkasMessage implements Packable {
     private BigInteger xor;
     private BigInteger r;
@@ -20,6 +22,16 @@ public class NaorPinkasMessage implements Packable {
     private LagrangeInterpolation<BigInteger> lagrange;
     private ImmutableList<NaorPinkasShare> shares;
 
+    /**
+     * Creates a new instance of NaorPinkasMessage with the given parameters.
+     * 
+     * @param t The degree of the polynomial.
+     * @param r The $r$ value.
+     * @param xor The $xor$ value.
+     * @param schnorr The schnorr group.
+     * @param lagrange The corresponding lagrange interpolation.
+     * @param shares The shares.
+     */
     public NaorPinkasMessage(int t, BigInteger r, BigInteger xor, 
                              SchnorrGroup schnorr,
                              LagrangeInterpolation<BigInteger> lagrange,
@@ -34,11 +46,34 @@ public class NaorPinkasMessage implements Packable {
         this.shares = shares;
     }
 
+    /**
+     * Returns the $xor$ value.
+     * 
+     * @return The $xor$ value.
+     */
     public BigInteger getXor() { return xor; }
+    /**
+     * Returns the $r$ value.
+     * 
+     * @return The $r$ value.
+     */
     public BigInteger getR() { return r; }
+    /**
+     * Returns the shares for this message.
+     * 
+     * @return The shares.
+     */
     public ImmutableList<NaorPinkasShare> getShares() { return shares; }
+    /**
+     * Returns the lagrange interpolation for this message.
+     * 
+     * @return The lagrange interpolation.
+     */
     public LagrangeInterpolation<BigInteger> getLagrange() { return lagrange; }
 
+    /**
+     * Returns the maximum space.
+     */
     public int getMaxSpace() {
         int size = 
                  // t
@@ -55,6 +90,11 @@ public class NaorPinkasMessage implements Packable {
         return size;
     }
 
+   /**
+    * Packs the message into the given byte buffer.
+    * 
+    * @param buf A byte buffer.
+    */
     public void pack(ByteBuffer buf) {
         buf.putInt(t);
         putBigInt(buf, r);
@@ -71,6 +111,12 @@ public class NaorPinkasMessage implements Packable {
         }
     }
 
+    /**
+     * Unpacks a message from the given byte buffer.
+     * 
+     * @param buf A byte buffer.
+     * @return Naor-pinkas message.
+     */
     public static NaorPinkasMessage unpack(ByteBuffer buf) {
         int t = buf.getInt();
         BigInteger r = getBigInt(buf),

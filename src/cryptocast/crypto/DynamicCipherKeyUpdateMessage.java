@@ -4,15 +4,31 @@ import java.nio.ByteBuffer;
 
 import cryptocast.util.Packable;
 
+/**
+ * A message for dynamic updates of the cipher key.
+ */
 public class DynamicCipherKeyUpdateMessage implements Packable {
     private byte[] encryptedKey, iv;
-    
+    /**
+     * Creates a message with the given values.
+     * 
+     * @param encryptedKey the encypted key.
+     * @param iv
+     */
     public DynamicCipherKeyUpdateMessage(byte[] encryptedKey, byte[] iv) {
         this.encryptedKey = encryptedKey;
         this.iv = iv;
     }
 
+    /**
+     * Returns the encypted key.
+     * @return The encypted key.
+     */
     public byte[] getEncryptedKey() { return encryptedKey; }
+    /**
+     * Returns the
+     * @return The
+     */
     public byte[] getIv() { return iv; }
 
     @Override
@@ -28,6 +44,12 @@ public class DynamicCipherKeyUpdateMessage implements Packable {
         buf.put(iv);
     }
 
+    /**
+     * Unpacks the message from the given buffer.
+     * 
+     * @param buf A byte buffer. 
+     * @return a dynamic cipher key update message instance.
+     */
     public static DynamicCipherKeyUpdateMessage unpack(ByteBuffer buf) {
         int keyLength = buf.getInt();
         byte[] encryptedKey = new byte[keyLength];

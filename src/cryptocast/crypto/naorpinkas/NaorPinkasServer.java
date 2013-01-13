@@ -57,10 +57,22 @@ public class NaorPinkasServer
         this.lagrange = lagrange;
     }
 
+    /**
+     * Returns the degree of the polynomial.
+     * 
+     * @return The degree of the polynomial.
+     */
     public int getT() {
         return t;
     }
     
+    /**
+     * Generates a naor-pinkas server instance.
+     * 
+     * @param t The degree of the polynomial.
+     * @param schnorr The schnorr group.
+     * @return Naor-pinkas server instance.
+     */
     public static NaorPinkasServer generate(int t, SchnorrGroup schnorr) {
         Field<BigInteger> modQ = schnorr.getFieldModQ();
         log.debug("Generating random polynomial");
@@ -89,8 +101,8 @@ public class NaorPinkasServer
 
     /**
      * Encrypts a secret.
-     * @param secret the secret
-     * @return The cipher text
+     * @param secret the secret.
+     * @return The cipher text.
      */
     public byte[] encrypt(byte[] secret) {
         byte[] bytes = new byte[secret.length + 1];
@@ -100,6 +112,12 @@ public class NaorPinkasServer
         return ByteUtils.pack(encryptNumber(new BigInteger(bytes)));
     }
 
+    /**
+     * Encrypts a message given the secret code.
+     * 
+     * @param secret The secret code.
+     * @return Naor-pinkas message.
+     */
     public NaorPinkasMessage encryptNumber(BigInteger secret) {
         BigInteger r = schnorr.getFieldModP().randomElement(rnd),
                    grp0 = schnorr.getFieldModP().pow(gp0, r), // g^{r P(0)}
@@ -124,8 +142,10 @@ public class NaorPinkasServer
     }
 
     /**
-     * @param i An index
-     * @return The identity with the given index
+     * Returns the identity with the given index.
+     * 
+     * @param i An index.
+     * @return The identity with the given index.
      */
     public NaorPinkasIdentity getIdentity(int i) {
         // first t users are dummies
@@ -143,6 +163,12 @@ public class NaorPinkasServer
         return keyGen.get(i);
     }
 
+    /**
+     * Revokes a user.
+     * 
+     * @param id The identity of the user
+     * @return true, if the set of revoked users changed or false otherwise
+     */
     public boolean revoke(NaorPinkasIdentity id) throws NoMoreRevocationsPossibleError {
         if (revokedUsers.size() == t) {
             throw new NoMoreRevocationsPossibleError();
@@ -154,6 +180,12 @@ public class NaorPinkasServer
         return revokedUsers.add(id);
     }
     
+    /**
+     * Authorizes a user.
+     * 
+     * @param id The identity of the user
+     * @return true, if the set of revoked users changed or false otherwise
+     */
     public boolean unrevoke(NaorPinkasIdentity id) {
         // TODO abstract this away
         // remove old identity and add new dummy
