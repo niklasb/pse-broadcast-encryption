@@ -1,23 +1,39 @@
 package cryptocast.server;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import static cryptocast.util.FileUtils.expandPath;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.google.common.base.Optional;
+
+import cryptocast.crypto.NoMoreRevocationsPossibleError;
+import cryptocast.crypto.SchnorrGroup;
+import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
+import cryptocast.crypto.naorpinkas.NaorPinkasServer;
 import cryptocast.util.CommandLineInterface.Exit;
 import cryptocast.util.InteractiveCommandLineInterface.CommandError;
 
 public class TestShell {
     private Shell sut;
+    NaorPinkasServer npServer = 
+            NaorPinkasServer.generate(10, SchnorrGroup.getP1024Q160());
     @Mock private BufferedReader in;
     @Mock private PrintStream out;
     @Mock private PrintStream err;
     @Mock private Controller control;
+    @Mock private NaorPinkasServerData model;
     
     @Before
     public void setUp() throws Exception {
@@ -57,6 +73,52 @@ public class TestShell {
     public void initInvalid() throws CommandError, Exit, IOException {
         String[] args = {"-1"};
         sut.performCommand("init", args);
+    }
+    
+    @Test
+    public void mp3Stream() throws CommandError, Exit, IOException, UnsupportedAudioFileException {
+        String[] args = {"C://test.mp3"};
+        sut.performCommand("stream-mp3", args);
+        File file = expandPath(args[0]);
+        verify(control).streamAudio(file);
+    }
+    
+    @Test
+    public void revoke() throws CommandError, Exit, NoMoreRevocationsPossibleError {
+        String name = "bob";
+        String[] args = {name};
+        when(control.getModel()).thenReturn(model);
+        User<NaorPinkasIdentity> myBob = new User<NaorPinkasIdentity>(name, npServer.getIdentity(3));
+        when(model.getUserByName(name)).thenReturn(Optional.fromNullable(myBob));
+        when(model.revoke(myBob)).thenReturn(true);
+        sut.performCommand("revoke", args);
+        verify(model).revoke(myBob);
+    }
+    
+    @Test
+    public void unrevoke() throws CommandError, Exit, NoMoreRevocationsPossibleError {
+        String name = "alice";
+        String[] args = {name};
+        when(control.getModel()).thenReturn(model);
+        User<NaorPinkasIdentity> myAlice = new User<NaorPinkasIdentity>(name, npServer.getIdentity(12));
+        when(model.getUserByName(name)).thenReturn(Optional.fromNullable(myAlice));
+        when(model.unrevoke(myAlice)).thenReturn(true);
+        sut.performCommand("unrevoke", args);
+        verify(model).unrevoke(myAlice);
+    }
+    
+    @Test
+    public void parseNotAnInt() {
+        Optional<Integer> result = Shell.parseInt("?!§/($%?");
+        assertFalse(result.isPresent());
+    }
+    
+    @Test
+    public void parseRealInts() {
+        Optional<Integer> result = Shell.parseInt("-12");
+        assertTrue(result.isPresent());
+        int expected = -12;
+        assertTrue(expected == result.get());
     }
 
 }
