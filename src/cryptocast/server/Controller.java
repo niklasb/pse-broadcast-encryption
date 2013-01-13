@@ -126,8 +126,6 @@ public class Controller implements Observer {
 	}
 
 	/**
-     * Returns the data.
-     * 
      * @return the data.
      */
 	public NaorPinkasServerData getModel() {
@@ -219,8 +217,6 @@ public class Controller implements Observer {
 	}
 
 	/**
-	 * Returns the database file.
-	 * 
 	 * @return The database file.
 	 */
 	public File getDatabaseFile() {
@@ -228,8 +224,6 @@ public class Controller implements Observer {
 	}
 
 	/**
-	 * Returns The size of the polynomial.
-     * 
      * @return The size of the polynomial.
      */
 	public int getT() {
@@ -237,8 +231,6 @@ public class Controller implements Observer {
 	}
 
 	/**
-     * Returns the socket listening address to bind to.
-     * 
      * @return The socket listening address to bind to.
      */
 	public SocketAddress getListenAddress() {
@@ -292,10 +284,6 @@ public class Controller implements Observer {
 		InputStream in = new FileInputStream(file);
 		stream(in, bitrate / 8, 0x4000);
 	}
-
-	
-
-	
 
 	@Override
 	public void update(Observable o, Object arg) {
