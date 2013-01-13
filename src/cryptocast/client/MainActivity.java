@@ -32,6 +32,7 @@ public class MainActivity extends ClientActivity {
     private TextView editHostname, editPort;
     private File keyFile;
     private InetSocketAddress addr;
+
     
     @Override
     protected void onCreate(Bundle b) {

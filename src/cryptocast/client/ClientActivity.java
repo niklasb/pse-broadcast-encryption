@@ -79,6 +79,10 @@ public class ClientActivity extends FragmentActivity {
             intent = new Intent(this, HelpActivity.class);
             startActivity(intent);
             return true;
+        case R.id.itemAbout:
+            intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
