@@ -198,8 +198,8 @@ public class Controller implements Observer {
      * Stops the stream
      */
     public void stopStream() {
-        log.debug("stoping current stream");
         if (streamer != null && !streamer.isInterrupted()) {
+            log.info("Stream stopped!");
             streamer.interrupt();
         }
     }
