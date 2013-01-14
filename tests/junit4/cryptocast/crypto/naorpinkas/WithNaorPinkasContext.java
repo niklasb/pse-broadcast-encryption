@@ -8,15 +8,17 @@ import cryptocast.crypto.*;
 
 public class WithNaorPinkasContext {
     protected SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
-    protected IntegersModuloPrime modQ = schnorr.getFieldModQ(),
+    protected IntegersModuloPrime modQ = schnorr.getFieldModOrder(),
                                   modP = schnorr.getFieldModP();
-    protected NaorPinkasShareCombinator combi = new NaorPinkasShareCombinator();
+    protected NaorPinkasShareCombinator<BigInteger> combi = 
+                       new NaorPinkasShareCombinator<BigInteger>();
 
-    protected NaorPinkasShare makeShare(Polynomial<BigInteger> poly, BigInteger r, int xi) {
+    protected NaorPinkasShare<BigInteger> makeShare(
+                       Polynomial<BigInteger> poly, BigInteger r, int xi) {
         BigInteger x = BigInteger.valueOf(xi);
-        return new NaorPinkasShare(poly.getSize() - 1, r, x, 
-                                   schnorr.getPowerOfG(r.multiply(poly.evaluate(x))),
-                                   schnorr);
+        return new NaorPinkasShare<BigInteger>(poly.getSize() - 1, r, x, 
+                                               schnorr.getPowerOfG(r.multiply(poly.evaluate(x))),
+                                               schnorr);
     }
 
     protected Polynomial<BigInteger> makePolynomial(Field<BigInteger> field, int coefficients[]) {

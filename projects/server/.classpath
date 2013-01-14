@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="../../3rd_party/tritonus_share-0.3.6.jar"/>
 	<classpathentry kind="lib" path="../../3rd_party/mp3spi1.9.5.jar"/>
 	<classpathentry kind="lib" path="../../3rd_party/bcprov-jdk15on-147.jar"/>
+	<classpathentry kind="lib" path="../../3rd_party/protobuf-java-2.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

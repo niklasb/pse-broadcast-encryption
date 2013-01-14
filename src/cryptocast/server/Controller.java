@@ -5,8 +5,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
+import java.security.PrivateKey;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -92,8 +94,7 @@ public class Controller implements Observer {
 	}
 
 	private static NaorPinkasServerData createNewData(int t) {
-		return new NaorPinkasServerData(NaorPinkasServer.generate(t,
-				SchnorrGroup.getP1024Q160()));
+	    return new NaorPinkasServerData(new SchnorrNaorPinkasServerFactory().construct(t));
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class Controller implements Observer {
 		for (User<NaorPinkasIdentity> user : users) {
 			File keyFile = new File(dir.getAbsolutePath() + "/"
 					+ user.getName() + ".key");
-			Optional<NaorPinkasPersonalKey> mKey = data.npServer
+			Optional<? extends PrivateKey> mKey = data.npServer
 					.getPersonalKey(user.getIdentity());
 			assert mKey.isPresent();
 			SerializationUtils.writeToFile(keyFile, mKey.get());

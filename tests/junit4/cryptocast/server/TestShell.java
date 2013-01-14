@@ -18,17 +18,15 @@ import org.mockito.MockitoAnnotations;
 
 import com.google.common.base.Optional;
 
-import cryptocast.crypto.NoMoreRevocationsPossibleError;
-import cryptocast.crypto.SchnorrGroup;
-import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
-import cryptocast.crypto.naorpinkas.NaorPinkasServer;
+import cryptocast.crypto.*;
+import cryptocast.crypto.naorpinkas.*;
 import cryptocast.util.CommandLineInterface.Exit;
 import cryptocast.util.InteractiveCommandLineInterface.CommandError;
 
 public class TestShell {
     private Shell sut;
-    NaorPinkasServer npServer = 
-            NaorPinkasServer.generate(10, SchnorrGroup.getP1024Q160());
+    SchnorrNaorPinkasServer npServer = 
+            (SchnorrNaorPinkasServer) new SchnorrNaorPinkasServerFactory().construct(10);
     @Mock private BufferedReader in;
     @Mock private PrintStream out;
     @Mock private PrintStream err;
@@ -109,7 +107,7 @@ public class TestShell {
     
     @Test
     public void parseNotAnInt() {
-        Optional<Integer> result = Shell.parseInt("?!§/($%?");
+        Optional<Integer> result = Shell.parseInt("?!/($%?");
         assertFalse(result.isPresent());
     }
     

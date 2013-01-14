@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.util.Random;
 
 /**
- * Represents a field over values of type T.
+ * Represents a group over a subset $F$ of the values of type T.
  * @param <T> The values we work on.
  */
 public abstract class Field<T> implements Serializable {

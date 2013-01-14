@@ -1,23 +1,20 @@
 package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
-import cryptocast.util.Generator;
-import cryptocast.util.OptimisticGenerator;
-import cryptocast.util.ByteUtils;
+import cryptocast.crypto.Protos.BInteger;
+import cryptocast.crypto.naorpinkas.Protos.*;
 
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
+import com.google.protobuf.ByteString;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -25,142 +22,107 @@ import static com.google.common.base.Preconditions.*;
  * A server in the Naor-Pinkas broadcast encryption scheme. It knows
  * the entire polynomial and therefore all the private keys of its users. 
  */
-public class NaorPinkasServer
-      implements BroadcastSchemeUserManager<NaorPinkasIdentity>,
-                 BroadcastSchemeKeyManager<NaorPinkasIdentity>,
-                 Serializable,
-                 Encryptor<byte[]> {
+public abstract class NaorPinkasServer<T>
+      implements NaorPinkasServerInterface, Serializable {
     private static final long serialVersionUID = -6864326409385317975L;
-    private static final Logger log = LoggerFactory
-            .getLogger(NaorPinkasServer.class);
-    
-    private int t;
-    private SchnorrGroup schnorr;
-    private Map<NaorPinkasIdentity, NaorPinkasPersonalKey> keyByIdentity =
-                 new HashMap<NaorPinkasIdentity, NaorPinkasPersonalKey>();
-    private Set<NaorPinkasIdentity> revokedUsers =
-                 new HashSet<NaorPinkasIdentity>();
-    private Generator<NaorPinkasPersonalKey> keyGen;
-    private BigInteger gp0;  // $g^P(0)$
-    private LagrangeInterpolation<BigInteger> lagrange;
 
+    private NaorPinkasServerContext<T> context;
+    private T gp0;  // $g^P(0)$
+    private Map<NaorPinkasIdentity, NaorPinkasPersonalKey<T>> keyByIdentity =
+            Maps.newHashMap();
+    private Set<NaorPinkasIdentity> revokedUsers = Sets.newHashSet();
+    
+    private CyclicGroupOfPrimeOrder<T> group;
+    private int t;
+    
     private static SecureRandom rnd = new SecureRandom();
 
-    private NaorPinkasServer(int t, SchnorrGroup schnorr,
-                             Generator<NaorPinkasPersonalKey> keyGen,
-                             Polynomial<BigInteger> poly,
-                             LagrangeInterpolation<BigInteger> lagrange) {
-        this.t = t;
-        this.schnorr = schnorr;
-        this.keyGen = keyGen;
-        this.gp0 = schnorr.getPowerOfG(poly.evaluate(BigInteger.ZERO));
-        this.lagrange = lagrange;
+    protected NaorPinkasServer(NaorPinkasServerContext<T> context) {
+        this.context = context;
+        this.group = context.getGroup();
+        this.t = context.getT();
+        this.gp0 = group.getPowerOfG(
+                          context.getPoly().evaluate(BigInteger.ZERO));
     }
 
-    /**
-     * Returns the degree of the polynomial.
-     * 
-     * @return The degree of the polynomial.
-     */
+    protected abstract Optional<byte[]> encryptSecretWithItem(byte[] secret, T key);
+
+    @Override
     public int getT() {
         return t;
     }
     
-    /**
-     * Generates a naor-pinkas server instance.
-     * 
-     * @param t The degree of the polynomial.
-     * @param schnorr The schnorr group.
-     * @return Naor-pinkas server instance.
-     */
-    public static NaorPinkasServer generate(int t, SchnorrGroup schnorr) {
-        Field<BigInteger> modQ = schnorr.getFieldModQ();
-        log.debug("Generating random polynomial");
-        long start = System.currentTimeMillis();
-        Polynomial<BigInteger> poly = 
-                Polynomial.createRandomPolynomial(rnd, modQ, t + 1);
-        log.debug("Took {} ms", System.currentTimeMillis() - start);
-        log.debug("Setting up dummy keys");
-        start = System.currentTimeMillis();
-        Generator<NaorPinkasPersonalKey> keyGen = 
-                new OptimisticGenerator<NaorPinkasPersonalKey>(
-                        new NaorPinkasKeyGenerator(
-                                t, rnd, schnorr, poly));
-        ImmutableList.Builder<BigInteger> dummyXs = ImmutableList.builder();
-        for (int i = 0; i < t; ++i) {
-            dummyXs.add(keyGen.get(i).getIdentity().getI());
+    public NaorPinkasServerContext<T> getContext() { return context; }
+    
+    protected static class UnresolvedEncryptionMessage<T> {
+        public NaorPinkasMessageCommon common;
+        public ImmutableList<NaorPinkasShare<T>> shares;
+        private UnresolvedEncryptionMessage(NaorPinkasMessageCommon common,
+                                ImmutableList<NaorPinkasShare<T>> shares) {
+            this.common = common;
+            this.shares = shares;
         }
-        log.debug("Took {} ms", System.currentTimeMillis() - start);
-        log.debug("Computing initial lagrange coefficients");
-        start = System.currentTimeMillis();
-        LagrangeInterpolation<BigInteger> lagrange = 
-                LagrangeInterpolation.fromXs(modQ, dummyXs.build());
-        log.debug("Took {} ms", System.currentTimeMillis() - start);
-        return new NaorPinkasServer(t, schnorr, keyGen, poly, lagrange);
     }
-
-    /**
-     * Encrypts a secret.
-     * @param secret the secret.
-     * @return The cipher text.
-     */
-    public byte[] encrypt(byte[] secret) {
-        byte[] bytes = new byte[secret.length + 1];
-        // explicitly set the sign bit so we can safely remove it on the other side
-        bytes[0] = 0x01;
-        System.arraycopy(secret, 0, bytes, 1, secret.length);
-        return ByteUtils.pack(encryptNumber(new BigInteger(bytes)));
-    }
-
-    /**
-     * Encrypts a message given the secret code.
-     * 
-     * @param secret The secret code.
-     * @return Naor-pinkas message.
-     */
-    public NaorPinkasMessage encryptNumber(BigInteger secret) {
-        BigInteger r = schnorr.getFieldModP().randomElement(rnd),
-                   grp0 = schnorr.getFieldModP().pow(gp0, r), // g^{r P(0)}
-                   xor = grp0.xor(secret),
-                   gr = schnorr.getPowerOfG(r);
-        checkArgument(xor.compareTo(schnorr.getP()) < 0, "Secret is too large to encrypt");
+    
+    protected UnresolvedEncryptionMessage<T> encryptPartial(byte[] secret) {
+        BigInteger r = group.getFieldModOrder().randomElement(rnd);
+        T grp0 = group.pow(gp0, r), // g^{r P(0)
+          gr = group.getPowerOfG(r);
+        Optional<byte[]> mEncryptedSecret = encryptSecretWithItem(secret, grp0);
+        checkArgument(mEncryptedSecret.isPresent(), "Secret is too large to encrypt");
+        byte[] encryptedSecret = mEncryptedSecret.get();
         
-        ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
+        ImmutableList.Builder<NaorPinkasShare<T>> shares = ImmutableList.builder();
         int i = 0;
         int dummies = t - revokedUsers.size();
         while (i < dummies) {
-            NaorPinkasShare share = getDummyKey(i).getShare(r, gr);
+            NaorPinkasShare<T> share = getDummyKey(i).getShare(r, gr);
             shares.add(share);
             ++i;
         }
         for (NaorPinkasIdentity id : revokedUsers) {
-            NaorPinkasShare share = getPersonalKey(id).get().getShare(r, gr);
+            NaorPinkasShare<T> share = getPersonalKey(id).get().getShare(r, gr);
             shares.add(share);
         }
-        
-        return new NaorPinkasMessage(t, r, xor, schnorr, lagrange, shares.build());
+        ImmutableList.Builder<BInteger> lagrangeCoeffs = ImmutableList.builder();
+        for (NaorPinkasShare<T> share : shares.build()) {
+            BigInteger c = context.getLagrange().getCoefficients().get(share.getI());
+            assert c != null;
+            lagrangeCoeffs.add(packBigInt(c));
+        }
+        NaorPinkasMessageCommon common = 
+                NaorPinkasMessageCommon.newBuilder()
+                    .setT(t)
+                    .setR(packBigInt(r))
+                    .setEncryptedSecret(ByteString.copyFrom(encryptedSecret))
+                    .addAllCoefficients(lagrangeCoeffs.build())
+                    .build();
+        return new UnresolvedEncryptionMessage<T>(common, shares.build());
     }
-
+    
+    protected BInteger packBigInt(BigInteger x) {
+        return BInteger.newBuilder()
+                .setTwoComplement(ByteString.copyFrom(x.toByteArray()))
+                .build();
+    }
+    
     /**
-     * Returns the identity with the given index.
-     * 
      * @param i An index.
      * @return The identity with the given index.
      */
     public NaorPinkasIdentity getIdentity(int i) {
-        // first t users are dummies
         return getUserKey(i).getIdentity();
     }
 
-    private NaorPinkasPersonalKey getUserKey(int i) {
+    private NaorPinkasPersonalKey<T> getUserKey(int i) {
         // first t users are dummies
-        NaorPinkasPersonalKey key = keyGen.get(t + i);
+        NaorPinkasPersonalKey<T> key = context.getKeyGen().get(t + i);
         keyByIdentity.put(key.getIdentity(), key);
         return key;
     }
 
-    private NaorPinkasPersonalKey getDummyKey(int i) {
-        return keyGen.get(i);
+    private NaorPinkasPersonalKey<T> getDummyKey(int i) {
+        return context.getKeyGen().get(i);
     }
 
     /**
@@ -175,8 +137,9 @@ public class NaorPinkasServer
         }
         // TODO abstract this away
         // remove highest dummy key and add new identity
-        lagrange.removeX(getDummyKey(t - revokedUsers.size() - 1).getIdentity().getI());
-        lagrange.addX(id.getI());
+        context.getLagrange().removeX(
+                    getDummyKey(t - revokedUsers.size() - 1).getIdentity().getI());
+        context.getLagrange().addX(id.getI());
         return revokedUsers.add(id);
     }
     
@@ -189,8 +152,9 @@ public class NaorPinkasServer
     public boolean unrevoke(NaorPinkasIdentity id) {
         // TODO abstract this away
         // remove old identity and add new dummy
-        lagrange.removeX(id.getI());
-        lagrange.addX(getDummyKey(t - revokedUsers.size()).getIdentity().getI());
+        context.getLagrange().removeX(id.getI());
+        context.getLagrange().addX(
+                    getDummyKey(t - revokedUsers.size()).getIdentity().getI());
         return revokedUsers.remove(id);
     }
     
@@ -207,7 +171,7 @@ public class NaorPinkasServer
      * @return The private key of the user or absent if no
      * such user exists
      */
-    public Optional<NaorPinkasPersonalKey> getPersonalKey(NaorPinkasIdentity id) {
+    public Optional<NaorPinkasPersonalKey<T>> getPersonalKey(NaorPinkasIdentity id) {
         return Optional.fromNullable(keyByIdentity.get(id));
     }
 }

@@ -2,8 +2,6 @@ package cryptocast.crypto.naorpinkas;
 
 import static org.junit.Assert.*;
 
-import java.math.BigInteger;
-
 import org.junit.Test;
 
 import cryptocast.crypto.*;
@@ -11,15 +9,10 @@ import static cryptocast.util.ByteUtils.str2bytes;
 
 public class TestNaorPinkasCommunication extends WithNaorPinkasContext {
     private int t = 10;
-    NaorPinkasServer server = NaorPinkasServer.generate(t, schnorr);
-    NaorPinkasClient client = 
-            new NaorPinkasClient(server.getPersonalKey(server.getIdentity(0)).get());
-    
-    @Test
-    public void encryptDecryptNumberWorks() throws Exception {
-        BigInteger secret = BigInteger.valueOf(111111);
-        assertEquals(secret, client.decryptNumber(server.encryptNumber(secret)));
-    }
+    SchnorrNaorPinkasServer server = 
+            (SchnorrNaorPinkasServer) new SchnorrNaorPinkasServerFactory().construct(t);
+    SchnorrNaorPinkasClient client = 
+            new SchnorrNaorPinkasClient(server.getPersonalKey(server.getIdentity(0)).get());
 
     @Test
     public void encryptDecryptByteArrayWorks() throws Exception {
@@ -36,6 +29,6 @@ public class TestNaorPinkasCommunication extends WithNaorPinkasContext {
     @Test(expected=InsufficientInformationError.class)
     public void decryptDoesntWorkWithRevokedShare() throws Exception {
         server.revoke(server.getIdentity(0));
-        client.decryptNumber(server.encryptNumber(BigInteger.valueOf(111)));
+        client.decrypt(server.encrypt(new byte[] { 0x1 }));
     }
 }

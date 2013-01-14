@@ -5,102 +5,64 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 import static cryptocast.util.ByteUtils.*;
-import cryptocast.util.Packable;
 
 import static com.google.common.base.Preconditions.*;
 
 /**
  * Represents a schnorr group.
  */
-public class SchnorrGroup implements Packable, Serializable {
+public class SchnorrGroup extends CyclicGroupOfPrimeOrder<BigInteger>
+                          implements Serializable {
     private static final long serialVersionUID = -2980881642885431015L;
-    
-    private BigInteger p, q, r, g;
-    private IntegersModuloPrime modP, modQ;
+
+    private BigInteger p;
+    private IntegersModuloPrime modP;
 
     /**
      * Creates a schnorr group with the given values:
-     * ($p$ = $q$ * $r$ +1), with $p$ and $q$ prime and 1 < $h$ < p,
-     * $h$^$r$ != 1(mod $p$), $g$ = $h$^$r$ mod $p$
-     * @param p the $p$ argument
-     * @param q the $q$ argument
-     * @param g the $g$ argument
+     * $q$ and $p$ prime, $p = qr + 1$ and $g$ generates
+     * a subgroup of $\mathbb{Z}_p^\times$ with order $q$.
+     * @param p $p$, a large prime
+     * @param q $q$, a prime factor of $p - 1$
+     * @param g $g$, the generator of a subgroup of $\mathbb{Z}_p^\times$ 
+     *          with order $q$
      */
     public SchnorrGroup(BigInteger p, BigInteger q, BigInteger g) {
+        super(g, q);
         checkArgument(p.subtract(BigInteger.ONE).mod(q).equals(BigInteger.ZERO),
                           "q must divide (p - 1) without remainder");
         this.p = p;
-        this.q = q;
-        this.r = p.subtract(BigInteger.ONE).divide(q);
-        this.g = g;
         modP = new IntegersModuloPrime(p);
-        modQ = new IntegersModuloPrime(q);
     }
-    /**
-     * Returns modulo $p$ 
-     * 
-     * @return Modulo $p$ 
-     */
-    public IntegersModuloPrime getFieldModP() {
-        return modP;
+
+    @Override
+    public BigInteger combine(BigInteger a, BigInteger b) {
+        return modP.multiply(a, b);
     }
-    /**
-     * Returns module $q$
-     * 
-     * @return Module $q$
-     */
-    public IntegersModuloPrime getFieldModQ() {
-        return modQ;
+
+    @Override
+    public BigInteger pow(BigInteger a, BigInteger k) {
+        return modP.pow(a, k);
+    }
+
+    @Override
+    public BigInteger invert(BigInteger a) {
+        return modP.invert(a);
+    }
+
+    @Override
+    public BigInteger identity() {
+        return modP.one();
     }
 
     /** @return $p$ */
     public BigInteger getP() {
         return p;
     }
-    
-    /** @return $g$ */
-    public BigInteger getG() {
-        return g;
-    }
-   
-    /** @return $q$ */
-    public BigInteger getQ() {
-        return q;
-    }
-    
-    /** @return $r$ */
-    public BigInteger getR() {
-        return r;
-    }
-   
-    /** @return $g^k$ */
-    public BigInteger getPowerOfG(BigInteger k) {
-        return modP.pow(g, k);
-    }
 
-    @Override
-    public int getMaxSpace() {
-        return 3 * modP.getMaxNumberSpace();
-    }
-    
-    @Override
-    public void pack(ByteBuffer buf) {
-        putBigInt(buf, p);
-        putBigInt(buf, q);
-        putBigInt(buf, g);
-    }
-
-    /**
-     * Unpacks a byte buffer into a schnorr group.
-     * 
-     * @param buf A byte buffer.
-     * @return A schnorr group.
-     */
-    public static SchnorrGroup unpack(ByteBuffer buf) {
-        BigInteger p = getBigInt(buf),
-                   q = getBigInt(buf),
-                   g = getBigInt(buf);
-        return new SchnorrGroup(p, q, g);
+    /** @return the field of integers modulo $p$ */
+    public IntegersModuloPrime getFieldModP() {
+        return modP;
     }
     
     /**
@@ -141,7 +103,7 @@ public class SchnorrGroup implements Packable, Serializable {
         if (other_ == null || other_.getClass() != getClass()) { return false; }
         SchnorrGroup other = (SchnorrGroup)other_;
         return p.equals(other.p)
-            && g.equals(other.g)
-            && q.equals(other.q);
+            && getGenerator().equals(other.getGenerator())
+            && getOrder().equals(other.getOrder());
     }
 }

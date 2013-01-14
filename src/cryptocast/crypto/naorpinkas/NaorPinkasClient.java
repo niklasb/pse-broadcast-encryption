@@ -1,9 +1,12 @@
 package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
-import cryptocast.util.ByteUtils;
+import cryptocast.crypto.Protos.BInteger;
+import cryptocast.crypto.naorpinkas.Protos.*;
+import cryptocast.util.MapUtils;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -11,53 +14,47 @@ import com.google.common.collect.ImmutableList;
 /**
  * A client in the Naor-Pinkas broadcast encryption scheme.
  */
-public class NaorPinkasClient implements Decryptor<byte[]> {
-    private NaorPinkasPersonalKey key;
-    private NaorPinkasShareCombinator combinator = new NaorPinkasShareCombinator();
-    private SchnorrGroup schnorr;
+public abstract class NaorPinkasClient<T> implements Decryptor<byte[]> {
+    private NaorPinkasPersonalKey<T> key;
+    private NaorPinkasShareCombinator<T> combinator = 
+                   new NaorPinkasShareCombinator<T>();
+    private CyclicGroupOfPrimeOrder<T> group;
     
     /**
      * Initializes a Naor-Pinkas broadcast client.
      * @param key The personal key used to reconstruct a secret from the stream.
      */
-    public NaorPinkasClient(NaorPinkasPersonalKey key) {
+    protected NaorPinkasClient(NaorPinkasPersonalKey<T> key) {
         this.key = key;
-        schnorr = key.getSchnorr();
+        group = key.getGroup();
     }
-
-    /**
-      * Decrypts a secret.
-      * @param cipher The encrypted secret.
-      * @return The decrypted secret.
-      */
-    public byte[] decrypt(byte[] cipher) throws InsufficientInformationError {
-        NaorPinkasMessage msg = NaorPinkasMessage.unpack(
-                ByteUtils.startUnpack(cipher));
-        byte[] bytes = decryptNumber(msg).toByteArray();
-        byte[] secret = new byte[bytes.length - 1];
-        System.arraycopy(bytes, 1, secret, 0, secret.length);
-        return secret;
-    }
-    /**
-     * Decrypts a message into corresponding code.
-     * 
-     * @param msg The message to decrypt.
-     * @return The decrypted message code.
-     * @throws InsufficientInformationError
-     */
-    public BigInteger decryptNumber(NaorPinkasMessage msg) throws InsufficientInformationError {
-        BigInteger r = msg.getR();
-        
-        // make a mutable copy, so we can add our own share
-        ImmutableList<NaorPinkasShare> shares = ImmutableList.<NaorPinkasShare>builder()
-                .addAll(msg.getShares())
-                .add(key.getShare(r, schnorr.getPowerOfG(r)))
+    
+    public CyclicGroupOfPrimeOrder<T> getGroup() { return group; }
+    
+    protected T decryptItem(NaorPinkasMessageCommon common, List<NaorPinkasShare<T>> shares) 
+                  throws InsufficientInformationError {
+        BigInteger r = unpackBigInt(common.getR());
+        ImmutableList.Builder<BigInteger> coeffs = ImmutableList.builder();
+        for (BInteger c : common.getCoefficientsList()) {
+            coeffs.add(unpackBigInt(c));
+        }
+        LagrangeInterpolation<BigInteger> lagrange = 
+                     new LagrangeInterpolation<BigInteger>(group.getFieldModOrder(), 
+                             MapUtils.zip(NaorPinkasShare.getXsFromShares(shares), 
+                                          coeffs.build()));
+        ImmutableList<NaorPinkasShare<T>> allShares = ImmutableList.<NaorPinkasShare<T>>builder()
+                .addAll(shares)
+                .add(key.getShare(r, group.getPowerOfG(r)))
                 .build();
-        Optional<BigInteger> mInterpol = combinator.restore(shares, msg.getLagrange());
+        Optional<T> mInterpol = combinator.restore(allShares, lagrange);
         if (!mInterpol.isPresent()) {
             throw new InsufficientInformationError(
                     "Cannot restore secret: Redundant or missing information");
         }
-        return mInterpol.get().xor(msg.getXor());
+        return mInterpol.get();
+    }
+    
+    protected BigInteger unpackBigInt(BInteger b) {
+        return new BigInteger(b.getTwoComplement().toByteArray());
     }
 }

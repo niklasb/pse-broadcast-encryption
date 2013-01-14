@@ -9,15 +9,14 @@ import org.junit.*;
 public class TestIntegersModuloPrime {
     private IntegersModuloPrime smallSut =
             new IntegersModuloPrime(BigInteger.valueOf(11));
-    private IntegersModuloPrime largeSut =
-            SchnorrGroup.getP1024Q160().getFieldModP();
+    private IntegersModuloPrime largeSut = SchnorrGroup.getP1024Q160().getFieldModP();
     
     @Test
     public void pow() {
         assertEquals(BigInteger.valueOf(9), 
                 smallSut.pow(BigInteger.valueOf(3), BigInteger.valueOf(1000000002)));
         
-        BigInteger q = SchnorrGroup.getP1024Q160().getQ();
+        BigInteger q = SchnorrGroup.getP1024Q160().getOrder();
         BigInteger expected = new BigInteger(
                 "9dab40a861a4f4e58fb56e9b4f5c2036d385773495200d4" +
                 "12234738610aa88093a36218df86e941b6d7c87ceee2230" +

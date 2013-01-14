@@ -3,16 +3,17 @@ package cryptocast.crypto.naorpinkas;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
-import java.util.Map;
 
 import org.junit.Test;
 
 import cryptocast.crypto.*;
+import cryptocast.crypto.Protos.BInteger;
+import cryptocast.crypto.naorpinkas.Protos.*;
 
 public class TestNaorPinkasServer {
     int t = 10;
-    NaorPinkasServer server = 
-            NaorPinkasServer.generate(t, SchnorrGroup.getP1024Q160());
+    SchnorrNaorPinkasServer server = 
+            (SchnorrNaorPinkasServer) new SchnorrNaorPinkasServerFactory().construct(t);
     
     @Test
     public void getPersonalKeyWorks() throws Exception {
@@ -23,7 +24,8 @@ public class TestNaorPinkasServer {
     
     @Test
     public void broadcastsTheCorrectNumberOfShares() throws Exception {
-        assertEquals(t, server.encryptNumber(BigInteger.valueOf(111111)).getShares().size());
+        NaorPinkasMessageSchnorr msg = server.encryptMessage(new byte[] { 0x1 });
+        assertEquals(t, msg.getSharesCount());
     }
     
     @Test
@@ -63,14 +65,14 @@ public class TestNaorPinkasServer {
         for (int i : revoked) {
             server.revoke(server.getIdentity(i));
         }
-        NaorPinkasMessage msg = server.encryptNumber(BigInteger.valueOf(111111));
+        NaorPinkasMessageSchnorr msg = server.encryptMessage(new byte[] { 0x1 });
         for (int i : revoked) {
             assertTrue(containsShareForUser(msg, server.getIdentity(i)));
         }
     }
     
     @Test
-    public void sendsCorrectLagrangeCoefficients() throws Exception {
+    public void maintainsLagrangeCoefficients() throws Exception {
         for (int i = 2; i <= 4; ++i) {
             server.revoke(server.getIdentity(i));
         }
@@ -80,20 +82,25 @@ public class TestNaorPinkasServer {
         server.unrevoke(server.getIdentity(9));
         server.unrevoke(server.getIdentity(2));
         
-        NaorPinkasMessage msg = server.encryptNumber(BigInteger.ONE);
-        Map<BigInteger, BigInteger> coefficients = msg.getLagrange().getCoefficients();
-        assertEquals(t, coefficients.size());
-        for (NaorPinkasShare share : msg.getShares()) {
-            assertTrue(coefficients.containsKey(share.getI()));
+        LagrangeInterpolation<BigInteger> lagrange = server.getContext().getLagrange();
+        NaorPinkasMessageSchnorr msg = server.encryptMessage(new byte[] { 0x1 });
+        assertEquals(t, lagrange.getCoefficients().size());
+        for (NaorPinkasShareSchnorr share : msg.getSharesList()) {
+            assertTrue(lagrange.getCoefficients().containsKey(unpackBigInt(share.getI())));
         }
     }
     
-    private boolean containsShareForUser(NaorPinkasMessage msg, NaorPinkasIdentity id) {
-        for (NaorPinkasShare share : msg.getShares()) {
-            if (share.getIdentity().equals(id)) { 
+    private boolean containsShareForUser(NaorPinkasMessageSchnorr msg, NaorPinkasIdentity id) {
+        for (NaorPinkasShareSchnorr share : msg.getSharesList()) {
+            BigInteger i = unpackBigInt(share.getI());
+            if (i.equals(id.getI())) { 
                 return true; 
             }
         }
         return false;
+    }
+    
+    private BigInteger unpackBigInt(BInteger b) {
+        return new BigInteger(b.getTwoComplement().toByteArray());
     }
 }

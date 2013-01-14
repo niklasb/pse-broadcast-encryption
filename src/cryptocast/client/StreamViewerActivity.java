@@ -2,6 +2,7 @@ package cryptocast.client;
 
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -10,8 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import cryptocast.comm.StreamMessageInChannel;
 import cryptocast.crypto.BroadcastEncryptionClient;
-import cryptocast.crypto.naorpinkas.NaorPinkasClient;
-import cryptocast.crypto.naorpinkas.NaorPinkasPersonalKey;
+import cryptocast.crypto.naorpinkas.*;
 import cryptocast.util.SerializationUtils;
 
 import android.media.MediaPlayer;
@@ -46,7 +46,7 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onStart() {
         super.onStart();
-        NaorPinkasPersonalKey key;
+        NaorPinkasPersonalKey<BigInteger> key;
         try {
             key = SerializationUtils.readFromFile(keyFile);
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class StreamViewerActivity extends ClientActivity
             BroadcastEncryptionClient in =
                     new BroadcastEncryptionClient(
                             new StreamMessageInChannel(sock.getInputStream()), 
-                            new NaorPinkasClient(key));
+                            new SchnorrNaorPinkasClient(key));
             log.debug("Waiting for first byte");
             in.read();
             log.debug("Starting media player");

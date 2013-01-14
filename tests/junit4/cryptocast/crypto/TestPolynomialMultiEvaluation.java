@@ -41,7 +41,7 @@ public class TestPolynomialMultiEvaluation {
     }
     
     private void randomTest(int t, int n) {
-        IntegersModuloPrime field = SchnorrGroup.getP1024Q160().getFieldModQ();
+        IntegersModuloPrime field = SchnorrGroup.getP1024Q160().getFieldModOrder();
         Polynomial<BigInteger> poly = Polynomial.createRandomPolynomial(rnd, field, t);
         ImmutableList.Builder<BigInteger> xs = ImmutableList.builder();
         for (int i = 0; i < n; ++i) {

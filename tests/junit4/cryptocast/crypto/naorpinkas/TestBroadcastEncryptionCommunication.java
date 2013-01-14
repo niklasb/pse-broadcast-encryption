@@ -2,6 +2,8 @@ package cryptocast.crypto.naorpinkas;
 
 import static org.junit.Assert.*;
 
+import java.math.BigInteger;
+
 import org.junit.Test;
 
 import cryptocast.comm.MessageBuffer;
@@ -11,17 +13,18 @@ import static cryptocast.util.ByteUtils.str2bytes;
 
 public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext {
     private int t = 10;
-    private NaorPinkasServer server = 
-                NaorPinkasServer.generate(t, SchnorrGroup.getP1024Q160());
+    SchnorrNaorPinkasServer server = 
+            (SchnorrNaorPinkasServer) new SchnorrNaorPinkasServerFactory().construct(t);
     private MessageBuffer fifo = new MessageBuffer();
     
     @Test
     public void serverCanSendToClient() throws Exception {
         BroadcastEncryptionServer<NaorPinkasIdentity> out = 
                 BroadcastEncryptionServer.start(server, server, 128, fifo, 0, null);
-        NaorPinkasPersonalKey key = server.getPersonalKey(server.getIdentity(0)).get();
+        NaorPinkasPersonalKey<BigInteger> key = 
+                server.getPersonalKey(server.getIdentity(0)).get();
         BroadcastEncryptionClient in =
-                new BroadcastEncryptionClient(fifo, new NaorPinkasClient(key));
+                new BroadcastEncryptionClient(fifo, new SchnorrNaorPinkasClient(key));
         byte[] payload = str2bytes("abcdefg");
         out.write(payload);
         out.close();
@@ -33,7 +36,7 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
     public void serverBroadcastsKeyRegularly() throws Exception {
         BroadcastEncryptionServer<NaorPinkasIdentity> out = 
                 BroadcastEncryptionServer.start(server, server, 128, fifo, 100, null);
-        NaorPinkasPersonalKey key = server.getPersonalKey(server.getIdentity(0)).get();
+        NaorPinkasPersonalKey<BigInteger> key = server.getPersonalKey(server.getIdentity(0)).get();
         byte[] payload = str2bytes("abcdefg");
         out.write(payload);
         out.flush();
@@ -41,7 +44,7 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
         while (fifo.recvMessage() != null) {}
         fifo.setBlocking(true);
         BroadcastEncryptionClient in =
-                new BroadcastEncryptionClient(fifo, new NaorPinkasClient(key));
+                new BroadcastEncryptionClient(fifo, new SchnorrNaorPinkasClient(key));
         Thread worker = new Thread(out);
         worker.start();
         Thread.sleep(500);
