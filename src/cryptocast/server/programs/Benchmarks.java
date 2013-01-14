@@ -1,6 +1,7 @@
 package cryptocast.server.programs;
 
 import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -77,7 +78,7 @@ public final class Benchmarks {
         private int t = 100;
         @Parameter(names = { "-b" }, description = "The bit size of the modulus")
         private int b = 160;
-        @Parameter(names = { "-x" }, description = "The bit size of the modulus")
+        @Parameter(names = { "-x" }, description = "The number of threads")
         private int numThreads = 2;
         
         IntegersModuloPrime field;
@@ -99,6 +100,76 @@ public final class Benchmarks {
         
         public void run() {
             LagrangeInterpolation.computeCoefficients(field, xs, numThreads);
+        }
+    }
+    
+    @Parameters(commandDescription = "Calculate the lagrange coefficients")
+    private static class MultiExpBenchmark implements Benchmark {
+        private static final Logger log = LoggerFactory
+                .getLogger(Benchmarks.MultiExpBenchmark.class);
+        
+        @Parameter(names = { "-t" }, description = "The number of exponentations")
+        private int t = 100;
+        
+        @Parameter(names = { "-g" }, description = "The group (ec or schnorr)")
+        private String g = "schnorr";
+        
+        SchnorrGroup schnorr;
+        EllipticCurveGroup<BigInteger, EllipticCurveOverFp> ecGroup;
+        
+        ImmutableList<BigInteger> basesSchnorr;
+        ImmutableList<EllipticCurve.Point<BigInteger>> basesEc;
+        ImmutableList<BigInteger> exps;
+        
+        public void beforeAll() throws Exception {
+            log.info("Using algorithm {}", g);
+            Random rnd = new Random();
+            IntegersModuloPrime modQ;
+            if (g.equals("ec")) {
+                ecGroup = EllipticCurveGroup.getPrime192V1();
+                ImmutableList.Builder<EllipticCurve.Point<BigInteger>> builder = 
+                             ImmutableList.builder();
+                for (int i = 0; i < t; i++) {
+                    builder.add(ecGroup.getBasePoint());
+                }
+                basesEc = builder.build();
+                modQ = ecGroup.getFieldModOrder();
+            } else if (g.equals("schnorr")) {
+                schnorr = SchnorrGroup.getP1024Q160();
+                ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
+                for (int i = 0; i < t; i++) {
+                    builder.add(schnorr.getFieldModP().randomElement(rnd));
+                }
+                basesSchnorr = builder.build();
+                modQ = schnorr.getFieldModOrder();
+            } else {
+                throw new Exception("Invalid group: `" + g + "'");
+            }
+            ImmutableList.Builder<BigInteger> cbuilder = ImmutableList.builder();
+            for (int i = 0; i < t; i++) {
+                cbuilder.add(modQ.randomElement(rnd));
+            }
+            exps = cbuilder.build();
+        }
+        
+        public void before() {}
+        
+        public void run() {
+            if (g.equals("ec")) {
+                multiexp(basesEc, exps, ecGroup);
+            } else {
+                multiexp(basesSchnorr, exps, schnorr);
+            }
+        }
+        
+        private <T> T multiexp(ImmutableList<T> bases, ImmutableList<BigInteger> exps,
+                               CyclicGroupOfPrimeOrder<T> group) {
+            T res = group.identity();
+            Iterator<BigInteger> exp = exps.iterator();
+            for (T base : bases) {
+                res = group.combine(res, group.pow(base, exp.next()));
+            }
+            return res;
         }
     }
     
@@ -307,6 +378,7 @@ public final class Benchmarks {
             .put("decrypt", new DecryptBenchmark())
             .put("multi-eval", new MultiEvalBenchmark())
             .put("keygen", new KeygenBenchmark())
+            .put("multi-exp", new MultiExpBenchmark())
             .build();
 
     private static void printCommands() {
