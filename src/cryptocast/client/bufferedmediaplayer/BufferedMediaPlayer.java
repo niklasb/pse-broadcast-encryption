@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import android.media.MediaPlayer;
@@ -33,13 +32,14 @@ BufferedFileListener, Runnable, OnPreparedListener {
 
     private MediaPlayer playingPlayer;
     
-    private BlockingQueue<File> bufferedFiles;
-    private BlockingQueue<File> emptyBufferFiles;
+    private Queue<File> bufferedFiles;
+    private Queue<File> emptyBufferFiles;
     private HashMap<MediaPlayer, File> playedFiles;
     
     private InputStream stream;
     private StreamSaver saver;
     private boolean shouldBePlaying;
+    private boolean running;
     private LinkedList<OnStatusChangeListener> statusListeners;
     
     /**
@@ -49,11 +49,10 @@ BufferedFileListener, Runnable, OnPreparedListener {
         bufferedFiles = new LinkedBlockingQueue<File>();
         idlePlayers = new LinkedList<MediaPlayer>();
         preparingPlayers = new LinkedList<MediaPlayer>();
-        preparedPlayers = new LinkedList<MediaPlayer>();
+        preparedPlayers = new LinkedBlockingQueue<MediaPlayer>();
         playedFiles = new HashMap<MediaPlayer, File>();
         statusListeners = new LinkedList<OnStatusChangeListener>();
         saver = new StreamSaver();
-
         
         for (int i = 0; i < AMOUNT_BUFFERED_PLAYERS; i++) {
            MediaPlayer player = new MediaPlayer();
@@ -66,6 +65,7 @@ BufferedFileListener, Runnable, OnPreparedListener {
         removeBufferFiles();
         emptyBufferFiles = createBufferFiles();
         shouldBePlaying = false;
+        running = true;
     }
     
     /**
@@ -83,9 +83,7 @@ BufferedFileListener, Runnable, OnPreparedListener {
         if (stream == null) {
             return;
         }
-        if (saver == null) {
-            prepare();
-        } else if (!saver.isStreaming()) {
+        if (!saver.isStreaming()) {
             saver.startStreaming();
         }
         shouldBePlaying = true;
@@ -104,8 +102,9 @@ BufferedFileListener, Runnable, OnPreparedListener {
      * @return is playing
      */
     public boolean isPlaying() {
-        return playingPlayer != null &&playingPlayer.isPlaying();
+        return playingPlayer != null && playingPlayer.isPlaying();
     }
+    
     /**
      * Pauses the player but keeps streaming and buffering.
      */
@@ -116,8 +115,16 @@ BufferedFileListener, Runnable, OnPreparedListener {
         }
     }
     
-    public boolean isBuffering() {
+    /**
+     * 
+     * @return is streaming
+     */
+    public boolean isStreaming() {
         return saver.isStreaming();
+    }
+    
+    public void addOnStatusChangeListener(OnStatusChangeListener listener) {
+        statusListeners.add(listener);
     }
     
     /**
@@ -126,23 +133,20 @@ BufferedFileListener, Runnable, OnPreparedListener {
     public void prepare() {
         saver.prepare(stream, emptyBufferFiles);
         saver.addBufferedFileListener(this);
+        saver.startStreaming();
         new Thread(saver).start();
         new Thread(this).start();
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (playingPlayer != null) {
+        if (playingPlayer != null && shouldBePlaying) {
             playingPlayer.start();
-        } else {
+        } else if (shouldBePlaying){
             playNextFile();
         }
     }
-    
-    public void addOnStatusChangeListener(OnStatusChangeListener listener) {
-        statusListeners.add(listener);
-    }
-    
+
     @Override
     public void addBufferedFile(File file) {
         //Log.d(this.getClass().getName(), "Buffered File added " + file.toString());
@@ -151,7 +155,7 @@ BufferedFileListener, Runnable, OnPreparedListener {
 
     @Override
     public void run() {
-        while(true) {
+        while(running) {
             if (bufferedFiles.size() > 0 && idlePlayers.size() > 0) {
                 MediaPlayer player = idlePlayers.remove();
                 File file = bufferedFiles.remove();
@@ -170,6 +174,7 @@ BufferedFileListener, Runnable, OnPreparedListener {
                 }
             }
             
+            
             if (shouldBePlaying) {
                 if (playingPlayer == null) {
                     playNextFile();
@@ -183,8 +188,8 @@ BufferedFileListener, Runnable, OnPreparedListener {
     @Override
     public void onPrepared(MediaPlayer mp) {
         //Log.d(this.getClass().getName(), "Player succesfully prepared, ready to play.");
-        preparedPlayers.add(mp);
         preparingPlayers.remove(mp);
+        preparedPlayers.add(mp);
     }
 
     private LinkedBlockingQueue<File> createBufferFiles() {

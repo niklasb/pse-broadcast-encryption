@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -14,31 +15,50 @@ import cryptocast.client.ClientTestRunner;
 
 @RunWith(ClientTestRunner.class)
 public class TestBufferedMediaPlayer implements OnStatusChangeListener {
-
-    private int percentage = 0;
     
-    @Test
-    public void testMediaPlayer() {
-        BufferedMediaPlayer player = new BufferedMediaPlayer();
-        InputStream stream = mockStream();
+    private final static int TIME_TO_PREPARE_IN_MS = 100;
+    
+    BufferedMediaPlayer player;
+    InputStream stream;
+            
+    @Before
+    public void testInit() {
+        player = new BufferedMediaPlayer();
+        stream = mockStream();
         player.addOnStatusChangeListener(this);
         player.setDataSource(stream);
         player.prepare();
-        
         assertFalse(player.isPlaying());
+        assertTrue(player.isStreaming());
+    }
+    
+    @Test
+    public void testStart() {
         player.start();
-        /*while (percentage < 100) {
-            // give the player time to buffer the first file
+        try {
+            Thread.sleep(TIME_TO_PREPARE_IN_MS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         assertTrue(player.isPlaying());
+        assertTrue(player.isStreaming());
+    }
+    
+    @Test
+    public void testPause() {
+        player.start();
         player.pause();
         assertFalse(player.isPlaying());
-        assertTrue(player.isBuffering());
-        player.stop();
-        assertFalse(player.isBuffering());
-        */
-
+        assertTrue(player.isStreaming());
     }
+    @Test
+    public void testStop() {
+        player.start();
+        player.stop();
+        assertFalse(player.isPlaying());
+        assertFalse(player.isStreaming());
+    }
+    
     
     public InputStream mockStream() {
         ByteArrayInputStream stream = spy(new ByteArrayInputStream(new byte[1]));
@@ -55,7 +75,7 @@ public class TestBufferedMediaPlayer implements OnStatusChangeListener {
 
     @Override
     public void bufferUpdate(int percentage) {
-        this.percentage = percentage;
+        //System.out.println("Buffer percentage: " + percentage + "%");
     }
 }
 

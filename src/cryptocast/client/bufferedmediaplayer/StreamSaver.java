@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
 
 /**
  * This class represents a stream saver.
@@ -124,8 +123,12 @@ public class StreamSaver implements Runnable {
     public void addBufferedFileListener(BufferedFileListener listener) {
         this.listeners.add(listener);
     }
-
-    public void prepare(InputStream stream, BlockingQueue<File> files) {
+    /**
+     * Prepares the streaming.
+     * @param stream the stream
+     * @param files the files to buffer the stream to
+     */
+    public void prepare(InputStream stream, Queue<File> files) {
         this.stream = stream;
         this.usableBufferFiles = files;
         
