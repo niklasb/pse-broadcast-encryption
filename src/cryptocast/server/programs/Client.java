@@ -5,9 +5,9 @@ import java.io.FileOutputStream;
 import java.net.Socket;
 
 import com.beust.jcommander.Parameter;
+import com.google.common.io.ByteStreams;
 
 import cryptocast.comm.StreamMessageInChannel;
-import cryptocast.comm.StreamUtils;
 import cryptocast.crypto.BroadcastEncryptionClient;
 import cryptocast.crypto.naorpinkas.*;
 import cryptocast.server.OptParse;
@@ -58,7 +58,7 @@ public final class Client {
                 System.err.println("Must specify -o option for type raw!");
             }
             FileOutputStream out = new FileOutputStream(opts.outfile);
-            StreamUtils.shovel(in, out, 0x1000);
+            ByteStreams.copy(in, out);
         } else if (opts.type.equals("debug")) {
             int received;
             byte[] buffer = new byte[0x1000];
