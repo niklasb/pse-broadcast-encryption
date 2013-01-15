@@ -13,9 +13,17 @@ import com.google.common.collect.Ordering;
 /**
  * Allows to restore a number from a sufficient number of Naor-Pinkas shares.
  */
-public class NaorPinkasShareCombinator<T> 
-                     implements ShareCombinator<T, NaorPinkasShare<T>, 
+public class NaorPinkasShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T>> 
+                     implements ShareCombinator<T, NaorPinkasShare<T, G>, 
                                                 LagrangeInterpolation<BigInteger>> {
+    private int t;
+    private G group;
+    
+    public NaorPinkasShareCombinator(int t, G group) {
+        this.t = t;
+        this.group = group;
+    }
+    
     /**
      * Restores a secret from several Naor-Pinkas shares.
      * @param shares The shares
@@ -25,19 +33,17 @@ public class NaorPinkasShareCombinator<T>
      * by the given shares is insufficient to restore it.
      */
     @Override
-    public Optional<T> restore(List<NaorPinkasShare<T>> shares,
+    public Optional<T> restore(List<NaorPinkasShare<T, G>> shares,
                                LagrangeInterpolation<BigInteger> lagrange) {
         if (hasMissingShares(shares) || hasRedundantShares(shares)) {
             return Optional.absent();
         }
-
-        CyclicGroupOfPrimeOrder<T> group = shares.get(0).getGroup();
         
         ImmutableList.Builder<T> bases = ImmutableList.builder();
         ImmutableList.Builder<BigInteger> exponents = ImmutableList.builder();
 
         lagrange.setXs(ImmutableSet.copyOf(NaorPinkasShare.getXsFromShares(shares)));
-        for (NaorPinkasShare<T> share : shares) {
+        for (NaorPinkasShare<T, G> share : shares) {
             bases.add(share.getGRPI());
             BigInteger e = lagrange.getCoefficients().get(share.getI());
             assert e != null;
@@ -54,8 +60,7 @@ public class NaorPinkasShareCombinator<T>
      * @return The reconstructed secret or absent if the information represented
      * by the given shares is insufficient to restore it.
      */
-    public Optional<T> restore(List<NaorPinkasShare<T>> shares, 
-                               CyclicGroupOfPrimeOrder<T> group) {
+    public Optional<T> restore(List<NaorPinkasShare<T, G>> shares) {
         if (hasMissingShares(shares) || hasRedundantShares(shares)) {
             return Optional.absent();
         }
@@ -69,8 +74,7 @@ public class NaorPinkasShareCombinator<T>
      * @param shares The shares to check.
      * @return <code>true</code> if there are any missing shares, <code>false</code> otherwise.
      */
-    public boolean hasMissingShares(List<NaorPinkasShare<T>> shares) {
-        int t = shares.get(0).getT();
+    public boolean hasMissingShares(List<NaorPinkasShare<T, G>> shares) {
         if (shares.size() < t + 1) {
             return true;
         }
@@ -83,11 +87,11 @@ public class NaorPinkasShareCombinator<T>
      * @param shares The shares.
      * @return <code>true</code> if there are any redundant shares, <code>false</code> otherwise.
      */
-    public boolean hasRedundantShares(List<NaorPinkasShare<T>> shares) {
-        ImmutableList<NaorPinkasShare<T>> sortedShares = 
+    public boolean hasRedundantShares(List<NaorPinkasShare<T, G>> shares) {
+        ImmutableList<NaorPinkasShare<T, G>> sortedShares = 
                 Ordering.natural().immutableSortedCopy(shares);
         BigInteger lastX = null;
-        for (NaorPinkasShare<T> share : sortedShares) {
+        for (NaorPinkasShare<T, G> share : sortedShares) {
             BigInteger x = share.getI();
             if (x.equals(lastX)) {
                 return true;

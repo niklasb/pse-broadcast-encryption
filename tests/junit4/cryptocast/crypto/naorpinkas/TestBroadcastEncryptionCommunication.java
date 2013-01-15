@@ -21,7 +21,7 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
     public void serverCanSendToClient() throws Exception {
         BroadcastEncryptionServer<NaorPinkasIdentity> out = 
                 BroadcastEncryptionServer.start(server, server, 128, fifo, 0, null);
-        NaorPinkasPersonalKey<BigInteger> key = 
+        NaorPinkasPersonalKey<BigInteger, SchnorrGroup> key = 
                 server.getPersonalKey(server.getIdentity(0)).get();
         BroadcastEncryptionClient in =
                 new BroadcastEncryptionClient(fifo, new SchnorrNaorPinkasClient(key));
@@ -36,7 +36,8 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
     public void serverBroadcastsKeyRegularly() throws Exception {
         BroadcastEncryptionServer<NaorPinkasIdentity> out = 
                 BroadcastEncryptionServer.start(server, server, 128, fifo, 100, null);
-        NaorPinkasPersonalKey<BigInteger> key = server.getPersonalKey(server.getIdentity(0)).get();
+        NaorPinkasPersonalKey<BigInteger, SchnorrGroup> key = 
+                server.getPersonalKey(server.getIdentity(0)).get();
         byte[] payload = str2bytes("abcdefg");
         out.write(payload);
         out.flush();

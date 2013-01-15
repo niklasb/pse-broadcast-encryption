@@ -2,44 +2,29 @@ package cryptocast.crypto.naorpinkas;
 
 import java.math.BigInteger;
 
-import com.google.common.collect.ImmutableList;
-import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.common.io.ByteArrayDataInput;
 
 import cryptocast.crypto.*;
-import cryptocast.crypto.naorpinkas.Protos.*;
 import cryptocast.util.ArrayUtils;
-import cryptocast.util.ErrorUtils;
 
-public class SchnorrNaorPinkasClient extends NaorPinkasClient<BigInteger> {
-    public SchnorrNaorPinkasClient(NaorPinkasPersonalKey<BigInteger> key) {
+public class SchnorrNaorPinkasClient extends NaorPinkasClient<BigInteger, SchnorrGroup> {
+    public SchnorrNaorPinkasClient(NaorPinkasPersonalKey<BigInteger, SchnorrGroup> key) {
         super(key);
     }
 
-    /**
-     * Decrypts a secret.
-     * @param cipher The encrypted secret.
-     * @return The decrypted secret.
-     */
-    public byte[] decrypt(byte[] cipher) throws DecryptionError {
-        NaorPinkasMessageSchnorr msg = null;
-        try {
-            msg = NaorPinkasMessageSchnorr.parseFrom(cipher);
-        } catch (InvalidProtocolBufferException e) {
-            ErrorUtils.throwWithCause(new DecryptionError("Could not parse protobuf!"), e);
-        }
-        int t = msg.getCommon().getT();
-        ImmutableList.Builder<NaorPinkasShare<BigInteger>> shares = ImmutableList.builder();
-        for (NaorPinkasShareSchnorr share : msg.getSharesList()) {
-            BigInteger r = unpackBigInt(share.getR()),
-                       i = unpackBigInt(share.getI()),
-                       grpi = unpackBigInt(share.getGrpi());
-            shares.add(new NaorPinkasShare<BigInteger>(t, r, i, grpi, getGroup()));
-        }
-        BigInteger decryptedItem = decryptItem(msg.getCommon(), shares.build()),
-                   xor = new BigInteger(msg.getCommon().getEncryptedSecret().toByteArray()),
-                   secretAsNum = decryptedItem.xor(xor);
-        
-        byte[] bytes = secretAsNum.toByteArray();
+    @Override
+    protected NaorPinkasShare<BigInteger, SchnorrGroup> readShare(
+                           ByteArrayDataInput in) {
+        BigInteger i = new BigInteger(readBytes(in)),
+                   grpi = new BigInteger(readBytes(in));
+        return new NaorPinkasShare<BigInteger, SchnorrGroup>(i, grpi, getGroup());
+    }
+
+    @Override
+    protected byte[] decryptSecretWithItem(byte[] encryptedSecret,
+                                           BigInteger item) {
+        BigInteger xor = new BigInteger(encryptedSecret);
+        byte[] bytes = item.xor(xor).toByteArray();
         return ArrayUtils.copyOfRange(bytes, 1, bytes.length);
     }
 }

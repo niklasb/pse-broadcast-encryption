@@ -3,14 +3,14 @@ package cryptocast.crypto.naorpinkas;
 import java.math.BigInteger;
 
 import com.google.common.base.Optional;
+import com.google.common.io.ByteArrayDataOutput;
 
-import cryptocast.crypto.naorpinkas.Protos.*;
+import cryptocast.crypto.*;
 
-public class SchnorrNaorPinkasServer extends NaorPinkasServer<BigInteger> {
+public class SchnorrNaorPinkasServer extends NaorPinkasServer<BigInteger, SchnorrGroup> {
     private static final long serialVersionUID = 1656507589897819277L;
 
-    protected SchnorrNaorPinkasServer(
-            NaorPinkasServerContext<BigInteger> ctx) {
+    protected SchnorrNaorPinkasServer(NaorPinkasServerContext<BigInteger, SchnorrGroup> ctx) {
         super(ctx);
     }
 
@@ -27,23 +27,10 @@ public class SchnorrNaorPinkasServer extends NaorPinkasServer<BigInteger> {
         return Optional.of(secretAsNum.xor(key).toByteArray());
     }
 
-    protected NaorPinkasMessageSchnorr encryptMessage(byte[] secret) {
-        UnresolvedEncryptionMessage<BigInteger> partial = encryptPartial(secret);
-        NaorPinkasMessageSchnorr.Builder builder = NaorPinkasMessageSchnorr.newBuilder();
-        for (NaorPinkasShare<BigInteger> share : partial.shares) {
-            builder.addShares(
-                NaorPinkasShareSchnorr.newBuilder()
-                    .setGrpi(packBigInt(share.getGRPI()))
-                    .setI(packBigInt(share.getI()))
-                    .setR(packBigInt(share.getR()))
-                    .build());
-        }
-        builder.setCommon(partial.common);
-        return builder.build();
-    }
-
     @Override
-    public byte[] encrypt(byte[] secret) {
-        return encryptMessage(secret).toByteArray();
+    protected void putShare(ByteArrayDataOutput out, 
+                            NaorPinkasShare<BigInteger, SchnorrGroup> share) {
+        putBytes(out, share.getI().toByteArray());
+        putBytes(out, share.getGRPI().toByteArray());
     }
 }

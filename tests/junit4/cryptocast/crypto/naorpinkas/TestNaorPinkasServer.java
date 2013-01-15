@@ -9,8 +9,6 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableSet;
 
 import cryptocast.crypto.*;
-import cryptocast.crypto.Protos.BInteger;
-import cryptocast.crypto.naorpinkas.Protos.*;
 
 public class TestNaorPinkasServer {
     int t = 10;
@@ -26,8 +24,9 @@ public class TestNaorPinkasServer {
     
     @Test
     public void broadcastsTheCorrectNumberOfShares() throws Exception {
-        NaorPinkasMessageSchnorr msg = server.encryptMessage(new byte[] { 0x1 });
-        assertEquals(t, msg.getSharesCount());
+        NaorPinkasMessage<BigInteger, SchnorrGroup> msg = 
+                server.encryptMessage(new byte[] { 0x1 });
+        assertEquals(t, msg.getShares().size());
     }
     
     @Test
@@ -77,7 +76,8 @@ public class TestNaorPinkasServer {
         for (int i : revoked) {
             server.revoke(server.getIdentity(i));
         }
-        NaorPinkasMessageSchnorr msg = server.encryptMessage(new byte[] { 0x1 });
+        NaorPinkasMessage<BigInteger, SchnorrGroup> msg = 
+                server.encryptMessage(new byte[] { 0x1 });
         for (int i : revoked) {
             assertTrue(containsShareForUser(msg, server.getIdentity(i)));
         }
@@ -98,24 +98,21 @@ public class TestNaorPinkasServer {
         server.unrevoke(server.getIdentity(2));
         
         LagrangeInterpolation<BigInteger> lagrange = server.getContext().getLagrange();
-        NaorPinkasMessageSchnorr msg = server.encryptMessage(new byte[] { 0x1 });
+        NaorPinkasMessage<BigInteger, SchnorrGroup> msg = 
+                server.encryptMessage(new byte[] { 0x1 });
         assertEquals(t, lagrange.getCoefficients().size());
-        for (NaorPinkasShareSchnorr share : msg.getSharesList()) {
-            assertTrue(lagrange.getCoefficients().containsKey(unpackBigInt(share.getI())));
+        for (NaorPinkasShare<BigInteger, SchnorrGroup> share : msg.getShares()) {
+            assertTrue(lagrange.getCoefficients().containsKey(share.getI()));
         }
     }
     
-    private boolean containsShareForUser(NaorPinkasMessageSchnorr msg, NaorPinkasIdentity id) {
-        for (NaorPinkasShareSchnorr share : msg.getSharesList()) {
-            BigInteger i = unpackBigInt(share.getI());
-            if (i.equals(id.getI())) { 
+    private boolean containsShareForUser(NaorPinkasMessage<BigInteger, SchnorrGroup> msg, 
+                                         NaorPinkasIdentity id) {
+        for (NaorPinkasShare<BigInteger, SchnorrGroup> share : msg.getShares()) {
+            if (share.getI().equals(id.getI())) { 
                 return true; 
             }
         }
         return false;
-    }
-    
-    private BigInteger unpackBigInt(BInteger b) {
-        return new BigInteger(b.getTwoComplement().toByteArray());
     }
 }

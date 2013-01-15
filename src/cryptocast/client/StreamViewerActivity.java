@@ -1,7 +1,6 @@
 package cryptocast.client;
 
 import java.io.File;
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import cryptocast.comm.StreamMessageInChannel;
 import cryptocast.crypto.BroadcastEncryptionClient;
+import cryptocast.crypto.SchnorrGroup;
 import cryptocast.crypto.naorpinkas.*;
 import cryptocast.util.SerializationUtils;
 
@@ -46,7 +46,7 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onStart() {
         super.onStart();
-        NaorPinkasPersonalKey<BigInteger> key;
+        NaorPinkasPersonalKey<BigInteger, SchnorrGroup> key;
         try {
             key = SerializationUtils.readFromFile(keyFile);
         } catch (Exception e) {
