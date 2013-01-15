@@ -13,7 +13,7 @@ public class FileUtils {
      * @return The absolute path.
      */
     public static File expandPath(String path) {
-        if (path.startsWith("~" + File.separator)) {
+        if (path.startsWith("~/") || path.startsWith("~" + File.separator)) {
             path = System.getProperty("user.home") + path.substring(1);
         }
         return new File(path);
