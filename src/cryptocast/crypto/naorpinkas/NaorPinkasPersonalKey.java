@@ -17,19 +17,21 @@ public class NaorPinkasPersonalKey<T>
     private int t;
     private BigInteger i, pi;
     private CyclicGroupOfPrimeOrder<T> group;
-
+    private NaorPinkasIdentity id;
+    
     /**
      * Creates a new instance of NaorPinkasPersonalKey with the given parameters.
      * 
-     * @param t The $t$, degree of the polynomial.
-     * @param i The $I$ of the polynomial.
-     * @param pi The $P(I)$ of the polynomial, the value of the polynomial at $I$.
+     * @param t $t$, the degree of the polynomial.
+     * @param i A point $I$.
+     * @param pi $P(I)$, the value of the polynomial at $I$.
      * @param schnorr The schnorr group.
      */
     protected NaorPinkasPersonalKey(int t, BigInteger i, BigInteger pi, 
                                     CyclicGroupOfPrimeOrder<T> group) {
         this.t = t;
         this.i = i;
+        id = new NaorPinkasIdentity(i);
         this.pi = pi;
         this.group = group;
     }
@@ -55,7 +57,7 @@ public class NaorPinkasPersonalKey<T>
      * @return the NP identity.
      */
     public NaorPinkasIdentity getIdentity() {
-        return new NaorPinkasIdentity(i);
+        return id;
     }
 
     /**
