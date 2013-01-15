@@ -10,10 +10,10 @@ import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Set;
 
-import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.protobuf.ByteString;
 
@@ -30,7 +30,7 @@ public abstract class NaorPinkasServer<T>
     private NaorPinkasServerContext<T> context;
     private T gp0;  // $g^P(0)$
     private Map<NaorPinkasIdentity, NaorPinkasPersonalKey<T>> keyByIdentity =
-            Maps.newHashMap();
+                                Maps.newHashMap();
     private Set<NaorPinkasIdentity> revokedUsers = Sets.newHashSet();
     
     private CyclicGroupOfPrimeOrder<T> group;
