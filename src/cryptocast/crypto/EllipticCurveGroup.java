@@ -1,5 +1,6 @@
 package cryptocast.crypto;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -11,7 +12,10 @@ import org.bouncycastle.math.ec.ECPoint;
 import cryptocast.crypto.EllipticCurve.*;
 
 public class EllipticCurveGroup<T, C extends EllipticCurve<T>>
-              extends CyclicGroupOfPrimeOrder<Point<T>> {
+              extends CyclicGroupOfPrimeOrder<Point<T>>
+              implements Serializable {
+    private static final long serialVersionUID = 1276532022589756079L;
+    
     private C curve;
     private EllipticCurve.ConcretePoint<T> basePoint;
     private BigInteger basePointOrder;
