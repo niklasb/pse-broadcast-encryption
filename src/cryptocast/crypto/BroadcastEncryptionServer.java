@@ -109,7 +109,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
      * @throws NoMoreRevocationsPossibleError
      * @throws IOException
      */
-    public synchronized void revoke(List<ID> id) throws NoMoreRevocationsPossibleError, IOException {
+    public synchronized void revoke(ID id) throws NoMoreRevocationsPossibleError, IOException {
         if (context.revoke(id)) {
             updateKey();
         }

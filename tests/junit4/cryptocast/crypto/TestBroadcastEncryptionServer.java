@@ -40,16 +40,14 @@ public class TestBroadcastEncryptionServer {
     
     @Test
     public void revokeInformsBackend() throws Exception {
-        ArrayList<Identity> ids = new ArrayList<Identity>();
-        ids.add(new Identity());
-        sut.revoke(ids);
-        verify(userManager).revoke(ids);
+        Identity id = new Identity();
+        sut.revoke(id);
+        verify(userManager).revoke(id);
     }
 
     @Test
     public void revokeTriggersKeyUpdate() throws Exception {
-        ArrayList<Identity> id = new ArrayList<Identity>();
-        id.add(new Identity());
+        Identity id = new Identity();
         when(userManager.revoke(id))
             .thenReturn(true)
             .thenReturn(false);
@@ -58,12 +56,12 @@ public class TestBroadcastEncryptionServer {
         sut.revoke(id);
         verify(cipherStream, times(1)).updateKey();
         
-        when(userManager.unrevoke(id.get(0)))
+        when(userManager.unrevoke(id))
             .thenReturn(true)
             .thenReturn(false);
-        sut.unrevoke(id.get(0));
+        sut.unrevoke(id);
         verify(cipherStream, times(2)).updateKey();
-        sut.unrevoke(id.get(0));
+        sut.unrevoke(id);
         verify(cipherStream, times(2)).updateKey();
     }
 }

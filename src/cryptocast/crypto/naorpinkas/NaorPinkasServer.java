@@ -105,6 +105,7 @@ public class NaorPinkasServer
      * @param secret the secret.
      * @return The cipher text.
      */
+    @Override
     public byte[] encrypt(byte[] secret) {
         byte[] bytes = new byte[secret.length + 1];
         // explicitly set the sign bit so we can safely remove it on the other side
@@ -148,6 +149,7 @@ public class NaorPinkasServer
      * @param i An index.
      * @return The identity with the given index.
      */
+    @Override
     public NaorPinkasIdentity getIdentity(int i) {
         // first t users are dummies
         return getUserKey(i).getIdentity();
@@ -165,24 +167,42 @@ public class NaorPinkasServer
     }
 
     /**
+     * Revokes multiple users.
+     * 
+     * @param id The identity of the user
+     * @return true, if the set of revoked users changed or false otherwise
+     */
+    @Override
+    public boolean revoke(List<NaorPinkasIdentity> ids) throws NoMoreRevocationsPossibleError {
+        if (getRemainingRevocations() < ids.size()) {
+            throw new NoMoreRevocationsPossibleError();
+        }
+        
+        boolean result = false;
+        for (NaorPinkasIdentity id : ids) {
+            // TODO abstract this away
+            // remove highest dummy key and add new identity
+            assert getRemainingRevocations() > 0;
+            lagrange.removeX(getDummyKey(getRemainingRevocations() - 1).getIdentity().getI());
+            lagrange.addX(id.getI());
+            result = result || revokedUsers.add(id);
+        }
+        return result;
+    }
+    
+    /**
      * Revokes a user.
      * 
      * @param id The identity of the user
      * @return true, if the set of revoked users changed or false otherwise
      */
-    public boolean revoke(List<NaorPinkasIdentity> ids) throws NoMoreRevocationsPossibleError {
-        // TODO abstract this away
-        // remove highest dummy key and add new identity
-        boolean result = false;
-        for (NaorPinkasIdentity id : ids) {
-            if (revokedUsers.size() == t) {
-                throw new NoMoreRevocationsPossibleError();
-            }
-            lagrange.removeX(getDummyKey(t - revokedUsers.size() - 1).getIdentity().getI());
-            lagrange.addX(id.getI());
-            result = revokedUsers.add(id);
-        }
-        return result;
+    @Override
+    public boolean revoke(NaorPinkasIdentity id) throws NoMoreRevocationsPossibleError {
+        return revoke(ImmutableList.of(id));
+    }
+    
+    private int getRemainingRevocations() {
+        return t - revokedUsers.size();
     }
     
     /**
@@ -191,6 +211,7 @@ public class NaorPinkasServer
      * @param id The identity of the user
      * @return true, if the set of revoked users changed or false otherwise
      */
+    @Override
     public boolean unrevoke(NaorPinkasIdentity id) {
         // TODO abstract this away
         // remove old identity and add new dummy
@@ -203,6 +224,7 @@ public class NaorPinkasServer
      * @param id The identity of the user
      * @return Whether the user is revoked.
      */
+    @Override
     public boolean isRevoked(NaorPinkasIdentity id) {
         return revokedUsers.contains(id);
     }
@@ -212,6 +234,7 @@ public class NaorPinkasServer
      * @return The private key of the user or absent if no
      * such user exists
      */
+    @Override
     public Optional<NaorPinkasPersonalKey> getPersonalKey(NaorPinkasIdentity id) {
         return Optional.fromNullable(keyByIdentity.get(id));
     }
