@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class TestStreamRunner {
-    private Thread thread;
     private StreamRunner sut;
     @Mock private OutputStream out;
     @Mock private InputStream in;
@@ -21,7 +20,8 @@ public class TestStreamRunner {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         sut = new StreamRunner(in, out, 1024);
-        thread = new Thread(sut);
+        assertTrue(sut.hasStopped());
+        assertFalse(sut.isRunning());
     }
 
     @After
@@ -29,8 +29,10 @@ public class TestStreamRunner {
     }
 
     @Test
-    public void startAndStop() {
-        thread.start();
+    public void startAndStop() throws InterruptedException {
+        sut.start();
+        //TODO about 1 ms is necessary until it works correctly!
+        //Thread.sleep(1);
         assertTrue(sut.isRunning());
         assertFalse(sut.hasStopped());
         sut.stop();

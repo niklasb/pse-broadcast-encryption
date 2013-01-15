@@ -16,24 +16,7 @@ public class StreamRunner implements Runnable {
     private InputStream in;
     private OutputStream out;
     private int bufsize;
-    
-    @Override
-    public void run() {
-        isRunning = true;
-        stopped = false;
-        try {
-            StreamUtils.copyInterruptable(in, out, bufsize, this);
-        } catch (IOException e) {
-            log.error("Stream crashed", e);
-        }
-        stopped = true;
-    }
-    
-    public StreamRunner() {
-        this.isRunning = false;
-        this.stopped = true;
-    }
-    
+       
     public StreamRunner(InputStream in, OutputStream out, int bufsize) {
         super();
         this.in = in;
@@ -42,12 +25,39 @@ public class StreamRunner implements Runnable {
         this.isRunning = false;
         this.stopped = true;
     }
+    
+    @Override
+    public void run() {
+        byte[] buffer = new byte[bufsize];
+        int received;
+        stopped = false;
+        isRunning = true;
+        try {
+            while ((received = in.read(buffer)) >= 0 && isRunning) {
+                out.write(buffer, 0, received);
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        stopped = true;
+    }
+
+    public void start() {
+        new Thread(this).start();
+        while(!isRunning) {
+            //TODO wait until stream is finally started
+        }
+    }
 
     /**
      * Sets the flag to indicate that the thread running this runnable should stop working.
      */
     public void stop() {
         isRunning = false;
+        while(!stopped) {
+            //TODO wait until it really stops
+        }
     }
     
     /**
@@ -63,5 +73,4 @@ public class StreamRunner implements Runnable {
     public boolean hasStopped() {
         return stopped;
     }
-
 }
