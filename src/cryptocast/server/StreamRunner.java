@@ -7,8 +7,6 @@ import java.io.OutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cryptocast.comm.StreamUtils;
-
 public class StreamRunner implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(StreamRunner.class);
     private volatile boolean isRunning;
@@ -16,7 +14,7 @@ public class StreamRunner implements Runnable {
     private InputStream in;
     private OutputStream out;
     private int bufsize;
-       
+
     public StreamRunner(InputStream in, OutputStream out, int bufsize) {
         super();
         this.in = in;
@@ -25,7 +23,7 @@ public class StreamRunner implements Runnable {
         this.isRunning = false;
         this.stopped = true;
     }
-    
+
     @Override
     public void run() {
         byte[] buffer = new byte[bufsize];

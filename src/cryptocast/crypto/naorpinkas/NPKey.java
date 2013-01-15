@@ -10,28 +10,25 @@ import cryptocast.crypto.CyclicGroupOfPrimeOrder;
  * It consists of a value $I$ and the value $P(I)$, which is the value of 
  * the Naor-Pinkas polynomial at $I$.
  */
-public class NaorPinkasPersonalKey<T>
+public class NPKey<T, G extends CyclicGroupOfPrimeOrder<T>>
                         implements PrivateKey {
     private static final long serialVersionUID = 654772327240529095L;
 
-    private int t;
     private BigInteger i, pi;
-    private CyclicGroupOfPrimeOrder<T> group;
-    private NaorPinkasIdentity id;
+    private G group;
+    private NPIdentity id;
     
     /**
      * Creates a new instance of NaorPinkasPersonalKey with the given parameters.
      * 
-     * @param t $t$, the degree of the polynomial.
      * @param i A point $I$.
      * @param pi $P(I)$, the value of the polynomial at $I$.
      * @param schnorr The schnorr group.
      */
-    protected NaorPinkasPersonalKey(int t, BigInteger i, BigInteger pi, 
-                                    CyclicGroupOfPrimeOrder<T> group) {
-        this.t = t;
+    protected NPKey(BigInteger i, BigInteger pi, 
+                                    G group) {
         this.i = i;
-        id = new NaorPinkasIdentity(i);
+        id = new NPIdentity(i);
         this.pi = pi;
         this.group = group;
     }
@@ -39,7 +36,7 @@ public class NaorPinkasPersonalKey<T>
     /**
      * @return The NP group.
      */
-    public CyclicGroupOfPrimeOrder<T> getGroup() {
+    public G getGroup() {
         return group;
     }
     
@@ -48,15 +45,23 @@ public class NaorPinkasPersonalKey<T>
      * @param gr The value $g^r$.
      * @return a NP share constructed from this key and the given values.
      */
-    public NaorPinkasShare<T> getShare(BigInteger r, T gr) {
+    public NPShare<T, G> getShare(BigInteger r, T gr) {
         T x = group.pow(gr, pi);
-        return new NaorPinkasShare<T>(t, r, i, x, group);
+        return new NPShare<T, G>(i, x, group);
+    }
+    
+    /**
+     * @param r The integer $r$
+     * @return a NP share constructed from this key and the given $r$.
+     */
+    public NPShare<T, G> getShare(BigInteger r) {
+        return getShare(r, group.getPowerOfG(r));
     }
 
     /**
      * @return the NP identity.
      */
-    public NaorPinkasIdentity getIdentity() {
+    public NPIdentity getIdentity() {
         return id;
     }
 

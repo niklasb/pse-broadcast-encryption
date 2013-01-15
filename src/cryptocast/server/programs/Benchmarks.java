@@ -170,7 +170,7 @@ public final class Benchmarks {
         @Parameter(names = { "-t" }, description = "Number of revocable users")
         private int t = 100;
         
-        NaorPinkasServerInterface server;
+        NPServerInterface server;
         byte[] plain;
         
         public void beforeAll() throws Exception {
@@ -180,7 +180,7 @@ public final class Benchmarks {
                         t, schnorr.getGenerator().bitLength(), schnorr.getP().bitLength());
             log.info("Generating server instance");
             start = System.currentTimeMillis();
-            server = new SchnorrNaorPinkasServerFactory().construct(t, schnorr);
+            server = new SchnorrNPServerFactory().construct(t, schnorr);
             log.info("Took {} ms", System.currentTimeMillis() - start);
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);
@@ -208,7 +208,7 @@ public final class Benchmarks {
         private int t = 100;
         
         SchnorrGroup schnorr;
-        NaorPinkasServerInterface server;
+        NPServerInterface server;
         byte[] plain;
         
         public void beforeAll() throws Exception {
@@ -223,7 +223,7 @@ public final class Benchmarks {
         public void before() {
             log.info("Generating server...");
             long t1 = System.currentTimeMillis();
-            server = new SchnorrNaorPinkasServerFactory().construct(t, schnorr);
+            server = new SchnorrNPServerFactory().construct(t, schnorr);
             log.info("Done! Took {} ms", System.currentTimeMillis() - t1);
         }
         
@@ -252,7 +252,7 @@ public final class Benchmarks {
         @Parameter(names = { "-t" }, description = "Number of revocable users")
         private int t = 100;
         
-        SchnorrNaorPinkasClient client;
+        SchnorrNPClient client;
         byte[] cipher;
         
         public void beforeAll() throws Exception {
@@ -260,9 +260,9 @@ public final class Benchmarks {
             log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
                     t, schnorr.getOrder().bitLength(), schnorr.getP().bitLength());
             log.info("Generating server and client and doing the initial encryption");
-            SchnorrNaorPinkasServer server = 
-                    (SchnorrNaorPinkasServer) new SchnorrNaorPinkasServerFactory().construct(t, schnorr);
-            client = new SchnorrNaorPinkasClient(server.getPersonalKey(server.getIdentity(0)).get());
+            SchnorrNPServer server = 
+                    (SchnorrNPServer) new SchnorrNPServerFactory().construct(t, schnorr);
+            client = new SchnorrNPClient(server.getPersonalKey(server.getIdentity(0)).get());
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);
             byte[] plain = gen.generateKey().getEncoded();
@@ -332,7 +332,7 @@ public final class Benchmarks {
         @Parameter(names = { "-n" }, description = "The number of users")
         private int n = 1000;
         
-        NaorPinkasServerInterface server;
+        NPServerInterface server;
         
         public void beforeAll() throws Exception { }
         
@@ -343,7 +343,7 @@ public final class Benchmarks {
                         t, schnorr.getOrder().bitLength(), schnorr.getP().bitLength());
             log.info("Generating server instance");
             start = System.currentTimeMillis();
-            server = new SchnorrNaorPinkasServerFactory().construct(t, schnorr);
+            server = new SchnorrNPServerFactory().construct(t, schnorr);
             log.info("Took {} ms", System.currentTimeMillis() - start);
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);

@@ -6,7 +6,7 @@ import java.math.BigInteger;
 /**
  * An identity in the Naor-Pinkas broadcast encryption scheme
  */
-public class NaorPinkasIdentity implements Serializable {
+public class NPIdentity implements Serializable {
     private static final long serialVersionUID = -4137161426277758109L;
     
     BigInteger i;
@@ -15,7 +15,7 @@ public class NaorPinkasIdentity implements Serializable {
      * initializes NaorPinkasIdentity
      * @param i The identity code.
      */
-    protected NaorPinkasIdentity(BigInteger i) {
+    protected NPIdentity(BigInteger i) {
         this.i = i;
     }
 
@@ -36,6 +36,6 @@ public class NaorPinkasIdentity implements Serializable {
     @Override
     public boolean equals(Object other) {
         if (other == null || other.getClass() != getClass()) { return false; }
-        return ((NaorPinkasIdentity)other).i.equals(i);
+        return ((NPIdentity)other).i.equals(i);
     }
 }

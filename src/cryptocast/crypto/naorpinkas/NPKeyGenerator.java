@@ -15,17 +15,16 @@ import cryptocast.util.Generator;
 /**
  * This class is for generatingnaor-pinkas keys.
  */
-public class NaorPinkasKeyGenerator<T> 
-                    extends Generator<NaorPinkasPersonalKey<T>> 
+public class NPKeyGenerator<T, G extends CyclicGroupOfPrimeOrder<T>> 
+                    extends Generator<NPKey<T, G>> 
                     implements Serializable {
     private static final long serialVersionUID = 2925906243884263202L;
     
-    private int t;
     private SecureRandom rnd;
-    private CyclicGroupOfPrimeOrder<T> group;
+    private G group;
     private Field<BigInteger> modQ;
     private Polynomial<BigInteger> poly;
-    private Map<NaorPinkasIdentity, NaorPinkasPersonalKey<T>> keyByIdentity =
+    private Map<NPIdentity, NPKey<T, G>> keyByIdentity =
                Maps.newHashMap();
     
     /**
@@ -36,12 +35,10 @@ public class NaorPinkasKeyGenerator<T>
      * @param group The NP group.
      * @param poly The polynomial.
      */
-    public NaorPinkasKeyGenerator(int t,
-                                  SecureRandom rnd, 
-                                  CyclicGroupOfPrimeOrder<T> group, 
+    public NPKeyGenerator(SecureRandom rnd, 
+                                  G group, 
                                   Polynomial<BigInteger> poly) {
         assert poly.getField().equals(group.getFieldModOrder());
-        this.t = t;
         this.rnd = rnd;
         this.group = group;
         this.poly = poly;
@@ -49,17 +46,17 @@ public class NaorPinkasKeyGenerator<T>
     }
 
     @Override
-    public NaorPinkasPersonalKey<T> get(int i) {
+    public NPKey<T, G> get(int i) {
         BigInteger x = modQ.randomElement(rnd),
                    px = poly.evaluate(x);
-        NaorPinkasPersonalKey<T> key = 
-                new NaorPinkasPersonalKey<T>(t, x, px, group);
+        NPKey<T, G> key = 
+                new NPKey<T, G>(x, px, group);
         addKey(key);
         return key;
     }
 
     @Override
-    public ImmutableList<NaorPinkasPersonalKey<T>> getRange(int a, int b) {
+    public ImmutableList<NPKey<T, G>> getRange(int a, int b) {
         ImmutableList.Builder<BigInteger> xsBuilder = ImmutableList.builder();
         int len = b - a;
         for (int i = 0; i < len; ++i) {
@@ -68,11 +65,11 @@ public class NaorPinkasKeyGenerator<T>
         ImmutableList<BigInteger> 
             xs = xsBuilder.build(),
             ys = new PolynomialMultiEvaluation(xs).evaluate(poly);
-        ImmutableList.Builder<NaorPinkasPersonalKey<T>> keys = 
+        ImmutableList.Builder<NPKey<T, G>> keys = 
                 ImmutableList.builder();
         for (int i = 0; i < len; ++i) {
-            NaorPinkasPersonalKey<T> key = 
-                    new NaorPinkasPersonalKey<T>(t, xs.get(i), ys.get(i), group);
+            NPKey<T, G> key = 
+                    new NPKey<T, G>(xs.get(i), ys.get(i), group);
             keys.add(key);
             addKey(key);
         }
@@ -83,11 +80,11 @@ public class NaorPinkasKeyGenerator<T>
      * @param id An identity.
      * @return the key for the given identity.
      */
-    public Optional<NaorPinkasPersonalKey<T>> getKey(NaorPinkasIdentity id) {
+    public Optional<NPKey<T, G>> getKey(NPIdentity id) {
         return Optional.fromNullable(keyByIdentity.get(id));
     }
     
-    private void addKey(NaorPinkasPersonalKey<T> key) {
+    private void addKey(NPKey<T, G> key) {
         keyByIdentity.put(key.getIdentity(), key);
     }
 }

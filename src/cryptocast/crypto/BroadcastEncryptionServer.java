@@ -1,10 +1,14 @@
 package cryptocast.crypto;
 
 import cryptocast.comm.*;
-import cryptocast.util.Callback;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Function;
 
 /**
  * The server side of a broadcast encryption scheme.
@@ -12,10 +16,13 @@ import java.io.OutputStream;
  */
 public class BroadcastEncryptionServer<ID> extends OutputStream
                                            implements Runnable {
+    private static final Logger log = LoggerFactory
+            .getLogger(BroadcastEncryptionServer.class);
+    
     private BroadcastSchemeUserManager<ID> context;
     private DynamicCipherOutputStream cipherStream;
     private int intervalMilliseconds;
-    private Callback<Throwable> excHandler;
+    private Function<Throwable, Boolean> excHandler;
     
     /**
      * Initializes a broadcast encryption server.
@@ -23,12 +30,14 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
      * @param context The user management context.
      * @param cipherStream The ciphered input stream.
      * @param intervalMilliseconds The broadcast time interval in millis.
-     * @param excHandler Handler callback.
+     * @param excHandler Handler callback, which is called if an exception occurs in 
+     *                   the key update loop. If it returns <code>true</code>, the 
+     *                   exception is ignored, otherwise the loop is exited.
      */
     public BroadcastEncryptionServer(BroadcastSchemeUserManager<ID> context,
                                      DynamicCipherOutputStream cipherStream,
                                      int intervalMilliseconds,
-                                     Callback<Throwable> excHandler) {
+                                     Function<Throwable, Boolean> excHandler) {
         this.cipherStream = cipherStream;
         this.context = context;
         this.intervalMilliseconds = intervalMilliseconds;
@@ -53,7 +62,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
             int symmetricKeyBits,
             MessageOutChannel inner,
             int intervalMilliseconds,
-            Callback<Throwable> excHandler) throws IOException {
+            Function<Throwable, Boolean> excHandler) throws IOException {
         return new BroadcastEncryptionServer<ID>(context, 
                 DynamicCipherOutputStream.start(inner, symmetricKeyBits, enc),
                 intervalMilliseconds,
@@ -73,8 +82,12 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
             }
             try {
                 broadcastKey();
-            } catch (Exception e) {
-                excHandler.handle(e);
+            } catch (Throwable e) {
+                log.trace("Caught exception in key broadcast loop. Calling handler.", e);
+                if (!excHandler.apply(e)) {
+                    return;
+                }
+                log.debug("Handler told us to ignore the exception.");
             }
         }
     }

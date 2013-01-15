@@ -7,25 +7,26 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cryptocast.util.Callback;
+import com.google.common.base.Function;
 
 /**
  * This class implements channel-based communication via TCP.
  */
 public class ServerMultiMessageOutChannel extends MessageOutChannel implements Runnable {
-    private MultiOutputStream multi;
-    private Callback<Throwable> excHandler;
-    private ServerSocket server;
-    private MessageOutChannel out;
     private static final Logger log = LoggerFactory
             .getLogger(ServerMultiMessageOutChannel.class);
+    
+    private MultiOutputStream multi;
+    private Function<Throwable, Boolean> excHandler;
+    private ServerSocket server;
+    private MessageOutChannel out;
     
     /**
      * Creates an instance of a multicast server which uses the given socket.
      * @param server Server socket
      */
     public ServerMultiMessageOutChannel(ServerSocket server,
-                                        Callback<Throwable> excHandler) {
+                                        Function<Throwable, Boolean> excHandler) {
         this.multi = new MultiOutputStream(MultiOutputStream.removeOnError);
         this.out = new StreamMessageOutChannel(multi);
         this.server = server;
@@ -42,8 +43,11 @@ public class ServerMultiMessageOutChannel extends MessageOutChannel implements R
                 multi.addChannel(socket.getOutputStream());
                 log.debug("New client connected!");
             } catch (Throwable e) {
-                excHandler.handle(e);
-                return;
+                log.trace("Caught exception in accept loop. Calling handler", e);
+                if (!excHandler.apply(e)) {
+                    return;
+                }
+                log.debug("Handler told us to ignore the exception.");
             }
         }
     }

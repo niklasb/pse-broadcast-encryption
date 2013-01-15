@@ -1,8 +1,6 @@
 package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
-import cryptocast.crypto.Protos.BInteger;
-import cryptocast.crypto.naorpinkas.Protos.*;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -15,7 +13,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.protobuf.ByteString;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -23,22 +22,22 @@ import static com.google.common.base.Preconditions.*;
  * A server in the Naor-Pinkas broadcast encryption scheme. It knows
  * the entire polynomial and therefore all the private keys of its users. 
  */
-public abstract class NaorPinkasServer<T>
-      implements NaorPinkasServerInterface, Serializable {
+public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
+          implements NPServerInterface, Serializable {
     private static final long serialVersionUID = -6864326409385317975L;
 
-    private NaorPinkasServerContext<T> context;
+    private NPServerContext<T, G> context;
     private T gp0;  // $g^P(0)$
-    private Map<NaorPinkasIdentity, NaorPinkasPersonalKey<T>> keyByIdentity =
+    private Map<NPIdentity, NPKey<T, G>> keyByIdentity =
                                 Maps.newHashMap();
-    private Set<NaorPinkasIdentity> revokedUsers = Sets.newHashSet();
+    private Set<NPIdentity> revokedUsers = Sets.newHashSet();
     
-    private CyclicGroupOfPrimeOrder<T> group;
+    private G group;
     private int t;
     
     private static SecureRandom rnd = new SecureRandom();
 
-    protected NaorPinkasServer(NaorPinkasServerContext<T> context) {
+    protected NPServer(NPServerContext<T, G> context) {
         this.context = context;
         this.group = context.getGroup();
         this.t = context.getT();
@@ -46,65 +45,72 @@ public abstract class NaorPinkasServer<T>
                           context.getPoly().evaluate(BigInteger.ZERO));
     }
 
-    protected abstract Optional<byte[]> encryptSecretWithItem(byte[] secret, T key);
-
     @Override
     public int getT() {
         return t;
     }
     
-    public NaorPinkasServerContext<T> getContext() { return context; }
+    public NPServerContext<T, G> getContext() { return context; }
+
+    protected abstract Optional<byte[]> encryptSecretWithItem(byte[] secret, T key);
     
-    protected static class UnresolvedEncryptionMessage<T> {
-        public NaorPinkasMessageCommon common;
-        public ImmutableList<NaorPinkasShare<T>> shares;
-        private UnresolvedEncryptionMessage(NaorPinkasMessageCommon common,
-                                ImmutableList<NaorPinkasShare<T>> shares) {
-            this.common = common;
-            this.shares = shares;
-        }
+    @Override
+    public byte[] encrypt(byte[] secret) {
+        return packMessage(encryptMessage(secret));
     }
     
-    protected UnresolvedEncryptionMessage<T> encryptPartial(byte[] secret) {
+    protected NPMessage<T, G> encryptMessage(byte[] secret) {
         BigInteger r = group.getFieldModOrder().randomElement(rnd);
-        T grp0 = group.pow(gp0, r), // g^{r P(0)
+        T grp0 = group.pow(gp0, r), // g^{r P(0)} is the secret value that can be computed by
+                                    // authorized users
           gr = group.getPowerOfG(r);
         Optional<byte[]> mEncryptedSecret = encryptSecretWithItem(secret, grp0);
         checkArgument(mEncryptedSecret.isPresent(), "Secret is too large to encrypt");
         byte[] encryptedSecret = mEncryptedSecret.get();
         
-        ImmutableList.Builder<NaorPinkasShare<T>> shares = ImmutableList.builder();
+        ImmutableList.Builder<NPShare<T, G>> shares = ImmutableList.builder();
         int i = 0;
         int dummies = t - revokedUsers.size();
         while (i < dummies) {
-            NaorPinkasShare<T> share = getDummyKey(i).getShare(r, gr);
+            NPShare<T, G> share = getDummyKey(i).getShare(r, gr);
             shares.add(share);
             ++i;
         }
-        for (NaorPinkasIdentity id : revokedUsers) {
-            NaorPinkasShare<T> share = getPersonalKey(id).get().getShare(r, gr);
+        for (NPIdentity id : revokedUsers) {
+            NPShare<T, G> share = getPersonalKey(id).get().getShare(r, gr);
             shares.add(share);
         }
-        ImmutableList.Builder<BInteger> lagrangeCoeffs = ImmutableList.builder();
-        for (NaorPinkasShare<T> share : shares.build()) {
+        ImmutableList.Builder<BigInteger> lagrangeCoeffs = ImmutableList.builder();
+        for (NPShare<T, G> share : shares.build()) {
             BigInteger c = context.getLagrange().getCoefficients().get(share.getI());
             assert c != null;
-            lagrangeCoeffs.add(packBigInt(c));
+            lagrangeCoeffs.add(c);
         }
-        NaorPinkasMessageCommon common = 
-                NaorPinkasMessageCommon.newBuilder()
-                    .setT(t)
-                    .setR(packBigInt(r))
-                    .setEncryptedSecret(ByteString.copyFrom(encryptedSecret))
-                    .addAllCoefficients(lagrangeCoeffs.build())
-                    .build();
-        return new UnresolvedEncryptionMessage<T>(common, shares.build());
+        
+        return new NPMessage<T, G>(
+                t, r, encryptedSecret, group, 
+                lagrangeCoeffs.build(), shares.build());
     }
     
-    protected BInteger packBigInt(BigInteger x) {
-        return BInteger.newBuilder()
-                .setTwoComplement(ByteString.copyFrom(x.toByteArray()))
-                .build();
+    protected abstract void putShare(ByteArrayDataOutput out, NPShare<T, G> share);
+    
+    private byte[] packMessage(NPMessage<T, G> msg) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeInt(msg.getT());
+        putBytes(out, msg.getR().toByteArray());
+        putBytes(out, msg.getEncryptedSecret());
+        for (BigInteger c : msg.getLagrangeCoeffs()) {
+            putBytes(out, c.toByteArray());
+        }
+        for (NPShare<T, G> share : msg.getShares()) {
+            putShare(out, share);
+        }
+        return out.toByteArray();
+    }
+    
+    protected void putBytes(ByteArrayDataOutput out, byte[] x) {
+        out.writeInt(x.length);
+        out.write(x);
     }
     
     /**
@@ -112,18 +118,18 @@ public abstract class NaorPinkasServer<T>
      * @return The identity with the given index.
      */
     @Override
-    public NaorPinkasIdentity getIdentity(int i) {
+    public NPIdentity getIdentity(int i) {
         return getUserKey(i).getIdentity();
     }
 
-    private NaorPinkasPersonalKey<T> getUserKey(int i) {
+    private NPKey<T, G> getUserKey(int i) {
         // first t users are dummies
-        NaorPinkasPersonalKey<T> key = context.getKeyGen().get(t + i);
+        NPKey<T, G> key = context.getKeyGen().get(t + i);
         keyByIdentity.put(key.getIdentity(), key);
         return key;
     }
 
-    private NaorPinkasPersonalKey<T> getDummyKey(int i) {
+    private NPKey<T, G> getDummyKey(int i) {
         return context.getKeyGen().get(i);
     }
 
@@ -134,13 +140,13 @@ public abstract class NaorPinkasServer<T>
      * @return true, if the set of revoked users changed or false otherwise
      */
     @Override
-    public boolean revoke(Set<NaorPinkasIdentity> ids) throws NoMoreRevocationsPossibleError {
-        Set<NaorPinkasIdentity> notYetRevoked = Sets.difference(ids, revokedUsers);
+    public boolean revoke(Set<NPIdentity> ids) throws NoMoreRevocationsPossibleError {
+        Set<NPIdentity> notYetRevoked = Sets.difference(ids, revokedUsers);
         if (notYetRevoked.size() == 0) { return false; }
         if (getRemainingRevocations() < notYetRevoked.size()) {
             throw new NoMoreRevocationsPossibleError();
         }
-        for (NaorPinkasIdentity id : notYetRevoked) {
+        for (NPIdentity id : notYetRevoked) {
             revokeUnconditional(id);
         }
         return true;
@@ -153,13 +159,13 @@ public abstract class NaorPinkasServer<T>
      * @return true, if the set of revoked users changed or false otherwise
      */
     @Override
-    public boolean revoke(NaorPinkasIdentity id) throws NoMoreRevocationsPossibleError {
+    public boolean revoke(NPIdentity id) throws NoMoreRevocationsPossibleError {
         return revoke(ImmutableSet.of(id));
     }
     
     // must only be called if we know revocation will be successful
     // and that the user is not already revoked!
-    private void revokeUnconditional(NaorPinkasIdentity id) {
+    private void revokeUnconditional(NPIdentity id) {
         assert getRemainingRevocations() > 0 && !revokedUsers.contains(id);
         // TODO abstract this away
         // remove highest dummy key and add new identity
@@ -180,7 +186,7 @@ public abstract class NaorPinkasServer<T>
      * @return true, if the set of revoked users changed or false otherwise
      */
     @Override
-    public boolean unrevoke(NaorPinkasIdentity id) {
+    public boolean unrevoke(NPIdentity id) {
         if (!revokedUsers.contains(id)) { return false; }
         // TODO abstract this away
         // remove old identity and add new dummy
@@ -196,7 +202,7 @@ public abstract class NaorPinkasServer<T>
      * @return Whether the user is revoked.
      */
     @Override
-    public boolean isRevoked(NaorPinkasIdentity id) {
+    public boolean isRevoked(NPIdentity id) {
         return revokedUsers.contains(id);
     }
     
@@ -205,7 +211,7 @@ public abstract class NaorPinkasServer<T>
      * @return The private key of the user or absent if no
      * such user exists
      */
-    public Optional<NaorPinkasPersonalKey<T>> getPersonalKey(NaorPinkasIdentity id) {
+    public Optional<NPKey<T, G>> getPersonalKey(NPIdentity id) {
         return Optional.fromNullable(keyByIdentity.get(id));
     }
 }

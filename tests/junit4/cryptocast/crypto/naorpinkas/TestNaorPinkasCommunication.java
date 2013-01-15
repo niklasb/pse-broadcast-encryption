@@ -9,10 +9,10 @@ import static cryptocast.util.ByteUtils.str2bytes;
 
 public class TestNaorPinkasCommunication extends WithNaorPinkasContext {
     private int t = 10;
-    SchnorrNaorPinkasServer server = 
-            (SchnorrNaorPinkasServer) new SchnorrNaorPinkasServerFactory().construct(t);
-    SchnorrNaorPinkasClient client = 
-            new SchnorrNaorPinkasClient(server.getPersonalKey(server.getIdentity(0)).get());
+    SchnorrNPServer server = 
+            (SchnorrNPServer) new SchnorrNPServerFactory().construct(t);
+    SchnorrNPClient client = 
+            new SchnorrNPClient(server.getPersonalKey(server.getIdentity(0)).get());
 
     @Test
     public void encryptDecryptByteArrayWorks() throws Exception {

@@ -21,6 +21,7 @@ import org.tritonus.share.sampled.TAudioFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
 import cryptocast.crypto.*;
@@ -44,14 +45,24 @@ public class Controller implements Observer {
     private NaorPinkasServerData data;
     private MessageOutChannel rawOut;
     private File databaseFile;
-    private BroadcastEncryptionServer<NaorPinkasIdentity> encServer;
+    private BroadcastEncryptionServer<NPIdentity> encServer;
     private SocketAddress listenAddr;
     private int keyBroadcastIntervalSecs;
     private Thread streamer;
     
+    private static Function<Throwable, Boolean> fatalExceptionHandler =
+            new Function<Throwable, Boolean>() {
+                @Override
+                public Boolean apply(Throwable e) {
+                    log.error("A fatal error occured in a background thread, exiting!", e);
+                    System.exit(1);
+                    return false; // just for the lulz
+                }
+            };
+            
 	private Controller(NaorPinkasServerData data, File databaseFile,
 			MessageOutChannel rawOut,
-			BroadcastEncryptionServer<NaorPinkasIdentity> encServer,
+			BroadcastEncryptionServer<NPIdentity> encServer,
 			SocketAddress listenAddr, int keyBroadcastIntervalSecs) {
 		this.data = data;
 		data.addObserver(this);
@@ -85,7 +96,7 @@ public class Controller implements Observer {
 		ServerSocket socket = new ServerSocket();
 		socket.bind(listenAddr);
 		ServerMultiMessageOutChannel multicastServer = new ServerMultiMessageOutChannel(
-				socket, null);
+				socket, fatalExceptionHandler);
 		new Thread(multicastServer).start();
 		return new Controller(data, databaseFile, multicastServer,
 				startBroadcastEncryptionServer(data, multicastServer,
@@ -94,7 +105,7 @@ public class Controller implements Observer {
 	}
 
 	private static NaorPinkasServerData createNewData(int t) {
-	    return new NaorPinkasServerData(new SchnorrNaorPinkasServerFactory().construct(t));
+	    return new NaorPinkasServerData(new SchnorrNPServerFactory().construct(t));
 	}
 
 	/**
@@ -104,9 +115,9 @@ public class Controller implements Observer {
      * @param users The users who their personal keys will be saved.
      * @throws IOException
      */
-	public void saveUserKeys(File dir, Set<User<NaorPinkasIdentity>> users)
+	public void saveUserKeys(File dir, Set<User<NPIdentity>> users)
 			throws IOException {
-		for (User<NaorPinkasIdentity> user : users) {
+		for (User<NPIdentity> user : users) {
 			File keyFile = new File(dir.getAbsolutePath() + "/"
 					+ user.getName() + ".key");
 			Optional<? extends PrivateKey> mKey = data.npServer
@@ -205,17 +216,17 @@ public class Controller implements Observer {
         }
     }
 
-	private static BroadcastEncryptionServer<NaorPinkasIdentity> startBroadcastEncryptionServer(
+	private static BroadcastEncryptionServer<NPIdentity> startBroadcastEncryptionServer(
 			NaorPinkasServerData data, MessageOutChannel rawOut,
 			int keyBroadcastIntervalSecs) throws IOException {
-		BroadcastEncryptionServer<NaorPinkasIdentity> server = BroadcastEncryptionServer
+		BroadcastEncryptionServer<NPIdentity> server = BroadcastEncryptionServer
 				.start(data.userManager, data.npServer, AES_KEY_BITS, rawOut,
-						keyBroadcastIntervalSecs * 1000, // update every 15 seconds
-						null);
+					   keyBroadcastIntervalSecs * 1000, // update every 15 seconds
+				       fatalExceptionHandler);
 		new Thread(server).start();
 		return server;
 	}
-
+	
 	/**
 	 * @return The database file.
 	 */

@@ -6,13 +6,11 @@ import cryptocast.crypto.NoMoreRevocationsPossibleError;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.io.Serializable;
 import java.security.PrivateKey;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Set;
