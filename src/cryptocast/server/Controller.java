@@ -21,6 +21,7 @@ import org.tritonus.share.sampled.TAudioFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
 import cryptocast.crypto.*;
@@ -49,6 +50,16 @@ public class Controller implements Observer {
     private int keyBroadcastIntervalSecs;
     private Thread streamer;
     
+    private static Function<Throwable, Boolean> fatalExceptionHandler =
+            new Function<Throwable, Boolean>() {
+                @Override
+                public Boolean apply(Throwable e) {
+                    log.error("A fatal error occured in a background thread, exiting!", e);
+                    System.exit(1);
+                    return false; // just for the lulz
+                }
+            };
+            
 	private Controller(NaorPinkasServerData data, File databaseFile,
 			MessageOutChannel rawOut,
 			BroadcastEncryptionServer<NaorPinkasIdentity> encServer,
@@ -85,7 +96,7 @@ public class Controller implements Observer {
 		ServerSocket socket = new ServerSocket();
 		socket.bind(listenAddr);
 		ServerMultiMessageOutChannel multicastServer = new ServerMultiMessageOutChannel(
-				socket, null);
+				socket, fatalExceptionHandler);
 		new Thread(multicastServer).start();
 		return new Controller(data, databaseFile, multicastServer,
 				startBroadcastEncryptionServer(data, multicastServer,
@@ -210,12 +221,12 @@ public class Controller implements Observer {
 			int keyBroadcastIntervalSecs) throws IOException {
 		BroadcastEncryptionServer<NaorPinkasIdentity> server = BroadcastEncryptionServer
 				.start(data.userManager, data.npServer, AES_KEY_BITS, rawOut,
-						keyBroadcastIntervalSecs * 1000, // update every 15 seconds
-						null);
+					   keyBroadcastIntervalSecs * 1000, // update every 15 seconds
+				       fatalExceptionHandler);
 		new Thread(server).start();
 		return server;
 	}
-
+	
 	/**
 	 * @return The database file.
 	 */

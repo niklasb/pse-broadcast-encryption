@@ -83,11 +83,11 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
             try {
                 broadcastKey();
             } catch (Throwable e) {
-                log.trace("An exception was caught in the key update loop. Calling handler.", e);
+                log.trace("Caught exception in key broadcast loop. Calling handler.", e);
                 if (!excHandler.apply(e)) {
                     return;
                 }
-                log.trace("Handler told us to ignore the exception!");
+                log.debug("Handler told us to ignore the exception.");
             }
         }
     }
