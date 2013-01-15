@@ -48,7 +48,6 @@ public class Controller implements Observer {
     private SocketAddress listenAddr;
     private int keyBroadcastIntervalSecs;
     private Thread streamer;
-    private StreamRunner streamRunner;
     
 	private Controller(NaorPinkasServerData data, File databaseFile,
 			MessageOutChannel rawOut,
@@ -62,7 +61,6 @@ public class Controller implements Observer {
 		this.listenAddr = listenAddr;
 		this.keyBroadcastIntervalSecs = keyBroadcastIntervalSecs;
 		this.streamer = new Thread();
-		this.streamRunner = new StreamRunner();
 	}
 
 	/**
