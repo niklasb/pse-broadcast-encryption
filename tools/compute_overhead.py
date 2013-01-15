@@ -7,14 +7,14 @@ parser.add_argument('-t', type=int, help='the number of revocable users')
 parser.add_argument('-b', type=int, help='the bitrate')
 parser.add_argument('-o', type=int, help='the overhead in percent')
 parser.add_argument('-i', type=int, help='the key broadcast interval in seconds')
-parser.add_argument('-q', type=int, help='parameter q of the ec or exp algorithms (default: 160 for exp, 192 for ec)')
-parser.add_argument('-p', type=int, help='parameter p of the ec or exp algorithms (default: 1024 for exp, 192 for ec)')
+parser.add_argument('-q', type=int, help='parameter q of the ec or exp algorithms (default: 160 for exp, 160 for ec)')
+parser.add_argument('-p', type=int, help='parameter p of the ec or exp algorithms (default: 1024 for exp, 160 for ec)')
 args = parser.parse_args()
 
 if args.algorithm == 'exp':
   q, p = args.q or 160, args.p or 1024
 else: # ec
-  q, p = args.q or 192, args.p or 192
+  q, p = args.q or 160, args.p or 160
 
 print "Parameters: q=%dbits p=%dbits" % (q, p)
 overhead = lambda t: t * (q + p)

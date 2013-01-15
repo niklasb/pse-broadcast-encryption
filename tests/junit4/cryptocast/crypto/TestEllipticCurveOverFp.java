@@ -74,7 +74,7 @@ public class TestEllipticCurveOverFp {
     @Test
     public void largeMultiplyTest() {
         EllipticCurveGroup<BigInteger, EllipticCurveOverFp> group = 
-                EllipticCurveGroup.getPrime192V1();
+                EllipticCurveGroup.getNamedCurve("prime192v1");
         EllipticCurveOverFp curve = group.getCurve();
         BigInteger k = new BigInteger("333333333333333333333333333333337c964c53", 16);
         EllipticCurve.Point<BigInteger> 

@@ -126,7 +126,7 @@ public final class Benchmarks {
             Random rnd = new Random();
             IntegersModuloPrime modQ;
             if (g.equals("ec")) {
-                ecGroup = EllipticCurveGroup.getPrime192V1();
+                ecGroup = EllipticCurveGroup.getNamedCurve("secp160r1");
                 ImmutableList.Builder<EllipticCurve.Point<BigInteger>> builder = 
                              ImmutableList.builder();
                 for (int i = 0; i < t; i++) {
@@ -156,20 +156,10 @@ public final class Benchmarks {
         
         public void run() {
             if (g.equals("ec")) {
-                multiexp(basesEc, exps, ecGroup);
+                ecGroup.multiexp(basesEc, exps);
             } else {
-                multiexp(basesSchnorr, exps, schnorr);
+                schnorr.multiexp(basesSchnorr, exps);
             }
-        }
-        
-        private <T> T multiexp(ImmutableList<T> bases, ImmutableList<BigInteger> exps,
-                               CyclicGroupOfPrimeOrder<T> group) {
-            T res = group.identity();
-            Iterator<BigInteger> exp = exps.iterator();
-            for (T base : bases) {
-                res = group.combine(res, group.pow(base, exp.next()));
-            }
-            return res;
         }
     }
     

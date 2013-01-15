@@ -2,8 +2,13 @@ package cryptocast.crypto;
 
 import java.math.BigInteger;
 
+import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.math.ec.ECFieldElement;
+
 public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
     private IntegersModuloPrime field;
+    private ECCurve.Fp bcCurve;
     
     public EllipticCurveOverFp(IntegersModuloPrime field,
                                BigInteger a,
@@ -11,6 +16,7 @@ public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
         this.field = field;
         this.a = a;
         this.b = b;
+        bcCurve = new ECCurve.Fp(field.getP(), a, b);
     }
     
     @Override
@@ -56,7 +62,7 @@ public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
     }
     
     @Override
-    public Point<BigInteger> twice(EllipticCurve.Point<BigInteger> a) {
+    public Point<BigInteger> twice(Point<BigInteger> a) {
         if (isInfinity(a)) { return a; }
         
         ConcretePoint<BigInteger> concreteA = (ConcretePoint<BigInteger>) a;
@@ -84,9 +90,7 @@ public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
     }
     
     @Override
-    public EllipticCurve.Point<BigInteger> multiply(
-            EllipticCurve.Point<BigInteger> p,
-            BigInteger k) {
+    public Point<BigInteger> multiply(Point<BigInteger> p, BigInteger k) {
         if (k.signum() == 0) {
             return getInfinity();
         }
@@ -107,4 +111,17 @@ public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
 
         return R;
     }
+    
+//    @Override
+//    public Point<BigInteger> multiply(Point<BigInteger> p, BigInteger k) {
+//        if (isInfinity(p)) { return p; }
+//        ConcretePoint<BigInteger> cp = (ConcretePoint<BigInteger>) p;
+//        ECPoint bcp = bcCurve.createPoint(cp.getX(), cp.getY(), false);
+//        bcp = bcp.multiply(k);
+//        if (bcp.isInfinity()) {
+//            return getInfinity();
+//        } else {
+//            return getPoint(bcp.getX().toBigInteger(), bcp.getY().toBigInteger());
+//        }
+//    }
 }
