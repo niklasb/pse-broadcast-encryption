@@ -12,8 +12,8 @@ import cryptocast.crypto.CyclicGroupOfPrimeOrder;
  * $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
  * value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$.
  */
-public class NaorPinkasShare<T, G extends CyclicGroupOfPrimeOrder<T>> 
-                                  implements Comparable<NaorPinkasShare<T, G>> {
+public class NPShare<T, G extends CyclicGroupOfPrimeOrder<T>> 
+                                  implements Comparable<NPShare<T, G>> {
     private BigInteger i;
     private T grpi;
     private G group;
@@ -25,7 +25,7 @@ public class NaorPinkasShare<T, G extends CyclicGroupOfPrimeOrder<T>>
      * @param grpi The value $g^{r \cdot P(I)}) \in G$.
      * @param group The NP group.
      */
-    public NaorPinkasShare(BigInteger i, T grpi, G group) {
+    public NPShare(BigInteger i, T grpi, G group) {
         this.i = i;
         this.grpi = grpi;
         this.group = group;
@@ -49,12 +49,12 @@ public class NaorPinkasShare<T, G extends CyclicGroupOfPrimeOrder<T>>
     /**
      * @return The identity
      */
-    public NaorPinkasIdentity getIdentity() {
-        return new NaorPinkasIdentity(i);
+    public NPIdentity getIdentity() {
+        return new NPIdentity(i);
     }
 
     @Override
-    public int compareTo(NaorPinkasShare<T, G> other) {
+    public int compareTo(NPShare<T, G> other) {
         return i.compareTo(other.i);
     }
 
@@ -62,9 +62,9 @@ public class NaorPinkasShare<T, G extends CyclicGroupOfPrimeOrder<T>>
     @Override
     public boolean equals(Object other_) {
         if (other_ == null || other_.getClass() != getClass()) { return false; }
-        NaorPinkasShare<T, G> other;
+        NPShare<T, G> other;
         try {
-            other = (NaorPinkasShare<T, G>)other_;
+            other = (NPShare<T, G>)other_;
         } catch (Throwable e) { return false; }
         return i.equals(other.i)
             && grpi.equals(other.grpi)
@@ -79,9 +79,9 @@ public class NaorPinkasShare<T, G extends CyclicGroupOfPrimeOrder<T>>
      */
     public static <T, G extends CyclicGroupOfPrimeOrder<T>> 
                 ImmutableList<BigInteger> getXsFromShares(
-                                  List<NaorPinkasShare<T, G>> shares) {
+                                  List<NPShare<T, G>> shares) {
         ImmutableList.Builder<BigInteger> xs = ImmutableList.builder();
-        for (NaorPinkasShare<T, G> share : shares) {
+        for (NPShare<T, G> share : shares) {
             xs.add(share.getI());
         }
         return xs.build();

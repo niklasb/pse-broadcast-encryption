@@ -23,8 +23,8 @@ import cryptocast.util.InteractiveCommandLineInterface.CommandError;
 
 public class TestShell {
     private Shell sut;
-    SchnorrNaorPinkasServer npServer = 
-            (SchnorrNaorPinkasServer) new SchnorrNaorPinkasServerFactory().construct(10);
+    SchnorrNPServer npServer = 
+            (SchnorrNPServer) new SchnorrNPServerFactory().construct(10);
     @Mock private BufferedReader in;
     @Mock private PrintStream out;
     @Mock private PrintStream err;
@@ -84,7 +84,7 @@ public class TestShell {
     public void revokeSingle() throws Throwable {
         String name = "bob";
         String[] args = {name};
-        User<NaorPinkasIdentity> bob = new User<NaorPinkasIdentity>(name, npServer.getIdentity(3));
+        User<NPIdentity> bob = new User<NPIdentity>(name, npServer.getIdentity(3));
         when(model.getUserByName(name)).thenReturn(Optional.fromNullable(bob));
         when(model.revoke(bob)).thenReturn(true);
         sut.performCommand("revoke", args);
@@ -94,10 +94,10 @@ public class TestShell {
     @Test
     public void revokeSeveral() throws Throwable {
         String[] names = { "bob", "alice", "james" };
-        List<User<NaorPinkasIdentity>> users = ImmutableList.of(
-            new User<NaorPinkasIdentity>(names[0], npServer.getIdentity(3)),
-            new User<NaorPinkasIdentity>(names[1], npServer.getIdentity(5)),
-            new User<NaorPinkasIdentity>(names[2], npServer.getIdentity(6))
+        List<User<NPIdentity>> users = ImmutableList.of(
+            new User<NPIdentity>(names[0], npServer.getIdentity(3)),
+            new User<NPIdentity>(names[1], npServer.getIdentity(5)),
+            new User<NPIdentity>(names[2], npServer.getIdentity(6))
         );
         when(model.getUserByName(names[0])).thenReturn(Optional.fromNullable(users.get(0)));
         when(model.getUserByName(names[1])).thenReturn(Optional.fromNullable(users.get(1)));
@@ -111,7 +111,7 @@ public class TestShell {
     public void unrevoke() throws Throwable {
         String name = "alice";
         String[] args = {name};
-        User<NaorPinkasIdentity> myAlice = new User<NaorPinkasIdentity>(name, npServer.getIdentity(12));
+        User<NPIdentity> myAlice = new User<NPIdentity>(name, npServer.getIdentity(12));
         when(model.getUserByName(name)).thenReturn(Optional.fromNullable(myAlice));
         when(model.unrevoke(myAlice)).thenReturn(true);
         sut.performCommand("unrevoke", args);

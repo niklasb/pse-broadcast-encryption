@@ -11,13 +11,13 @@ import cryptocast.crypto.*;
  * This class represents a NP message sent from the
  * server to the clients.
  */
-public class NaorPinkasMessage<T, G extends CyclicGroupOfPrimeOrder<T>> {
+public class NPMessage<T, G extends CyclicGroupOfPrimeOrder<T>> {
     private byte[] encryptedSecret;
     private BigInteger r;
     private G group;
     int t;
     private ImmutableList<BigInteger> lagrangeCoefficients;
-    private ImmutableList<NaorPinkasShare<T, G>> shares;
+    private ImmutableList<NPShare<T, G>> shares;
 
     /**
      * Creates a new instance of NaorPinkasMessage with the given parameters.
@@ -30,10 +30,10 @@ public class NaorPinkasMessage<T, G extends CyclicGroupOfPrimeOrder<T>> {
      * @param lagrange The lagrange coefficients belonging to the shares.
      * @param shares The shares.
      */
-    public NaorPinkasMessage(int t, BigInteger r, byte[] encryptedSecret, 
+    public NPMessage(int t, BigInteger r, byte[] encryptedSecret, 
                              G group,
                              List<BigInteger> lagrangeCoefficients,
-                             List<NaorPinkasShare<T, G>> shares) {
+                             List<NPShare<T, G>> shares) {
         assert shares.size() == t && lagrangeCoefficients.size() == t;
         this.t = t;
         this.r = r;
@@ -68,7 +68,7 @@ public class NaorPinkasMessage<T, G extends CyclicGroupOfPrimeOrder<T>> {
     /**
      * @return The shares.
      */
-    public ImmutableList<NaorPinkasShare<T, G>> getShares() { return shares; }
+    public ImmutableList<NPShare<T, G>> getShares() { return shares; }
     
     /**
      * @return The lagrange coefficients belonging to the shares.

@@ -46,7 +46,7 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onStart() {
         super.onStart();
-        NaorPinkasPersonalKey<BigInteger, SchnorrGroup> key;
+        NPKey<BigInteger, SchnorrGroup> key;
         try {
             key = SerializationUtils.readFromFile(keyFile);
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class StreamViewerActivity extends ClientActivity
             BroadcastEncryptionClient in =
                     new BroadcastEncryptionClient(
                             new StreamMessageInChannel(sock.getInputStream()), 
-                            new SchnorrNaorPinkasClient(key));
+                            new SchnorrNPClient(key));
             log.debug("Waiting for first byte");
             in.read();
             log.debug("Starting media player");

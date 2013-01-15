@@ -45,7 +45,7 @@ public class Controller implements Observer {
     private NaorPinkasServerData data;
     private MessageOutChannel rawOut;
     private File databaseFile;
-    private BroadcastEncryptionServer<NaorPinkasIdentity> encServer;
+    private BroadcastEncryptionServer<NPIdentity> encServer;
     private SocketAddress listenAddr;
     private int keyBroadcastIntervalSecs;
     private Thread streamer;
@@ -62,7 +62,7 @@ public class Controller implements Observer {
             
 	private Controller(NaorPinkasServerData data, File databaseFile,
 			MessageOutChannel rawOut,
-			BroadcastEncryptionServer<NaorPinkasIdentity> encServer,
+			BroadcastEncryptionServer<NPIdentity> encServer,
 			SocketAddress listenAddr, int keyBroadcastIntervalSecs) {
 		this.data = data;
 		data.addObserver(this);
@@ -105,7 +105,7 @@ public class Controller implements Observer {
 	}
 
 	private static NaorPinkasServerData createNewData(int t) {
-	    return new NaorPinkasServerData(new SchnorrNaorPinkasServerFactory().construct(t));
+	    return new NaorPinkasServerData(new SchnorrNPServerFactory().construct(t));
 	}
 
 	/**
@@ -115,9 +115,9 @@ public class Controller implements Observer {
      * @param users The users who their personal keys will be saved.
      * @throws IOException
      */
-	public void saveUserKeys(File dir, Set<User<NaorPinkasIdentity>> users)
+	public void saveUserKeys(File dir, Set<User<NPIdentity>> users)
 			throws IOException {
-		for (User<NaorPinkasIdentity> user : users) {
+		for (User<NPIdentity> user : users) {
 			File keyFile = new File(dir.getAbsolutePath() + "/"
 					+ user.getName() + ".key");
 			Optional<? extends PrivateKey> mKey = data.npServer
@@ -216,10 +216,10 @@ public class Controller implements Observer {
         }
     }
 
-	private static BroadcastEncryptionServer<NaorPinkasIdentity> startBroadcastEncryptionServer(
+	private static BroadcastEncryptionServer<NPIdentity> startBroadcastEncryptionServer(
 			NaorPinkasServerData data, MessageOutChannel rawOut,
 			int keyBroadcastIntervalSecs) throws IOException {
-		BroadcastEncryptionServer<NaorPinkasIdentity> server = BroadcastEncryptionServer
+		BroadcastEncryptionServer<NPIdentity> server = BroadcastEncryptionServer
 				.start(data.userManager, data.npServer, AES_KEY_BITS, rawOut,
 					   keyBroadcastIntervalSecs * 1000, // update every 15 seconds
 				       fatalExceptionHandler);

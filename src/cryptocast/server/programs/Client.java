@@ -42,13 +42,13 @@ public final class Client {
     public static void main(String[] argv) throws Exception {
         Options opts = OptParse.parseArgs(new Options(), "client", argv);
         
-        NaorPinkasPersonalKey<BigInteger, SchnorrGroup> key = 
+        NPKey<BigInteger, SchnorrGroup> key = 
                 SerializationUtils.readFromFile(opts.keyFile);
         Socket sock = new Socket(opts.connectHost, opts.connectPort);
         BroadcastEncryptionClient in =
                 new BroadcastEncryptionClient(
                         new StreamMessageInChannel(sock.getInputStream()), 
-                        new SchnorrNaorPinkasClient(key));
+                        new SchnorrNPClient(key));
         if (opts.type.equals("text")) {
             int received;
             byte[] buffer = new byte[0x1000];

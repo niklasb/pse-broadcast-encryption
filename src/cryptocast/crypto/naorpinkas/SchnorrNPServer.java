@@ -7,10 +7,10 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import cryptocast.crypto.*;
 
-public class SchnorrNaorPinkasServer extends NaorPinkasServer<BigInteger, SchnorrGroup> {
+public class SchnorrNPServer extends NPServer<BigInteger, SchnorrGroup> {
     private static final long serialVersionUID = 1656507589897819277L;
 
-    protected SchnorrNaorPinkasServer(NaorPinkasServerContext<BigInteger, SchnorrGroup> ctx) {
+    protected SchnorrNPServer(NPServerContext<BigInteger, SchnorrGroup> ctx) {
         super(ctx);
     }
 
@@ -29,7 +29,7 @@ public class SchnorrNaorPinkasServer extends NaorPinkasServer<BigInteger, Schnor
 
     @Override
     protected void putShare(ByteArrayDataOutput out, 
-                            NaorPinkasShare<BigInteger, SchnorrGroup> share) {
+                            NPShare<BigInteger, SchnorrGroup> share) {
         putBytes(out, share.getI().toByteArray());
         putBytes(out, share.getGRPI().toByteArray());
     }

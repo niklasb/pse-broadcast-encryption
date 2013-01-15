@@ -13,18 +13,18 @@ import static cryptocast.util.ByteUtils.str2bytes;
 
 public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext {
     private int t = 10;
-    SchnorrNaorPinkasServer server = 
-            (SchnorrNaorPinkasServer) new SchnorrNaorPinkasServerFactory().construct(t);
+    SchnorrNPServer server = 
+            (SchnorrNPServer) new SchnorrNPServerFactory().construct(t);
     private MessageBuffer fifo = new MessageBuffer();
     
     @Test
     public void serverCanSendToClient() throws Exception {
-        BroadcastEncryptionServer<NaorPinkasIdentity> out = 
+        BroadcastEncryptionServer<NPIdentity> out = 
                 BroadcastEncryptionServer.start(server, server, 128, fifo, 0, null);
-        NaorPinkasPersonalKey<BigInteger, SchnorrGroup> key = 
+        NPKey<BigInteger, SchnorrGroup> key = 
                 server.getPersonalKey(server.getIdentity(0)).get();
         BroadcastEncryptionClient in =
-                new BroadcastEncryptionClient(fifo, new SchnorrNaorPinkasClient(key));
+                new BroadcastEncryptionClient(fifo, new SchnorrNPClient(key));
         byte[] payload = str2bytes("abcdefg");
         out.write(payload);
         out.close();
@@ -34,9 +34,9 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
 
     @Test
     public void serverBroadcastsKeyRegularly() throws Exception {
-        BroadcastEncryptionServer<NaorPinkasIdentity> out = 
+        BroadcastEncryptionServer<NPIdentity> out = 
                 BroadcastEncryptionServer.start(server, server, 128, fifo, 100, null);
-        NaorPinkasPersonalKey<BigInteger, SchnorrGroup> key = 
+        NPKey<BigInteger, SchnorrGroup> key = 
                 server.getPersonalKey(server.getIdentity(0)).get();
         byte[] payload = str2bytes("abcdefg");
         out.write(payload);
@@ -45,7 +45,7 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
         while (fifo.recvMessage() != null) {}
         fifo.setBlocking(true);
         BroadcastEncryptionClient in =
-                new BroadcastEncryptionClient(fifo, new SchnorrNaorPinkasClient(key));
+                new BroadcastEncryptionClient(fifo, new SchnorrNPClient(key));
         Thread worker = new Thread(out);
         worker.start();
         Thread.sleep(500);

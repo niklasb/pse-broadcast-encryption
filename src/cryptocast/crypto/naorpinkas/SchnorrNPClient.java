@@ -7,17 +7,17 @@ import com.google.common.io.ByteArrayDataInput;
 import cryptocast.crypto.*;
 import cryptocast.util.ArrayUtils;
 
-public class SchnorrNaorPinkasClient extends NaorPinkasClient<BigInteger, SchnorrGroup> {
-    public SchnorrNaorPinkasClient(NaorPinkasPersonalKey<BigInteger, SchnorrGroup> key) {
+public class SchnorrNPClient extends NPClient<BigInteger, SchnorrGroup> {
+    public SchnorrNPClient(NPKey<BigInteger, SchnorrGroup> key) {
         super(key);
     }
 
     @Override
-    protected NaorPinkasShare<BigInteger, SchnorrGroup> readShare(
+    protected NPShare<BigInteger, SchnorrGroup> readShare(
                            ByteArrayDataInput in) {
         BigInteger i = new BigInteger(readBytes(in)),
                    grpi = new BigInteger(readBytes(in));
-        return new NaorPinkasShare<BigInteger, SchnorrGroup>(i, grpi, getGroup());
+        return new NPShare<BigInteger, SchnorrGroup>(i, grpi, getGroup());
     }
 
     @Override

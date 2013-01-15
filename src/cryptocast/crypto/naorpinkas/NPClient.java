@@ -14,25 +14,25 @@ import com.google.common.io.ByteStreams;
 /**
  * A client in the Naor-Pinkas broadcast encryption scheme.
  */
-public abstract class NaorPinkasClient<T, G extends CyclicGroupOfPrimeOrder<T>> 
+public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>> 
                                  implements Decryptor<byte[]> {
-    private NaorPinkasPersonalKey<T, G> key;
+    private NPKey<T, G> key;
     private G group;
     
     /**
      * Initializes a Naor-Pinkas broadcast client.
      * @param key The personal key used to reconstruct a secret from the stream.
      */
-    protected NaorPinkasClient(NaorPinkasPersonalKey<T, G> key) {
+    protected NPClient(NPKey<T, G> key) {
         this.key = key;
         group = key.getGroup();
     }
 
     public G getGroup() { return group; }
 
-    protected abstract NaorPinkasShare<T, G> readShare(ByteArrayDataInput in);
+    protected abstract NPShare<T, G> readShare(ByteArrayDataInput in);
 
-    public NaorPinkasMessage<T, G> unpackMessage(byte[] msg) {
+    public NPMessage<T, G> unpackMessage(byte[] msg) {
         ByteArrayDataInput in = ByteStreams.newDataInput(msg);
         int t = in.readInt();
         BigInteger r = new BigInteger(readBytes(in));
@@ -41,11 +41,11 @@ public abstract class NaorPinkasClient<T, G extends CyclicGroupOfPrimeOrder<T>>
         for (int i = 0; i < t; ++i) {
             lagrangeCoeffs.add(new BigInteger(readBytes(in)));
         }
-        ImmutableList.Builder<NaorPinkasShare<T, G>> shares = ImmutableList.builder();
+        ImmutableList.Builder<NPShare<T, G>> shares = ImmutableList.builder();
         for (int i = 0; i < t; ++i) {
             shares.add(readShare(in));
         }
-        return new NaorPinkasMessage<T, G>(t, r, encryptedSecret, group, 
+        return new NPMessage<T, G>(t, r, encryptedSecret, group, 
                                            lagrangeCoeffs.build(), shares.build());
     }
 
@@ -60,16 +60,16 @@ public abstract class NaorPinkasClient<T, G extends CyclicGroupOfPrimeOrder<T>>
     
     @Override
     public byte[] decrypt(byte[] cipher) throws InsufficientInformationError {
-        NaorPinkasMessage<T, G> msg = unpackMessage(cipher);
-        NaorPinkasShareCombinator<T, G> combinator = 
-                new NaorPinkasShareCombinator<T, G>(msg.getT(), group);
-        List<NaorPinkasShare<T, G>> allShares = ImmutableList.<NaorPinkasShare<T, G>>builder()
+        NPMessage<T, G> msg = unpackMessage(cipher);
+        NPShareCombinator<T, G> combinator = 
+                new NPShareCombinator<T, G>(msg.getT(), group);
+        List<NPShare<T, G>> allShares = ImmutableList.<NPShare<T, G>>builder()
                                                   .addAll(msg.getShares())
                                                   .add(key.getShare(msg.getR()))
                                                   .build();
         LagrangeInterpolation<BigInteger> lagrange = 
                 new LagrangeInterpolation<BigInteger>(group.getFieldModOrder(), 
-                        MapUtils.zip(NaorPinkasShare.getXsFromShares(msg.getShares()), 
+                        MapUtils.zip(NPShare.getXsFromShares(msg.getShares()), 
                                 msg.getLagrangeCoeffs()));
         Optional<T> mInterpol = combinator.restore(allShares, lagrange);
         if (!mInterpol.isPresent()) {

@@ -10,13 +10,13 @@ import cryptocast.crypto.CyclicGroupOfPrimeOrder;
  * It consists of a value $I$ and the value $P(I)$, which is the value of 
  * the Naor-Pinkas polynomial at $I$.
  */
-public class NaorPinkasPersonalKey<T, G extends CyclicGroupOfPrimeOrder<T>>
+public class NPKey<T, G extends CyclicGroupOfPrimeOrder<T>>
                         implements PrivateKey {
     private static final long serialVersionUID = 654772327240529095L;
 
     private BigInteger i, pi;
     private G group;
-    private NaorPinkasIdentity id;
+    private NPIdentity id;
     
     /**
      * Creates a new instance of NaorPinkasPersonalKey with the given parameters.
@@ -25,10 +25,10 @@ public class NaorPinkasPersonalKey<T, G extends CyclicGroupOfPrimeOrder<T>>
      * @param pi $P(I)$, the value of the polynomial at $I$.
      * @param schnorr The schnorr group.
      */
-    protected NaorPinkasPersonalKey(BigInteger i, BigInteger pi, 
+    protected NPKey(BigInteger i, BigInteger pi, 
                                     G group) {
         this.i = i;
-        id = new NaorPinkasIdentity(i);
+        id = new NPIdentity(i);
         this.pi = pi;
         this.group = group;
     }
@@ -45,23 +45,23 @@ public class NaorPinkasPersonalKey<T, G extends CyclicGroupOfPrimeOrder<T>>
      * @param gr The value $g^r$.
      * @return a NP share constructed from this key and the given values.
      */
-    public NaorPinkasShare<T, G> getShare(BigInteger r, T gr) {
+    public NPShare<T, G> getShare(BigInteger r, T gr) {
         T x = group.pow(gr, pi);
-        return new NaorPinkasShare<T, G>(i, x, group);
+        return new NPShare<T, G>(i, x, group);
     }
     
     /**
      * @param r The integer $r$
      * @return a NP share constructed from this key and the given $r$.
      */
-    public NaorPinkasShare<T, G> getShare(BigInteger r) {
+    public NPShare<T, G> getShare(BigInteger r) {
         return getShare(r, group.getPowerOfG(r));
     }
 
     /**
      * @return the NP identity.
      */
-    public NaorPinkasIdentity getIdentity() {
+    public NPIdentity getIdentity() {
         return id;
     }
 

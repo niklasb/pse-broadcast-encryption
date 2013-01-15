@@ -11,10 +11,10 @@ public class WithNaorPinkasContext {
     protected IntegersModuloPrime modQ = schnorr.getFieldModOrder(),
                                   modP = schnorr.getFieldModP();
 
-    protected NaorPinkasShare<BigInteger, SchnorrGroup> makeShare(
+    protected NPShare<BigInteger, SchnorrGroup> makeShare(
                        Polynomial<BigInteger> poly, BigInteger r, int xi) {
         BigInteger x = BigInteger.valueOf(xi);
-        return new NaorPinkasShare<BigInteger, SchnorrGroup>(
+        return new NPShare<BigInteger, SchnorrGroup>(
                 x, schnorr.getPowerOfG(r.multiply(poly.evaluate(x))), schnorr);
     }
 
@@ -26,8 +26,8 @@ public class WithNaorPinkasContext {
         return new Polynomial<BigInteger>(field, coeff.build());
     }
     
-    protected NaorPinkasShareCombinator<BigInteger, SchnorrGroup>
+    protected NPShareCombinator<BigInteger, SchnorrGroup>
                       makeCombinator(Polynomial<BigInteger> poly) {
-        return new NaorPinkasShareCombinator<BigInteger, SchnorrGroup>(poly.getDegree(), schnorr);
+        return new NPShareCombinator<BigInteger, SchnorrGroup>(poly.getDegree(), schnorr);
     }
 }

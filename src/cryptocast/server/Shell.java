@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import cryptocast.crypto.NoMoreRevocationsPossibleError;
-import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
+import cryptocast.crypto.naorpinkas.NPIdentity;
 import cryptocast.util.InteractiveCommandLineInterface;
 import cryptocast.util.ByteUtils;
 import static cryptocast.util.ErrorUtils.cannotHappen;
@@ -186,15 +186,15 @@ public class Shell extends InteractiveCommandLineInterface {
             commandSyntaxError(cmd);
         }
 
-        Set<User<NaorPinkasIdentity>> users = getModel().getUsers();
+        Set<User<NPIdentity>> users = getModel().getUsers();
         int revoked = 0;
-        for (User<NaorPinkasIdentity> user : users) {
+        for (User<NPIdentity> user : users) {
             if (getModel().isRevoked(user)) {
                 revoked++;
             }
         }
         printf("Have %d users, %d/%d revoked:\n", users.size(), revoked, control.getT());
-        for (User<NaorPinkasIdentity> user : users) {
+        for (User<NPIdentity> user : users) {
             printf("  %-20s%s\n", user.getName(), 
                           getModel().isRevoked(user) ? " revoked" : "");
         }
@@ -205,7 +205,7 @@ public class Shell extends InteractiveCommandLineInterface {
             commandSyntaxError(cmd);
         }
 
-        Optional<User<NaorPinkasIdentity>> mUser = getModel().createNewUser(args[0]);
+        Optional<User<NPIdentity>> mUser = getModel().createNewUser(args[0]);
         if (!mUser.isPresent()) {
             error("User with this name already existing!");
         }
@@ -216,7 +216,7 @@ public class Shell extends InteractiveCommandLineInterface {
             commandSyntaxError(cmd);
         }
         
-        ImmutableSet.Builder<User<NaorPinkasIdentity>> users = ImmutableSet.builder();
+        ImmutableSet.Builder<User<NPIdentity>> users = ImmutableSet.builder();
         for (String name : args) {
             users.add(getUser(name));
         }
@@ -232,7 +232,7 @@ public class Shell extends InteractiveCommandLineInterface {
             commandSyntaxError(cmd);
         }
 
-        User<NaorPinkasIdentity> user = getUser(args[0]);
+        User<NPIdentity> user = getUser(args[0]);
         if (!getModel().unrevoke(user)) {
             error("User already authorized!");
         }
@@ -247,7 +247,7 @@ public class Shell extends InteractiveCommandLineInterface {
         if (!dir.isDirectory()) {
             error("Target directory does not exist!");
         }
-        Set<User<NaorPinkasIdentity>> users;
+        Set<User<NPIdentity>> users;
         if (args.length > 1) {
             users = Sets.newHashSet();
             for (int i = 1; i < args.length; ++i) {
@@ -332,15 +332,15 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
 
-    private User<NaorPinkasIdentity> getUser(String name) throws CommandError {
-        Optional<User<NaorPinkasIdentity>> mUser = getModel().getUserByName(name);
+    private User<NPIdentity> getUser(String name) throws CommandError {
+        Optional<User<NPIdentity>> mUser = getModel().getUserByName(name);
         if (!mUser.isPresent()) {
             error("No such user: " + name);
         }
         return mUser.get();
     }
 
-    private ServerData<NaorPinkasIdentity> getModel() {
+    private ServerData<NPIdentity> getModel() {
         return control.getModel();
     }
     
