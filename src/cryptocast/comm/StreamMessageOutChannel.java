@@ -22,17 +22,17 @@ public class StreamMessageOutChannel extends MessageOutChannel {
     }
 
     /**
-     * Sends the given message via the channel.
+     * Sends the given message via the channel using a single write.
      * 
      * @param data The data to send.
      * @param offset The start offset in array data at which the data is written.
      * @param len The maximum number of bytes to read.
      */
     public void sendMessage(byte[] data, int offset, int len) throws IOException {
-        ByteBuffer packedSize = ByteBuffer.allocate(4);
-        packedSize.order(ByteOrder.BIG_ENDIAN);
-        packedSize.putInt(len);
-        inner.write(packedSize.array());
-        inner.write(data, offset, len);
+        ByteBuffer msg = ByteBuffer.allocate(4 + len);
+        msg.order(ByteOrder.BIG_ENDIAN);
+        msg.putInt(len);
+        msg.put(data, offset, len);
+        inner.write(msg.array());
     }
 }
