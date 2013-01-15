@@ -3,8 +3,14 @@ package cryptocast.crypto;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Random;
+
+import cryptocast.crypto.EllipticCurve.*;
 
 import org.junit.Test;
+
+import com.beust.jcommander.internal.Lists;
 
 public class TestEllipticCurveOverFp {
     private BigInteger p = BigInteger.valueOf(11),
@@ -15,7 +21,7 @@ public class TestEllipticCurveOverFp {
     
     @Test
     public void negate() {
-        EllipticCurve.Point<BigInteger> 
+        Point<BigInteger> 
             point = curve.getPoint(BigInteger.valueOf(3), BigInteger.valueOf(4)),
             neg = curve.getPoint(BigInteger.valueOf(3), BigInteger.valueOf(7));
         assertEquals(neg, curve.negate(point));
@@ -24,7 +30,7 @@ public class TestEllipticCurveOverFp {
     
     @Test
     public void twice() {
-        EllipticCurve.Point<BigInteger> 
+        Point<BigInteger> 
             point = curve.getPoint(BigInteger.valueOf(3), BigInteger.valueOf(4)),
             twice = curve.getPoint(BigInteger.valueOf(8), BigInteger.valueOf(4)),
             fourTimes = curve.getPoint(BigInteger.valueOf(9), BigInteger.valueOf(2)),
@@ -38,7 +44,7 @@ public class TestEllipticCurveOverFp {
     
     @Test
     public void add() {
-        EllipticCurve.Point<BigInteger> 
+        Point<BigInteger> 
             p1 = curve.getPoint(BigInteger.valueOf(0), BigInteger.valueOf(4)),
             p2 = curve.getPoint(BigInteger.valueOf(0), BigInteger.valueOf(7)),
             p3 = curve.getPoint(BigInteger.valueOf(3), BigInteger.valueOf(4)),
@@ -54,7 +60,7 @@ public class TestEllipticCurveOverFp {
     
     @Test
     public void multiply() {
-        EllipticCurve.Point<BigInteger> 
+        Point<BigInteger> 
             p1 = curve.getPoint(BigInteger.valueOf(0), BigInteger.valueOf(4)),
             p2 = curve.getPoint(BigInteger.valueOf(0), BigInteger.valueOf(7)),
             p3 = curve.getPoint(BigInteger.valueOf(3), BigInteger.valueOf(4)),
@@ -77,11 +83,27 @@ public class TestEllipticCurveOverFp {
                 EllipticCurveGroup.getNamedCurve("prime192v1");
         EllipticCurveOverFp curve = group.getCurve();
         BigInteger k = new BigInteger("333333333333333333333333333333337c964c53", 16);
-        EllipticCurve.Point<BigInteger> 
+        Point<BigInteger> 
             actual = curve.multiply(group.getBasePoint(), k),
             expected = curve.getPoint(
                     new BigInteger("ccb5412903ebb05c8bf1672ff5b21ba7708537d06b5d68e8", 16),
                     new BigInteger("de2e4e3badcabdd2567d53df9fe1df9913894fa3359c620c", 16));
         assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void multiexpWorks() {
+        EllipticCurveGroup<BigInteger, EllipticCurveOverFp> group = 
+                EllipticCurveGroup.getNamedCurve("secp160r1");
+        List<Point<BigInteger>> bases = Lists.newArrayList();
+        List<BigInteger> exps = Lists.newArrayList();
+        bases.add(group.getBasePoint());
+        bases.add(group.identity());
+        bases.add(group.getPowerOfG(new BigInteger("fffffffffffff213", 16)));
+        Random rnd = new Random();
+        for (int i = 0; i < bases.size(); ++i) {
+            exps.add(SchnorrGroup.getP1024Q160().getFieldModP().randomElement(rnd));
+        }
+        TestCyclicGroupOfPrimeOrder.testMultiexp(bases, exps, group);
     }
 }

@@ -4,7 +4,6 @@ import cryptocast.crypto.*;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -34,14 +33,17 @@ public class NaorPinkasShareCombinator<T>
 
         CyclicGroupOfPrimeOrder<T> group = shares.get(0).getGroup();
         
+        ImmutableList.Builder<T> bases = ImmutableList.builder();
+        ImmutableList.Builder<BigInteger> exponents = ImmutableList.builder();
+
         lagrange.setXs(ImmutableSet.copyOf(NaorPinkasShare.getXsFromShares(shares)));
-        Map<BigInteger, BigInteger> coeffs = lagrange.getCoefficients();
-        T res = group.identity();
         for (NaorPinkasShare<T> share : shares) {
-            BigInteger c = coeffs.get(share.getI());
-            res = group.combine(res, group.pow(share.getGRPI(), c));
+            bases.add(share.getGRPI());
+            BigInteger e = lagrange.getCoefficients().get(share.getI());
+            assert e != null;
+            exponents.add(e);
         }
-        return Optional.of(res);
+        return Optional.of(group.multiexp(bases.build(), exponents.build()));
     }
     
     /**

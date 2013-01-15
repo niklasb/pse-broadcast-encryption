@@ -37,7 +37,7 @@ public class TestPolynomialMultiEvaluation {
     
     @Test
     public void largeRandomTest() {
-        randomTest(500, 1000);
+        randomTest(200, 500);
     }
     
     private void randomTest(int t, int n) {

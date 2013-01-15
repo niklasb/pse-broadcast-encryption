@@ -1,12 +1,8 @@
 package cryptocast.crypto;
 
-import java.util.ArrayList;
-
 import org.junit.*;
 import static org.mockito.Mockito.*;
 import org.mockito.*;
-
-import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
 
 class Identity { }
 

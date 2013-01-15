@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Represents a cyclic group $(G, \otimes)$ of prime order $q$ over a subset 
@@ -98,22 +99,25 @@ public abstract class CyclicGroupOfPrimeOrder<T> implements Serializable {
      *         is the size of the input lists
      */
     public T multiexp(List<T> bases, List<BigInteger> exponents) {
+        assert bases.size() == exponents.size();
         return multiexpShamir(bases, exponents, 5);
     }
 
     /**
      * Implements multi-exponentation by applying Shamir's trick
-     * to chunks of a given size.
+     * iteratively to chunks of a given size.
      * Uses {@link List.subList}, so you'd better give it 
      * {@link ImmutableList}s.
      * 
      * @param bases The items $b_i$
      * @param exponents The exponents $e_i$
-     * @param $k$ The chunk size
+     * @param $k > 0$ The chunk size
      * @return $\bigotimes_{i=1}^n b_i^{e_i}$, where $n$
      *         is the size of the input lists
      */
     public T multiexpShamir(List<T> bases, List<BigInteger> exponents, int k) {
+        checkArgument(k > 0, "k must be > 0");
+        assert bases.size() == exponents.size();
         T res = identity();
         int len = bases.size();
         res = combine(res, shamir(bases.subList(0, len % k), 
@@ -125,19 +129,27 @@ public abstract class CyclicGroupOfPrimeOrder<T> implements Serializable {
         return res;
     }
     
-    // Implements Shamir's trick for multiple variables.
-    // Needs space exponential in the length of the input lists.
-    private T shamir(List<T> bases, List<BigInteger> exponents) {
+    /**
+     * Implements Shamir's trick for multiple variables.
+     * Needs space exponential in the number of variables!
+     * 
+     * @param bases The items $b_i$
+     * @param exponents The exponents $e_i$
+     * @return $\bigotimes_{i=1}^n b_i^{e_i}$, where $n$
+     *         is the size of the input lists
+     */
+    protected T shamir(List<T> bases, List<BigInteger> exponents) {
+        assert bases.size() == exponents.size();
+        
         int len = bases.size();
-        assert len == exponents.size();
         ImmutableList.Builder<T> builder = ImmutableList.builder();
-        for (int i = 0; i < (1<<len); ++i) {
-            T sum = identity();
+        for (int i = 0; i < (1 << len); ++i) {
+            T prod = identity();
             for (int j = 0; j < len; ++j) {
-                if ((i & j) == 0) { continue; }
-                sum = combine(sum, bases.get(j));
+                if ((i & (1 << j)) == 0) { continue; }
+                prod = combine(prod, bases.get(j));
             }
-            builder.add(sum);
+            builder.add(prod);
         }
         ImmutableList<T> precomp = builder.build();
         int m = 0;
