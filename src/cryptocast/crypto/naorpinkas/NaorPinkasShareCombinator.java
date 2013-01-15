@@ -1,6 +1,7 @@
 package cryptocast.crypto.naorpinkas;
 
 import cryptocast.crypto.*;
+
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -13,32 +14,32 @@ import com.google.common.collect.Ordering;
 /**
  * Allows to restore a number from a sufficient number of Naor-Pinkas shares.
  */
-public class NaorPinkasShareCombinator implements 
-             ShareCombinator<BigInteger, 
-                             NaorPinkasShare, 
-                             LagrangeInterpolation<BigInteger>> {
+public class NaorPinkasShareCombinator<T> 
+                     implements ShareCombinator<T, NaorPinkasShare<T>, 
+                                                LagrangeInterpolation<BigInteger>> {
     /**
      * Restores a secret from several Naor-Pinkas shares.
      * @param shares The shares
-     * @param additionalInfo the precomputed Lagrange coefficients
+     * @param lagrange The precomputed Lagrange coefficients
+     * 
      * @return The reconstructed secret or absent if the information represented
      * by the given shares is insufficient to restore it.
      */
     @Override
-    public Optional<BigInteger> restore(List<NaorPinkasShare> shares,
-                                        LagrangeInterpolation<BigInteger> lagrange) {
+    public Optional<T> restore(List<NaorPinkasShare<T>> shares,
+                               LagrangeInterpolation<BigInteger> lagrange) {
         if (hasMissingShares(shares) || hasRedundantShares(shares)) {
             return Optional.absent();
         }
 
-        Field<BigInteger> modP = shares.get(0).getGroup().getFieldModP();
+        CyclicGroupOfPrimeOrder<T> group = shares.get(0).getGroup();
         
         lagrange.setXs(ImmutableSet.copyOf(NaorPinkasShare.getXsFromShares(shares)));
         Map<BigInteger, BigInteger> coeffs = lagrange.getCoefficients();
-        BigInteger res = modP.one();
-        for (NaorPinkasShare share : shares) {
+        T res = group.identity();
+        for (NaorPinkasShare<T> share : shares) {
             BigInteger c = coeffs.get(share.getI());
-            res = modP.multiply(res, modP.pow(share.getGRPI(), c));
+            res = group.combine(res, group.pow(share.getGRPI(), c));
         }
         return Optional.of(res);
     }
@@ -51,12 +52,13 @@ public class NaorPinkasShareCombinator implements
      * @return The reconstructed secret or absent if the information represented
      * by the given shares is insufficient to restore it.
      */
-    public Optional<BigInteger> restore(List<NaorPinkasShare> shares, 
-                                        SchnorrGroup schnorr) {
+    public Optional<T> restore(List<NaorPinkasShare<T>> shares, 
+                               CyclicGroupOfPrimeOrder<T> group) {
         if (hasMissingShares(shares) || hasRedundantShares(shares)) {
             return Optional.absent();
         }
-        return restore(shares, new LagrangeInterpolation<BigInteger>(schnorr.getFieldModQ()));
+        return restore(shares, new LagrangeInterpolation<BigInteger>(
+                                     group.getFieldModOrder()));
     }
     
     /**
@@ -65,7 +67,7 @@ public class NaorPinkasShareCombinator implements
      * @param shares The shares to check.
      * @return <code>true</code> if there are any missing shares, <code>false</code> otherwise.
      */
-    public boolean hasMissingShares(List<NaorPinkasShare> shares) {
+    public boolean hasMissingShares(List<NaorPinkasShare<T>> shares) {
         int t = shares.get(0).getT();
         if (shares.size() < t + 1) {
             return true;
@@ -79,11 +81,11 @@ public class NaorPinkasShareCombinator implements
      * @param shares The shares.
      * @return <code>true</code> if there are any redundant shares, <code>false</code> otherwise.
      */
-    public boolean hasRedundantShares(List<NaorPinkasShare> shares) {
-        ImmutableList<NaorPinkasShare> sortedShares = 
+    public boolean hasRedundantShares(List<NaorPinkasShare<T>> shares) {
+        ImmutableList<NaorPinkasShare<T>> sortedShares = 
                 Ordering.natural().immutableSortedCopy(shares);
         BigInteger lastX = null;
-        for (NaorPinkasShare share : sortedShares) {
+        for (NaorPinkasShare<T> share : sortedShares) {
             BigInteger x = share.getI();
             if (x.equals(lastX)) {
                 return true;

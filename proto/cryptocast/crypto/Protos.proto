@@ -1,0 +1,27 @@
+package cryptocast.crypto;
+
+message BInteger {
+    required bytes twoComplement = 1;
+}
+
+message ECPoint {
+    required BInteger grpiX = 1;
+    required BInteger grpiY = 2;
+}
+
+message DynamicCipherPayloadMessage {
+    required bytes payload = 1;
+}
+
+message DynamicCipherKeyUpdateMessage {
+    required bytes encryptedKey = 1;
+    required bytes iv = 2;
+}
+
+message DynamicCipherEofMessage { }
+
+message DynamicCipherMessage {
+    optional DynamicCipherPayloadMessage payloadMessage = 1;
+    optional DynamicCipherKeyUpdateMessage keyUpdateMessage = 2;
+    optional DynamicCipherEofMessage eofMessage = 3;
+}

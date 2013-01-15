@@ -18,7 +18,7 @@ public class TestNaorPinkasShareCombinator extends WithNaorPinkasContext {
         Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 2, 3, 7, 11 });
         BigInteger r = BigInteger.valueOf(11111),
                    grp0 = schnorr.getPowerOfG(modQ.multiply(r, poly.evaluate(modQ.zero())));
-        ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
+        ImmutableList.Builder<NaorPinkasShare<BigInteger>> shares = ImmutableList.builder();
         shares.add(makeShare(poly, r, 123123));
         shares.add(makeShare(poly, r, 33123));
         shares.add(makeShare(poly, r, 22233333));
@@ -32,7 +32,7 @@ public class TestNaorPinkasShareCombinator extends WithNaorPinkasContext {
     public void detectsRedundantShares() {
         Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 2, 3, 7, 11 });
         BigInteger r = BigInteger.valueOf(11111);
-        ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
+        ImmutableList.Builder<NaorPinkasShare<BigInteger>> shares = ImmutableList.builder();
         shares.add(makeShare(poly, r, 22233333));
         shares.add(makeShare(poly, r, 123123));
         shares.add(makeShare(poly, r, 33123));
@@ -44,7 +44,7 @@ public class TestNaorPinkasShareCombinator extends WithNaorPinkasContext {
     public void detectsMissingShares() {
         Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 2, 3, 7, 11 });
         BigInteger r = BigInteger.valueOf(11111);
-        ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
+        ImmutableList.Builder<NaorPinkasShare<BigInteger>> shares = ImmutableList.builder();
         shares.add(makeShare(poly, r, 123123));
         shares.add(makeShare(poly, r, 33123));
         shares.add(makeShare(poly, r, 22233333));
@@ -55,7 +55,7 @@ public class TestNaorPinkasShareCombinator extends WithNaorPinkasContext {
     public void cannotRestoreSecretFromTooFewShares() {
         Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 2, 3, 7, 11 });
         BigInteger r = BigInteger.valueOf(11111);
-        ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
+        ImmutableList.Builder<NaorPinkasShare<BigInteger>> shares = ImmutableList.builder();
         shares.add(makeShare(poly, r, 123123));
         shares.add(makeShare(poly, r, 33123));
         shares.add(makeShare(poly, r, 22233333));
@@ -67,7 +67,7 @@ public class TestNaorPinkasShareCombinator extends WithNaorPinkasContext {
     public void cannotRestoreSecretFromRedundantShares() {
         Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 2, 3, 7, 11 });
         BigInteger r = BigInteger.valueOf(11111);
-        ImmutableList.Builder<NaorPinkasShare> shares = ImmutableList.builder();
+        ImmutableList.Builder<NaorPinkasShare<BigInteger>> shares = ImmutableList.builder();
         shares.add(makeShare(poly, r, 22233333));
         shares.add(makeShare(poly, r, 123123));
         shares.add(makeShare(poly, r, 33123));

@@ -1,0 +1,32 @@
+package cryptocast.crypto.naorpinkas;
+
+import "cryptocast/crypto/Protos.proto";
+
+message NaorPinkasShareEC {
+    required BInteger r = 1;
+    required BInteger i = 2;
+    required ECPoint grpi = 3;
+}
+
+message NaorPinkasShareSchnorr {
+    required BInteger r = 1;
+    required BInteger i = 2;
+    required BInteger grpi = 3;
+}
+
+message NaorPinkasMessageCommon {
+    required int32 t = 1;
+    required BInteger r = 2;
+    required bytes encryptedSecret = 3;
+    repeated BInteger coefficients = 4;
+}
+
+message NaorPinkasMessageEC {
+    required NaorPinkasMessageCommon common = 1;
+    repeated NaorPinkasShareEC shares = 2;
+}
+
+message NaorPinkasMessageSchnorr {
+    required NaorPinkasMessageCommon common = 1;
+    repeated NaorPinkasShareSchnorr shares = 2;
+}

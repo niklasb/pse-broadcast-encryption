@@ -101,39 +101,39 @@ public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
 //        return q;
 //    }
     
-//    @Override
-//    public Point<BigInteger> multiply(Point<BigInteger> p, BigInteger k) {
-//        if (k.signum() == 0) {
-//            return getInfinity();
-//        }
-//        BigInteger h = k.multiply(BigInteger.valueOf(3));
-//
-//        Point<BigInteger> neg = negate(p), R = p;
-//
-//        for (int i = h.bitLength() - 2; i > 0; --i) {
-//            R = twice(R);
-//
-//            boolean hBit = h.testBit(i),
-//                    kBit = k.testBit(i);
-//
-//            if (hBit != kBit) {
-//                R = add(R, hBit ? p : neg);
-//            }
-//        }
-//
-//        return R;
-//    }
-    
     @Override
     public Point<BigInteger> multiply(Point<BigInteger> p, BigInteger k) {
-        if (isInfinity(p)) { return p; }
-        ConcretePoint<BigInteger> cp = (ConcretePoint<BigInteger>) p;
-        ECPoint bcp = bcCurve.createPoint(cp.getX(), cp.getY(), false);
-        bcp = bcp.multiply(k);
-        if (bcp.isInfinity()) {
+        if (k.signum() == 0) {
             return getInfinity();
-        } else {
-            return getPoint(bcp.getX().toBigInteger(), bcp.getY().toBigInteger());
         }
+        BigInteger h = k.multiply(BigInteger.valueOf(3));
+
+        Point<BigInteger> neg = negate(p), R = p;
+
+        for (int i = h.bitLength() - 2; i > 0; --i) {
+            R = twice(R);
+
+            boolean hBit = h.testBit(i),
+                    kBit = k.testBit(i);
+
+            if (hBit != kBit) {
+                R = add(R, hBit ? p : neg);
+            }
+        }
+
+        return R;
     }
+
+//    @Override
+//    public Point<BigInteger> multiply(Point<BigInteger> p, BigInteger k) {
+//        if (isInfinity(p)) { return p; }
+//        ConcretePoint<BigInteger> cp = (ConcretePoint<BigInteger>) p;
+//        ECPoint bcp = bcCurve.createPoint(cp.getX(), cp.getY(), false);
+//        bcp = bcp.multiply(k);
+//        if (bcp.isInfinity()) {
+//            return getInfinity();
+//        } else {
+//            return getPoint(bcp.getX().toBigInteger(), bcp.getY().toBigInteger());
+//        }
+//    }
 }

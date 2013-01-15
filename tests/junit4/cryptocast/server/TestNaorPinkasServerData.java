@@ -9,12 +9,11 @@ import org.junit.*;
 import com.google.common.base.Optional;
 
 import cryptocast.crypto.NoMoreRevocationsPossibleError;
-import cryptocast.crypto.SchnorrGroup;
 import cryptocast.crypto.naorpinkas.*;
 
 public class TestNaorPinkasServerData {
-    private NaorPinkasServer npServer = 
-               NaorPinkasServer.generate(10, SchnorrGroup.getP1024Q160());
+    private SchnorrNaorPinkasServer npServer = 
+               (SchnorrNaorPinkasServer) new SchnorrNaorPinkasServerFactory().construct(10);
     private NaorPinkasServerData sut = new NaorPinkasServerData(npServer);
 
     @Before

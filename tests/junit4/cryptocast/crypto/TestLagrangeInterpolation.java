@@ -16,7 +16,7 @@ public class TestLagrangeInterpolation {
     @Test
     public void interpolationInExponentWorks() {
         SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
-        Field<BigInteger> modQ = schnorr.getFieldModQ();
+        Field<BigInteger> modQ = schnorr.getFieldModOrder();
         Field<BigInteger> modP = schnorr.getFieldModP();
         Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 123123, 333333, 2222 });
         BigInteger[] xs = { 
@@ -52,7 +52,7 @@ public class TestLagrangeInterpolation {
 
     @Test
     public void interpolationInLargeField() {
-        Field<BigInteger> field = SchnorrGroup.getP1024Q160().getFieldModP();
+        Field<BigInteger> field = SchnorrGroup.getP1024Q160().getFieldModOrder();
         Polynomial<BigInteger> poly = makePolynomial(field, new int[] { 2, 3, 7, 11, 13 });
         LagrangeInterpolation<BigInteger> lagrange = LagrangeInterpolation.fromXs(field, 
                 ImmutableList.of( 
@@ -66,7 +66,7 @@ public class TestLagrangeInterpolation {
 
     @Test
     public void dynamicAddingAndRemovingOfPointsWorks() {
-        Field<BigInteger> field = SchnorrGroup.getP1024Q160().getFieldModQ();
+        Field<BigInteger> field = SchnorrGroup.getP1024Q160().getFieldModOrder();
         Polynomial<BigInteger> poly = makePolynomial(field, 
                 new int[] { 2, 3, 7, 11, 13 });
         LagrangeInterpolation<BigInteger> lagrange = 
@@ -93,7 +93,7 @@ public class TestLagrangeInterpolation {
     
     @Test
     public void interpolationByDataPointsAdaptsXs() {
-        Field<BigInteger> field = SchnorrGroup.getP1024Q160().getFieldModQ();
+        Field<BigInteger> field = SchnorrGroup.getP1024Q160().getFieldModOrder();
         Polynomial<BigInteger> poly = makePolynomial(field, 
                 new int[] { 2, 3, 5 });
         LagrangeInterpolation<BigInteger> lagrange = 
@@ -133,7 +133,7 @@ public class TestLagrangeInterpolation {
     }
 
     private void randomTest(int t) {
-        Field<BigInteger> field = SchnorrGroup.getP1024Q160().getFieldModQ();
+        Field<BigInteger> field = SchnorrGroup.getP1024Q160().getFieldModOrder();
         Random rnd = new Random();
         ImmutableList.Builder<BigInteger> xs = ImmutableList.builder();
         for (int j = 0; j < t; ++j) {

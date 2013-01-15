@@ -2,6 +2,7 @@ package cryptocast.server.programs;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.math.BigInteger;
 import java.net.Socket;
 
 import com.beust.jcommander.Parameter;
@@ -41,12 +42,12 @@ public final class Client {
     public static void main(String[] argv) throws Exception {
         Options opts = OptParse.parseArgs(new Options(), "client", argv);
         
-        NaorPinkasPersonalKey key = SerializationUtils.readFromFile(opts.keyFile);
+        NaorPinkasPersonalKey<BigInteger> key = SerializationUtils.readFromFile(opts.keyFile);
         Socket sock = new Socket(opts.connectHost, opts.connectPort);
         BroadcastEncryptionClient in =
                 new BroadcastEncryptionClient(
                         new StreamMessageInChannel(sock.getInputStream()), 
-                        new NaorPinkasClient(key));
+                        new SchnorrNaorPinkasClient(key));
         if (opts.type.equals("text")) {
             int received;
             byte[] buffer = new byte[0x1000];

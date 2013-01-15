@@ -1,5 +1,7 @@
 package cryptocast.crypto;
 
+import java.math.BigInteger;
+
 public abstract class EllipticCurve<T> {
     protected T a, b;
     
@@ -61,5 +63,5 @@ public abstract class EllipticCurve<T> {
         return new ConcretePoint<T>(x, y);
     }
     
-    public abstract Point<T> multiply(Point<T> a, T multiple);
+    public abstract Point<T> multiply(Point<T> a, BigInteger k);
 }
