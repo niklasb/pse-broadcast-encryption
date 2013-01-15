@@ -59,7 +59,6 @@ public class TestBufferedMediaPlayer implements OnStatusChangeListener {
         assertFalse(player.isStreaming());
     }
     
-    
     public InputStream mockStream() {
         ByteArrayInputStream stream = spy(new ByteArrayInputStream(new byte[1]));
         when(stream.available()).thenReturn(100000);

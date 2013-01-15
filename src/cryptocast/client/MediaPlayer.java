@@ -3,7 +3,6 @@ package cryptocast.client;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import cryptocast.client.bufferedmediaplayer.BufferedMediaPlayer;
 import cryptocast.client.bufferedmediaplayer.OnStatusChangeListener;
@@ -32,7 +31,6 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
             player.setDataSource(new FileInputStream(new File("/mnt/sdcard/whistle_long.mp3")));
             player.prepare();
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -54,7 +52,7 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
             @Override
             public void onClick(View v) {
                 player.start();
-            }
+                }
         });
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,15 +66,14 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
                 player.stop();
             }
         });
-        
+        status.setText("");
         player = new BufferedMediaPlayer();
         player.addOnStatusChangeListener(this);
     }
-
+    
     @Override
     public void onStatusChange(String message) {
-        // TODO Auto-generated method stub
-        
+        // TODO implement
     }
 
     @Override

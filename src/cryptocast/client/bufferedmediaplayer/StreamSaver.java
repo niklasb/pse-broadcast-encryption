@@ -14,7 +14,7 @@ import java.util.Queue;
  */
 public class StreamSaver implements Runnable {
     
-    private static int FILE_SIZE = 50000;
+    private static int FILE_SIZE = 200000;
     private static int INPUT_BUFFER_SIZE = 1024;
     private int bytesWritten = 0;
     

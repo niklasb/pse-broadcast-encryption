@@ -49,7 +49,7 @@ BufferedFileListener, Runnable, OnPreparedListener {
         bufferedFiles = new LinkedBlockingQueue<File>();
         idlePlayers = new LinkedList<MediaPlayer>();
         preparingPlayers = new LinkedList<MediaPlayer>();
-        preparedPlayers = new LinkedBlockingQueue<MediaPlayer>();
+        preparedPlayers = new LinkedList<MediaPlayer>();
         playedFiles = new HashMap<MediaPlayer, File>();
         statusListeners = new LinkedList<OnStatusChangeListener>();
         saver = new StreamSaver();
@@ -97,6 +97,11 @@ BufferedFileListener, Runnable, OnPreparedListener {
         if (saver != null) {
             saver.stopStreaming();
         }
+        if (playingPlayer != null) {
+            cleanupPlayer(playingPlayer);
+        }
+        preparingPlayers.clear();
+        preparedPlayers.clear();
     }
     /**
      * @return is playing
