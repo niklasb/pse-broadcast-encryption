@@ -1,8 +1,12 @@
 package cryptocast.crypto;
 
+import java.util.ArrayList;
+
 import org.junit.*;
 import static org.mockito.Mockito.*;
 import org.mockito.*;
+
+import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
 
 class Identity { }
 
@@ -36,14 +40,16 @@ public class TestBroadcastEncryptionServer {
     
     @Test
     public void revokeInformsBackend() throws Exception {
-        Identity id = new Identity();
-        sut.revoke(id);
-        verify(userManager).revoke(id);
+        ArrayList<Identity> ids = new ArrayList<Identity>();
+        ids.add(new Identity());
+        sut.revoke(ids);
+        verify(userManager).revoke(ids);
     }
 
     @Test
     public void revokeTriggersKeyUpdate() throws Exception {
-        Identity id = new Identity();
+        ArrayList<Identity> id = new ArrayList<Identity>();
+        id.add(new Identity());
         when(userManager.revoke(id))
             .thenReturn(true)
             .thenReturn(false);
@@ -52,12 +58,12 @@ public class TestBroadcastEncryptionServer {
         sut.revoke(id);
         verify(cipherStream, times(1)).updateKey();
         
-        when(userManager.unrevoke(id))
+        when(userManager.unrevoke(id.get(0)))
             .thenReturn(true)
             .thenReturn(false);
-        sut.unrevoke(id);
+        sut.unrevoke(id.get(0));
         verify(cipherStream, times(2)).updateKey();
-        sut.unrevoke(id);
+        sut.unrevoke(id.get(0));
         verify(cipherStream, times(2)).updateKey();
     }
 }

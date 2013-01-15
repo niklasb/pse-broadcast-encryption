@@ -3,6 +3,8 @@ package cryptocast.crypto.naorpinkas;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.security.Identity;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -35,7 +37,9 @@ public class TestNaorPinkasCommunication extends WithNaorPinkasContext {
     
     @Test(expected=InsufficientInformationError.class)
     public void decryptDoesntWorkWithRevokedShare() throws Exception {
-        server.revoke(server.getIdentity(0));
+        ArrayList<NaorPinkasIdentity> id = new ArrayList<NaorPinkasIdentity>();
+        id.add(server.getIdentity(0));
+        server.revoke(id);
         client.decryptNumber(server.encryptNumber(BigInteger.valueOf(111)));
     }
 }

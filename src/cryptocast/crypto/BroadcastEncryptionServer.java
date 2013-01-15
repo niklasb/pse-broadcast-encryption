@@ -5,6 +5,7 @@ import cryptocast.util.Callback;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +109,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
      * @throws NoMoreRevocationsPossibleError
      * @throws IOException
      */
-    public synchronized void revoke(ID id) throws NoMoreRevocationsPossibleError, IOException {
+    public synchronized void revoke(List<ID> id) throws NoMoreRevocationsPossibleError, IOException {
         if (context.revoke(id)) {
             updateKey();
         }

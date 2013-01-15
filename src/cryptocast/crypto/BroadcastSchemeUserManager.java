@@ -1,6 +1,7 @@
 package cryptocast.crypto;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Manages a set of user identities.
@@ -18,7 +19,7 @@ public interface BroadcastSchemeUserManager<ID> extends Serializable {
      * @param id The identity of the user
      * @return true, if the set of revoked users changed or false otherwise
      */
-    public boolean revoke(ID id) throws NoMoreRevocationsPossibleError;
+    public boolean revoke(List<ID> id) throws NoMoreRevocationsPossibleError;
     
     /**
      * Authorizes a user.

@@ -3,6 +3,7 @@ package cryptocast.crypto.naorpinkas;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.junit.Test;
@@ -28,41 +29,51 @@ public class TestNaorPinkasServer {
     
     @Test
     public void canCheckRevocationStatus() throws Exception {
+        ArrayList<NaorPinkasIdentity> ids = new ArrayList<NaorPinkasIdentity>();
         NaorPinkasIdentity id = server.getIdentity(2);
+        ids.add(id);
         assertFalse(server.isRevoked(id));
-        server.revoke(id);
+        server.revoke(ids);
         assertTrue(server.isRevoked(id));
     }
 
     @Test
     public void revokeAndUnrevokeReturnCorrectBool() throws Exception {
+        ArrayList<NaorPinkasIdentity> ids = new ArrayList<NaorPinkasIdentity>();
         NaorPinkasIdentity id = server.getIdentity(2);
-        assertTrue(server.revoke(id));
-        assertFalse(server.revoke(id));
+        ids.add(id);
+        assertTrue(server.revoke(ids));
+        assertFalse(server.revoke(ids));
         assertTrue(server.unrevoke(id));
         assertFalse(server.unrevoke(id));
     }
     
     @Test
     public void canRevokeUpToTUsers() throws Exception {
+        ArrayList<NaorPinkasIdentity> ids = new ArrayList<NaorPinkasIdentity>();
         for (int i = 0; i < t; ++i) {
-            server.revoke(server.getIdentity(i));
+            ids.add(server.getIdentity(i));
         }
+        server.revoke(ids);
     }
 
     @Test(expected=NoMoreRevocationsPossibleError.class)
     public void canRevokeOnlyTUsers() throws Exception {
+        ArrayList<NaorPinkasIdentity> ids = new ArrayList<NaorPinkasIdentity>();
         for (int i = 0; i < t + 1; ++i) {
-            server.revoke(server.getIdentity(i));
+            ids.add(server.getIdentity(i));
         }
+        server.revoke(ids);
     }
 
     @Test
     public void broadcastsRevokedUserShares() throws Exception {
+        ArrayList<NaorPinkasIdentity> ids = new ArrayList<NaorPinkasIdentity>();
         int[] revoked = { 0, 2, 4 };
         for (int i : revoked) {
-            server.revoke(server.getIdentity(i));
+            ids.add(server.getIdentity(i));
         }
+        server.revoke(ids);
         NaorPinkasMessage msg = server.encryptNumber(BigInteger.valueOf(111111));
         for (int i : revoked) {
             assertTrue(containsShareForUser(msg, server.getIdentity(i)));
@@ -71,12 +82,16 @@ public class TestNaorPinkasServer {
     
     @Test
     public void sendsCorrectLagrangeCoefficients() throws Exception {
+        ArrayList<NaorPinkasIdentity> ids = new ArrayList<NaorPinkasIdentity>();
         for (int i = 2; i <= 4; ++i) {
-            server.revoke(server.getIdentity(i));
+            ids.add(server.getIdentity(i));
         }
+        server.revoke(ids);
         server.unrevoke(server.getIdentity(3));
-        server.revoke(server.getIdentity(9));
-        server.revoke(server.getIdentity(8));
+        ids.clear();
+        ids.add(server.getIdentity(9));
+        ids.add(server.getIdentity(8));
+        server.revoke(ids);
         server.unrevoke(server.getIdentity(9));
         server.unrevoke(server.getIdentity(2));
         

@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -169,15 +170,19 @@ public class NaorPinkasServer
      * @param id The identity of the user
      * @return true, if the set of revoked users changed or false otherwise
      */
-    public boolean revoke(NaorPinkasIdentity id) throws NoMoreRevocationsPossibleError {
-        if (revokedUsers.size() == t) {
-            throw new NoMoreRevocationsPossibleError();
-        }
+    public boolean revoke(List<NaorPinkasIdentity> ids) throws NoMoreRevocationsPossibleError {
         // TODO abstract this away
         // remove highest dummy key and add new identity
-        lagrange.removeX(getDummyKey(t - revokedUsers.size() - 1).getIdentity().getI());
-        lagrange.addX(id.getI());
-        return revokedUsers.add(id);
+        boolean result = false;
+        for (NaorPinkasIdentity id : ids) {
+            if (revokedUsers.size() == t) {
+                throw new NoMoreRevocationsPossibleError();
+            }
+            lagrange.removeX(getDummyKey(t - revokedUsers.size() - 1).getIdentity().getI());
+            lagrange.addX(id.getI());
+            result = revokedUsers.add(id);
+        }
+        return result;
     }
     
     /**

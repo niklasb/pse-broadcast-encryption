@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -88,11 +89,13 @@ public class TestShell {
         String name = "bob";
         String[] args = {name};
         when(control.getModel()).thenReturn(model);
+        ArrayList<User<NaorPinkasIdentity>> users = new ArrayList<User<NaorPinkasIdentity>>();
         User<NaorPinkasIdentity> myBob = new User<NaorPinkasIdentity>(name, npServer.getIdentity(3));
+        users.add(myBob);
         when(model.getUserByName(name)).thenReturn(Optional.fromNullable(myBob));
-        when(model.revoke(myBob)).thenReturn(true);
+        when(model.revoke(users)).thenReturn(true);
         sut.performCommand("revoke", args);
-        verify(model).revoke(myBob);
+        verify(model).revoke(users);
     }
     
     @Test
@@ -102,19 +105,19 @@ public class TestShell {
         String name3 = "james";
         String[] args = {name1, name2, name3};
         when(control.getModel()).thenReturn(model);
+        ArrayList<User<NaorPinkasIdentity>> users = new ArrayList<User<NaorPinkasIdentity>>();
         User<NaorPinkasIdentity> myBob = new User<NaorPinkasIdentity>(name1, npServer.getIdentity(3));
         User<NaorPinkasIdentity> myAlice = new User<NaorPinkasIdentity>(name2, npServer.getIdentity(5));
         User<NaorPinkasIdentity> myJames = new User<NaorPinkasIdentity>(name3, npServer.getIdentity(7));
+        users.add(myBob);
+        users.add(myAlice);
+        users.add(myJames);
         when(model.getUserByName(name1)).thenReturn(Optional.fromNullable(myBob));
         when(model.getUserByName(name2)).thenReturn(Optional.fromNullable(myAlice));
         when(model.getUserByName(name3)).thenReturn(Optional.fromNullable(myJames));
-        when(model.revoke(myBob)).thenReturn(true);
-        when(model.revoke(myAlice)).thenReturn(true);
-        when(model.revoke(myJames)).thenReturn(true);
+        when(model.revoke(users)).thenReturn(true);
         sut.performCommand("revoke", args);
-        verify(model).revoke(myBob);
-        verify(model).revoke(myAlice);
-        verify(model).revoke(myJames);
+        verify(model).revoke(users);
     }
     
     @Test

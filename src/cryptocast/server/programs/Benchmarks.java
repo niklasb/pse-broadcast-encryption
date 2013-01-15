@@ -1,6 +1,7 @@
 package cryptocast.server.programs;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -170,9 +171,11 @@ public final class Benchmarks {
         public void run() {
             try {
                 server.encrypt(plain);
+                ArrayList<NaorPinkasIdentity> ids = new ArrayList<NaorPinkasIdentity>();
                 for (int i = 1; i <= 100; ++i) {
-                    server.revoke(server.getIdentity(i));
+                    ids.add(server.getIdentity(i));
                 }
+                server.revoke(ids);
                 server.encrypt(plain);
                 for (int i = 30; i <= 80; ++i) {
                     server.unrevoke(server.getIdentity(i));

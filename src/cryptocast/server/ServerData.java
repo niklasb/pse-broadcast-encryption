@@ -11,6 +11,7 @@ import com.google.common.collect.Maps;
 import java.util.List;
 import java.io.Serializable;
 import java.security.PrivateKey;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Observable;
 
@@ -103,8 +104,12 @@ public class ServerData<ID> extends Observable implements Serializable {
      * @return  <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
      * @throws NoMoreRevocationsPossibleError
      */
-    public boolean revoke(User<ID> user) throws NoMoreRevocationsPossibleError {
-        boolean res = userManager.revoke(user.getIdentity());
+    public boolean revoke(List<User<ID>> users) throws NoMoreRevocationsPossibleError {
+        List<ID> ids = new ArrayList<ID>();
+        for (User<ID> user : users) {
+            ids.add(user.getIdentity());
+        }
+        boolean res = userManager.revoke(ids);
         setChanged();
         notifyObservers();
         return res;

@@ -2,6 +2,8 @@ package cryptocast.server;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.*;
 
 import com.google.common.base.Optional;
@@ -66,8 +68,10 @@ public class TestNaorPinkasServerData {
     public void revokeUser() {
         Optional<User<NaorPinkasIdentity>> mUser = sut.getUserByName("alice");
         assertTrue(mUser.isPresent());
+        ArrayList<User<NaorPinkasIdentity>> users = new ArrayList<User<NaorPinkasIdentity>>();
+        users.add(mUser.get());
         try {
-            sut.revoke(mUser.get());
+            sut.revoke(users);
         } catch (NoMoreRevocationsPossibleError e) {
             // cannot happen
             e.printStackTrace();
