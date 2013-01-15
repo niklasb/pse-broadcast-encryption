@@ -2,12 +2,10 @@ package cryptocast.crypto;
 
 import java.util.List;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Random;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.base.Preconditions;
 
 import static com.google.common.base.Preconditions.checkArgument;

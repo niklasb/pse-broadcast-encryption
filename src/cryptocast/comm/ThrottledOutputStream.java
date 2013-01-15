@@ -4,15 +4,10 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 /**
  * A filter output stream which limit the number of written bytes per second.
  */
 public class ThrottledOutputStream extends FilterOutputStream {
-    private static final Logger log = LoggerFactory
-            .getLogger(ThrottledOutputStream.class);
-    
     private long maxBytesPerSec;
     private long bytes = 0;
     private long start;

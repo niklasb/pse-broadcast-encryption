@@ -5,14 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.security.PrivateKey;
-import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -104,7 +103,7 @@ public class Controller implements Observer {
      * @param users The users who their personal keys will be saved.
      * @throws IOException
      */
-	public void saveUserKeys(File dir, List<User<NaorPinkasIdentity>> users)
+	public void saveUserKeys(File dir, Set<User<NaorPinkasIdentity>> users)
 			throws IOException {
 		for (User<NaorPinkasIdentity> user : users) {
 			File keyFile = new File(dir.getAbsolutePath() + "/"

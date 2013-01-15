@@ -2,11 +2,8 @@ package cryptocast.server;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-
-import javax.sound.sampled.UnsupportedAudioFileException;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,10 +15,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
-import cryptocast.crypto.*;
 import cryptocast.crypto.naorpinkas.*;
-import cryptocast.util.CommandLineInterface.Exit;
 import cryptocast.util.InteractiveCommandLineInterface.CommandError;
 
 public class TestShell {
@@ -33,35 +30,36 @@ public class TestShell {
     @Mock private PrintStream err;
     @Mock private Controller control;
     @Mock private NaorPinkasServerData model;
-    
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         sut = new Shell(in, out, err, control);
+        when(control.getModel()).thenReturn(model);
     }
-    
+
     @Test(expected=CommandError.class)
-    public void invalidCommand() throws Exit, CommandError {
+    public void invalidCommand() throws Throwable {
         String[] args = {""};
         sut.performCommand("42", args);
     }
 
     @Test
-    public void HelpAdd() throws CommandError, Exit {
+    public void HelpAdd() throws Throwable {
         String[] args = {"add"};
         sut.performCommand("help", args);
         verify(out).printf("Usage: %s %s\n", "add", "<name>");
     }
-    
+
     @Test
-    public void showHelp() throws CommandError, Exit {
+    public void showHelp() throws Throwable {
         String[] args = {};
         sut.performCommand("help", args);
         verify(out).println("Use `help <cmd>' to get more information about a specific command");
     }
-    
+
     @Test
-    public void reInit() throws CommandError, Exit, IOException {
+    public void reInit() throws Throwable {
         String[] args = {"100"};
         sut.performCommand("init", args);
         sut.performCommand("init", args);
@@ -69,13 +67,13 @@ public class TestShell {
     }
     
     @Test(expected=CommandError.class)
-    public void initInvalid() throws CommandError, Exit, IOException {
+    public void initInvalid() throws Throwable {
         String[] args = {"-1"};
         sut.performCommand("init", args);
     }
     
     @Test
-    public void mp3Stream() throws CommandError, Exit, IOException, UnsupportedAudioFileException {
+    public void mp3Stream() throws Throwable {
         String[] args = {"C://test.mp3"};
         sut.performCommand("stream-mp3", args);
         File file = expandPath(args[0]);
@@ -83,46 +81,36 @@ public class TestShell {
     }
     
     @Test
-    public void revokeOne() throws CommandError, Exit, NoMoreRevocationsPossibleError {
+    public void revokeSingle() throws Throwable {
         String name = "bob";
         String[] args = {name};
-        when(control.getModel()).thenReturn(model);
-        ArrayList<User<NaorPinkasIdentity>> users = new ArrayList<User<NaorPinkasIdentity>>();
-        User<NaorPinkasIdentity> myBob = new User<NaorPinkasIdentity>(name, npServer.getIdentity(3));
-        users.add(myBob);
-        when(model.getUserByName(name)).thenReturn(Optional.fromNullable(myBob));
-        when(model.revoke(users)).thenReturn(true);
+        User<NaorPinkasIdentity> bob = new User<NaorPinkasIdentity>(name, npServer.getIdentity(3));
+        when(model.getUserByName(name)).thenReturn(Optional.fromNullable(bob));
+        when(model.revoke(bob)).thenReturn(true);
         sut.performCommand("revoke", args);
-        verify(model).revoke(users);
+        verify(model).revoke(ImmutableSet.of(bob));
     }
     
     @Test
-    public void revokeSeveral() throws CommandError, Exit, NoMoreRevocationsPossibleError {
-        String name1 = "bob";
-        String name2 = "alice";
-        String name3 = "james";
-        String[] args = {name1, name2, name3};
-        when(control.getModel()).thenReturn(model);
-        ArrayList<User<NaorPinkasIdentity>> users = new ArrayList<User<NaorPinkasIdentity>>();
-        User<NaorPinkasIdentity> myBob = new User<NaorPinkasIdentity>(name1, npServer.getIdentity(3));
-        User<NaorPinkasIdentity> myAlice = new User<NaorPinkasIdentity>(name2, npServer.getIdentity(5));
-        User<NaorPinkasIdentity> myJames = new User<NaorPinkasIdentity>(name3, npServer.getIdentity(7));
-        users.add(myBob);
-        users.add(myAlice);
-        users.add(myJames);
-        when(model.getUserByName(name1)).thenReturn(Optional.fromNullable(myBob));
-        when(model.getUserByName(name2)).thenReturn(Optional.fromNullable(myAlice));
-        when(model.getUserByName(name3)).thenReturn(Optional.fromNullable(myJames));
-        when(model.revoke(users)).thenReturn(true);
-        sut.performCommand("revoke", args);
-        verify(model).revoke(users);
+    public void revokeSeveral() throws Throwable {
+        String[] names = { "bob", "alice", "james" };
+        List<User<NaorPinkasIdentity>> users = ImmutableList.of(
+            new User<NaorPinkasIdentity>(names[0], npServer.getIdentity(3)),
+            new User<NaorPinkasIdentity>(names[1], npServer.getIdentity(5)),
+            new User<NaorPinkasIdentity>(names[2], npServer.getIdentity(6))
+        );
+        when(model.getUserByName(names[0])).thenReturn(Optional.fromNullable(users.get(0)));
+        when(model.getUserByName(names[1])).thenReturn(Optional.fromNullable(users.get(1)));
+        when(model.getUserByName(names[2])).thenReturn(Optional.fromNullable(users.get(2)));
+        when(model.revoke(ImmutableSet.copyOf(users))).thenReturn(true);
+        sut.performCommand("revoke", names);
+        verify(model).revoke(ImmutableSet.copyOf(users));
     }
     
     @Test
-    public void unrevoke() throws CommandError, Exit, NoMoreRevocationsPossibleError {
+    public void unrevoke() throws Throwable {
         String name = "alice";
         String[] args = {name};
-        when(control.getModel()).thenReturn(model);
         User<NaorPinkasIdentity> myAlice = new User<NaorPinkasIdentity>(name, npServer.getIdentity(12));
         when(model.getUserByName(name)).thenReturn(Optional.fromNullable(myAlice));
         when(model.unrevoke(myAlice)).thenReturn(true);

@@ -21,5 +21,4 @@ public class TestController {
         socketAddress = new InetSocketAddress(21337);
         sut = Controller.start(databaseFile, socketAddress, 15);
     }
-
 }

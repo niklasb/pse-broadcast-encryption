@@ -2,11 +2,10 @@ package cryptocast.server;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
 import org.junit.*;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 
 import cryptocast.crypto.NoMoreRevocationsPossibleError;
 import cryptocast.crypto.naorpinkas.*;
@@ -53,7 +52,11 @@ public class TestNaorPinkasServerData {
         assertEquals(2, sut.getUsers().size());
         sut.createNewUser("foo");
         assertEquals(3, sut.getUsers().size());
-        assertEquals("bob", sut.getUsers().get(1).getName());
+        ImmutableSet.Builder<String> names = ImmutableSet.builder();
+        for (User<NaorPinkasIdentity> user : sut.getUsers()) {
+            names.add(user.getName());
+        }
+        assertEquals(ImmutableSet.of("foo", "bob", "alice"), names.build());
     }
     
     @Test
@@ -67,10 +70,8 @@ public class TestNaorPinkasServerData {
     public void revokeUser() {
         Optional<User<NaorPinkasIdentity>> mUser = sut.getUserByName("alice");
         assertTrue(mUser.isPresent());
-        ArrayList<User<NaorPinkasIdentity>> users = new ArrayList<User<NaorPinkasIdentity>>();
-        users.add(mUser.get());
         try {
-            sut.revoke(users);
+            sut.revoke(ImmutableSet.of(mUser.get()));
         } catch (NoMoreRevocationsPossibleError e) {
             // cannot happen
             e.printStackTrace();

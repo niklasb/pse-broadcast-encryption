@@ -6,6 +6,8 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableSet;
+
 import cryptocast.crypto.*;
 import cryptocast.crypto.Protos.BInteger;
 import cryptocast.crypto.naorpinkas.Protos.*;
@@ -46,8 +48,18 @@ public class TestNaorPinkasServer {
     }
     
     @Test
+    public void canRevokeMultipleUsers() throws Exception {
+        assertTrue(server.revoke(ImmutableSet.of(server.getIdentity(2), server.getIdentity(4))));
+        for (int i = 0; i < t; ++i) {
+            boolean revoked = server.isRevoked(server.getIdentity(i));
+            assertTrue((i == 2 || i == 4) ? revoked : !revoked);
+        }
+    }
+    
+    @Test
     public void canRevokeUpToTUsers() throws Exception {
         for (int i = 0; i < t; ++i) {
+            server.revoke(server.getIdentity(i));
             server.revoke(server.getIdentity(i));
         }
     }
@@ -77,9 +89,12 @@ public class TestNaorPinkasServer {
             server.revoke(server.getIdentity(i));
         }
         server.unrevoke(server.getIdentity(3));
-        server.revoke(server.getIdentity(9));
+        server.revoke(ImmutableSet.of(server.getIdentity(9), server.getIdentity(8)));
+        server.revoke(ImmutableSet.of(server.getIdentity(9), server.getIdentity(8)));
         server.revoke(server.getIdentity(8));
         server.unrevoke(server.getIdentity(9));
+        server.unrevoke(server.getIdentity(2));
+        server.unrevoke(server.getIdentity(2));
         server.unrevoke(server.getIdentity(2));
         
         LagrangeInterpolation<BigInteger> lagrange = server.getContext().getLagrange();

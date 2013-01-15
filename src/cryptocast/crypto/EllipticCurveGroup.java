@@ -8,8 +8,6 @@ import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 
-import com.google.common.collect.ImmutableList;
-
 import cryptocast.crypto.EllipticCurve.*;
 
 public class EllipticCurveGroup<T, C extends EllipticCurve<T>>

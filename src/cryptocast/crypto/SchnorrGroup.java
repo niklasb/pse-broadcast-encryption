@@ -2,10 +2,6 @@ package cryptocast.crypto;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.util.List;
-
-import static cryptocast.util.ByteUtils.*;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -18,7 +14,7 @@ public class SchnorrGroup extends CyclicGroupOfPrimeOrder<BigInteger>
 
     private BigInteger p;
     private IntegersModuloPrime modP;
-
+    
     /**
      * Creates a schnorr group with the given values:
      * $q$ and $p$ prime, $p = qr + 1$ and $g$ generates

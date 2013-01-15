@@ -1,12 +1,10 @@
 package cryptocast.crypto;
 
+import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-
-import cryptocast.crypto.EllipticCurve.Point;
 
 /**
  * Represents a cyclic group $(G, \otimes)$ of prime order $q$ over a subset 
@@ -14,7 +12,9 @@ import cryptocast.crypto.EllipticCurve.Point;
  * Let $e$ denote the identity element of $G$ and $x^{-1}$ the inverse of $x$.
  * @param <T> The values we work on.
  */
-public abstract class CyclicGroupOfPrimeOrder<T> {
+public abstract class CyclicGroupOfPrimeOrder<T> implements Serializable {
+    private static final long serialVersionUID = 2338713119390549550L;
+    
     private IntegersModuloPrime modQ;
     private T g;
     private BigInteger q;

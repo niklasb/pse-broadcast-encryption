@@ -5,10 +5,6 @@ import cryptocast.util.Callback;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The server side of a broadcast encryption scheme.
@@ -16,9 +12,6 @@ import org.slf4j.LoggerFactory;
  */
 public class BroadcastEncryptionServer<ID> extends OutputStream
                                            implements Runnable {
-    private static final Logger log = LoggerFactory
-            .getLogger(BroadcastEncryptionServer.class);
-    
     private BroadcastSchemeUserManager<ID> context;
     private DynamicCipherOutputStream cipherStream;
     private int intervalMilliseconds;

@@ -5,15 +5,17 @@ import cryptocast.crypto.BroadcastSchemeKeyManager;
 import cryptocast.crypto.NoMoreRevocationsPossibleError;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
-import java.util.List;
 import java.io.Serializable;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +30,17 @@ public class ServerData<ID> extends Observable implements Serializable {
 
     private Map<String, User<ID>> userByName = Maps.newHashMap();
     private Map<ID, User<ID>> userById = Maps.newHashMap();
+    
     /**
-     * A list of users.
+     * The set of users known to the server.
      */
-    protected List<User<ID>> users = Lists.newArrayList();
+    protected Set<User<ID>> users = Sets.newHashSet();
+    
     /**
      * Manages the users.
      */
     protected BroadcastSchemeUserManager<ID> userManager;
+    
     /**
      * Manages the keys
      */
@@ -98,21 +103,32 @@ public class ServerData<ID> extends Observable implements Serializable {
     }
 
     /**
+     * Revokes users.
+     * 
+     * @param users The users to revoke.
+     * @return  <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
+     * @throws NoMoreRevocationsPossibleError
+     */
+    public boolean revoke(Set<User<ID>> users) throws NoMoreRevocationsPossibleError {
+        ImmutableSet.Builder<ID> identities = ImmutableSet.builder();
+        for (User<ID> user : users) {
+            identities.add(user.getIdentity());
+        }
+        boolean res = userManager.revoke(identities.build());
+        setChanged();
+        notifyObservers();
+        return res;
+    }
+    
+    /**
      * Revokes a user.
      * 
      * @param user The user to revoke.
      * @return  <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
      * @throws NoMoreRevocationsPossibleError
      */
-    public boolean revoke(List<User<ID>> users) throws NoMoreRevocationsPossibleError {
-        List<ID> ids = new ArrayList<ID>();
-        for (User<ID> user : users) {
-            ids.add(user.getIdentity());
-        }
-        boolean res = userManager.revoke(ids);
-        setChanged();
-        notifyObservers();
-        return res;
+    public boolean revoke(User<ID> user) throws NoMoreRevocationsPossibleError {
+        return revoke(ImmutableSet.of(user));
     }
 
     /**
@@ -141,7 +157,7 @@ public class ServerData<ID> extends Observable implements Serializable {
     /**
      * @return all users.
      */
-    public List<User<ID>> getUsers() {
+    public Set<User<ID>> getUsers() {
         return users;
     }
 }

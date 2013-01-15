@@ -1,12 +1,6 @@
 package cryptocast.util;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
 
 import static cryptocast.util.ErrorUtils.cannotHappen;
 

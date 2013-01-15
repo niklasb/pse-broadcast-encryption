@@ -2,13 +2,8 @@ package cryptocast.crypto;
 
 import java.math.BigInteger;
 
-import org.bouncycastle.math.ec.ECPoint;
-import org.bouncycastle.math.ec.ECCurve;
-import org.bouncycastle.math.ec.ECFieldElement;
-
 public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
     private IntegersModuloPrime field;
-    private ECCurve.Fp bcCurve;
     
     public EllipticCurveOverFp(IntegersModuloPrime field,
                                BigInteger a,
@@ -16,7 +11,6 @@ public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
         this.field = field;
         this.a = a;
         this.b = b;
-        bcCurve = new ECCurve.Fp(field.getP(), a, b);
     }
     
     @Override
@@ -89,18 +83,6 @@ public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
         return getPoint(x3, y3);
     }
     
-//    @Override
-//    public Point<BigInteger> multiply(Point<BigInteger> p, BigInteger k) {
-//        Point<BigInteger> q = getInfinity();
-//        for (int i = 0, len = k.bitLength(); i < len; i++) {
-//            if (k.testBit(i)) {
-//                q = add(q, p);
-//            }
-//            p = twice(p);
-//        }
-//        return q;
-//    }
-    
     @Override
     public Point<BigInteger> multiply(Point<BigInteger> p, BigInteger k) {
         if (k.signum() == 0) {
@@ -123,17 +105,4 @@ public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
 
         return R;
     }
-
-//    @Override
-//    public Point<BigInteger> multiply(Point<BigInteger> p, BigInteger k) {
-//        if (isInfinity(p)) { return p; }
-//        ConcretePoint<BigInteger> cp = (ConcretePoint<BigInteger>) p;
-//        ECPoint bcp = bcCurve.createPoint(cp.getX(), cp.getY(), false);
-//        bcp = bcp.multiply(k);
-//        if (bcp.isInfinity()) {
-//            return getInfinity();
-//        } else {
-//            return getPoint(bcp.getX().toBigInteger(), bcp.getY().toBigInteger());
-//        }
-//    }
 }

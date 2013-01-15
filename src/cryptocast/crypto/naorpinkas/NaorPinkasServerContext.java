@@ -1,5 +1,6 @@
 package cryptocast.crypto.naorpinkas;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
@@ -12,7 +13,9 @@ import cryptocast.crypto.*;
 import cryptocast.util.Generator;
 import cryptocast.util.OptimisticGenerator;
 
-public class NaorPinkasServerContext<T>{
+public class NaorPinkasServerContext<T> implements Serializable {
+    private static final long serialVersionUID = -3094894850650540736L;
+
     private static final Logger log = LoggerFactory
             .getLogger(NaorPinkasServerContext.class);
     

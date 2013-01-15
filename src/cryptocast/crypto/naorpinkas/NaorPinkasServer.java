@@ -7,13 +7,13 @@ import cryptocast.crypto.naorpinkas.Protos.*;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.protobuf.ByteString;
 
@@ -130,26 +130,20 @@ public abstract class NaorPinkasServer<T>
     /**
      * Revokes multiple users.
      * 
-     * @param id The identity of the user
+     * @param id The identities of the users
      * @return true, if the set of revoked users changed or false otherwise
      */
     @Override
-    public boolean revoke(List<NaorPinkasIdentity> ids) throws NoMoreRevocationsPossibleError {
-        if (getRemainingRevocations() < ids.size()) {
+    public boolean revoke(Set<NaorPinkasIdentity> ids) throws NoMoreRevocationsPossibleError {
+        Set<NaorPinkasIdentity> notYetRevoked = Sets.difference(ids, revokedUsers);
+        if (notYetRevoked.size() == 0) { return false; }
+        if (getRemainingRevocations() < notYetRevoked.size()) {
             throw new NoMoreRevocationsPossibleError();
         }
-        
-        boolean result = false;
-        for (NaorPinkasIdentity id : ids) {
-            // TODO abstract this away
-            // remove highest dummy key and add new identity
-            assert getRemainingRevocations() > 0;
-            context.getLagrange().removeX(
-                    getDummyKey(getRemainingRevocations() - 1).getIdentity().getI());
-            context.getLagrange().addX(id.getI());
-            result = result || revokedUsers.add(id);
+        for (NaorPinkasIdentity id : notYetRevoked) {
+            revokeUnconditional(id);
         }
-        return result;
+        return true;
     }
     
     /**
@@ -160,7 +154,19 @@ public abstract class NaorPinkasServer<T>
      */
     @Override
     public boolean revoke(NaorPinkasIdentity id) throws NoMoreRevocationsPossibleError {
-        return revoke(ImmutableList.of(id));
+        return revoke(ImmutableSet.of(id));
+    }
+    
+    // must only be called if we know revocation will be successful
+    // and that the user is not already revoked!
+    private void revokeUnconditional(NaorPinkasIdentity id) {
+        assert getRemainingRevocations() > 0 && !revokedUsers.contains(id);
+        // TODO abstract this away
+        // remove highest dummy key and add new identity
+        context.getLagrange().removeX(
+                getDummyKey(getRemainingRevocations() - 1).getIdentity().getI());
+        context.getLagrange().addX(id.getI());
+        revokedUsers.add(id);
     }
     
     private int getRemainingRevocations() {
@@ -175,12 +181,14 @@ public abstract class NaorPinkasServer<T>
      */
     @Override
     public boolean unrevoke(NaorPinkasIdentity id) {
+        if (!revokedUsers.contains(id)) { return false; }
         // TODO abstract this away
         // remove old identity and add new dummy
         context.getLagrange().removeX(id.getI());
         context.getLagrange().addX(
                     getDummyKey(t - revokedUsers.size()).getIdentity().getI());
-        return revokedUsers.remove(id);
+        revokedUsers.remove(id);
+        return true;
     }
     
     /**

@@ -8,8 +8,7 @@ import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -17,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
 import cryptocast.crypto.NoMoreRevocationsPossibleError;
 import cryptocast.crypto.naorpinkas.NaorPinkasIdentity;
@@ -39,8 +40,8 @@ public class Shell extends InteractiveCommandLineInterface {
                          "<name>",
                          "Add a new user to the group of recipients"),
         new ShellCommand("revoke",
-                         "<name>",
-                         "Revoke a user"),
+                         "[<name>, [<name>, ... ]]",
+                         "Revoke users"),
         new ShellCommand("unrevoke",
                          "<name>",
                          "Unrevoke a user"),
@@ -98,6 +99,7 @@ public class Shell extends InteractiveCommandLineInterface {
         printf("Listening on %s\n", control.getListenAddress());
         super.start();
     }
+    
     @Override
     protected void performCommand(String cmdName, String[] args) 
             throws CommandError, Exit {
@@ -140,7 +142,7 @@ public class Shell extends InteractiveCommandLineInterface {
     /**
      * Prints all commands this shell can perform with information about how to use them.
      */
-    private void cmdHelp(ShellCommand cmd, String[] args) throws CommandError {
+    protected void cmdHelp(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length > 1) {
             commandSyntaxError(cmd);
         }
@@ -163,7 +165,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdInit(ShellCommand cmd, String[] args) throws CommandError, Exit {
+    protected void cmdInit(ShellCommand cmd, String[] args) throws CommandError, Exit {
         if (args.length != 1) {
             commandSyntaxError(cmd);
         }
@@ -179,12 +181,12 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
 
-    private void cmdUsers(ShellCommand cmd, String[] args) throws CommandError {
+    protected void cmdUsers(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length != 0) {
             commandSyntaxError(cmd);
         }
 
-        List<User<NaorPinkasIdentity>> users = getModel().getUsers();
+        Set<User<NaorPinkasIdentity>> users = getModel().getUsers();
         int revoked = 0;
         for (User<NaorPinkasIdentity> user : users) {
             if (getModel().isRevoked(user)) {
@@ -198,7 +200,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdAdd(ShellCommand cmd, String[] args) throws CommandError {
+    protected void cmdAdd(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length != 1) {
             commandSyntaxError(cmd);
         }
@@ -209,20 +211,23 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdRevoke(ShellCommand cmd, String[] args) throws CommandError {
+    protected void cmdRevoke(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length < 1) {
             commandSyntaxError(cmd);
         }
         
-        List<User<NaorPinkasIdentity>> existingUsers = getExistingUsers(args);
+        ImmutableSet.Builder<User<NaorPinkasIdentity>> users = ImmutableSet.builder();
+        for (String name : args) {
+            users.add(getUser(name));
+        }
         try {
-            getModel().revoke(existingUsers); 
+            getModel().revoke(users.build()); 
         } catch (NoMoreRevocationsPossibleError e) {
-            error("Cannot revoke any more users, therefore not given users have been revoked!");
+            error("Cannot revoke that many users!");
         }
     }
     
-    private void cmdUnrevoke(ShellCommand cmd, String[] args) throws CommandError {
+    protected void cmdUnrevoke(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length != 1) {
             commandSyntaxError(cmd);
         }
@@ -233,7 +238,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
 
-    private void cmdSaveKeys(ShellCommand cmd, String[] args) throws CommandError, Exit {
+    protected void cmdSaveKeys(ShellCommand cmd, String[] args) throws CommandError, Exit {
         if (args.length < 1) {
             commandSyntaxError(cmd);
         }
@@ -242,13 +247,13 @@ public class Shell extends InteractiveCommandLineInterface {
         if (!dir.isDirectory()) {
             error("Target directory does not exist!");
         }
-        List<User<NaorPinkasIdentity>> users;
+        Set<User<NaorPinkasIdentity>> users;
         if (args.length > 1) {
-            users = new ArrayList<User<NaorPinkasIdentity>>();
+            users = Sets.newHashSet();
             for (int i = 1; i < args.length; ++i) {
                 users.add(getUser(args[i]));
             }
-        } else { 
+        } else {
             users = getModel().getUsers();
         }
         try {
@@ -258,7 +263,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdStreamSampleText(ShellCommand cmd, String[] args) throws CommandError, Exit {
+    protected void cmdStreamSampleText(ShellCommand cmd, String[] args) throws CommandError, Exit {
         if (args.length != 0) {
             commandSyntaxError(cmd);
         }
@@ -269,7 +274,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdStreamStdin(ShellCommand cmd, String[] args) 
+    protected void cmdStreamStdin(ShellCommand cmd, String[] args) 
                                 throws CommandError, Exit {
         if (args.length != 0) {
             commandSyntaxError(cmd);
@@ -304,7 +309,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdStreamMp3(ShellCommand cmd, String[] args) throws CommandError, Exit {
+    protected void cmdStreamMp3(ShellCommand cmd, String[] args) throws CommandError, Exit {
         if (args.length != 1) {
             commandSyntaxError(cmd);
         }
@@ -316,7 +321,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    private void cmdStopStream(ShellCommand cmd, String[] args) throws CommandError, Exit {
+    protected void cmdStopStream(ShellCommand cmd, String[] args) throws CommandError, Exit {
         if (args.length > 0) {
             commandSyntaxError(cmd);
         }
@@ -334,33 +339,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
         return mUser.get();
     }
-    
-    private List<User<NaorPinkasIdentity>> getExistingUsers(String[] names) {
-        List<User<NaorPinkasIdentity>> result = new ArrayList<User<NaorPinkasIdentity>>();
-        List<String> nonExisting = new ArrayList<String>();
-        ServerData<NaorPinkasIdentity> model = getModel();
-        Optional<User<NaorPinkasIdentity>> mUser;
-        for (String name : names) {
-            mUser = model.getUserByName(name);
-            if (mUser.isPresent()) {
-                result.add(mUser.get());
-            } else {
-                nonExisting.add(name);
-            }
-        }
-        if (nonExisting.size() > 0)  {
-            String print = "";
-            for (int i = 0; i < nonExisting.size(); i++) {
-                print += nonExisting.get(i);
-                if (i < nonExisting.size() - 1) {
-                    print += ", ";
-                }
-            }
-            log.info("Useres with the names " + print + "do not exist!");
-        }
-        return result;
-    }
-     
+
     private ServerData<NaorPinkasIdentity> getModel() {
         return control.getModel();
     }
