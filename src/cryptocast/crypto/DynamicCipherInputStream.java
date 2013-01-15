@@ -22,7 +22,6 @@ import cryptocast.comm.MessageInChannel;
 import cryptocast.util.ArrayUtils;
 
 import static cryptocast.util.ErrorUtils.*;
-import cryptocast.crypto.Protos.*;
 
 /**
  * Represents a dynamic cipher input stream, which is an input stream that needs to be decrypted.
@@ -82,46 +81,50 @@ public class DynamicCipherInputStream extends InputStream {
     }
 
     private void processMessage() throws IOException {
-        byte[] packedMsg = inner.recvMessage();
-        if (packedMsg == null) {
+        byte[] msg = inner.recvMessage();
+        if (msg == null) {
             // stream should be terminated by a special EOF message
             throw new IOException("Unexpected EOF");
         }
-        DynamicCipherMessage msg = DynamicCipherMessage.parseFrom(packedMsg);
         
-        if (msg.hasPayloadMessage()) {
+        switch (msg[0]) { // switch on the message type
+        case DynamicCipherOutputStream.CTRL_CIPHER_DATA:
             if (cipher == null) {
                 // ignore data before we got the key!
                 return;
+                //throw new IllegalStateException("Cannot yet decrypt data");
             }
-            rest = cipher.update(msg.getPayloadMessage().getPayload().toByteArray());
-        } else if (msg.hasKeyUpdateMessage()) {
+            rest = cipher.update(msg, 1, msg.length - 1);
+            return;
+        case DynamicCipherOutputStream.CTRL_UPDATE_KEY:
             if (cipher != null) {
                 finalizeCipher();
             }
-            byte[] encryptedKey = msg.getKeyUpdateMessage().getEncryptedKey().toByteArray(),
-                   iv = msg.getKeyUpdateMessage().getIv().toByteArray();
-            if (!Arrays.equals(encryptedKey, lastEncryptedKey)) {
+            DynamicCipherKeyUpdateMessage keyUpdate = 
+                    DynamicCipherKeyUpdateMessage.unpack(
+                            ArrayUtils.copyOfRange(msg, 1, msg.length));
+            if (!Arrays.equals(keyUpdate.getEncryptedKey(), lastEncryptedKey)) {
                 try {
-                    key = decodeKey(dec.decrypt(encryptedKey));
+                    key = decodeKey(dec.decrypt(keyUpdate.getEncryptedKey()));
                 } catch (DecryptionError e) {
                     throwWithCause(new IOException("Error while decrypting session key"), e);
                 }
             }
-            lastEncryptedKey = encryptedKey;
+            lastEncryptedKey = keyUpdate.getEncryptedKey();
             try {
-                cipher = createCipher(key, new IvParameterSpec(iv));
+                cipher = createCipher(key, new IvParameterSpec(keyUpdate.getIv()));
             } catch (InvalidKeyException e) {
                 throwWithCause(new IOException("The other side sent an invalid session key"), e);
             } catch (InvalidAlgorithmParameterException e) {
                 throwWithCause(new IOException("The other side sent an invalid IV"), e);
             }
             return;
-        } else if (msg.hasEofMessage()) {
+        case DynamicCipherOutputStream.CTRL_EOF:
             finalizeCipher();
             eof = true;
-        } else {
-            log.warn("Empty message!");
+            return;
+        default:
+            throw new IOException("Invalid message type: " + msg[0]);
         }
     }
 

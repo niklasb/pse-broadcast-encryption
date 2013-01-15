@@ -12,11 +12,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.KeyGenerator;
 
-import com.google.protobuf.ByteString;
-
 import cryptocast.comm.MessageOutChannel;
-
-import cryptocast.crypto.Protos.*;
 
 import static cryptocast.util.ErrorUtils.*;
 
@@ -25,6 +21,19 @@ import static cryptocast.util.ErrorUtils.*;
  * This stream uses a message-based communication channel.
  */
 public class DynamicCipherOutputStream extends OutputStream {
+	/**
+	 * Constant for cipher data.
+	 */
+    public static final byte CTRL_CIPHER_DATA = 0;
+    /**
+     * Constant for the update key.
+     */
+    public static final byte CTRL_UPDATE_KEY = 1;
+    /**
+     * Constant for the update key.
+     */
+    public static final byte CTRL_EOF = 2;
+
     private MessageOutChannel inner;
     private SecretKey key;
     private KeyGenerator keyGen;
@@ -80,19 +89,16 @@ public class DynamicCipherOutputStream extends OutputStream {
         } catch (InvalidKeyException e) {
             cannotHappen(e); // because we generated the key by ourselves
         }
-        inner.sendMessage(
-            DynamicCipherMessage.newBuilder().setKeyUpdateMessage(
-                DynamicCipherKeyUpdateMessage.newBuilder()
-                    .setEncryptedKey(ByteString.copyFrom(encryptedKey))
-                    .setIv(ByteString.copyFrom(cipher.getIV()))
-            ).build().toByteArray());
+        DynamicCipherKeyUpdateMessage keyUpdate = 
+                new DynamicCipherKeyUpdateMessage(encryptedKey, cipher.getIV());
+        sendTypedMessage(CTRL_UPDATE_KEY, keyUpdate.pack());
     }
     
     @Override
     public void write(byte[] data, int offset, int len) throws IOException {
         byte[] encData = cipher.update(data, offset, len);
         if (encData != null && encData.length > 0) {
-            sendPayload(encData);
+            sendTypedMessage(CTRL_CIPHER_DATA, encData);
         }
     }
 
@@ -104,15 +110,12 @@ public class DynamicCipherOutputStream extends OutputStream {
     @Override
     public void close() throws IOException {
         finalizeCipher();
-        inner.sendMessage(
-            DynamicCipherMessage.newBuilder().setEofMessage(
-                DynamicCipherEofMessage.newBuilder()
-            ).build().toByteArray());
+        sendTypedMessage(CTRL_EOF);
     }
 
     private void finalizeCipher() throws IOException {
         try {
-            sendPayload(cipher.doFinal());
+            sendTypedMessage(CTRL_CIPHER_DATA, cipher.doFinal());
         } catch (BadPaddingException e) {
             cannotHappen(e);
         } catch (IllegalBlockSizeException e) {
@@ -121,12 +124,15 @@ public class DynamicCipherOutputStream extends OutputStream {
         flush();
     }
 
-    private void sendPayload(byte[] payload) throws IOException {
-        inner.sendMessage(
-                DynamicCipherMessage.newBuilder().setPayloadMessage(
-                    DynamicCipherPayloadMessage.newBuilder()
-                        .setPayload(ByteString.copyFrom(payload))
-                ).build().toByteArray());
+    private void sendTypedMessage(byte type, byte[] msg) throws IOException {
+        byte[] realMsg = new byte[msg.length + 1];
+        realMsg[0] = type;
+        System.arraycopy(msg, 0, realMsg, 1, msg.length);
+        inner.sendMessage(realMsg);
+    }
+    
+    private void sendTypedMessage(byte type) throws IOException {
+        sendTypedMessage(type, new byte[0]);
     }
 
     private KeyGenerator createKeygen(int keyBits) {
