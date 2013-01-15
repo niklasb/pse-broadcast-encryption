@@ -1,0 +1,185 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{import}
+\usepackage{xspace}
+\usepackage{enumitem}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{wrapfig}
+\usepackage{pdflscape}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+\usetikzlibrary{calc}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage[section]{placeins} % don't move figures beyond the next section heading
+
+% this is needed for forms and links within the text
+\usepackage{hyperref}
+
+% Variables
+\newcommand{\authorName}{
+   Mohammed~Abu~Jayyab,
+   Niklas~Baumstark,
+   Tobias~Gräf,
+   Amrei~Loose,
+   Christoph~Michel
+}
+\newcommand{\authorNameEmph}{
+   Mohammed~Abu~Jayyab,
+   \textbf{Niklas~Baumstark},
+   Tobias~Gräf,
+   Amrei~Loose,
+   Christoph~Michel
+}
+
+\newcommand{\dateFirstVersion}{\today}
+\newcommand{\customer}{Karlsruhe Institute of Technology}
+\newcommand{\contractor}{A company}
+\newcommand{\projectName}{Broadcast Encryption\xspace}
+
+\newcommand{\doctitle}{\projectName (Implementation document)}
+\title{\doctitle}
+\author{\authorName}
+\date{\today}
+
+\include{style}
+
+\begin{document}
+
+\input{frontpage}
+\tableofcontents
+\clearpage
+
+\section{Introduction}
+This document contains the changes applied on the implementation with respect to the design document.
+Some of these changes were necessary, and then there are additional changes to improve the performance.
+The elements as attributes, methods and classes were renamed, whenever it is useful. In the following the 
+changes are listed and described according to packages.
+
+\section{Changes in the packages}
+\subsection{Package cryptocast.comm}
+
+\begin{itemize}
+   \item \textbf{\textit{class DecoratingMessageOutChannel}}
+	\begin{itemize}
+	 \item This class \textit{"DecoratingMessageOutChannel"} was added for decorating 
+	 a message to send with a certain prefix and suffix.
+	 \item \textit{"+DecoratingMessageOutChannel(inner: MessageOutChannel, prefix: byte[] , suffix: byte[])"} was added. 
+	\end{itemize}
+	 
+	\item \textbf{\textit{class SimpleHttpStreamServer}}
+	\begin{itemize}
+	 \item This class \textit{"SimpleHttpStreamServer"} was added for representing a simple tcp based http server.
+	 \item \textit{"+SimpleHttpStreamServer(in: InputStream, addr: SocketAddress , contentType:  String , bufsize:  int)"} 
+	 was added.
+	 \item \textit{"+waitForListener() : int"} was added.
+	\end{itemize}
+	
+   \item \textbf{\textit{class MessageBuffer}}
+	\begin{itemize}
+	 \item This class \textit{"MessageBuffer"} was added for representing a buffer for all message.
+	 \item \textit{"+setBlocking(block: boolean) : void"} was added. 
+	 \item \textit{"+close() : void"} was added. 
+	\end{itemize}
+	
+	 \item \textbf{\textit{class StreamUtils}}
+	\begin{itemize}
+	 \item This class \textit{"StreamUtils"} was added for limiting the number of written bytes per second.
+	 \item \textit{"+readall(in: InputStream, buffer: byte[] , offset: int , len: int ) : int"} was added.
+	 \item \textit{"+copyInterruptable(in: InputStream , out: OutputStream , bufsize: int) : void"} was added.
+	\end{itemize}
+	
+	 \item \textbf{\textit{class ThrottledOutputStream}}
+	\begin{itemize}
+	 \item This class \textit{"ThrottledOutputStream"} was added for limiting the number of written bytes per second.
+	 \item \textit{"+ThrottledOutputStream(out: OutputStream , maxBytesPerSec: long)"} was added. 
+	\end{itemize}
+	
+   \item \textbf{\textit{class MultiOutputStream}}
+  \begin{itemize}
+	 \item The class \textit{"MultiOutChannel"} was replaced by this class \textit{"MultiOutputStream"}.
+	 \item \textit{"+addChannel(channel : OutChannel) : void"} was replaced by 
+	 \textit{"+addChannel(channel : OutputStream ) : void"}.
+	 \item \textit{"+removeChannel(channel : OutChannel) : void"} was replaced by 
+	 \textit{"+removeChannel(channel : OutputStream ) : void"}.
+	 \item \textit{"+send(data : byte[]) : void"} was deleted.
+	 \item The static interface \textit{"ErrorHandler"} was added.
+	 \item \textit{"+getChannels() : ImmutableList<OutputStream>"} was added.
+	 \item \textit{"+MultiOutputStream()"} was added.
+	 \item \textit{"+MultiOutputStream(errHandler: ErrorHandler)"} was added.
+	 \item \textit{"+handle(multi: MultiOutputStream, channel: OutputStream, exc: IOException) : void"} was added.
+	 \item \textit{"+removeOnError : ErrorHandler"} was added.
+	 \item \textit{"`+propagateError : ErrorHandler"} was added.
+	\end{itemize}
+	
+   \item \textit{\textbf{class ServerMultiMessageOutChannel}}
+	\begin{itemize}
+	 \item The class \textit{"SocketMulticastServer"} was replaced by this class \textit{"ServerMultiMessageOutChannel"}.
+	 \item \textit{"+SocketMulticastServer(socket : ServerSocket)"} was replaced by 
+	 \textit{"+ServerMultiMessageOutChannel(server : ServerSocket , excHandler : Callback<Throwable>)"}.
+	 \item \textit{"+send(data : byte[]) : void"} was deleted.
+	\end{itemize}
+	 
+   \item \textbf{\textit{class StatisticalInputStream}}
+	\begin{itemize}
+	\item The class \textit{"StatisticalInChannel"} was replaced by this class \textit{"StatisticalInputStream"}.
+	\item \textit{"+StatisticalInChannel(inner : InChannel)"} was replaced by 
+	\textit{"+StatisticalInputStream(inner : InputStream)"}.
+	\item \textit{"+recv(size : int, buffer : byte[]) : void"} was deleted.
+	\end{itemize}
+	
+   \item \textbf{\textit{class StatisticalOutputStream}}
+	\begin{itemize}
+	 \item The class \textit{"StatisticalOutChannel"} was replaced by this class \textit{"StatisticalOutputStream"}.
+	 \item \textit{"+StatisticalOutChannel(inner : OutChannel)"} was replaced by 
+	 \textit{"+StatisticalOutputStream(inner : OutputStream)"}.
+   \item \textit{"+send(data : byte[]) : void"} was deleted.
+	\end{itemize}
+ 
+   \item \textbf{\textit{class StreamMessageInChannel}}
+	\begin{itemize}
+	 \item The class \textit{"MessageInChannel"} was replaced by this \textit{"StreamMessageInChannel"}.
+	\end{itemize}
+	
+   \item \textbf{\textit{class StreamMessageOutChannel}}
+	\begin{itemize}
+	 \item The class \textit{"MessageOutChannel""} was replaced by this class \textit{"StreamMessageOutChannel"}.
+	 \item \textit{"+MessageOutChannel(inner : OutChannel)"} was replaced by 
+	 \textit{"+StreamMessageOutChannel(inner : OutputStream)"}.
+	 \item \textit{"+sendMessage(data : byte[]) : void"} was replaced by 
+	 \textit{"+sendMessage(data: byte[], offset: int , len: int) : void"}.
+	\end{itemize}
+	
+   \item \textbf{\textit{interface MessageInChannel}}
+	\begin{itemize}
+	 \item The interface \textit{""InChannel"} was renamed to \textit{"MessageInChannel"}.
+	 \item \textit{"+recv(size : int, buffer : byte[]) : void"} was replaced by \textit{"+recvMessage() : byte[]"}.
+	\end{itemize}
+	
+	 \item \textbf{\textit{abstract class MessageOutChannel}}
+	\begin{itemize}
+	 \item The interface \textit{"OutChannel"} was replaced by this abstract class \textit{"MessageOutChannel"}.
+	 \item \textit{"+send(data : byte[]) : void"} was renamed to \textit{+sendMessage(data : byte[]) : void"}.
+	 \item \textit{"+sendMessage(data: byte[] , offset: int , len: int) : void"} was added.
+	\end{itemize}
+	
+\end{itemize}
+
+\subsection{Package cryptocast.server}
+\subsection{Package cryptocast.server.programs}
+\subsection{Package cryptocast.client}
+\subsection{Package cryptocast.client.filechooser}
+\subsection{Package cryptocast.client.bufferedmediaplayer}
+\subsection{Package cryptocast.crypto}
+\subsection{Package cryptocast.crypto.naorpinkas}
+\subsection{Package cryptocast.util}
+
+
+
+\end{document}
+
