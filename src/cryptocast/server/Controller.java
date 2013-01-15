@@ -48,6 +48,7 @@ public class Controller implements Observer {
     private SocketAddress listenAddr;
     private int keyBroadcastIntervalSecs;
     private Thread streamer;
+    private StreamRunner streamRunner;
     
 	private Controller(NaorPinkasServerData data, File databaseFile,
 			MessageOutChannel rawOut,
@@ -60,6 +61,8 @@ public class Controller implements Observer {
 		this.encServer = encServer;
 		this.listenAddr = listenAddr;
 		this.keyBroadcastIntervalSecs = keyBroadcastIntervalSecs;
+		this.streamer = new Thread();
+		this.streamRunner = new StreamRunner();
 	}
 
 	/**
@@ -140,7 +143,7 @@ public class Controller implements Observer {
      */
     public void reinitializeCrypto(int t) 
             throws IOException {
-        stopStream();
+        stopStreamThread();
         data = createNewData(t);
         data.addObserver(this);
         encServer = startBroadcastEncryptionServer(
@@ -176,7 +179,7 @@ public class Controller implements Observer {
     private void startStreamThread(final InputStream in, final OutputStream out, final int bufsize) {
         //stop stream if one is already running
         if (streamer != null && !streamer.isInterrupted()) {
-            stopStream();
+            stopStreamThread();
         }
         //start stream if there is none or it has been interrupted
         if (streamer == null || streamer.isInterrupted()) {
@@ -197,7 +200,7 @@ public class Controller implements Observer {
     /**
      * Stops the stream
      */
-    public void stopStream() {
+    public void stopStreamThread() {
         if (streamer != null && !streamer.isInterrupted()) {
             log.info("Stream stopped!");
             streamer.interrupt();

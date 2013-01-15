@@ -326,7 +326,7 @@ public class Shell extends InteractiveCommandLineInterface {
             commandSyntaxError(cmd);
         }
         try {
-            control.stopStream();
+            control.stopStreamThread();
         } catch (Exception e) {
             fatalError(e);
         }

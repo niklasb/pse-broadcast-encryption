@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import cryptocast.server.StreamRunner;
+
 import static cryptocast.util.ErrorUtils.throwWithCause;
 
 /**
@@ -65,5 +67,47 @@ public class StreamUtils {
             }
             out.write(buffer, 0, received);
         }
+    }
+    
+    /**
+     * Directs the data from input stream into output stream .
+     * 
+     * @param in The input stream.
+     * @param out The output steam.
+     * @param bufsize The length of buffer array.
+     * @param runner The {@link StreamRunner} calling this method.
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    public static void copyFromStreamRunner(InputStream in, OutputStream out, int bufsize, StreamRunner runner) 
+            throws IOException, InterruptedException {
+        byte[] buffer = new byte[bufsize];
+        int received;
+        while ((received = in.read(buffer)) >= 0) {
+            if (Thread.interrupted()) {
+                //dont stream anmore if thread has been interrupted
+                throw new InterruptedException();
+            }
+            out.write(buffer, 0, received);
+        }
+    }
+    
+    /**
+     * Directs the data from input stream into output stream .
+     * 
+     * @param in The input stream.
+     * @param out The output steam.
+     * @param bufsize The length of buffer array.
+     * @param streamRunner The {@link StreamRunner} calling this method. 
+     * @throws IOException
+     */
+    public static void copyInterruptable(InputStream in, OutputStream out,
+            int bufsize, StreamRunner streamRunner) throws IOException {
+        byte[] buffer = new byte[bufsize];
+        int received;
+        while ((received = in.read(buffer)) >= 0 && streamRunner.isRunning()) {
+            out.write(buffer, 0, received);
+        }
+        
     }
 }
