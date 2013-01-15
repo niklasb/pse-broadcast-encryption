@@ -4,41 +4,40 @@
     android:layout_height="match_parent"
     tools:context=".MediaPlayer" >
 
-    <Button
-        android:id="@+id/Button01"
+    <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="64dp"
-        android:text="Stop" />
+        android:layout_below="@+id/button1"
+        android:layout_marginTop="28dp"
+        android:text="TextView" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="14dp"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="28dp"
         android:layout_toLeftOf="@+id/button2"
         android:text="Play" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="24dp"
-        android:layout_toLeftOf="@+id/Button01"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
-        android:layout_alignRight="@+id/textView2"
+        android:layout_above="@+id/textView1"
+        android:layout_centerHorizontal="true"
         android:text="Pause" />
+
+    <Button
+        android:id="@+id/Button01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView1"
+        android:layout_toRightOf="@+id/button2"
+        android:text="Stop" />
 
 </RelativeLayout>

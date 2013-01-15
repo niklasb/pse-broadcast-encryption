@@ -12,35 +12,42 @@ import java.util.concurrent.LinkedBlockingQueue;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.os.Environment;
+import android.os.SystemClock;
+import android.util.Log;
 
 /**
  * This class represents a buffered media player.
  * @author Christoph
  *
  */
-public class BufferedMediaPlayer extends MediaPlayer implements OnCompletionListener, 
+public class BufferedMediaPlayer implements OnCompletionListener, 
 BufferedFileListener, Runnable, OnPreparedListener {
     
     private static int MAXIMUM_BUFFERED_FILES = 8;
-    private static String BUFFER_LOCATION = "/mnt/sdcard/mpbuffer/";
+    private static String BUFFER_LOCATION = Environment.getExternalStorageDirectory()
+            + "/mpbuffer/";
     public static String BUFFER_NAME = "streambuffer";
-    public static int AMOUNT_BUFFERED_PLAYERS = 2; // needs to be > 0
+    public static int AMOUNT_BUFFERED_PLAYERS = 3; // needs to be > 0
     
     private Queue<MediaPlayer> idlePlayers;
     private Queue<MediaPlayer> preparingPlayers;
     private Queue<MediaPlayer> preparedPlayers;
 
-    private MediaPlayer playingPlayer;
+    private MediaPlayer currentPlayer;
     
     private Queue<File> bufferedFiles;
     private Queue<File> emptyBufferFiles;
-    private HashMap<MediaPlayer, File> playedFiles;
+    private HashMap<MediaPlayer, File> associatedFiles;
     
-    private InputStream stream;
     private StreamSaver saver;
     private boolean shouldBePlaying;
+    private boolean stopped;
     private boolean running;
     private LinkedList<OnStatusChangeListener> statusListeners;
+    private static String LINE_BREAK =  System.getProperty("line.separator");
+    private static long BROADCAST_INTERVALL = 500L;
+    private long lastBroadcast = 0L;
     
     /**
      * Creates a new BufferedMediaPlayer.
@@ -50,7 +57,7 @@ BufferedFileListener, Runnable, OnPreparedListener {
         idlePlayers = new LinkedList<MediaPlayer>();
         preparingPlayers = new LinkedList<MediaPlayer>();
         preparedPlayers = new LinkedList<MediaPlayer>();
-        playedFiles = new HashMap<MediaPlayer, File>();
+        associatedFiles = new HashMap<MediaPlayer, File>();
         statusListeners = new LinkedList<OnStatusChangeListener>();
         saver = new StreamSaver();
         
@@ -65,7 +72,9 @@ BufferedFileListener, Runnable, OnPreparedListener {
         removeBufferFiles();
         emptyBufferFiles = createBufferFiles();
         shouldBePlaying = false;
+        stopped = false;
         running = true;
+        currentPlayer = idlePlayers.remove();
     }
     
     /**
@@ -73,19 +82,17 @@ BufferedFileListener, Runnable, OnPreparedListener {
      * @param stream the stream to play
      */
     public void setDataSource(InputStream stream) {
-        this.stream = stream;
+        saver.setStream(stream, emptyBufferFiles);
     }
     
     /**
      * Starts playing the stream files.
      */
     public void start() {
-        if (stream == null) {
-            return;
-        }
         if (!saver.isStreaming()) {
             saver.startStreaming();
         }
+        stopped = false;
         shouldBePlaying = true;
     }
     
@@ -94,30 +101,41 @@ BufferedFileListener, Runnable, OnPreparedListener {
      */
     public void stop() {
         pause();
-        if (saver != null) {
-            saver.stopStreaming();
+        stopped = true;
+        saver.stopStreaming();
+        while (!preparingPlayers.isEmpty()) {
+            MediaPlayer player = preparingPlayers.remove();
+            cleanupPlayer(player);
+            idlePlayers.add(player);
         }
-        if (playingPlayer != null) {
-            cleanupPlayer(playingPlayer);
+        while (!preparedPlayers.isEmpty()) {
+            MediaPlayer player = preparedPlayers.remove();
+            cleanupPlayer(player);
+            idlePlayers.add(player);
         }
-        preparingPlayers.clear();
-        preparedPlayers.clear();
+        while (!bufferedFiles.isEmpty()) {
+            emptyBufferFiles.add(bufferedFiles.remove());
+        }
+        cleanupPlayer(currentPlayer);
+        associatedFiles.clear();
+        
+        broadcastBufferStatus();
     }
-    /**
-     * @return is playing
-     */
-    public boolean isPlaying() {
-        return playingPlayer != null && playingPlayer.isPlaying();
-    }
-    
     /**
      * Pauses the player but keeps streaming and buffering.
      */
     public void pause() {
         shouldBePlaying = false;
-        if (playingPlayer != null) {
-            playingPlayer.stop();
+        if (currentPlayer.isPlaying()) {
+            currentPlayer.stop();
         }
+    }
+
+    /**
+     * @return is playing
+     */
+    public boolean isPlaying() {
+        return currentPlayer.isPlaying();
     }
     
     /**
@@ -128,6 +146,10 @@ BufferedFileListener, Runnable, OnPreparedListener {
         return saver.isStreaming();
     }
     
+    /**
+     * Adds the given listener.
+     * @param listener listener to add
+     */
     public void addOnStatusChangeListener(OnStatusChangeListener listener) {
         statusListeners.add(listener);
     }
@@ -136,7 +158,6 @@ BufferedFileListener, Runnable, OnPreparedListener {
      * Prepares the player and starts streaming.
      */
     public void prepare() {
-        saver.prepare(stream, emptyBufferFiles);
         saver.addBufferedFileListener(this);
         saver.startStreaming();
         new Thread(saver).start();
@@ -145,9 +166,7 @@ BufferedFileListener, Runnable, OnPreparedListener {
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (playingPlayer != null && shouldBePlaying) {
-            playingPlayer.start();
-        } else if (shouldBePlaying){
+        if (shouldBePlaying) {
             playNextFile();
         }
     }
@@ -161,40 +180,58 @@ BufferedFileListener, Runnable, OnPreparedListener {
     @Override
     public void run() {
         while(running) {
-            if (bufferedFiles.size() > 0 && idlePlayers.size() > 0) {
-                MediaPlayer player = idlePlayers.remove();
-                File file = bufferedFiles.remove();
-                try {
-                    player.setDataSource(file.toString());
-                    player.prepare();
-                    playedFiles.put(player, file);
-                    preparingPlayers.add(player);
-                    //Log.d(this.getClass().getName(), "Preparing next player");
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if (!stopped) {
+                tryToPrepareNextPlayer();
+                if (shouldBePlaying && !currentPlayer.isPlaying()) {
+                    playNextFile();
                 }
             }
             
-            
-            if (shouldBePlaying) {
-                if (playingPlayer == null) {
-                    playNextFile();
-                } else if (!playingPlayer.isPlaying()) {
-                    playNextFile();
-                }
+            long currentTime = SystemClock.currentThreadTimeMillis();
+            if (currentTime - lastBroadcast > BROADCAST_INTERVALL) {
+                broadcastBufferStatus();
+                lastBroadcast = currentTime;
             }
         }
     }
-
+    
     @Override
     public void onPrepared(MediaPlayer mp) {
-        //Log.d(this.getClass().getName(), "Player succesfully prepared, ready to play.");
-        preparingPlayers.remove(mp);
+        while (!preparingPlayers.remove(mp)) {
+            Log.d(this.getClass().getName(), "ERROR AT REMOVING");
+        }
         preparedPlayers.add(mp);
+    }
+
+    private void broadcastBufferStatus() {
+        for (OnStatusChangeListener listener : statusListeners) {
+            listener.onStatusChange(
+                    "Files: "  + emptyBufferFiles.size() + " empty; " + bufferedFiles.size() 
+                    + " buffered; " + associatedFiles.size() + " associated;" + LINE_BREAK
+                    + "Players: " + idlePlayers.size() + " idle; " + preparingPlayers.size() 
+                    + " preparing; " + preparedPlayers.size() + " prepared" + LINE_BREAK
+                    + "Current bufferfile: " + saver.getBufferProgress() + "%");
+        }
+    }
+
+    private void tryToPrepareNextPlayer() {
+        if (bufferedFiles.size() > 0 && idlePlayers.size() > 0) {
+            MediaPlayer player = idlePlayers.remove();
+            File file = bufferedFiles.remove();
+            try {
+                player.setDataSource(file.toString());
+                associatedFiles.put(player, file);
+                preparingPlayers.add(player);
+                player.prepare();
+                //Log.d(this.getClass().getName(), "Preparing next player");
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private LinkedBlockingQueue<File> createBufferFiles() {
@@ -233,32 +270,23 @@ BufferedFileListener, Runnable, OnPreparedListener {
     }
 
     private void playNextFile() {
-        MediaPlayer nextPlayer = null;
         if (!preparedPlayers.isEmpty()) {
-            nextPlayer = preparedPlayers.remove();
-            nextPlayer.start();
+            preparedPlayers.peek().start();
+            MediaPlayer nextPlayer = preparedPlayers.remove();
+            cleanupPlayer(currentPlayer);
+            currentPlayer = nextPlayer;
         }
-        
-        if (playingPlayer != null) { // check for null for initial method call
-            cleanupPlayer(playingPlayer);
-        }
-        playingPlayer = nextPlayer;
     }
     
     private void cleanupPlayer(MediaPlayer player) {
-        File lastFile = playedFiles.get(player);
-        playedFiles.remove(player);
-        if (lastFile != null) {
-            emptyBufferFiles.add(lastFile);
-        }
-        player.reset();
-        idlePlayers.add(player);
-    }
-
-    @Override
-    public void updateBufferProgress(int percentage) {
-        for (OnStatusChangeListener listener : statusListeners) {
-            listener.bufferUpdate(percentage);
+        File lastFile = associatedFiles.get(player);
+        if (associatedFiles.containsKey(player)) {
+            associatedFiles.remove(player);
+            if (lastFile != null) {
+                emptyBufferFiles.add(lastFile);
+            }
+            player.reset();
+            idlePlayers.add(player);
         }
     }
 }

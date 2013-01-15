@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import cryptocast.client.bufferedmediaplayer.BufferedMediaPlayer;
 import cryptocast.client.bufferedmediaplayer.OnStatusChangeListener;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
@@ -18,10 +20,9 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
     private Button play;
     private Button pause;
     private Button stop;
-    private TextView status;
+    private static TextView status;
 
     private BufferedMediaPlayer player;
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,24 +47,27 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
         play = (Button) findViewById(R.id.button1);
         pause = (Button) findViewById(R.id.button2);
         stop = (Button) findViewById(R.id.Button01);
-        status = (TextView) findViewById(R.id.textView2);
+        status = (TextView) findViewById(R.id.textView1);
         
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 player.start();
-                }
+                setPlayingStatus(true);
+            }
         });
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 player.pause();
+                setPlayingStatus(false);
             }
         });
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 player.stop();
+                setPlayingStatus(false);
             }
         });
         status.setText("");
@@ -73,11 +77,26 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
     
     @Override
     public void onStatusChange(String message) {
-        // TODO implement
+        updateLabel(message);
     }
+    
+    private void updateLabel(String message) {
+        Message m = new Message();
+        m.obj = message;
+        textChangeHandler.sendMessage(m);
+    }
+    
+    private void setPlayingStatus(boolean playing) {
+        play.setEnabled(!playing);
+        pause.setEnabled(playing);
+    }
+    
 
-    @Override
-    public void bufferUpdate(int percentage) {
-        //status.setText("Buffer status: " + percentage + "%");
-    }
+    private static Handler textChangeHandler  = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            String text = (String)msg.obj;
+            status.setText(text);
+        }
+    };
 }

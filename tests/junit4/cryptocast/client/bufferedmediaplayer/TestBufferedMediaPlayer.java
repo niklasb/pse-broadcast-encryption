@@ -71,11 +71,6 @@ public class TestBufferedMediaPlayer implements OnStatusChangeListener {
         // TODO Auto-generated method stub
         
     }
-
-    @Override
-    public void bufferUpdate(int percentage) {
-        //System.out.println("Buffer percentage: " + percentage + "%");
-    }
 }
 
 
