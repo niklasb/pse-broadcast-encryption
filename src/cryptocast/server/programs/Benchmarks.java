@@ -1,7 +1,6 @@
 package cryptocast.server.programs;
 
 import java.math.BigInteger;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
