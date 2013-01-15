@@ -54,14 +54,14 @@ public class StreamUtils {
      * @param bufsize The length of buffer array.
      * @throws IOException
      */
-    public static void shovel(InputStream in, OutputStream out, int bufsize) 
-            throws IOException {
+    public static void copyInterruptable(InputStream in, OutputStream out, int bufsize) 
+            throws IOException, InterruptedException {
         byte[] buffer = new byte[bufsize];
         int received;
         while ((received = in.read(buffer)) >= 0) {
-            if(Thread.interrupted()) {
+            if (Thread.interrupted()) {
                 //dont stream anmore if thread has been interrupted
-                return;
+                throw new InterruptedException();
             }
             out.write(buffer, 0, received);
         }

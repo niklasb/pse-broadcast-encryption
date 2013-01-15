@@ -183,11 +183,10 @@ public class Controller implements Observer {
             streamer = new Thread(new Runnable() {
                 public void run() {
                     try {
-                        StreamUtils.shovel(in, out, bufsize);
+                        StreamUtils.copyInterruptable(in, out, bufsize);
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        log.debug("stream crashed", e);
-                        e.printStackTrace();
+                        log.error("Stream crashed", e);
+                    } catch (InterruptedException e) {
                     }
                 }
             });
@@ -199,8 +198,8 @@ public class Controller implements Observer {
      * Stops the stream
      */
     public void stopStream() {
-        log.debug("stoping current stream");
         if (streamer != null && !streamer.isInterrupted()) {
+            log.info("Stream stopped!");
             streamer.interrupt();
         }
     }

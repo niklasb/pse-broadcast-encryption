@@ -210,17 +210,28 @@ public class Shell extends InteractiveCommandLineInterface {
     }
     
     private void cmdRevoke(ShellCommand cmd, String[] args) throws CommandError {
-        if (args.length != 1) {
+        if (args.length < 1) {
             commandSyntaxError(cmd);
         }
-
-        User<NaorPinkasIdentity> user = getUser(args[0]);
-        try {
-            if (!getModel().revoke(user)) {
-                error("User already revoked!");
+        
+        List<User<NaorPinkasIdentity>> existingUsers = getExistingUsers(args);
+        //TODO the following would be required by different notifications to the user
+        // or different implementation: revoke methode in model nimmt liste.
+        //List<User<NaorPinkasIdentity>> nonExistingUsers = getNonExistingUsers(args);
+        //List<User<NaorPinkasIdentity>> alreadyRevokedUsers = new ArrayList<User<NaorPinkasIdentity>>();
+        //List<User<NaorPinkasIdentity>> newRevokedUsers = new ArrayList<User<NaorPinkasIdentity>>();
+        for(User<NaorPinkasIdentity> user : existingUsers) {
+            try {
+                if (!getModel().revoke(user)) {
+                    log.info("User " + user.getName() + " is already revoked!");
+                    //alreadyRevokedUsers.add(user);
+                } else {
+                    log.info("User " + user.getName() + " is now revoked!");
+                    //newRevokedUsers.add(user);
+                }
+            } catch (NoMoreRevocationsPossibleError e) {
+                error("Cannot revoke any more users!");
             }
-        } catch (NoMoreRevocationsPossibleError e) {
-            error("Cannot revoke any more users!");
         }
     }
     
@@ -337,6 +348,21 @@ public class Shell extends InteractiveCommandLineInterface {
         return mUser.get();
     }
     
+    private List<User<NaorPinkasIdentity>> getExistingUsers(String[] names) {
+        List<User<NaorPinkasIdentity>> result = new ArrayList<User<NaorPinkasIdentity>>();
+        ServerData<NaorPinkasIdentity> model = getModel();
+        Optional<User<NaorPinkasIdentity>> mUser;
+        for (String name : names) {
+            mUser = model.getUserByName(name);
+            if (mUser.isPresent()) {
+                result.add(mUser.get());
+            } else {
+                log.info("User with the name " + name + " does not exist!");
+            }
+        }
+        return result;
+    }
+     
     private ServerData<NaorPinkasIdentity> getModel() {
         return control.getModel();
     }
