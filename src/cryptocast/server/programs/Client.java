@@ -1,7 +1,6 @@
 package cryptocast.server.programs;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.net.Socket;
 
@@ -59,9 +58,9 @@ public final class Client {
         } else if (opts.type.equals("raw")) {
             if (opts.outfile == null) {
                 System.err.println("Must specify -o option for type raw!");
-                return;
+                System.exit(1);
             }
-            FileOutputStream out = new FileOutputStream(FileUtils.expandPath(opts.outfile));
+            OutputStream out = new FileOutputStream(FileUtils.expandPath(opts.outfile));
             ByteStreams.copy(in, out);
         } else if (opts.type.equals("debug")) {
             int received;

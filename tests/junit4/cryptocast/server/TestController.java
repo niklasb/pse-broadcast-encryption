@@ -15,10 +15,10 @@ public class TestController {
     private SocketAddress socketAddress;    
     private Controller sut;
 
-    @Before
-    public void setUp() throws IOException, ClassNotFoundException {
-        MockitoAnnotations.initMocks(this);
-        socketAddress = new InetSocketAddress(21337);
-        sut = Controller.start(databaseFile, socketAddress, 15);
-    }
+//    @Before
+//    public void setUp() throws IOException, ClassNotFoundException {
+//        MockitoAnnotations.initMocks(this);
+//        socketAddress = new InetSocketAddress(21337);
+//        sut = Controller.start(databaseFile, socketAddress, 15);
+//    }
 }

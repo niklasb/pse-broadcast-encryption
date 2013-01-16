@@ -49,6 +49,7 @@ public class Controller implements Observer {
     private SocketAddress listenAddr;
     private int keyBroadcastIntervalSecs;
     private SwitchableInputStream switchableInput;
+    NPServerFactory serverFactory;
     
     private static Function<Throwable, Boolean> fatalExceptionHandler =
             new Function<Throwable, Boolean>() {
@@ -64,7 +65,8 @@ public class Controller implements Observer {
 			MessageOutChannel rawOut,
 			BroadcastEncryptionServer<NPIdentity> encServer,
 			SocketAddress listenAddr, int keyBroadcastIntervalSecs,
-			SwitchableInputStream switchableInput) {
+			SwitchableInputStream switchableInput,
+			NPServerFactory serverFactory) {
 		this.data = data;
 		data.addObserver(this);
 		this.rawOut = rawOut;
@@ -73,6 +75,7 @@ public class Controller implements Observer {
 		this.listenAddr = listenAddr;
 		this.keyBroadcastIntervalSecs = keyBroadcastIntervalSecs;
 		this.switchableInput = switchableInput;
+		this.serverFactory = serverFactory;
 	}
 
 	/**
@@ -86,13 +89,14 @@ public class Controller implements Observer {
      * @throws ClassNotFoundException
      */
 	public static Controller start(File databaseFile, SocketAddress listenAddr,
-			                       int keyBroadcastIntervalSecs) 
+			                       int keyBroadcastIntervalSecs,
+			                       NPServerFactory serverFactory) 
 			       throws IOException, ClassNotFoundException {
 		NaorPinkasServerData data;
 		if (databaseFile.exists()) {
 			data = SerializationUtils.readFromFile(databaseFile);
 		} else {
-			data = createNewData(0);
+			data = createNewData(0, serverFactory);
 		}
 		ServerSocket socket = new ServerSocket();
 		socket.bind(listenAddr);
@@ -114,11 +118,11 @@ public class Controller implements Observer {
 		}).start();
 		return new Controller(data, databaseFile, multicastServer,
 		        broadcastServer, listenAddr,
-				keyBroadcastIntervalSecs, input);
+				keyBroadcastIntervalSecs, input, serverFactory);
 	}
 
-	private static NaorPinkasServerData createNewData(int t) {
-	    return new NaorPinkasServerData(new SchnorrNPServerFactory().construct(t));
+	private static NaorPinkasServerData createNewData(int t, NPServerFactory serverFactory) {
+	    return new NaorPinkasServerData(serverFactory.construct(t));
 	}
 
 	/**
@@ -166,7 +170,7 @@ public class Controller implements Observer {
      */
     public void reinitializeCrypto(int t) 
             throws IOException {
-        data = createNewData(t);
+        data = createNewData(t, serverFactory);
         data.addObserver(this);
         encServer = startBroadcastEncryptionServer(
                 data, rawOut, keyBroadcastIntervalSecs);
