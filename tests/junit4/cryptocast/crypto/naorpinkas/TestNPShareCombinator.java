@@ -11,7 +11,11 @@ import com.google.common.collect.ImmutableList;
 
 import cryptocast.crypto.*;
 
-public class TestNaorPinkasShareCombinator extends WithNaorPinkasContext {
+public class TestNPShareCombinator {
+    private SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
+    private IntegersModuloPrime modQ = schnorr.getFieldModOrder(),
+                                modP = schnorr.getFieldModP();
+    
     @Test
     public void canRestoreSecretFromValidShares() {
         Polynomial<BigInteger> poly = makePolynomial(modQ, new int[] { 2, 3, 7, 11 });
@@ -83,5 +87,25 @@ public class TestNaorPinkasShareCombinator extends WithNaorPinkasContext {
         shares.add(makeShare(poly, r, 22233333));
         Optional<BigInteger> actualGRP0 = combi.restore(shares.build());
         assertFalse(actualGRP0.isPresent());
+    }
+
+    private NPShare<BigInteger, SchnorrGroup> makeShare(
+                       Polynomial<BigInteger> poly, BigInteger r, int xi) {
+        BigInteger x = BigInteger.valueOf(xi);
+        return new NPShare<BigInteger, SchnorrGroup>(
+                x, schnorr.getPowerOfG(r.multiply(poly.evaluate(x))), schnorr);
+    }
+
+    private Polynomial<BigInteger> makePolynomial(Field<BigInteger> field, int coefficients[]) {
+        ImmutableList.Builder<BigInteger> coeff = ImmutableList.builder();
+        for (int i = 0; i < coefficients.length; ++i) {
+            coeff.add(BigInteger.valueOf(coefficients[i]));
+        }
+        return new Polynomial<BigInteger>(field, coeff.build());
+    }
+    
+    private NPShareCombinator<BigInteger, SchnorrGroup>
+                      makeCombinator(Polynomial<BigInteger> poly) {
+        return new NPShareCombinator<BigInteger, SchnorrGroup>(poly.getDegree(), schnorr);
     }
 }

@@ -7,7 +7,12 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Optional;
+
 import cryptocast.util.NativeUtils;
+
+// for the sqrt algorithm
+import org.bouncycastle.math.ec.ECFieldElement.Fp;
 
 /**
  * The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$.
@@ -119,13 +124,9 @@ public class IntegersModuloPrime extends Field<BigInteger>
         return p.equals(((IntegersModuloPrime)other).p);
     }
 
-    /**
-     * Returns the maximum space.
-     * @return the maximum space.
-     */
-    public int getMaxNumberSpace() {
-        // round up to next int: (a + b - 1) / b = ceil(a / b)
-        // also add 4 bytes for size information and 1 byte for the sign bit
-        return 4 + 1 + (getP().bitLength() + 7) / 8;
+    @Override
+    public Optional<BigInteger> sqrt(BigInteger a) {
+        Fp res = (Fp) new Fp(getP(), a).sqrt();
+        return res == null ? Optional.<BigInteger>absent() : Optional.of(res.toBigInteger());
     }
 }

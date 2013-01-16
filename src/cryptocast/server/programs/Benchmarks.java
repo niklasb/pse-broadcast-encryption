@@ -125,7 +125,7 @@ public final class Benchmarks {
             Random rnd = new Random();
             IntegersModuloPrime modQ;
             if (g.equals("ec")) {
-                ecGroup = EllipticCurveGroup.getNamedCurve("secp160r1");
+                ecGroup = EllipticCurveGroup.getNamedFpCurve("secp160r1");
                 ImmutableList.Builder<EllipticCurve.Point<BigInteger>> builder = 
                              ImmutableList.builder();
                 for (int i = 0; i < t; i++) {

@@ -80,7 +80,7 @@ public class TestEllipticCurveOverFp {
     @Test
     public void largeMultiplyTest() {
         EllipticCurveGroup<BigInteger, EllipticCurveOverFp> group = 
-                EllipticCurveGroup.getNamedCurve("prime192v1");
+                EllipticCurveGroup.getNamedFpCurve("prime192v1");
         EllipticCurveOverFp curve = group.getCurve();
         BigInteger k = new BigInteger("333333333333333333333333333333337c964c53", 16);
         Point<BigInteger> 
@@ -94,7 +94,7 @@ public class TestEllipticCurveOverFp {
     @Test
     public void multiexpWorks() {
         EllipticCurveGroup<BigInteger, EllipticCurveOverFp> group = 
-                EllipticCurveGroup.getNamedCurve("secp160r1");
+                EllipticCurveGroup.getNamedFpCurve("secp160r1");
         List<Point<BigInteger>> bases = Lists.newArrayList();
         List<BigInteger> exps = Lists.newArrayList();
         bases.add(group.getBasePoint());

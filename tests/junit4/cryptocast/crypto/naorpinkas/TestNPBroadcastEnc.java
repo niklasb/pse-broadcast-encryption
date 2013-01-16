@@ -11,20 +11,24 @@ import cryptocast.comm.StreamUtils;
 import cryptocast.crypto.*;
 import static cryptocast.util.ByteUtils.str2bytes;
 
-public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext {
+public abstract class TestNPBroadcastEnc
+           <T, G extends CyclicGroupOfPrimeOrder<T>> {
+    protected abstract NPServer<T, G> makeServer(int t);
+    protected abstract NPClient<T, G> makeClient(NPKey<T, G> key);
+    
     private int t = 10;
-    SchnorrNPServer server = 
-            (SchnorrNPServer) new SchnorrNPServerFactory().construct(t);
+    protected NPServer<T, G> server = makeServer(t);
+    
     private MessageBuffer fifo = new MessageBuffer();
     
     @Test
     public void serverCanSendToClient() throws Exception {
         BroadcastEncryptionServer<NPIdentity> out = 
                 BroadcastEncryptionServer.start(server, server, 128, fifo, 0, null);
-        NPKey<BigInteger, SchnorrGroup> key = 
+        NPKey<T, G> key = 
                 server.getPersonalKey(server.getIdentity(0)).get();
         BroadcastEncryptionClient in =
-                new BroadcastEncryptionClient(fifo, new SchnorrNPClient(key));
+                new BroadcastEncryptionClient(fifo, makeClient(key));
         byte[] payload = str2bytes("abcdefg");
         out.write(payload);
         out.close();
@@ -36,7 +40,7 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
     public void serverBroadcastsKeyRegularly() throws Exception {
         BroadcastEncryptionServer<NPIdentity> out = 
                 BroadcastEncryptionServer.start(server, server, 128, fifo, 100, null);
-        NPKey<BigInteger, SchnorrGroup> key = 
+        NPKey<T, G> key = 
                 server.getPersonalKey(server.getIdentity(0)).get();
         byte[] payload = str2bytes("abcdefg");
         out.write(payload);
@@ -45,7 +49,7 @@ public class TestBroadcastEncryptionCommunication extends WithNaorPinkasContext 
         while (fifo.recvMessage() != null) {}
         fifo.setBlocking(true);
         BroadcastEncryptionClient in =
-                new BroadcastEncryptionClient(fifo, new SchnorrNPClient(key));
+                new BroadcastEncryptionClient(fifo, makeClient(key));
         Thread worker = new Thread(out);
         worker.start();
         Thread.sleep(500);

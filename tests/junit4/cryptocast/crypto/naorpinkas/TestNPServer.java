@@ -10,10 +10,9 @@ import com.google.common.collect.ImmutableSet;
 
 import cryptocast.crypto.*;
 
-public class TestNaorPinkasServer {
+public class TestNPServer {
     int t = 10;
-    SchnorrNPServer server = 
-            (SchnorrNPServer) new SchnorrNPServerFactory().construct(t);
+    SchnorrNPServer server = new SchnorrNPServerFactory().construct(t);
     
     @Test
     public void getPersonalKeyWorks() throws Exception {

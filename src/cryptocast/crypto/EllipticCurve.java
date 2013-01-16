@@ -46,7 +46,7 @@ public abstract class EllipticCurve<T> {
             return x.equals(otherPoint.x) && y.equals(otherPoint.y);
         }
     }
-
+    
     public abstract Point<T> negate(Point<T> a);
     public abstract Point<T> add(Point<T> a, Point<T> b);
     

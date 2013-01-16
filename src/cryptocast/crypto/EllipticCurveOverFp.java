@@ -2,6 +2,8 @@ package cryptocast.crypto;
 
 import java.math.BigInteger;
 
+import com.google.common.base.Optional;
+
 public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
     private IntegersModuloPrime field;
     
@@ -104,5 +106,45 @@ public class EllipticCurveOverFp extends EllipticCurve<BigInteger> {
         }
 
         return R;
+    }
+    
+    public static class CompressedPoint {
+        private BigInteger x;
+        private byte info;
+        public CompressedPoint(BigInteger x, byte info) {
+            this.x = x;
+            this.info = info;
+        }
+        public BigInteger getX() { return x; }
+        public byte getInfo() { return info; }
+    }
+    
+    public CompressedPoint compress(Point<BigInteger> p) {
+        if (isInfinity(p)) {
+            return new CompressedPoint(BigInteger.ZERO, (byte) 2);
+        }
+        ConcretePoint<BigInteger> cp = (ConcretePoint<BigInteger>) p;
+        byte info = (byte) (cp.getY().testBit(0) ? 1 : 0);
+        return new CompressedPoint(cp.getX(), info);
+    }
+    
+    public Point<BigInteger> uncompress(CompressedPoint p) {
+        if (p.getInfo() == (byte) 2) {
+            return getInfinity();
+        }
+        BigInteger x = p.getX();
+        BigInteger alpha = 
+                field.add(field.multiply(x, field.add(field.square(x), a)), b);
+        Optional<BigInteger> mY = field.sqrt(alpha);
+        if (!mY.isPresent()) {
+            throw new ArithmeticException("Invalid compressed point!");
+        }
+        BigInteger y = mY.get();
+        boolean ybyte = p.getInfo() != 0;
+        if (y.testBit(0) == ybyte) {
+            return getPoint(x, y);
+        } else {
+            return getPoint(x, field.negate(y));
+        }
     }
 }

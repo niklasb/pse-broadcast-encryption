@@ -67,7 +67,8 @@ public class EllipticCurveGroup<T, C extends EllipticCurve<T>>
         return multiexpShamir(bases, exponents, 5);
     }
     
-    public static EllipticCurveGroup<BigInteger, EllipticCurveOverFp> getNamedCurve(String name) {
+    public static EllipticCurveGroup<BigInteger, EllipticCurveOverFp>
+                               getNamedFpCurve(String name) {
         return fromBCParamSpecFp(ECNamedCurveTable.getParameterSpec(name));
     }
     

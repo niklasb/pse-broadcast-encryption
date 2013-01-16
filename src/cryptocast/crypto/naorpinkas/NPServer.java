@@ -65,7 +65,9 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
                                     // authorized users
           gr = group.getPowerOfG(r);
         Optional<byte[]> mEncryptedSecret = encryptSecretWithItem(secret, grp0);
+        System.out.println("mEncryptedSecret: " + mEncryptedSecret);
         checkArgument(mEncryptedSecret.isPresent(), "Secret is too large to encrypt");
+        System.out.println("WOOT? ");
         byte[] encryptedSecret = mEncryptedSecret.get();
         
         ImmutableList.Builder<NPShare<T, G>> shares = ImmutableList.builder();
@@ -92,7 +94,7 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
                 lagrangeCoeffs.build(), shares.build());
     }
     
-    protected abstract void putShare(ByteArrayDataOutput out, NPShare<T, G> share);
+    protected abstract void writeShare(ByteArrayDataOutput out, NPShare<T, G> share);
     
     private byte[] packMessage(NPMessage<T, G> msg) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -103,7 +105,7 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
             putBytes(out, c.toByteArray());
         }
         for (NPShare<T, G> share : msg.getShares()) {
-            putShare(out, share);
+            writeShare(out, share);
         }
         return out.toByteArray();
     }
