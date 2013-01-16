@@ -47,7 +47,8 @@ public class StreamUtils {
     }
     
     /**
-     * Directs the data from input stream into output stream .
+     * Directs the data from input stream into output stream. 
+     * The operation is interruptable only if neither input nor output block!
      * 
      * @param in The input stream.
      * @param out The output steam.
@@ -60,7 +61,6 @@ public class StreamUtils {
         int received;
         while ((received = in.read(buffer)) >= 0) {
             if (Thread.interrupted()) {
-                //dont stream anmore if thread has been interrupted
                 throw new InterruptedException();
             }
             out.write(buffer, 0, received);

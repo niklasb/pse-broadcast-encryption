@@ -2,6 +2,7 @@ package cryptocast.server;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -63,9 +64,6 @@ public class Shell extends InteractiveCommandLineInterface {
         new ShellCommand("init",
                          "<t>",
                          "Create a whole new crypto context"),
-        new ShellCommand("stop-stream",
-                         "",
-                         "Stops the current stream"),
     };
 
     private static SortedMap<String, ShellCommand> commandsByName = 
@@ -168,6 +166,18 @@ public class Shell extends InteractiveCommandLineInterface {
     protected void cmdInit(ShellCommand cmd, String[] args) throws CommandError, Exit {
         if (args.length != 1) {
             commandSyntaxError(cmd);
+        }
+        println("This is a DESTRUCTIVE operation! "
+              + "All user data and private keys will be lost forever! "
+              + "Please type `YES' if you are sure: ");
+        String answer = null;
+        try {
+            answer = in.readLine();
+        } catch (IOException e) {
+            fatalError(e);
+        }
+        if (!answer.equals("YES")) {
+            return;
         }
         Optional<Integer> mT = parseInt(args[0]);
         if (!mT.isPresent() || mT.get().intValue() < 0) {
@@ -284,26 +294,11 @@ public class Shell extends InteractiveCommandLineInterface {
         try {
             pipeOut = new PipedOutputStream();
             pipeIn = new PipedInputStream(pipeOut);
-        } catch (Exception e) {
-            fatalError(e);
-        }
-        final BufferedReader in = this.in;
-        final OutputStream out = pipeOut;
-        Thread reader = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        out.write(ByteUtils.encodeUtf8(line + "\n"));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            control.stream(pipeIn);
+            String line;
+            while ((line = in.readLine()) != null) {
+                pipeOut.write(ByteUtils.encodeUtf8(line + "\n"));
             }
-        });
-        reader.start();
-        try {
-            control.stream(pipeIn, 0x1000);
         } catch (Exception e) {
             fatalError(e);
         }
@@ -316,17 +311,6 @@ public class Shell extends InteractiveCommandLineInterface {
         File file = expandPath(args[0]);
         try {
             control.streamAudio(file);
-        } catch (Exception e) {
-            fatalError(e);
-        }
-    }
-    
-    protected void cmdStopStream(ShellCommand cmd, String[] args) throws CommandError, Exit {
-        if (args.length > 0) {
-            commandSyntaxError(cmd);
-        }
-        try {
-            control.stopStreamThread();
         } catch (Exception e) {
             fatalError(e);
         }

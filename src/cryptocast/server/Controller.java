@@ -48,7 +48,7 @@ public class Controller implements Observer {
     private BroadcastEncryptionServer<NPIdentity> encServer;
     private SocketAddress listenAddr;
     private int keyBroadcastIntervalSecs;
-    private Thread streamer;
+    private SwitchableInputStream switchableInput;
     
     private static Function<Throwable, Boolean> fatalExceptionHandler =
             new Function<Throwable, Boolean>() {
@@ -63,7 +63,8 @@ public class Controller implements Observer {
 	private Controller(NaorPinkasServerData data, File databaseFile,
 			MessageOutChannel rawOut,
 			BroadcastEncryptionServer<NPIdentity> encServer,
-			SocketAddress listenAddr, int keyBroadcastIntervalSecs) {
+			SocketAddress listenAddr, int keyBroadcastIntervalSecs,
+			SwitchableInputStream switchableInput) {
 		this.data = data;
 		data.addObserver(this);
 		this.rawOut = rawOut;
@@ -71,7 +72,7 @@ public class Controller implements Observer {
 		this.encServer = encServer;
 		this.listenAddr = listenAddr;
 		this.keyBroadcastIntervalSecs = keyBroadcastIntervalSecs;
-		this.streamer = new Thread();
+		this.switchableInput = switchableInput;
 	}
 
 	/**
@@ -85,8 +86,8 @@ public class Controller implements Observer {
      * @throws ClassNotFoundException
      */
 	public static Controller start(File databaseFile, SocketAddress listenAddr,
-			int keyBroadcastIntervalSecs) throws IOException,
-			ClassNotFoundException {
+			                       int keyBroadcastIntervalSecs) 
+			       throws IOException, ClassNotFoundException {
 		NaorPinkasServerData data;
 		if (databaseFile.exists()) {
 			data = SerializationUtils.readFromFile(databaseFile);
@@ -98,10 +99,22 @@ public class Controller implements Observer {
 		ServerMultiMessageOutChannel multicastServer = new ServerMultiMessageOutChannel(
 				socket, fatalExceptionHandler);
 		new Thread(multicastServer).start();
+		
+		final BroadcastEncryptionServer<NPIdentity> broadcastServer = 
+		        startBroadcastEncryptionServer(data, multicastServer, keyBroadcastIntervalSecs);
+		final SwitchableInputStream input = new SwitchableInputStream();
+		new Thread(new Runnable() {
+            public void run() {
+                try {
+                    StreamUtils.copyInterruptable(input, broadcastServer, 0x4000);
+                } catch (Exception e) {
+                    fatalExceptionHandler.apply(e);
+                }
+            }
+		}).start();
 		return new Controller(data, databaseFile, multicastServer,
-				startBroadcastEncryptionServer(data, multicastServer,
-						keyBroadcastIntervalSecs), listenAddr,
-				keyBroadcastIntervalSecs);
+		        broadcastServer, listenAddr,
+				keyBroadcastIntervalSecs, input);
 	}
 
 	private static NaorPinkasServerData createNewData(int t) {
@@ -145,31 +158,29 @@ public class Controller implements Observer {
 	}
 	
 	/**
-     * Reinitializes the cryptography.
+     * Reinitializes the cryptography. 
+     * All data of the current session will be lost forever!
      * 
      * @param t the size of the polynomial.
      * @throws IOException
      */
     public void reinitializeCrypto(int t) 
             throws IOException {
-        stopStreamThread();
         data = createNewData(t);
         data.addObserver(this);
         encServer = startBroadcastEncryptionServer(
                 data, rawOut, keyBroadcastIntervalSecs);
         saveDatabase();
     }
- 
-    
+
     /**
      * Streams the data.
      * 
      * @param in The input stream.
-     * @param bufsize The size of the buffer.
      * @throws IOException
      */
-    public void stream(InputStream in, int bufsize) throws IOException {
-        startStreamThread(in, encServer, bufsize);
+    public void stream(InputStream in) throws IOException {
+        switchableInput.switchInput(in);
     }
 
     /**
@@ -177,43 +188,10 @@ public class Controller implements Observer {
 	 * 
 	 * @param in The input stream.
 	 * @param maxBytesPerSec Maximum bytes per second.
-	 * @param bufsize The size of the buffer.
 	 * @throws IOException
 	 */
-    public void stream(InputStream in, long maxBytesPerSec, int bufsize) throws IOException {
-        OutputStream out = new ThrottledOutputStream(encServer, maxBytesPerSec);
-        startStreamThread(in, out, bufsize);
-    }
-    
-    private void startStreamThread(final InputStream in, final OutputStream out, final int bufsize) {
-        //stop stream if one is already running
-        if (streamer != null && !streamer.isInterrupted()) {
-            stopStreamThread();
-        }
-        //start stream if there is none or it has been interrupted
-        if (streamer == null || streamer.isInterrupted()) {
-            streamer = new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        StreamUtils.copyInterruptable(in, out, bufsize);
-                    } catch (IOException e) {
-                        log.error("Stream crashed", e);
-                    } catch (InterruptedException e) {
-                    }
-                }
-            });
-            streamer.start();
-        }
-    }
-    
-    /**
-     * Stops the stream
-     */
-    public void stopStreamThread() {
-        if (streamer != null && !streamer.isInterrupted()) {
-            log.info("Stream stopped!");
-            streamer.interrupt();
-        }
+    public void stream(InputStream in, long maxBytesPerSec) throws IOException {
+        stream(new ThrottledInputStream(in, maxBytesPerSec));
     }
 
 	private static BroadcastEncryptionServer<NPIdentity> startBroadcastEncryptionServer(
@@ -293,7 +271,7 @@ public class Controller implements Observer {
 							+ "Variable bitrates are not supported!");
 		}
 		InputStream in = new FileInputStream(file);
-		stream(in, bitrate / 8, 0x4000);
+		stream(in, bitrate / 8);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import cryptocast.comm.StreamMessageInChannel;
 import cryptocast.crypto.*;
 import cryptocast.crypto.naorpinkas.*;
 import cryptocast.server.OptParse;
+import cryptocast.util.FileUtils;
 import cryptocast.util.SerializationUtils;
 
 /**
@@ -33,7 +34,7 @@ public final class Client {
         private String connectHost = "127.0.0.1";
         
         @Parameter(names = { "-o", "--outfile" }, description = "Output file")
-        private File outfile = null;
+        private String outfile = null;
     }
     
     /**
@@ -58,8 +59,9 @@ public final class Client {
         } else if (opts.type.equals("raw")) {
             if (opts.outfile == null) {
                 System.err.println("Must specify -o option for type raw!");
+                return;
             }
-            FileOutputStream out = new FileOutputStream(opts.outfile);
+            FileOutputStream out = new FileOutputStream(FileUtils.expandPath(opts.outfile));
             ByteStreams.copy(in, out);
         } else if (opts.type.equals("debug")) {
             int received;

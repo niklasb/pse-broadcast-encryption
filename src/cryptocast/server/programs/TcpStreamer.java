@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.Parameter;
 
-import cryptocast.comm.ThrottledOutputStream;
+import cryptocast.comm.ThrottledInputStream;
 import cryptocast.server.OptParse;
 
 /**
@@ -57,10 +57,10 @@ public final class TcpStreamer {
         public void run() {
             try {
                 OutputStream out = sock.getOutputStream();
-                if (maxBps > 0) {
-                    out = new ThrottledOutputStream(out, maxBps);
-                }
                 InputStream in = new FileInputStream(file);
+                if (maxBps > 0) {
+                    in = new ThrottledInputStream(in, maxBps);
+                }
                 log.debug("Skipping {} bytes", skip);
                 for (int i = 0; i < skip; ++i) {
                     in.read();
