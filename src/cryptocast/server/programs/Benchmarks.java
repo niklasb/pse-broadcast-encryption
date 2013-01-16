@@ -68,6 +68,46 @@ public final class Benchmarks {
         public int f = 1;
     }
     
+    private static class WithECOrSchnorr {
+        private static final Logger log = LoggerFactory
+                .getLogger(Benchmarks.WithECOrSchnorr.class);
+        
+        @Parameter(names = { "-g" }, description = "The group (ec or schnorr)")
+        protected String g = "schnorr";
+        
+        protected NPServerFactory serverFactory;
+        protected NPServerInterface server;
+        
+        protected SchnorrGroup schnorrGroup;
+        protected EllipticCurveGroup<BigInteger, EllipticCurveOverFp> ecGroup;
+
+        protected void beforeAll() throws Exception {
+            if (isEc()) {
+                serverFactory = new ECNPServerFactory();
+                ecGroup = EllipticCurveGroup.getNamedFpCurve("secp160r1");
+                log.info("Using an elliptic curve over GF(p) with p 160 bits");
+            } else if (isSchnorr()) {
+                serverFactory = new SchnorrNPServerFactory();
+                schnorrGroup = SchnorrGroup.getP1024Q160();
+                log.info("Using a subgroup of GF(p) of size q with p 1024 and q 160 bits");
+            } else {
+                throw new Exception("Invalid group: `" + g + "'");
+            }
+        }
+        
+        protected void createServer(int t) {
+            server = serverFactory.construct(t);
+        }
+        
+        protected boolean isEc() {
+            return g.equals("ec");
+        }
+        
+        protected boolean isSchnorr() {
+            return g.equals("schnorr");
+        }
+    }
+    
     @Parameters(commandDescription = "Calculate the lagrange coefficients")
     private static class LagrangeBenchmark implements Benchmark {
         private static final Logger log = LoggerFactory
@@ -102,30 +142,23 @@ public final class Benchmarks {
         }
     }
     
-    @Parameters(commandDescription = "Calculate the lagrange coefficients")
-    private static class MultiExpBenchmark implements Benchmark {
+    @Parameters(commandDescription = "Calculate the product of powers in a cyclic group")
+    private static class MultiExpBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.MultiExpBenchmark.class);
         
-        @Parameter(names = { "-t" }, description = "The number of exponentations")
+        @Parameter(names = { "-t" }, description = "The number of powers")
         private int t = 100;
-        
-        @Parameter(names = { "-g" }, description = "The group (ec or schnorr)")
-        private String g = "schnorr";
-        
-        SchnorrGroup schnorr;
-        EllipticCurveGroup<BigInteger, EllipticCurveOverFp> ecGroup;
         
         ImmutableList<BigInteger> basesSchnorr;
         ImmutableList<EllipticCurve.Point<BigInteger>> basesEc;
         ImmutableList<BigInteger> exps;
         
         public void beforeAll() throws Exception {
-            log.info("Using algorithm {}", g);
+            super.beforeAll();
             Random rnd = new Random();
             IntegersModuloPrime modQ;
-            if (g.equals("ec")) {
-                ecGroup = EllipticCurveGroup.getNamedFpCurve("secp160r1");
+            if (isEc()) {
                 ImmutableList.Builder<EllipticCurve.Point<BigInteger>> builder = 
                              ImmutableList.builder();
                 for (int i = 0; i < t; i++) {
@@ -133,16 +166,13 @@ public final class Benchmarks {
                 }
                 basesEc = builder.build();
                 modQ = ecGroup.getFieldModOrder();
-            } else if (g.equals("schnorr")) {
-                schnorr = SchnorrGroup.getP1024Q160();
+            } else { // schnorr
                 ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
                 for (int i = 0; i < t; i++) {
-                    builder.add(schnorr.getFieldModP().randomElement(rnd));
+                    builder.add(schnorrGroup.getFieldModP().randomElement(rnd));
                 }
                 basesSchnorr = builder.build();
-                modQ = schnorr.getFieldModOrder();
-            } else {
-                throw new Exception("Invalid group: `" + g + "'");
+                modQ = schnorrGroup.getFieldModOrder();
             }
             ImmutableList.Builder<BigInteger> cbuilder = ImmutableList.builder();
             for (int i = 0; i < t; i++) {
@@ -157,30 +187,28 @@ public final class Benchmarks {
             if (g.equals("ec")) {
                 ecGroup.multiexp(basesEc, exps);
             } else {
-                schnorr.multiexp(basesSchnorr, exps);
+                schnorrGroup.multiexp(basesSchnorr, exps);
             }
         }
     }
     
     @Parameters(commandDescription = "Encrypt a 128-bit key using Naor-Pinkas")
-    private static class EncryptBenchmark implements Benchmark {
+    private static class EncryptBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.EncryptBenchmark.class);
         
         @Parameter(names = { "-t" }, description = "Number of revocable users")
         private int t = 100;
         
-        NPServerInterface server;
         byte[] plain;
         
         public void beforeAll() throws Exception {
+            super.beforeAll();
             long start;
-            SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
-            log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
-                        t, schnorr.getGenerator().bitLength(), schnorr.getP().bitLength());
+            log.info("Naor-Pinkas options: t={}", t);
             log.info("Generating server instance");
             start = System.currentTimeMillis();
-            server = new SchnorrNPServerFactory().construct(t, schnorr);
+            createServer(t);
             log.info("Took {} ms", System.currentTimeMillis() - start);
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);
@@ -195,26 +223,23 @@ public final class Benchmarks {
         
         public void run() {
             byte[] cipher = server.encrypt(plain);
-            log.debug("128-bit key was encrypted to {} bytes of Naor-Pinkas ciphertext", cipher.length);
+            log.debug("128-bit key was encrypted to {} bytes of ciphertext", cipher.length);
         }
     }
     
     @Parameters(commandDescription = "Encrypt a 128-bit key using Naor-Pinkas multiple times, with revocations in between")
-    private static class MultiEncryptBenchmark implements Benchmark {
+    private static class MultiEncryptBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.MultiEncryptBenchmark.class);
         
         @Parameter(names = { "-t" }, description = "Number of revocable users")
         private int t = 100;
         
-        SchnorrGroup schnorr;
-        NPServerInterface server;
         byte[] plain;
         
         public void beforeAll() throws Exception {
-            schnorr = SchnorrGroup.getP1024Q160();
-            log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
-                        t, schnorr.getGenerator().bitLength(), schnorr.getP().bitLength());
+            super.beforeAll();
+            log.info("Naor-Pinkas options: t={}", t);
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);
             plain = gen.generateKey().getEncoded();
@@ -223,7 +248,7 @@ public final class Benchmarks {
         public void before() {
             log.info("Generating server...");
             long t1 = System.currentTimeMillis();
-            server = new SchnorrNPServerFactory().construct(t, schnorr);
+            createServer(t);
             log.info("Done! Took {} ms", System.currentTimeMillis() - t1);
         }
         
@@ -245,24 +270,29 @@ public final class Benchmarks {
     }
     
     @Parameters(commandDescription = "Decrypt a 128-bit key using Naor-Pinkas")
-    private static class DecryptBenchmark implements Benchmark {
+    private static class DecryptBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.DecryptBenchmark.class);
         
         @Parameter(names = { "-t" }, description = "Number of revocable users")
         private int t = 100;
         
-        SchnorrNPClient client;
+        ECNPClient ecClient;
+        SchnorrNPClient schnorrClient;
         byte[] cipher;
         
         public void beforeAll() throws Exception {
-            SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
-            log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
-                    t, schnorr.getOrder().bitLength(), schnorr.getP().bitLength());
+            super.beforeAll();
+            log.info("Naor-Pinkas options: t={}", t);
             log.info("Generating server and client and doing the initial encryption");
-            SchnorrNPServer server = 
-                    (SchnorrNPServer) new SchnorrNPServerFactory().construct(t, schnorr);
-            client = new SchnorrNPClient(server.getPersonalKey(server.getIdentity(0)).get());
+            createServer(t);
+            if (isSchnorr()) {
+                schnorrClient = new SchnorrNPClient(
+                        ((SchnorrNPServer) server).getPersonalKey(server.getIdentity(0)).get());
+            } else {
+                ecClient = new ECNPClient(
+                        ((ECNPServer) server).getPersonalKey(server.getIdentity(0)).get());
+            }
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);
             byte[] plain = gen.generateKey().getEncoded();
@@ -273,7 +303,11 @@ public final class Benchmarks {
         
         public void run() {
             try {
-                client.decrypt(cipher);
+                if (isSchnorr()) {
+                    schnorrClient.decrypt(cipher);
+                } else {
+                    ecClient.decrypt(cipher);
+                }
             } catch (Exception e) {
                 log.error("Error while decrypting", e);
             }
@@ -323,7 +357,7 @@ public final class Benchmarks {
     }
     
     @Parameters(commandDescription = "Generate client keys")
-    private static class KeygenBenchmark implements Benchmark {
+    private static class KeygenBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.KeygenBenchmark.class);
         
@@ -334,16 +368,16 @@ public final class Benchmarks {
         
         NPServerInterface server;
         
-        public void beforeAll() throws Exception { }
+        public void beforeAll() throws Exception {
+            super.beforeAll();
+        }
         
         public void before() throws Exception {
             long start;
-            SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
-            log.info("Naor-Pinkas options: t={} qbits={} pbits={}", 
-                        t, schnorr.getOrder().bitLength(), schnorr.getP().bitLength());
+            log.info("Naor-Pinkas options: t={}", t);
             log.info("Generating server instance");
             start = System.currentTimeMillis();
-            server = new SchnorrNPServerFactory().construct(t, schnorr);
+            createServer(t);
             log.info("Took {} ms", System.currentTimeMillis() - start);
             KeyGenerator gen = KeyGenerator.getInstance("AES");
             gen.init(128);
