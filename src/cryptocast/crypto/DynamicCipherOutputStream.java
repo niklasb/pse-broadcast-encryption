@@ -12,6 +12,9 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.KeyGenerator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cryptocast.comm.MessageOutChannel;
 
 import static cryptocast.util.ErrorUtils.*;
@@ -21,6 +24,9 @@ import static cryptocast.util.ErrorUtils.*;
  * This stream uses a message-based communication channel.
  */
 public class DynamicCipherOutputStream extends OutputStream {
+    private static final Logger log = LoggerFactory
+            .getLogger(DynamicCipherOutputStream.class);
+    
 	/**
 	 * Constant for cipher data.
 	 */
@@ -71,6 +77,7 @@ public class DynamicCipherOutputStream extends OutputStream {
      * @throws IOException
      */
     public void updateKey() throws IOException {
+        log.trace("Updating key");
         key = keyGen.generateKey();
         encryptedKey = enc.encrypt(key.getEncoded());
         reinitializeCipher();
@@ -81,6 +88,7 @@ public class DynamicCipherOutputStream extends OutputStream {
      * @throws IOException
      */
     public void reinitializeCipher() throws IOException {
+        log.trace("reinitializing cipher");
         if (cipher != null) {
             finalizeCipher();
         }

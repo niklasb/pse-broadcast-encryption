@@ -6,13 +6,14 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
@@ -23,7 +24,10 @@ import static com.google.common.base.Preconditions.*;
  * the entire polynomial and therefore all the private keys of its users. 
  */
 public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
+          extends Observable
           implements NPServerInterface, Serializable {
+    private static final Logger log = LoggerFactory.getLogger(NPServer.class);
+    
     private static final long serialVersionUID = -6864326409385317975L;
 
     private NPServerContext<T, G> context;
@@ -149,6 +153,9 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
         for (NPIdentity id : notYetRevoked) {
             revokeUnconditional(id);
         }
+        log.trace("Set of revoked users changed, informing observers");
+        setChanged();
+        notifyObservers();
         return true;
     }
     
@@ -194,6 +201,9 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
         context.getLagrange().addX(
                     getDummyKey(t - revokedUsers.size()).getIdentity().getI());
         revokedUsers.remove(id);
+        log.trace("Set of revoked users changed, informing observers");
+        setChanged();
+        notifyObservers();
         return true;
     }
     

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.security.PrivateKey;
@@ -49,6 +48,7 @@ public class Controller implements Observer {
     private SocketAddress listenAddr;
     private int keyBroadcastIntervalSecs;
     private SwitchableInputStream switchableInput;
+    private SwitchableOutputStream switchableOutput;
     NPServerFactory serverFactory;
     
     private static Function<Throwable, Boolean> fatalExceptionHandler =
@@ -66,6 +66,7 @@ public class Controller implements Observer {
 			BroadcastEncryptionServer<NPIdentity> encServer,
 			SocketAddress listenAddr, int keyBroadcastIntervalSecs,
 			SwitchableInputStream switchableInput,
+			SwitchableOutputStream switchableOutput,
 			NPServerFactory serverFactory) {
 		this.data = data;
 		data.addObserver(this);
@@ -75,6 +76,7 @@ public class Controller implements Observer {
 		this.listenAddr = listenAddr;
 		this.keyBroadcastIntervalSecs = keyBroadcastIntervalSecs;
 		this.switchableInput = switchableInput;
+		this.switchableOutput = switchableOutput;
 		this.serverFactory = serverFactory;
 	}
 
@@ -95,6 +97,7 @@ public class Controller implements Observer {
 		NaorPinkasServerData data;
 		if (databaseFile.exists()) {
 			data = SerializationUtils.readFromFile(databaseFile);
+	        data.initAfterDeserialization();
 		} else {
 			data = createNewData(0, serverFactory);
 		}
@@ -107,10 +110,12 @@ public class Controller implements Observer {
 		final BroadcastEncryptionServer<NPIdentity> broadcastServer = 
 		        startBroadcastEncryptionServer(data, multicastServer, keyBroadcastIntervalSecs);
 		final SwitchableInputStream input = new SwitchableInputStream();
+		final SwitchableOutputStream output = new SwitchableOutputStream();
+		output.switchOutput(broadcastServer);
 		new Thread(new Runnable() {
             public void run() {
                 try {
-                    StreamUtils.copyInterruptable(input, broadcastServer, 0x4000);
+                    StreamUtils.copyInterruptable(input, output, 0x4000);
                 } catch (Exception e) {
                     fatalExceptionHandler.apply(e);
                 }
@@ -118,7 +123,7 @@ public class Controller implements Observer {
 		}).start();
 		return new Controller(data, databaseFile, multicastServer,
 		        broadcastServer, listenAddr,
-				keyBroadcastIntervalSecs, input, serverFactory);
+				keyBroadcastIntervalSecs, input, output, serverFactory);
 	}
 
 	private static NaorPinkasServerData createNewData(int t, NPServerFactory serverFactory) {
@@ -174,6 +179,7 @@ public class Controller implements Observer {
         data.addObserver(this);
         encServer = startBroadcastEncryptionServer(
                 data, rawOut, keyBroadcastIntervalSecs);
+        switchableOutput.switchOutput(encServer);
         saveDatabase();
     }
 

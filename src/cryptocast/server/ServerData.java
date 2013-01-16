@@ -1,8 +1,6 @@
 package cryptocast.server;
 
-import cryptocast.crypto.BroadcastSchemeUserManager;
-import cryptocast.crypto.BroadcastSchemeKeyManager;
-import cryptocast.crypto.NoMoreRevocationsPossibleError;
+import cryptocast.crypto.*;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -13,6 +11,7 @@ import java.io.Serializable;
 import java.security.PrivateKey;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * Contains the data which is managed by the controller and presented by the view.
  * @param <ID> The type of the user identities
  */
-public class ServerData<ID> extends Observable implements Serializable {
+public class ServerData<ID> extends Observable implements Observer, Serializable {
     private static final long serialVersionUID = -4614028292663697207L;
     private static final Logger log = LoggerFactory.getLogger(ServerData.class);
 
@@ -55,8 +54,17 @@ public class ServerData<ID> extends Observable implements Serializable {
                       BroadcastSchemeKeyManager<ID> keyManager) {
         this.userManager = userManager;
         this.keyManager = keyManager;
+        initAfterDeserialization();
     }
 
+    /**
+     * Initialize this instance after deserialization!
+     */
+    public void initAfterDeserialization() {
+        log.trace("Registering as an observer of the user manager");
+        userManager.addObserver(this);
+    }
+    
     /**
      * Creates and saves a new user by name.
      * 
@@ -107,15 +115,12 @@ public class ServerData<ID> extends Observable implements Serializable {
      * @return  <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
      * @throws NoMoreRevocationsPossibleError
      */
-    public boolean revoke(Set<User<ID>> users) throws NoMoreRevocationsPossibleError {
+    public void revoke(Set<User<ID>> users) throws NoMoreRevocationsPossibleError {
         ImmutableSet.Builder<ID> identities = ImmutableSet.builder();
         for (User<ID> user : users) {
             identities.add(user.getIdentity());
         }
-        boolean res = userManager.revoke(identities.build());
-        setChanged();
-        notifyObservers();
-        return res;
+        userManager.revoke(identities.build());
     }
     
     /**
@@ -125,8 +130,8 @@ public class ServerData<ID> extends Observable implements Serializable {
      * @return  <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
      * @throws NoMoreRevocationsPossibleError
      */
-    public boolean revoke(User<ID> user) throws NoMoreRevocationsPossibleError {
-        return revoke(ImmutableSet.of(user));
+    public void revoke(User<ID> user) throws NoMoreRevocationsPossibleError {
+        revoke(ImmutableSet.of(user));
     }
 
     /**
@@ -135,11 +140,8 @@ public class ServerData<ID> extends Observable implements Serializable {
      * @param user The user to authorize.
      * @return <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
      */
-    public boolean unrevoke(User<ID> user) {
-        boolean res = userManager.unrevoke(user.getIdentity());
-        setChanged();
-        notifyObservers();
-        return res;
+    public void unrevoke(User<ID> user) {
+        userManager.unrevoke(user.getIdentity());
     }
 
    /**
@@ -157,5 +159,12 @@ public class ServerData<ID> extends Observable implements Serializable {
      */
     public Set<User<ID>> getUsers() {
         return users;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        log.trace("Set of revoked users changed, notifying observers");
+        setChanged();
+        notifyObservers();
     }
 }
