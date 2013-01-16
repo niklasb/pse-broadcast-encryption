@@ -86,6 +86,7 @@ public class MultiOutputStream extends OutputStream {
     public void addChannel(OutputStream channel) {
         channels.add(channel);
     }
+    
     /**
      * Removes the given channel from the list of receivers.
      * @param channel The channel to remove

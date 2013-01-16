@@ -45,6 +45,9 @@ public final class Server {
         @Parameter(names = { "-v", "--verbosity" }, 
                    description = "Control the level of debug output on STDERR (trace, debug, info, warn, error)")
         private String verbosity = "info";
+        
+        @Parameter(names = { "--trace" }, description = "Enable tracing")
+        private boolean tracing = false;
     }
     
     /**
@@ -55,6 +58,9 @@ public final class Server {
         Level logLevel = Level.toLevel(opts.verbosity);
         
         System.out.printf("Logging to STDERR (level %s) and %s\n", logLevel, opts.logFile);
+        if (opts.tracing || Level.TRACE.isGreaterOrEqual(logLevel)) {
+            LogbackUtils.setRootLogLevel(Level.TRACE);
+        }
         LogbackUtils.removeAllAppenders();
         LogbackUtils.addFileAppender(opts.logFile, Level.ALL);
         LogbackUtils.addStderrLogger(logLevel);

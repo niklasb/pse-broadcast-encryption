@@ -28,6 +28,10 @@ public class LogbackUtils {
         rootLogger.detachAndStopAllAppenders();
     }
     
+    public static void setRootLogLevel(Level level) {
+        rootLogger.setLevel(level);
+    }
+    
     public static void addFileAppender(File logFile, Level level, String pattern) {
         PatternLayoutEncoder plFile = new PatternLayoutEncoder();
         plFile.setContext(ctx);

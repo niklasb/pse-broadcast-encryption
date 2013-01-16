@@ -1,9 +1,12 @@
 package cryptocast.crypto;
 
 import cryptocast.comm.*;
+import cryptocast.util.CanBeObserved;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +17,11 @@ import com.google.common.base.Function;
  * The server side of a broadcast encryption scheme.
  * @param <ID> The type of the identities
  */
-public class BroadcastEncryptionServer<ID> extends OutputStream
-                                           implements Runnable {
+public class BroadcastEncryptionServer<ID> extends OutputStream 
+                                           implements Runnable, Observer {
     private static final Logger log = LoggerFactory
             .getLogger(BroadcastEncryptionServer.class);
     
-    private BroadcastSchemeUserManager<ID> context;
     private DynamicCipherOutputStream cipherStream;
     private int intervalMilliseconds;
     private Function<Throwable, Boolean> excHandler;
@@ -34,14 +36,14 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
      *                   the key update loop. If it returns <code>true</code>, the 
      *                   exception is ignored, otherwise the loop is exited.
      */
-    public BroadcastEncryptionServer(BroadcastSchemeUserManager<ID> context,
+    public BroadcastEncryptionServer(CanBeObserved userManager,
                                      DynamicCipherOutputStream cipherStream,
                                      int intervalMilliseconds,
                                      Function<Throwable, Boolean> excHandler) {
         this.cipherStream = cipherStream;
-        this.context = context;
         this.intervalMilliseconds = intervalMilliseconds;
         this.excHandler = excHandler;
+        userManager.addObserver(this);
     }
 
     /**
@@ -81,6 +83,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
                 return;
             }
             try {
+                log.trace("Broadcasting key");
                 broadcastKey();
             } catch (Throwable e) {
                 log.trace("Caught exception in key broadcast loop. Calling handler.", e);
@@ -91,7 +94,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
             }
         }
     }
-    
+
     /**
      * Updates the key.
      * @throws IOException
@@ -108,31 +111,6 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
         cipherStream.reinitializeCipher();
     }
 
-    /**
-     * Revokes a user.
-     * 
-     * @param id The identity of the user.
-     * @throws NoMoreRevocationsPossibleError
-     * @throws IOException
-     */
-    public synchronized void revoke(ID id) throws NoMoreRevocationsPossibleError, IOException {
-        if (context.revoke(id)) {
-            updateKey();
-        }
-    }
-    
-    /**
-     * Authorizes a user.
-     * 
-     * @param id The identity of the user.
-     * @throws IOException
-     */
-    public synchronized void unrevoke(ID id) throws IOException {
-        if (context.unrevoke(id)) {
-            updateKey();
-        }
-    }
-    
     @Override
     public synchronized void close() throws IOException  {
         cipherStream.close();
@@ -151,5 +129,16 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
     @Override
     public synchronized void write(byte[] buf, int offset, int len) throws IOException {
         cipherStream.write(buf, offset, len);
+    }
+
+    @Override
+    public void update(Observable arg0, Object arg1) {
+        // the set of revoked users changed, we need a key update!
+        try {
+            updateKey();
+        } catch (Exception e) {
+            log.trace("Caught exception during key update. Calling handler.", e);
+            excHandler.apply(e);
+        }
     }
 }

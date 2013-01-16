@@ -140,7 +140,8 @@ public class Shell extends InteractiveCommandLineInterface {
             } else if (e.getCause() instanceof Exit) {
                 throw (Exit) e.getCause();
             }
-            cannotHappen(e);
+            log.error("Fatal error: ", e.getCause());
+            exit(1);
         } catch (Exception e) {
             log.error("Could not execute command", e);
         }
@@ -185,6 +186,11 @@ public class Shell extends InteractiveCommandLineInterface {
         if (args.length != 1) {
             commandSyntaxError(cmd);
         }
+        Optional<Integer> mT = parseInt(args[0]);
+        if (!mT.isPresent() || mT.get().intValue() < 0) {
+            error("Invalid integer value: " + args[0]);
+        }
+        int t = mT.get().intValue();
         println("This is a DESTRUCTIVE operation! "
               + "All user data and private keys will be lost forever! "
               + "Please type `YES' if you are sure: ");
@@ -197,11 +203,6 @@ public class Shell extends InteractiveCommandLineInterface {
         if (!answer.equals("YES")) {
             return;
         }
-        Optional<Integer> mT = parseInt(args[0]);
-        if (!mT.isPresent() || mT.get().intValue() < 0) {
-            error("Invalid integer value: " + args[0]);
-        }
-        int t = mT.get().intValue();
         try {
             control.reinitializeCrypto(t);
         } catch (Exception e) {
@@ -261,9 +262,7 @@ public class Shell extends InteractiveCommandLineInterface {
         }
 
         User<NPIdentity> user = getUser(args[0]);
-        if (!getModel().unrevoke(user)) {
-            error("User already authorized!");
-        }
+        getModel().unrevoke(user);
     }
 
     protected void cmdSaveKeys(ShellCommand cmd, String[] args) throws CommandError, Exit {
@@ -333,7 +332,7 @@ public class Shell extends InteractiveCommandLineInterface {
             fatalError(e);
         }
     }
-
+    
     private User<NPIdentity> getUser(String name) throws CommandError {
         Optional<User<NPIdentity>> mUser = getModel().getUserByName(name);
         if (!mUser.isPresent()) {

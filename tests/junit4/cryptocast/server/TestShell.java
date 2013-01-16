@@ -61,6 +61,7 @@ public class TestShell {
     @Test
     public void reInit() throws Throwable {
         String[] args = {"100"};
+        when(in.readLine()).thenReturn("YES");
         sut.performCommand("init", args);
         sut.performCommand("init", args);
         verify(control, times(2)).reinitializeCrypto(100);
@@ -86,7 +87,6 @@ public class TestShell {
         String[] args = {name};
         User<NPIdentity> bob = new User<NPIdentity>(name, npServer.getIdentity(3));
         when(model.getUserByName(name)).thenReturn(Optional.fromNullable(bob));
-        when(model.revoke(bob)).thenReturn(true);
         sut.performCommand("revoke", args);
         verify(model).revoke(ImmutableSet.of(bob));
     }
@@ -102,7 +102,6 @@ public class TestShell {
         when(model.getUserByName(names[0])).thenReturn(Optional.fromNullable(users.get(0)));
         when(model.getUserByName(names[1])).thenReturn(Optional.fromNullable(users.get(1)));
         when(model.getUserByName(names[2])).thenReturn(Optional.fromNullable(users.get(2)));
-        when(model.revoke(ImmutableSet.copyOf(users))).thenReturn(true);
         sut.performCommand("revoke", names);
         verify(model).revoke(ImmutableSet.copyOf(users));
     }
@@ -113,7 +112,6 @@ public class TestShell {
         String[] args = {name};
         User<NPIdentity> myAlice = new User<NPIdentity>(name, npServer.getIdentity(12));
         when(model.getUserByName(name)).thenReturn(Optional.fromNullable(myAlice));
-        when(model.unrevoke(myAlice)).thenReturn(true);
         sut.performCommand("unrevoke", args);
         verify(model).unrevoke(myAlice);
     }

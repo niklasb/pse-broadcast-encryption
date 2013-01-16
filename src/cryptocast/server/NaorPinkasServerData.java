@@ -19,6 +19,7 @@ public class NaorPinkasServerData extends ServerData<NPIdentity> {
      */
     public NaorPinkasServerData(NPServerInterface npServer) {
         super(npServer, npServer);
+        System.out.println("ASD");
         this.npServer = npServer;
     }
 }
