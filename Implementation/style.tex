@@ -1,0 +1,58 @@
+% less margin
+\usepackage[margin=2.5cm]{geometry}
+
+% horizontal line
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+% more beautiful lists
+\setlist{noitemsep}
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\labelitemii}{$\diamond$}
+
+% create a shorter version for tables
+\newcommand\addrow[2]{#1 &#2\\ }
+\newcommand\addheading[2]{\textbf{\sffamily #1} &\textbf{\sffamily #2}\\ \hline}
+\newcommand\tabularhead{\begin{tabular}{lp{13cm}}
+\hline
+}
+
+\newcommand\addmulrow[2]{ \begin{minipage}[t][][t]{2.5cm}#1\end{minipage}%
+   &\begin{minipage}[t][][t]{8cm}
+    \begin{enumerate} #2   \end{enumerate}
+    \end{minipage}\\ }
+
+\newenvironment{usecase}{\tabularhead}
+{\hline\end{tabular}}
+
+% a cross
+\newcommand\X{$\times$}
+
+% templates and default styles for figures and graphics
+\tikzset{>=triangle 45}
+\tikzset{font=\sffamily}
+
+\newcommand{\tmpCaption}{}
+\newenvironment{illustration}[1]
+{
+   \renewcommand{\tmpCaption}{#1}
+   \begin{figure}[ht!]
+   \centering
+}
+{
+   \caption{\tmpCaption}
+   \end{figure}
+}
+
+% code
+\lstset{frame=tb,
+        basicstyle=\footnotesize\ttfamily,
+        numbers=left,
+        numberstyle=\scriptsize,
+        numbersep=5pt,
+        tabsize=4,
+        captionpos=b,
+        language=Java,
+        breaklines=true,
+        breakatwhitespace=false,
+        escapeinside={(*}{*)},
+  }
