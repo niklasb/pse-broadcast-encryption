@@ -13,15 +13,17 @@ import org.mockito.MockitoAnnotations;
 
 public class TestStreamRunner {
     private StreamRunner sut;
+    private final int BUFSIZE = 1024;
     @Mock private OutputStream out;
     @Mock private InputStream in;
     
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        sut = new StreamRunner(in, out, 1024);
+        sut = new StreamRunner();
         assertTrue(sut.hasStopped());
         assertFalse(sut.isRunning());
+        sut.prepare(in, out, BUFSIZE);
     }
 
     @After
@@ -31,8 +33,6 @@ public class TestStreamRunner {
     @Test
     public void startAndStop() throws InterruptedException {
         sut.start();
-        //TODO about 1 ms is necessary until it works correctly!
-        //Thread.sleep(1);
         assertTrue(sut.isRunning());
         assertFalse(sut.hasStopped());
         sut.stop();
