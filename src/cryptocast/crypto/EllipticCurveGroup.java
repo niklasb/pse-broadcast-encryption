@@ -9,23 +9,21 @@ import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 
-import cryptocast.crypto.EllipticCurve.*;
-
-public class EllipticCurveGroup<T, C extends EllipticCurve<T>>
-              extends CyclicGroupOfPrimeOrder<Point<T>>
+public class EllipticCurveGroup<T, P, C extends EllipticCurve<T, P>>
+              extends CyclicGroupOfPrimeOrder<P>
               implements Serializable {
     private static final long serialVersionUID = 1276532022589756079L;
     
     private C curve;
-    private EllipticCurve.ConcretePoint<T> basePoint;
+    private P basePoint;
     private BigInteger basePointOrder;
     
     public C getCurve() { return curve; }
-    public ConcretePoint<T> getBasePoint() { return basePoint; }
+    public P getBasePoint() { return basePoint; }
     public BigInteger getBasePointOrder() { return basePointOrder; }
     
     public EllipticCurveGroup(C curve,
-            ConcretePoint<T> basePoint,
+            P basePoint,
             BigInteger basePointOrder) {
         super(basePoint, basePointOrder);
         this.curve = curve;
@@ -34,27 +32,27 @@ public class EllipticCurveGroup<T, C extends EllipticCurve<T>>
     }
     
     @Override
-    public Point<T> combine(Point<T> a, Point<T> b) {
+    public P combine(P a, P b) {
         return curve.add(a, b);
     }
     
     @Override
-    public Point<T> twice(Point<T> a) {
+    public P twice(P a) {
         return curve.twice(a);
     }
     
     @Override
-    public Point<T> pow(Point<T> a, BigInteger k) {
+    public P pow(P a, BigInteger k) {
         return curve.multiply(a, k);
     }
     
     @Override
-    public Point<T> invert(Point<T> a) {
+    public P invert(P a) {
         return curve.negate(a);
     }
     
     @Override
-    public Point<T> identity() {
+    public P identity() {
         return curve.getInfinity();
     }
     
@@ -63,16 +61,16 @@ public class EllipticCurveGroup<T, C extends EllipticCurve<T>>
      * better give it {@link ImmutableLists}.
      */
     @Override
-    public Point<T> multiexp(List<Point<T>> bases, List<BigInteger> exponents) {
+    public P multiexp(List<P> bases, List<BigInteger> exponents) {
         return multiexpShamir(bases, exponents, 5);
     }
     
-    public static EllipticCurveGroup<BigInteger, EllipticCurveOverFp>
+    public static EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp>
                                getNamedFpCurve(String name) {
         return fromBCParamSpecFp(ECNamedCurveTable.getParameterSpec(name));
     }
     
-    private static EllipticCurveGroup<BigInteger, EllipticCurveOverFp> 
+    private static EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp> 
                         fromBCParamSpecFp(ECParameterSpec bcSpec) {
         ECCurve.Fp bcCurve = (ECCurve.Fp) bcSpec.getCurve();
         EllipticCurveOverFp curve = new EllipticCurveOverFp(
@@ -80,11 +78,11 @@ public class EllipticCurveGroup<T, C extends EllipticCurve<T>>
                 bcCurve.getA().toBigInteger(),
                 bcCurve.getB().toBigInteger());
         ECPoint bcBasePoint = bcSpec.getG();
-        ConcretePoint<BigInteger> basePoint = curve.getPoint(
+        EllipticCurveOverFp.Point basePoint = curve.getPoint(
                     bcBasePoint.getX().toBigInteger(),
                     bcBasePoint.getY().toBigInteger()
                     );
-        return new EllipticCurveGroup<BigInteger, EllipticCurveOverFp>(
+        return new EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp>(
                 curve, basePoint, 
                 bcSpec.getN());
     }

@@ -3,10 +3,11 @@ package cryptocast.crypto.naorpinkas;
 import java.math.BigInteger;
 
 import cryptocast.crypto.*;
+import cryptocast.crypto.EllipticCurveOverFp.*;
 
 public class ECNPServerFactory implements NPServerFactory {
     public ECNPServer construct(int t, 
-                       EllipticCurveGroup<BigInteger, EllipticCurveOverFp> g) {
+                       EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp> g) {
         return new ECNPServer(NPServerContext.generate(t, g));
     }
     

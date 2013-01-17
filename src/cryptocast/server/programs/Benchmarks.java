@@ -79,7 +79,8 @@ public final class Benchmarks {
         protected NPServerInterface server;
         
         protected SchnorrGroup schnorrGroup;
-        protected EllipticCurveGroup<BigInteger, EllipticCurveOverFp> ecGroup;
+        protected EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp>
+              ecGroup;
 
         protected void beforeAll() throws Exception {
             if (isEc()) {
@@ -150,8 +151,11 @@ public final class Benchmarks {
         @Parameter(names = { "-t" }, description = "The number of powers")
         private int t = 100;
         
+        @Parameter(names = { "-k" }, description = "The chunk size to use for Shamir's trick")
+        private int k = 5;
+        
         ImmutableList<BigInteger> basesSchnorr;
-        ImmutableList<EllipticCurve.Point<BigInteger>> basesEc;
+        ImmutableList<EllipticCurveOverFp.Point> basesEc;
         ImmutableList<BigInteger> exps;
         
         public void beforeAll() throws Exception {
@@ -159,7 +163,7 @@ public final class Benchmarks {
             Random rnd = new Random();
             IntegersModuloPrime modQ;
             if (isEc()) {
-                ImmutableList.Builder<EllipticCurve.Point<BigInteger>> builder = 
+                ImmutableList.Builder<EllipticCurveOverFp.Point> builder = 
                              ImmutableList.builder();
                 for (int i = 0; i < t; i++) {
                     builder.add(ecGroup.getBasePoint());
@@ -185,9 +189,9 @@ public final class Benchmarks {
         
         public void run() {
             if (g.equals("ec")) {
-                ecGroup.multiexp(basesEc, exps);
+                ecGroup.multiexpShamir(basesEc, exps, k);
             } else {
-                schnorrGroup.multiexp(basesSchnorr, exps);
+                schnorrGroup.multiexpShamir(basesSchnorr, exps, k);
             }
         }
     }
