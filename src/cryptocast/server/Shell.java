@@ -36,19 +36,37 @@ public class Shell extends InteractiveCommandLineInterface {
     private static ShellCommand commands[] = {
         new ShellCommand("help",
                          "[<command>]",
-                         "Show the command line help"),
+                         "Show the command line help",
+                         "If no command is given a list of all available commands and information "
+                             + "about how to use them is shown."),
         new ShellCommand("add",
                          "<name>",
-                         "Add a new user to the group of recipients"),
+                         "Add a new user to the group of recipients",
+                         "If no user with the given name exists a new one is created and added "
+                                 + "to the group of recipients. Using the command \"save-keys\" "
+                                 + "the key assigned to this user can be saved in order to ship "
+                                 + "it to the user."),
         new ShellCommand("revoke",
                          "[<name>, [<name>, ... ]]",
-                         "Revoke users"),
+                         "Revoke users",
+                         "Tries to revoke the users with the given names. As there "
+                             + "is only a limited amount of revocations possible you should watch "
+                             + "the numbers of revoked and revokable users. Revokes happen "
+                             + "immediately  and the revoked user will not be "
+                             + "able to access the streamed data anymore."),
         new ShellCommand("unrevoke",
                          "<name>",
-                         "Unrevoke a user"),
+                         "Unrevoke a user",
+                         "Reverts the revokation of the user with the given name. "
+                             + "As a result of this the user will be able to access "
+                             + "the streamed data again. Just like revokations this happens "
+                             + "immediately."),
         new ShellCommand("users",
                          "",
-                         "List users"),
+                         "List users",
+                         "Shows the total amount of users, the amount of revokes users, the "
+                         + "amount of possible revocations and a list of all users and the "
+                         + "information which user is revoked."),
         new ShellCommand("save-keys",
                          "dir [<user>, [<user>, ...]]",
                          "Save user keys to a directory"),
