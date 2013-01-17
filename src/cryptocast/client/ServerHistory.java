@@ -3,13 +3,16 @@ package cryptocast.client;
 import java.io.File;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is responsible for saving recently selected servers
@@ -33,6 +36,11 @@ public class ServerHistory implements Serializable {
      */
     public Map<InetSocketAddress, File> getServers() {
         return servers;
+    }
+    
+    public List<InetSocketAddress> getServerList() {
+        List<InetSocketAddress> server = new ArrayList<InetSocketAddress>(servers.keySet());
+        return server;
     }
     
     /**

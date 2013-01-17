@@ -20,5 +20,10 @@
     <string name="invalid_port">Please give me a valid port.</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_media_player">MediaPlayer</string>
+    <string name="server_history">Server History</string>
+    <string name="help"><b>Help</b></string>
+    <string name="help_text">To connect to a server you have to fill in the host name and port you want to connect to, then press connect. If the connection was successfull, you will be asked to choose a key file from your directory. When chosen a right key file, you will be directed to the stream viewer.
+        You can view the servers you already connected with in options and modify or delete them with a long touch. 
+        If you want to go back to home screen, press Back. </string>
 
 </resources>

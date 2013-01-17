@@ -3,6 +3,6 @@
 android:id="@+id/file_row_text"
 android:drawablePadding="10dp"
 android:padding="10dp"
-android:textSize="24sp"
-android:layout_width="wrap_content"
+android:textSize="15sp"
+android:layout_width="match_parent"
 android:layout_height="wrap_content" />

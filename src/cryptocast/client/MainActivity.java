@@ -32,7 +32,8 @@ public class MainActivity extends ClientActivity {
     private TextView editHostname, editPort;
     private File keyFile;
     private InetSocketAddress addr;
-
+    
+    
     
     @Override
     protected void onCreate(Bundle b) {
@@ -40,16 +41,12 @@ public class MainActivity extends ClientActivity {
         setContentView(R.layout.activity_main);
         editHostname = (TextView) findViewById(R.id.editHostname);
         editPort = (TextView) findViewById(R.id.editPort);
-        Object[] servers = app.getServerHistory().getServers().keySet().toArray();
-        String[] hosts = new String[servers.length];
-        for (int i = 0; i < servers.length; i++) {
-            hosts[i] = ((InetSocketAddress)servers[i]).getHostName();
-        }
+        /*String[] hosts = app.getServerHistoryHostnames();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line, hosts);
         AutoCompleteTextView textView = (AutoCompleteTextView)
                 findViewById(R.id.editHostname);
-        textView.setAdapter(adapter);
+        textView.setAdapter(adapter);*/
     }
     
     @Override
