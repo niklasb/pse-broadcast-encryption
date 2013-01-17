@@ -23,7 +23,7 @@ public class FileChooser implements OnItemClickListener {
     private ListView listing;
     
     /**
-     * Initializes a file withe the given file pattern.
+     * Initializes a file with the given file pattern.
      * 
      * @param filePattern The pattern of the file.
      */

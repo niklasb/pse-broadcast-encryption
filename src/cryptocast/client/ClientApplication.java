@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.InetSocketAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ public class ClientApplication extends Application {
     public void onCreate() {
         try {
             InputStream in = openFileInput(STATE_FILE_NAME);
+            state.serverHistory.addServer(new InetSocketAddress("bla", 1), null);
             state = SerializationUtils.readFromStream(in);
             log.debug("Loaded application state from internal storage");
         } catch (Exception e) {
@@ -102,7 +104,36 @@ public class ClientApplication extends Application {
     public ServerHistory getServerHistory() {
         return state.serverHistory;
     }
+    
+    /**
+     * Returns an array of the server history host names 
+     * @return the string array of host names
+     */
+    public String[] getServerHistoryHostnames() {
+        Object[] servers = getServerHistory().getServers().keySet().toArray();
+        String[] hostNames = new String[servers.length];
+        for (int i = 0; i < servers.length; i++) {
+            hostNames[i] = ((InetSocketAddress)servers[i]).getHostName();
+        }
+        return hostNames;
+    }
+    
+    public InetSocketAddress[] getServerArray() {
+        InetSocketAddress[] servers = (InetSocketAddress[]) getServerHistory().getServers().keySet().toArray();
+        return servers;
+    }
 
+    public String[] getServerStringArray() {
+        InetSocketAddress[] servers = getServerArray();
+        String[] serverStrings = new String[servers.length];
+        for (int i = 0; i < servers.length; i++) {
+            serverStrings[i] = servers[i].toString();
+        }
+        return serverStrings;
+            
+        
+    }
+    
     /**
      * Sets the server history
      * 
