@@ -15,7 +15,7 @@ import cryptocast.util.NativeUtils;
 import org.bouncycastle.math.ec.ECFieldElement.Fp;
 
 /**
- * The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p$.
+ * The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p > 2$.
  */
 public class IntegersModuloPrime extends Field<BigInteger> 
                                  implements Serializable {
@@ -24,16 +24,46 @@ public class IntegersModuloPrime extends Field<BigInteger>
             .getLogger(IntegersModuloPrime.class);
 
     private BigInteger p;
-
+    private int n; // p.bitLength()
+    
+    // precomputed values used for Barrett reduction
+    private BigInteger mu;
+    private int alpha, beta;
+    
+    private BigInteger mu2;
+    private int alpha2, beta2;
+    
     private static boolean haveNative = 
             NativeUtils.tryToLoadNativeLibOrLogFailure("IntegersModuloPrime", log);
 
     /**
+     * Reduces an integer $a < p^2$ modulo $p$.
+     * @param a ($a < p^2$)
+     * @return $a \mod p$
+     */
+    public BigInteger reduce(BigInteger a) {
+        // perform a barrett reduction
+        BigInteger qq = a.shiftRight(n + beta).multiply(mu).shiftRight(alpha - beta);
+        BigInteger z = a.subtract(qq.multiply(p));
+        if (z.compareTo(p) >= 0) {
+            return z.subtract(p);
+        }
+        return z;
+    }
+
+    /**
      * Initializes the field.
-     * @param p A prime number
+     * @param p A prime number (must not be $2$)
      */
     public IntegersModuloPrime(BigInteger p) {
+        assert p.testBit(0);
         this.p = p;
+        n = p.bitLength();
+        alpha = n + 1;
+        beta = -2;
+        mu = BigInteger.ONE.shiftLeft(n + alpha).divide(p);
+        
+        
     }
 
     /** @return $p$ */
@@ -43,17 +73,18 @@ public class IntegersModuloPrime extends Field<BigInteger>
 
     @Override
     public BigInteger add(BigInteger a, BigInteger b) {
-        return a.add(b).mod(p);
+        return reduce(a.add(b));
     }
 
     @Override
     public BigInteger multiply(BigInteger a, BigInteger b) {
-        return a.multiply(b).mod(p);
+        return reduce(a.multiply(b));
     }
 
     @Override
     public BigInteger negate(BigInteger a) {
-        return a.negate().mod(p);
+        if (a.signum() == 0) { return a; }
+        return p.subtract(a);
     }
 
     @Override
@@ -73,22 +104,22 @@ public class IntegersModuloPrime extends Field<BigInteger>
     
     @Override
     public BigInteger two() {
-        return BigInteger.valueOf(2).mod(p);
+        return reduce(BigInteger.valueOf(2));
     }
     
     @Override
     public BigInteger three() {
-        return BigInteger.valueOf(3).mod(p);
+        return reduce(BigInteger.valueOf(3));
     }
     
     @Override
     public BigInteger four() {
-        return BigInteger.valueOf(4).mod(p);
+        return reduce(BigInteger.valueOf(4));
     }
 
     @Override
     public BigInteger subtract(BigInteger a, BigInteger b) {
-        return a.subtract(b).mod(p);
+        return reduce(a.subtract(b));
     }
 
     @Override

@@ -3,6 +3,7 @@ package cryptocast.crypto;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.util.Random;
 
 import org.junit.*;
 
@@ -10,6 +11,26 @@ public class TestIntegersModuloPrime {
     private IntegersModuloPrime smallSut =
             new IntegersModuloPrime(BigInteger.valueOf(11));
     private IntegersModuloPrime largeSut = SchnorrGroup.getP1024Q160().getFieldModP();
+    
+    Random rnd = new Random();
+    
+    @Test
+    public void reduceWorks() {
+        BigInteger p = largeSut.getP();
+        BigInteger x;
+        for (int i = -10; i < 10; ++i) {
+            for (int j = 0; j < 10; ++j) {
+                x = p.multiply(BigInteger.valueOf(j)).add(BigInteger.valueOf(i));
+                assertEquals(x.mod(p), largeSut.reduce(x));
+            }
+        }
+        x = p.multiply(p).subtract(BigInteger.ONE);
+        assertEquals(x.mod(p), largeSut.reduce(x));
+        for (int i = 0; i < 100; ++i) {
+            x = largeSut.randomElement(rnd);
+            assertEquals(x.mod(p), largeSut.reduce(x));
+        }
+    }
     
     @Test
     public void pow() {
