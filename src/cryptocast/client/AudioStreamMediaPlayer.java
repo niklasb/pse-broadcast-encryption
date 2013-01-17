@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 
 import cryptocast.comm.SimpleHttpStreamServer;
 /**
@@ -54,7 +55,10 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     private String contentType;
     private OnCompletionListener completionListener;
     private OnErrorListener errorListener;
+    private OnPreparedListener preparedListener;
 
+
+    
     /**
      * Sets the raw data.
      * 
@@ -82,6 +86,14 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
      */
     public void setOnErrorListener(OnErrorListener errorListener) {
         this.errorListener = errorListener;
+    }
+    
+    /**
+     * Set the prepared listener object.
+     * @param preparedListener prepared listener object to set.
+     */
+    public void setOnPreparedListener(OnPreparedListener preparedListener) {
+        this.preparedListener = preparedListener;
     }
     
     /**
@@ -125,6 +137,10 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
      */
     public void stop() {
         player.stop();
+        player.release();
+        if (worker != null) {
+            worker.interrupt();
+        }
     }
     
     /**

@@ -29,7 +29,7 @@ public class MediaPlayer extends Activity implements OnStatusChangeListener {
         setContentView(R.layout.activity_media_player);
         init();
         try {
-            player.setDataSource(new FileInputStream(new File("/mnt/sdcard/whistle_long.mp3")));
+            player.setDataSource(new FileInputStream(new File("/mnt/sdcard/01 Everlasting Light.mp3")));
             player.prepare();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

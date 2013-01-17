@@ -15,8 +15,15 @@ import cryptocast.crypto.naorpinkas.*;
 import cryptocast.util.SerializationUtils;
 
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.MediaController;
+import android.widget.ProgressBar;
 
 /**
  * This activity is responsible for decrypting the received data
@@ -24,14 +31,20 @@ import android.view.MenuItem;
  */
 public class StreamViewerActivity extends ClientActivity
                                   implements AudioStreamMediaPlayer.OnCompletionListener,
-                                             AudioStreamMediaPlayer.OnErrorListener {
+                                             AudioStreamMediaPlayer.OnErrorListener,
+                                             MediaController.MediaPlayerControl, 
+                                             OnTouchListener,
+                                             OnPreparedListener {
+    
     private static final Logger log = LoggerFactory
             .getLogger(StreamViewerActivity.class);
     
     private AudioStreamMediaPlayer player = new AudioStreamMediaPlayer();
+    private MediaController mediaController;
     private InetSocketAddress connectAddr;
     private File keyFile;
     private Socket sock;
+    private ProgressBar spinner;
     
     @Override
     protected void onCreate(Bundle b) {
@@ -41,11 +54,27 @@ public class StreamViewerActivity extends ClientActivity
         connectAddr = (InetSocketAddress) args.getSerializable("connectAddr");
         keyFile = (File) args.getSerializable("keyFile");
         log.debug("Created with: connectAddr={} keyFile={}", connectAddr, keyFile);
+        
+        mediaController = new MediaController(this);
+        mediaController.setMediaPlayer(this);
+        mediaController.setAnchorView(findViewById(R.id.MediaController1));
+        mediaController.setEnabled(true);
+        
+        findViewById(R.id.MediaController1).setOnTouchListener(this);
+        spinner = (ProgressBar) findViewById(R.id.progressBar1);
+        
+        player.setOnCompletionListener(this);
+        player.setOnErrorListener(this);
+        player.setOnPreparedListener(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        connect();
+    }
+    
+    private void connect() {
         NPKey<BigInteger, SchnorrGroup> key;
         try {
             key = SerializationUtils.readFromFile(keyFile);
@@ -74,15 +103,15 @@ public class StreamViewerActivity extends ClientActivity
             in.read();
             log.debug("Starting media player");
             player.setRawDataSource(in, "audio/mpeg");
-            player.setOnCompletionListener(this);
-            player.setOnErrorListener(this);
             player.prepare();
         } catch (Exception e) {
             log.error("Error while playing stream", e);
             showErrorDialog("Error while playing stream!", finishOnClick);
+            //finish();
             return;
         }
     }
+
     
     @Override
     protected void onResume() {
@@ -143,4 +172,59 @@ public class StreamViewerActivity extends ClientActivity
      * @return Whether the player is in playing mode.
      */
     public boolean isPlaying() { return false; }
+
+    @Override
+    public boolean canPause() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeekBackward() {
+        return false;
+    }
+
+    @Override
+    public boolean canSeekForward() {
+        return false;
+    }
+
+    @Override
+    public int getBufferPercentage() {
+        return 0;
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return 0;
+    }
+
+    @Override
+    public int getDuration() {
+        return 0;
+    }
+
+    @Override
+    public void pause() {
+        player.pause();
+    }
+
+    @Override
+    public void seekTo(int pos) {
+    }
+
+    @Override
+    public void start() {
+        player.start();
+    }
+
+    @Override
+    public boolean onTouch(View arg0, MotionEvent arg1) {
+        mediaController.show();
+        return false;
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer arg0) {
+        spinner.setVisibility(View.INVISIBLE);
+    }
 }
