@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
 import android.widget.TextView;
 
  /**
@@ -41,12 +42,6 @@ public class MainActivity extends ClientActivity {
         setContentView(R.layout.activity_main);
         editHostname = (TextView) findViewById(R.id.editHostname);
         editPort = (TextView) findViewById(R.id.editPort);
-        /*String[] hosts = app.getServerHistoryHostnames();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, hosts);
-        AutoCompleteTextView textView = (AutoCompleteTextView)
-                findViewById(R.id.editHostname);
-        textView.setAdapter(adapter);*/
     }
     
     @Override
@@ -107,6 +102,16 @@ public class MainActivity extends ClientActivity {
             this.addr = mAddr.get();
             startKeyChooserForResult();
         }
+    }
+    
+    public void onOldServers(View view) {
+        ListView listing = new ListView(app);
+        listing.setAdapter(
+                new ArrayAdapter<InetSocketAddress> (
+                        app, R.layout.file_chooser_row, app.getServerHistory().getServerList()));
+        ServersFragment frag = new ServersFragment(this, "Please choose a server.", listing);
+        frag.show(getSupportFragmentManager(), null);
+        return;
     }
     
     /**
@@ -199,4 +204,13 @@ public class MainActivity extends ClientActivity {
         intent.putExtra("keyFile", keyFile);
         startActivity(intent);
     }
+
+    public TextView getEditHostname() {
+        return editHostname;
+    }
+
+    public TextView getEditPort() {
+        return editPort;
+    }
+
 }
