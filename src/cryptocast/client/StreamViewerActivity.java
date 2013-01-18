@@ -76,7 +76,7 @@ public class StreamViewerActivity extends ClientActivity
     
     private void connectToStream() {
         log.debug("Connecting to {}", connectAddr);
-        Socket sock = new Socket();
+        sock = new Socket();
 
         try {
             sock.connect(connectAddr, 5000);
