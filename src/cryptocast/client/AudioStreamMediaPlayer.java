@@ -57,7 +57,6 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     private OnErrorListener errorListener;
     private OnPreparedListener preparedListener;
 
-
     
     /**
      * Sets the raw data.
@@ -122,6 +121,7 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
         player.setOnCompletionListener(this);
         player.setOnBufferingUpdateListener(this);
         player.setOnInfoListener(this);
+        player.setOnPreparedListener(preparedListener);
         player.prepare();
     }
 

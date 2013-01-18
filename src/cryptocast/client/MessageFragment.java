@@ -10,8 +10,8 @@ import android.support.v4.app.DialogFragment;
  * This class is used to pop up an error message.
  */
 public class MessageFragment extends DialogFragment {
-    private String message;
-    private DialogInterface.OnClickListener clickHandler;
+    protected String message;
+    protected DialogInterface.OnClickListener clickHandler;
 
     /**
      * Creates a new ErrorFragment which can be used to print the given error message.

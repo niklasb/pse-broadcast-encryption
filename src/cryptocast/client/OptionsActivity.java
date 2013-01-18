@@ -24,7 +24,6 @@ public class OptionsActivity extends ClientActivity {
         super.onCreate(b);
         setContentView(R.layout.activity_options);
         listing = (ListView) findViewById(R.id.listView1);
-        app.getServerHistory().addServer(new InetSocketAddress("server", 1), null);
         listing.setAdapter(
                 new ArrayAdapter<InetSocketAddress> (
                         app, R.layout.file_chooser_row, app.getServerHistory().getServerList()));

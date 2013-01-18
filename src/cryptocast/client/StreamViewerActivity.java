@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
@@ -62,6 +61,7 @@ public class StreamViewerActivity extends ClientActivity
         
         findViewById(R.id.MediaController1).setOnTouchListener(this);
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
+        spinner.setVisibility(View.VISIBLE);
         
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
@@ -71,10 +71,25 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onStart() {
         super.onStart();
-        connect();
+        connectToStream();
     }
     
-    private void connect() {
+    private void connectToStream() {
+        log.debug("Connecting to {}", connectAddr);
+        Socket sock = new Socket();
+
+        try {
+            sock.connect(connectAddr, 5000);
+        } catch (Exception e) {
+            log.error("Could not connect to target server", e);
+            showErrorDialog("Could not connect to server!", finishOnClick);
+            return;
+        }
+        log.debug("Connected to {}", connectAddr);
+        receiveData();
+    }
+
+    private void receiveData() {
         NPKey<BigInteger, SchnorrGroup> key;
         try {
             key = SerializationUtils.readFromFile(keyFile);
@@ -84,16 +99,7 @@ public class StreamViewerActivity extends ClientActivity
             app.getServerHistory().invalidateKeyFile(connectAddr);
             return;
         }
-
-        log.debug("Connecting to {}", connectAddr);
-        Socket sock = new Socket();
-        try {
-            sock.connect(connectAddr);
-        } catch (Exception e) {
-            log.error("Could not connect to target server", e);
-            showErrorDialog("Could not connect to server!", finishOnClick);
-            return;
-        }
+        log.debug("Key file successfully read.");
         try {
             BroadcastEncryptionClient in =
                     new BroadcastEncryptionClient(
@@ -107,11 +113,10 @@ public class StreamViewerActivity extends ClientActivity
         } catch (Exception e) {
             log.error("Error while playing stream", e);
             showErrorDialog("Error while playing stream!", finishOnClick);
-            //finish();
             return;
         }
     }
-
+    
     
     @Override
     protected void onResume() {
@@ -226,5 +231,10 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     public void onPrepared(MediaPlayer arg0) {
         spinner.setVisibility(View.INVISIBLE);
+    }
+    @Override  
+    public void onBackPressed() {
+        log.debug("Back pressed.");
+        super.onBackPressed();
     }
 }
