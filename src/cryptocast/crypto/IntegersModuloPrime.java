@@ -25,14 +25,11 @@ public class IntegersModuloPrime extends Field<BigInteger>
 
     private BigInteger p;
     private int n; // p.bitLength()
-    
+
     // precomputed values used for Barrett reduction
     private BigInteger mu;
     private int alpha, beta;
-    
-    private BigInteger mu2;
-    private int alpha2, beta2;
-    
+
     private static boolean haveNative = 
             NativeUtils.tryToLoadNativeLibOrLogFailure("IntegersModuloPrime", log);
 
@@ -62,8 +59,6 @@ public class IntegersModuloPrime extends Field<BigInteger>
         alpha = n + 1;
         beta = -2;
         mu = BigInteger.ONE.shiftLeft(n + alpha).divide(p);
-        
-        
     }
 
     /** @return $p$ */
@@ -119,7 +114,10 @@ public class IntegersModuloPrime extends Field<BigInteger>
 
     @Override
     public BigInteger subtract(BigInteger a, BigInteger b) {
-        return reduce(a.subtract(b));
+        BigInteger x = a.subtract(b);
+        if (x.signum() < 0) x = x.add(p);
+        assert x.signum() >= 0;
+        return reduce(x);
     }
 
     @Override

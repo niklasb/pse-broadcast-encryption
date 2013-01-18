@@ -33,6 +33,19 @@ public class TestIntegersModuloPrime {
     }
     
     @Test
+    public void subtractWorks() {
+        BigInteger p = largeSut.getP();
+        BigInteger a = BigInteger.ZERO, 
+                   b = p.subtract(BigInteger.ONE);
+        assertEquals(BigInteger.ONE, largeSut.subtract(a, b));
+        // verify bugfix
+        p = new BigInteger("1399252811935680595399801714158014275474696840019");
+        IntegersModuloPrime sut = new IntegersModuloPrime(p);
+        b = new BigInteger("24512950422631571850770299267501929141887405461");
+        assertEquals(b.negate().mod(p), sut.subtract(BigInteger.ZERO, b));
+    }
+    
+    @Test
     public void pow() {
         assertEquals(BigInteger.valueOf(9), 
                 smallSut.pow(BigInteger.valueOf(3), BigInteger.valueOf(1000000002)));
