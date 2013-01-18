@@ -38,7 +38,8 @@ public class Shell extends InteractiveCommandLineInterface {
                          "[<command>]",
                          "Show the command line help",
                          "If no command is given a list of all available commands and information "
-                             + "about how to use them is shown."),
+                             + "about how to use them is shown. Otherwise more details about the "
+                             + "given command can be read by the user."),
         new ShellCommand("add",
                          "<name>",
                          "Add a new user to the group of recipients",
@@ -65,11 +66,17 @@ public class Shell extends InteractiveCommandLineInterface {
                          "",
                          "List users",
                          "Shows the total amount of users, the amount of revokes users, the "
-                         + "amount of possible revocations and a list of all users and the "
-                         + "information which user is revoked."),
+                                 + "amount of possible revocations and a list of all users and the "
+                                 + "information which user is revoked."),
         new ShellCommand("save-keys",
                          "dir [<user>, [<user>, ...]]",
-                         "Save user keys to a directory"),
+                         "Save user keys to a directory",//TODO muss directory bestehen oder wird erstellt?!
+                         "Every user has a corresponding keyfile. These keyfiles are saved in the "
+                             + "given directory when using this command. "
+                             + "Each of these files must be shipped to the correspondig "
+                             + "user on a safe way, because it allows everyone having a key "
+                             + "to access the streamed data(if the user to which this key "
+                             + "belongs is not revoked"),
         new ShellCommand("stream-stdin",
                          "",
                          "Captures input from STDIN and broadcasts it"),
@@ -81,7 +88,10 @@ public class Shell extends InteractiveCommandLineInterface {
                          "Stream an MPEG-3 audio file"),
         new ShellCommand("init",
                          "<t>",
-                         "Create a whole new crypto context"),
+                         "Create a whole new crypto context",
+                         "The old crypto context with all its users and information "
+                                 + "is deleted and a new one is created. The paramater \"t\" "
+                                 + "describes the amount of users which can be revoked."),
     };
 
     private static SortedMap<String, ShellCommand> commandsByName = 
