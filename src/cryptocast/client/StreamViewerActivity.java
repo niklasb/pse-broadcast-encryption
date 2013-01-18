@@ -1,28 +1,23 @@
 package cryptocast.client;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cryptocast.comm.StreamMessageInChannel;
-import cryptocast.crypto.BroadcastEncryptionClient;
-import cryptocast.crypto.SchnorrGroup;
-import cryptocast.crypto.naorpinkas.*;
-import cryptocast.util.SerializationUtils;
-
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 /**
  * This activity is responsible for decrypting the received data
@@ -44,6 +39,8 @@ public class StreamViewerActivity extends ClientActivity
     private File keyFile;
     private Socket sock;
     private ProgressBar spinner;
+    private TextView statusText;
+
     
     @Override
     protected void onCreate(Bundle b) {
@@ -63,6 +60,9 @@ public class StreamViewerActivity extends ClientActivity
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
         
+        statusText = (TextView) findViewById(R.id.textView1);
+        statusText.setGravity(Gravity.CENTER_HORIZONTAL);
+        
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
         player.setOnPreparedListener(this);
@@ -71,52 +71,10 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onStart() {
         super.onStart();
-        connectToStream();
+        SocketConnector connector = new SocketConnector(sock, connectAddr, keyFile, player,
+                this);
+        new Thread(connector).start();
     }
-    
-    private void connectToStream() {
-        log.debug("Connecting to {}", connectAddr);
-        sock = new Socket();
-
-        try {
-            sock.connect(connectAddr, 5000);
-        } catch (Exception e) {
-            log.error("Could not connect to target server", e);
-            showErrorDialog("Could not connect to server!", finishOnClick);
-            return;
-        }
-        log.debug("Connected to {}", connectAddr);
-        receiveData();
-    }
-
-    private void receiveData() {
-        NPKey<BigInteger, SchnorrGroup> key;
-        try {
-            key = SerializationUtils.readFromFile(keyFile);
-        } catch (Exception e) {
-            log.error("Could not load key from file: ", e);
-            showErrorDialog("Invalid key file!", finishOnClick);
-            app.getServerHistory().invalidateKeyFile(connectAddr);
-            return;
-        }
-        log.debug("Key file successfully read.");
-        try {
-            BroadcastEncryptionClient in =
-                    new BroadcastEncryptionClient(
-                            new StreamMessageInChannel(sock.getInputStream()), 
-                            new SchnorrNPClient(key));
-            log.debug("Waiting for first byte");
-            in.read();
-            log.debug("Starting media player");
-            player.setRawDataSource(in, "audio/mpeg");
-            player.prepare();
-        } catch (Exception e) {
-            log.error("Error while playing stream", e);
-            showErrorDialog("Error while playing stream!", finishOnClick);
-            return;
-        }
-    }
-    
     
     @Override
     protected void onResume() {
@@ -173,10 +131,11 @@ public class StreamViewerActivity extends ClientActivity
      */
     public void togglePlay() { }
 
-    /**
-     * @return Whether the player is in playing mode.
-     */
-    public boolean isPlaying() { return false; }
+
+    @Override
+    public boolean isPlaying() { 
+        return player.isPlaying();
+    }
 
     @Override
     public boolean canPause() {
@@ -210,6 +169,7 @@ public class StreamViewerActivity extends ClientActivity
 
     @Override
     public void pause() {
+        log.debug("Pause called.");
         player.pause();
     }
 
@@ -219,6 +179,7 @@ public class StreamViewerActivity extends ClientActivity
 
     @Override
     public void start() {
+        log.debug("Start called.");
         player.start();
     }
 
@@ -231,10 +192,29 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     public void onPrepared(MediaPlayer arg0) {
         spinner.setVisibility(View.INVISIBLE);
+        setStatusText("Ready to play." + System.getProperty("line.separator") + 
+                "(Touch to show controls)");
+        mediaController.show();
     }
-    @Override  
-    public void onBackPressed() {
-        log.debug("Back pressed.");
-        super.onBackPressed();
+    
+    /**
+     * Creates a error dialog and finishes the activity on click.
+     * @param message the dialog message
+     */
+    public void createErrorPopup(String message) {
+        showErrorDialog(message, finishOnClick);
+    }
+    
+    /**
+     * Updates the status label text. Usable from other threads,
+     * @param text the text
+     */
+    public void setStatusText(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                statusText.setText(text);
+            }
+        });
     }
 }

@@ -14,4 +14,10 @@
         android:paddingRight="100dp"
         android:paddingTop="100dp" />
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:text="TextView" />
+
 </MediaController>

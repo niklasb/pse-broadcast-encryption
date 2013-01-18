@@ -188,4 +188,12 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
         default: return "MediaInfo(" + what + ")";
         }
     }
+
+    /**
+     * Returns whether the player is playing.
+     * @return whether the player is playing
+     */
+    public boolean isPlaying() {
+        return player.isPlaying();
+    }
 }
