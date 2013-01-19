@@ -44,9 +44,9 @@ public class Shell extends InteractiveCommandLineInterface {
                          "<name>",
                          "Add a new user to the group of recipients",
                          "If no user with the given name exists a new one is created and added "
-                                 + "to the group of recipients. Using the command \"save-keys\" "
-                                 + "the key assigned to this user can be saved in order to ship "
-                                 + "it to the user."),
+                             + "to the group of recipients. Using the command \"save-keys\" "
+                             + "the key assigned to this user can be saved in order to ship "
+                             + "it to the user."),
         new ShellCommand("revoke",
                          "[<name>, [<name>, ... ]]",
                          "Revoke users",
@@ -66,8 +66,8 @@ public class Shell extends InteractiveCommandLineInterface {
                          "",
                          "List users",
                          "Shows the total amount of users, the amount of revokes users, the "
-                                 + "amount of possible revocations and a list of all users and the "
-                                 + "information which user is revoked."),
+                             + "amount of possible revocations and a list of all users and the "
+                             + "information which user is revoked."),
         new ShellCommand("save-keys",
                          "dir [<user>, [<user>, ...]]",
                          "Save user keys to a directory",//TODO muss directory bestehen oder wird erstellt?!
@@ -85,13 +85,16 @@ public class Shell extends InteractiveCommandLineInterface {
                          "Stream an infinite stream of sample text"),
         new ShellCommand("stream-mp3",
                          "<file>",
-                         "Stream an MPEG-3 audio file"),
+                         "Stream an MPEG-3 audio file",
+                         "Starts streaming the MPEG-3 audio file specified by the parameter "
+                             + "\"file\". A stream is stopped when a new one is started, the "
+                             + "server is stopped or the whole has been streamed."),
         new ShellCommand("init",
                          "<t>",
                          "Create a whole new crypto context",
                          "The old crypto context with all its users and information "
-                                 + "is deleted and a new one is created. The paramater \"t\" "
-                                 + "describes the amount of users which can be revoked."),
+                             + "is deleted and a new one is created. The paramater \"t\" "
+                             + "describes the amount of users which can be revoked."),
     };
 
     private static SortedMap<String, ShellCommand> commandsByName = 
