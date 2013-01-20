@@ -61,26 +61,26 @@ public class Controller implements Observer {
                 }
             };
             
-	private Controller(NaorPinkasServerData data, File databaseFile,
-			MessageOutChannel rawOut,
-			BroadcastEncryptionServer<NPIdentity> encServer,
-			SocketAddress listenAddr, int keyBroadcastIntervalSecs,
-			SwitchableInputStream switchableInput,
-			SwitchableOutputStream switchableOutput,
-			NPServerFactory serverFactory) {
-		this.data = data;
-		data.addObserver(this);
-		this.rawOut = rawOut;
-		this.databaseFile = databaseFile;
-		this.encServer = encServer;
-		this.listenAddr = listenAddr;
-		this.keyBroadcastIntervalSecs = keyBroadcastIntervalSecs;
-		this.switchableInput = switchableInput;
-		this.switchableOutput = switchableOutput;
-		this.serverFactory = serverFactory;
-	}
+    private Controller(NaorPinkasServerData data, File databaseFile,
+            MessageOutChannel rawOut,
+            BroadcastEncryptionServer<NPIdentity> encServer,
+            SocketAddress listenAddr, int keyBroadcastIntervalSecs,
+            SwitchableInputStream switchableInput,
+            SwitchableOutputStream switchableOutput,
+            NPServerFactory serverFactory) {
+        this.data = data;
+        data.addObserver(this);
+        this.rawOut = rawOut;
+        this.databaseFile = databaseFile;
+        this.encServer = encServer;
+        this.listenAddr = listenAddr;
+        this.keyBroadcastIntervalSecs = keyBroadcastIntervalSecs;
+        this.switchableInput = switchableInput;
+        this.switchableOutput = switchableOutput;
+        this.serverFactory = serverFactory;
+    }
 
-	/**
+    /**
      * Creates a Controller with the given parameters
      * 
      * @param databaseFile The database file.
@@ -90,29 +90,29 @@ public class Controller implements Observer {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-	public static Controller start(File databaseFile, SocketAddress listenAddr,
-			                       int keyBroadcastIntervalSecs,
-			                       NPServerFactory serverFactory) 
-			       throws IOException, ClassNotFoundException {
-		NaorPinkasServerData data;
-		if (databaseFile.exists()) {
-			data = SerializationUtils.readFromFile(databaseFile);
-	        data.initAfterDeserialization();
-		} else {
-			data = createNewData(0, serverFactory);
-		}
-		ServerSocket socket = new ServerSocket();
-		socket.bind(listenAddr);
-		ServerMultiMessageOutChannel multicastServer = new ServerMultiMessageOutChannel(
-				socket, fatalExceptionHandler);
-		new Thread(multicastServer).start();
-		
-		final BroadcastEncryptionServer<NPIdentity> broadcastServer = 
-		        startBroadcastEncryptionServer(data, multicastServer, keyBroadcastIntervalSecs);
-		final SwitchableInputStream input = new SwitchableInputStream();
-		final SwitchableOutputStream output = new SwitchableOutputStream();
-		output.switchOutput(broadcastServer);
-		new Thread(new Runnable() {
+    public static Controller start(File databaseFile, SocketAddress listenAddr,
+                                   int keyBroadcastIntervalSecs,
+                                   NPServerFactory serverFactory) 
+                   throws IOException, ClassNotFoundException {
+        NaorPinkasServerData data;
+        if (databaseFile.exists()) {
+            data = SerializationUtils.readFromFile(databaseFile);
+            data.initAfterDeserialization();
+        } else {
+            data = createNewData(0, serverFactory);
+        }
+        ServerSocket socket = new ServerSocket();
+        socket.bind(listenAddr);
+        ServerMultiMessageOutChannel multicastServer = new ServerMultiMessageOutChannel(
+                socket, fatalExceptionHandler);
+        new Thread(multicastServer).start();
+        
+        final BroadcastEncryptionServer<NPIdentity> broadcastServer = 
+                startBroadcastEncryptionServer(data, multicastServer, keyBroadcastIntervalSecs);
+        final SwitchableInputStream input = new SwitchableInputStream();
+        final SwitchableOutputStream output = new SwitchableOutputStream();
+        output.switchOutput(broadcastServer);
+        new Thread(new Runnable() {
             public void run() {
                 try {
                     StreamUtils.copyInterruptable(input, output, 0x4000);
@@ -120,53 +120,53 @@ public class Controller implements Observer {
                     fatalExceptionHandler.apply(e);
                 }
             }
-		}).start();
-		return new Controller(data, databaseFile, multicastServer,
-		        broadcastServer, listenAddr,
-				keyBroadcastIntervalSecs, input, output, serverFactory);
-	}
+        }).start();
+        return new Controller(data, databaseFile, multicastServer,
+                broadcastServer, listenAddr,
+                keyBroadcastIntervalSecs, input, output, serverFactory);
+    }
 
-	private static NaorPinkasServerData createNewData(int t, NPServerFactory serverFactory) {
-	    return new NaorPinkasServerData(serverFactory.construct(t));
-	}
+    private static NaorPinkasServerData createNewData(int t, NPServerFactory serverFactory) {
+        return new NaorPinkasServerData(serverFactory.construct(t));
+    }
 
-	/**
+    /**
      * Saves the users's personal keys in a keyfile at the given directory.
      * 
      * @param dir The directory to save the keyfiles in.
      * @param users The users who their personal keys will be saved.
      * @throws IOException
      */
-	public void saveUserKeys(File dir, Set<User<NPIdentity>> users)
-			throws IOException {
-		for (User<NPIdentity> user : users) {
-			File keyFile = new File(dir.getAbsolutePath() + "/"
-					+ user.getName() + ".key");
-			Optional<? extends PrivateKey> mKey = data.npServer
-					.getPersonalKey(user.getIdentity());
-			assert mKey.isPresent();
-			SerializationUtils.writeToFile(keyFile, mKey.get());
-		}
-	}
+    public void saveUserKeys(File dir, Set<User<NPIdentity>> users)
+            throws IOException {
+        for (User<NPIdentity> user : users) {
+            File keyFile = new File(dir.getAbsolutePath() + "/"
+                    + user.getName() + ".key");
+            Optional<? extends PrivateKey> mKey = data.npServer
+                    .getPersonalKey(user.getIdentity());
+            assert mKey.isPresent();
+            SerializationUtils.writeToFile(keyFile, mKey.get());
+        }
+    }
 
-	/**
+    /**
      * Saves the database.
      * 
      * @throws IOException
      */
-	public void saveDatabase() throws IOException {
-		log.debug("Saving database to {}", databaseFile);
-		SerializationUtils.writeToFile(databaseFile, data);
-	}
+    public void saveDatabase() throws IOException {
+        log.debug("Saving database to {}", databaseFile);
+        SerializationUtils.writeToFile(databaseFile, data);
+    }
 
-	/**
+    /**
      * @return the data.
      */
-	public NaorPinkasServerData getModel() {
-		return data;
-	}
-	
-	/**
+    public NaorPinkasServerData getModel() {
+        return data;
+    }
+    
+    /**
      * Reinitializes the cryptography. 
      * All data of the current session will be lost forever!
      * 
@@ -194,103 +194,103 @@ public class Controller implements Observer {
     }
 
     /**
-	 * Streams the data.
-	 * 
-	 * @param in The input stream.
-	 * @param maxBytesPerSec Maximum bytes per second.
-	 * @throws IOException
-	 */
+     * Streams the data.
+     * 
+     * @param in The input stream.
+     * @param maxBytesPerSec Maximum bytes per second.
+     * @throws IOException
+     */
     public void stream(InputStream in, long maxBytesPerSec) throws IOException {
         stream(new ThrottledInputStream(in, maxBytesPerSec));
     }
 
-	private static BroadcastEncryptionServer<NPIdentity> startBroadcastEncryptionServer(
-			NaorPinkasServerData data, MessageOutChannel rawOut,
-			int keyBroadcastIntervalSecs) throws IOException {
-		BroadcastEncryptionServer<NPIdentity> server = BroadcastEncryptionServer
-				.start(data.userManager, data.npServer, AES_KEY_BITS, rawOut,
-					   keyBroadcastIntervalSecs * 1000, // update every 15 seconds
-				       fatalExceptionHandler);
-		new Thread(server).start();
-		return server;
-	}
-	
-	/**
-	 * @return The database file.
-	 */
-	public File getDatabaseFile() {
-		return databaseFile;
-	}
+    private static BroadcastEncryptionServer<NPIdentity> startBroadcastEncryptionServer(
+            NaorPinkasServerData data, MessageOutChannel rawOut,
+            int keyBroadcastIntervalSecs) throws IOException {
+        BroadcastEncryptionServer<NPIdentity> server = BroadcastEncryptionServer
+                .start(data.userManager, data.npServer, AES_KEY_BITS, rawOut,
+                       keyBroadcastIntervalSecs * 1000, // update every 15 seconds
+                       fatalExceptionHandler);
+        new Thread(server).start();
+        return server;
+    }
+    
+    /**
+     * @return The database file.
+     */
+    public File getDatabaseFile() {
+        return databaseFile;
+    }
 
-	/**
+    /**
      * @return The size of the polynomial.
      */
-	public int getT() {
-		return data.npServer.getT();
-	}
+    public int getT() {
+        return data.npServer.getT();
+    }
 
-	/**
+    /**
      * @return The socket listening address to bind to.
      */
-	public SocketAddress getListenAddress() {
-		return listenAddr;
-	}
+    public SocketAddress getListenAddress() {
+        return listenAddr;
+    }
 
-	/**
+    /**
      * Streams simple text.
      * 
      * @throws IOException
      * @throws InterruptedException
      */
-	public void streamSampleText() throws IOException, InterruptedException {
-		int counter = 0;
-		for (;;) {
-			encServer.write(ByteUtils.encodeUtf8((counter++) + "\n"));
-			encServer.flush();
-			Thread.sleep(1000);
-		}
-	}
+    public void streamSampleText() throws IOException, InterruptedException {
+        int counter = 0;
+        for (;;) {
+            encServer.write(ByteUtils.encodeUtf8((counter++) + "\n"));
+            encServer.flush();
+            Thread.sleep(1000);
+        }
+    }
 
-	/**
+    /**
      * Streams audio.
      * 
      * @param file The audio file from which the data is read.
      * @throws IOException
      * @throws UnsupportedAudioFileException
      */
-	public void streamAudio(File file) throws IOException,
-			UnsupportedAudioFileException {
-		AudioFormat baseFormat = AudioSystem.getAudioFileFormat(file)
-				.getFormat();
-		int bitrate = -1;
-		boolean vbr = false;
-		if (baseFormat instanceof TAudioFormat) {
-			Map<String, Object> properties = ((TAudioFormat) baseFormat)
-					.properties();
-			if (properties.containsKey("bitrate")) {
-				bitrate = (Integer) properties.get("bitrate");
-			}
-			if (properties.containsKey("vbr")) {
-				vbr = (Boolean) properties.get("vbr");
-			}
-		}
-		log.info("Bitrate: {}", bitrate);
-		if (bitrate < 0 || vbr) {
-			throw new IOException(
-					"Could not figure out the bitrate of the file. "
-							+ "Variable bitrates are not supported!");
-		}
-		InputStream in = new FileInputStream(file);
-		stream(in, bitrate / 8);
-	}
+    public void streamAudio(File file) throws IOException,
+            UnsupportedAudioFileException {
+        AudioFormat baseFormat = AudioSystem.getAudioFileFormat(file)
+                .getFormat();
+        int bitrate = -1;
+        boolean vbr = false;
+        if (baseFormat instanceof TAudioFormat) {
+            Map<String, Object> properties = ((TAudioFormat) baseFormat)
+                    .properties();
+            if (properties.containsKey("bitrate")) {
+                bitrate = (Integer) properties.get("bitrate");
+            }
+            if (properties.containsKey("vbr")) {
+                vbr = (Boolean) properties.get("vbr");
+            }
+        }
+        log.info("Bitrate: {}", bitrate);
+        if (bitrate < 0 || vbr) {
+            throw new IOException(
+                    "Could not figure out the bitrate of the file. "
+                            + "Variable bitrates are not supported!");
+        }
+        InputStream in = new FileInputStream(file);
+        stream(in, bitrate / 8);
+    }
 
-	@Override
-	public void update(Observable o, Object arg) {
-		try {
-			saveDatabase();
-		} catch (Exception e) {
-			log.error("Error while saving database", e);
-		}
-	}
+    @Override
+    public void update(Observable o, Object arg) {
+        try {
+            saveDatabase();
+        } catch (Exception e) {
+            log.error("Error while saving database", e);
+        }
+    }
 
 }
