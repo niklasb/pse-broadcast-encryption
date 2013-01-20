@@ -18,6 +18,7 @@ import android.widget.Toast;
 public class ServersFragment extends MessageFragment {
     
     private ListView listing;
+    private AlertDialog dialog;
     
     
 
@@ -32,7 +33,7 @@ public class ServersFragment extends MessageFragment {
                 InetSocketAddress address = (InetSocketAddress) listing.getItemAtPosition(position);
                 mainActivity.getEditHostname().setText(address.getHostName());
                 mainActivity.getEditPort().setText(String.valueOf(address.getPort()));
-             
+                dialog.cancel();                
              }
             
          });        
@@ -42,10 +43,12 @@ public class ServersFragment extends MessageFragment {
     public Dialog onCreateDialog(Bundle b) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(message).setPositiveButton(R.string.ok, clickHandler);
+        builder.setMessage(message).setNegativeButton("Cancel", clickHandler);
         builder.setView(listing);
+        builder.setCancelable(true);
+        dialog = builder.create();
         // Create the AlertDialog object and return it
-        return builder.create();
+        return dialog;
     }
    
 

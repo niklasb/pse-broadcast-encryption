@@ -40,6 +40,7 @@ public class MainActivity extends ClientActivity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_main);
+        app.getServerHistory().addServer(new InetSocketAddress("Server1", 1), keyFile);
         editHostname = (TextView) findViewById(R.id.editHostname);
         editPort = (TextView) findViewById(R.id.editPort);
     }
