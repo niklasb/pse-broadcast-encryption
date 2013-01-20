@@ -58,8 +58,8 @@
 \section{Introduction}
 This document contains the changes applied on the implementation with respect to the design document.
 Some of these changes were necessary, and then there are additional changes to improve the performance.
-The elements as attributes, methods and classes were renamed, whenever it is useful. In the following the 
-changes are listed and described according to packages.
+The elements as attributes, methods and classes were renamed, whenever it was useful. In the following the 
+changes are listed and described.
 
 \section{Changes in the packages}
 \subsection{Package cryptocast.comm}
@@ -171,6 +171,61 @@ changes are listed and described according to packages.
 \end{itemize}
 
 \subsection{Package cryptocast.server}
+
+\begin{itemize}
+  
+	\item \textbf{\textit{class Controller}} \newline
+	The following methods were added :
+	\begin{itemize}
+	 \item \textit{"+start(databaseFile : File , listenAddr : SocketAddress , keyBroadcastIntervalSecs: int ,
+	 serverFactory : NPServerFactory) : Controller"} for creating a instance of this class 
+	 \textit{"Controller"} with the given values.
+	 \item \textit{"+saveUserKeys(dir : File , users : Set<User<NPIdentity>>) : void"} for saving
+	 the personal keys of the users into a key-file at the given directory.
+	 \item \textit{"+saveDatabase() : void"} for saving the database into a specific file.
+	 \item \textit{"+getModel() : NaorPinkasServerData"} to return the data according to Naor-Pinkas.
+	 \item \textit{"+reinitializeCrypto(t : int) : void"} to reinitialize the cryptography so that 
+	 all data of the current session will be lost forever.
+	 \item \textit{"+streamAudio(File file) : void"} to stream a audio.
+	 \item \textit{"+streamSampleText() : void"} to stream a sample text.
+	 \item \textit{"+stream(in : InputStream) : void"} to stream the data.
+	 \item \textit{"+stream(in : InputStream , maxBytesPerSec : long ) : void"} to stream the data with limiting 
+	 the number of bytes read per second.
+	\end{itemize}
+	
+	\item \textbf{\textit{class ServerData<ID>}}\newline
+	The following methods were added :
+  \begin{itemize}
+	 \item \textit{"+revoke(users : Set<User<ID>>) : void"} so that we can revoke multiple users at the same time.
+	 \item \textit{"+revoke(user : User<ID>) : void"} so that we can revoke only one user.
+	 \item \textit{"+unrevoke(user : User<ID>) : void} so that we can authorize a user.
+	 \item \textit{"+isRevoked(user : User<ID> ) : boolean"} to let us know if a user is revoked or not.
+	 \item \textit{"+getUsers() : Set<User<ID>> "} to return all users in our collection.
+	\end{itemize}
+
+   \item \textbf{\textit{class LogbackUtils}}
+	\begin{itemize}
+	 \item This class \textit{"LogbackUtils"} was added for providing several Logback related utility methods.
+	\end{itemize}
+	
+	 \item \textbf{\textit{class NaorPinkasServerData}}
+	\begin{itemize}
+	 \item This class \textit{"NaorPinkasServerData"} was added for representing the server data according to Naor-Pinkas.
+	\end{itemize}
+	
+	 \item \textbf{\textit{class OptParse}}
+	\begin{itemize}
+	 \item This class \textit{"OptParse"} was added for providing a Command line option parser.
+	\end{itemize}
+	
+   \item \textit{\textbf{class ShellCommand}}
+	\begin{itemize}
+	 \item The class \textit{"ShellCommand"} was added for representing the commands available in the shell.
+	\end{itemize}
+	
+\end{itemize}
+
+
 \subsection{Package cryptocast.server.programs}
 \subsection{Package cryptocast.client}
 \subsection{Package cryptocast.client.filechooser}
