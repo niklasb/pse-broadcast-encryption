@@ -41,6 +41,8 @@ public class StreamViewerActivity extends ClientActivity
     private ProgressBar spinner;
     private TextView statusText;
 
+    private SocketConnector connector;
+
     
     @Override
     protected void onCreate(Bundle b) {
@@ -71,7 +73,7 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onStart() {
         super.onStart();
-        SocketConnector connector = new SocketConnector(sock, connectAddr, keyFile, player,
+        connector = new SocketConnector(sock, connectAddr, keyFile, player,
                 this);
         new Thread(connector).start();
     }
@@ -85,6 +87,8 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onPause() {
         player.pause();
+        connector.stop();
+        finish();
         super.onPause();
     }
 
@@ -194,7 +198,9 @@ public class StreamViewerActivity extends ClientActivity
      * @param message the dialog message
      */
     public void createErrorPopup(String message) {
-        showErrorDialog(message, finishOnClick);
+        if (hasWindowFocus()) {
+            showErrorDialog(message, finishOnClick);
+        }
     }
     
     /**
