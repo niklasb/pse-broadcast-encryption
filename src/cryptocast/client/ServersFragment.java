@@ -8,34 +8,35 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * This class is used to pop up an error message.
  */
 public class ServersFragment extends MessageFragment {
+    public static interface OnServerSelected {
+        public void onServerSelected(InetSocketAddress addr);
+    }
     
     private ListView listing;
     private AlertDialog dialog;
     
-    
-
-    public ServersFragment(final MainActivity mainActivity, String message, final ListView listing) {
+    public ServersFragment(ClientApplication app, String message, final OnServerSelected callback) {
         super(message);
-        this.listing = listing;
+        listing = new ListView(app);
+        listing.setAdapter(
+                new ArrayAdapter<InetSocketAddress> (
+                        app, R.layout.file_chooser_row, app.getServerHistory().getServerList()));
         listing.setClickable(true);
         listing.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                     long id) {
                 InetSocketAddress address = (InetSocketAddress) listing.getItemAtPosition(position);
-                mainActivity.getEditHostname().setText(address.getHostName());
-                mainActivity.getEditPort().setText(String.valueOf(address.getPort()));
-                dialog.cancel();                
+                callback.onServerSelected(address);
+                dialog.dismiss();                
              }
-            
          });        
     }
     
@@ -50,7 +51,4 @@ public class ServersFragment extends MessageFragment {
         // Create the AlertDialog object and return it
         return dialog;
     }
-   
-
-    
 }

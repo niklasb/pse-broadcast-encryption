@@ -12,14 +12,15 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 
 import cryptocast.comm.SimpleHttpStreamServer;
+
 /**
- * Media player to playing a audio stream.
+ * Media player to play audio from a raw {@link InputStream}
  */
-public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
+public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
                                                MediaPlayer.OnErrorListener,
                                                MediaPlayer.OnBufferingUpdateListener,
                                                MediaPlayer.OnInfoListener {
-	/** 
+	/**
 	 * Interface for completion callback.
 	 */
     public static interface OnCompletionListener {
@@ -28,7 +29,7 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     	 * 
     	 * @param p The media player.
     	 */
-        public void onCompletion(AudioStreamMediaPlayer p);
+        public void onCompletion(RawStreamMediaPlayer p);
     }
     /**
      * Interface for error callback.
@@ -42,11 +43,11 @@ public class AudioStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     	 * @param extra Extra info
     	 * @return <code>true</code>, if any error occurs or <code>false</code> otherwise. 
     	 */
-        public boolean onError(AudioStreamMediaPlayer p, int what, int extra);
+        public boolean onError(RawStreamMediaPlayer p, int what, int extra);
     }
     
     private static final Logger log = LoggerFactory
-            .getLogger(AudioStreamMediaPlayer.class);
+            .getLogger(RawStreamMediaPlayer.class);
     
     private MediaPlayer player = new MediaPlayer();
     private SimpleHttpStreamServer server;

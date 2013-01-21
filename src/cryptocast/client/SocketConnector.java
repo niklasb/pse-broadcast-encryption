@@ -20,15 +20,14 @@ import org.slf4j.LoggerFactory;
  * @author Christoph
  *
  */
-public class SocketConnector implements Runnable{
-
+public class SocketConnector implements Runnable {
     private Socket sock;
     private InetSocketAddress connectAddr;
     private File keyFile;
-    private AudioStreamMediaPlayer player;
+    private RawStreamMediaPlayer player;
     private StreamViewerActivity streamViewerActivity;
     private static final Logger log = LoggerFactory
-    .getLogger(StreamViewerActivity.class);
+            .getLogger(SocketConnector.class);
     
     /**
      * Creates a SocketConnector with the given socket.
@@ -38,7 +37,7 @@ public class SocketConnector implements Runnable{
      * @param streamViewerActivity 
      */
     public SocketConnector(Socket socket, InetSocketAddress connectAddr, File keyFile, 
-            AudioStreamMediaPlayer player, StreamViewerActivity streamViewerActivity) {
+            RawStreamMediaPlayer player, StreamViewerActivity streamViewerActivity) {
         this.sock = socket;
         this.connectAddr = connectAddr;
         this.keyFile = keyFile;

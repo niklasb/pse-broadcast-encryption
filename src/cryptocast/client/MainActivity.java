@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,13 +33,10 @@ public class MainActivity extends ClientActivity {
     private File keyFile;
     private InetSocketAddress addr;
     
-    
-    
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_main);
-        app.getServerHistory().addServer(new InetSocketAddress("Server1", 1), keyFile);
         editHostname = (TextView) findViewById(R.id.editHostname);
         editPort = (TextView) findViewById(R.id.editPort);
     }
@@ -106,13 +102,15 @@ public class MainActivity extends ClientActivity {
     }
     
     public void onOldServers(View view) {
-        ListView listing = new ListView(app);
-        listing.setAdapter(
-                new ArrayAdapter<InetSocketAddress> (
-                        app, R.layout.file_chooser_row, app.getServerHistory().getServerList()));
-        ServersFragment frag = new ServersFragment(this, "Please choose a server.", listing);
+        ServersFragment frag = new ServersFragment(app, "Please choose a server.", 
+            new ServersFragment.OnServerSelected() {
+                @Override
+                public void onServerSelected(InetSocketAddress addr) {
+                    editHostname.setText(addr.getHostName());
+                    editPort.setText("" + addr.getPort());
+                }
+            });
         frag.show(getSupportFragmentManager(), null);
-        return;
     }
     
     /**
@@ -133,7 +131,6 @@ public class MainActivity extends ClientActivity {
         return Optional.of(new InetSocketAddress(hostname, port));
     }
     
-    // TODO any other criterion?
     /**
      * Checks whether the hostname is correct.
      * 
@@ -141,6 +138,7 @@ public class MainActivity extends ClientActivity {
      * @return <code>true</code>, if the hostname is correct; <code>false</code> otherwise.
      */
     protected boolean checkHostname(String hostname) {
+        // TODO any other criterion?
         return hostname.length() > 0;
     }
     

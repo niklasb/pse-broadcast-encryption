@@ -37,7 +37,6 @@ public class ClientApplication extends Application {
     public void onCreate() {
         try {
             InputStream in = openFileInput(STATE_FILE_NAME);
-            state.serverHistory.addServer(new InetSocketAddress("bla", 1), null);
             state = SerializationUtils.readFromStream(in);
             log.debug("Loaded application state from internal storage");
         } catch (Exception e) {

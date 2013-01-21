@@ -39,13 +39,15 @@ public class IntegersModuloPrime extends Field<BigInteger>
      * @return $a \mod p$
      */
     public BigInteger reduce(BigInteger a) {
-        // perform a barrett reduction
-        BigInteger qq = a.shiftRight(n + beta).multiply(mu).shiftRight(alpha - beta);
-        BigInteger z = a.subtract(qq.multiply(p));
-        if (z.compareTo(p) >= 0) {
-            return z.subtract(p);
-        }
-        return z;
+        return a.mod(p);
+        
+//        // perform a barrett reduction
+//        BigInteger qq = a.shiftRight(n + beta).multiply(mu).shiftRight(alpha - beta);
+//        BigInteger z = a.subtract(qq.multiply(p));
+//        if (z.compareTo(p) >= 0) {
+//            return z.subtract(p);
+//        }
+//        return z;
     }
 
     /**

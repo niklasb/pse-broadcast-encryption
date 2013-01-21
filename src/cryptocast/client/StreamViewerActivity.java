@@ -24,8 +24,8 @@ import android.widget.TextView;
  * and viewing it.
  */
 public class StreamViewerActivity extends ClientActivity
-                                  implements AudioStreamMediaPlayer.OnCompletionListener,
-                                             AudioStreamMediaPlayer.OnErrorListener,
+                                  implements RawStreamMediaPlayer.OnCompletionListener,
+                                             RawStreamMediaPlayer.OnErrorListener,
                                              MediaController.MediaPlayerControl, 
                                              OnTouchListener,
                                              OnPreparedListener {
@@ -33,7 +33,7 @@ public class StreamViewerActivity extends ClientActivity
     private static final Logger log = LoggerFactory
             .getLogger(StreamViewerActivity.class);
     
-    private AudioStreamMediaPlayer player = new AudioStreamMediaPlayer();
+    private RawStreamMediaPlayer player = new RawStreamMediaPlayer();
     private MediaController mediaController;
     private InetSocketAddress connectAddr;
     private File keyFile;
@@ -89,14 +89,14 @@ public class StreamViewerActivity extends ClientActivity
     }
 
     @Override
-    public void onCompletion(AudioStreamMediaPlayer p) {
+    public void onCompletion(RawStreamMediaPlayer p) {
         try {
             sock.close();
         } catch (Throwable e) { }
     }
     
     @Override
-    public boolean onError(AudioStreamMediaPlayer p, int what, int extra) {
+    public boolean onError(RawStreamMediaPlayer p, int what, int extra) {
         log.error("MediaPlayer error: {} {}", formatError(what), formatError(extra));
         return false;
     }
