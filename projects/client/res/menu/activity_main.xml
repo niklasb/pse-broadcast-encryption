@@ -1,5 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/itemOptions" android:title="Options"></item>
-    <item android:id="@+id/itemHelp" android:title="Help"></item>
-    <item android:id="@+id/itemAbout" android:title="About"></item>
-</menu>

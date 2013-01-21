@@ -116,14 +116,6 @@ public class StreamViewerActivity extends ClientActivity
         player.stop();
         super.onStop();
     }
-    
-    /** Handles a click on the bottom menu.
-     * @param item The clicked menu item
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return false;
-    }
 
     /**
      * Toggle playback play/pause. Will pause if in play mode and continue if

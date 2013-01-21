@@ -65,13 +65,6 @@ public class MainActivity extends ClientActivity {
         app.setPortInput(getPortInput());
         super.onPause();
     }
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_main, menu);
-        return true;
-    }
 
     /**
      * Validates the input and connects to the specified server,

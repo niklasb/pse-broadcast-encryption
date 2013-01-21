@@ -12,11 +12,4 @@ public class HelpActivity extends ClientActivity {
         super.onCreate(b);
         setContentView(R.layout.activity_help);
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_help, menu);
-        return true;
-    }
 }
