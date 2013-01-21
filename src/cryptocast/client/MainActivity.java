@@ -8,7 +8,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +35,7 @@ public class MainActivity extends ClientActivity {
     private TextView editHostname, editPort;
     private File keyFile;
     private InetSocketAddress addr;
+    private NetworkInfo networkInfo;
     
     @Override
     protected void onCreate(Bundle b) {
@@ -39,6 +43,8 @@ public class MainActivity extends ClientActivity {
         setContentView(R.layout.activity_main);
         editHostname = (TextView) findViewById(R.id.editHostname);
         editPort = (TextView) findViewById(R.id.editPort);
+        networkInfo = ((ConnectivityManager) 
+                getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
     }
     
     @Override
@@ -48,6 +54,7 @@ public class MainActivity extends ClientActivity {
         editPort.setText(app.getPortInput());
 
         if (keyFile != null) {
+            //TODO is this still needed? it is not executed when starting a stream!
             // this is a signal by onActivityResult which is called after
             // a keyfile was selected. we now have all information to
             // start the stream
@@ -77,9 +84,16 @@ public class MainActivity extends ClientActivity {
             showErrorDialog("Invalid hostname/port");
             return;
         }
-        // TODO what if you don't have a network?
+        if (!networkInfo.isConnected()) {
+            showErrorDialog("Not connected to a network!");
+        }
         if (mAddr.get().isUnresolved()) {
             showErrorDialog("Could not resolve hostname!");
+            return;
+        }
+        if (app.getWifiOnlyOption() && !isWifiConnected()) {
+            log.debug("Connecting impossible: Wifi-Only mode on and not connected via Wifi.");
+            showErrorDialog("Connecting not possible, because Wifi-Only mode on and not connected via Wifi!");
             return;
         }
         Optional<File> mFile = app.getServerHistory().getKeyFile(mAddr.get());
@@ -183,7 +197,7 @@ public class MainActivity extends ClientActivity {
     }
 
     /**
-     * Stars the {@link StreamViewerActivity} to process the stream after 
+     * Starts the {@link StreamViewerActivity} to process the stream after 
      * the key file was chosen.
      * 
      * @param addr The socket address.
@@ -191,10 +205,21 @@ public class MainActivity extends ClientActivity {
      */
     protected void startStreamViewer(InetSocketAddress addr, File keyFile) {
         log.debug("Starting stream viewer with: connectAddr={} keyFile={}", addr, keyFile);
+        log.debug("Wifi-only mode: {}", app.getWifiOnlyOption() );
+        log.debug("Wifi-connected: {}", isWifiConnected());
         Intent intent = new Intent(this, StreamViewerActivity.class);
         intent.putExtra("connectAddr", addr);
         intent.putExtra("keyFile", keyFile);
         startActivity(intent);
+    }
+       
+    private boolean isWifiConnected() {
+        log.debug("checking Wifi connected");
+        if (networkInfo.isConnected()) {
+            return networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+        } else {
+            return false;
+        }  
     }
 
     public TextView getEditHostname() {
