@@ -90,6 +90,7 @@ public class SocketConnector implements Runnable {
             log.error("Could not load key from file: ", e);
             streamViewerActivity.createErrorPopup("Invalid key file!");
             streamViewerActivity.app.getServerHistory().invalidateKeyFile(connectAddr);
+            
             return;
         }
 

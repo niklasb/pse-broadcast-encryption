@@ -206,7 +206,9 @@ public class StreamViewerActivity extends ClientActivity
      * @param message the dialog message
      */
     public void createErrorPopup(String message) {
-        showErrorDialog(message, finishOnClick);
+        if (hasWindowFocus()) {
+            showErrorDialog(message, finishOnClick);
+        }
     }
     
     /**
