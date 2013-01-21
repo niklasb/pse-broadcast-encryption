@@ -1,6 +1,7 @@
 package cryptocast.client;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -49,6 +50,17 @@ public class SocketConnector implements Runnable {
     @Override
     public void run(){
         connectToStream();
+    }
+    
+    /**
+     * Stops the connector.
+     */
+    public void stop() {
+        try {
+            sock.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     private void connectToStream() {

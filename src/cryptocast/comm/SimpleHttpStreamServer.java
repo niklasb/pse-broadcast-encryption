@@ -76,17 +76,14 @@ public class SimpleHttpStreamServer implements Runnable {
         // inform a client sticking at waitForListener()
         // that we are ready for a connection
         listeningEvent.countDown();
-        try {
-            for (;;) {
-                try {
-                    handleNextClient(sock);
-                } catch (InterruptedException e) {
-                    break;
-                } catch (Exception e) {
-                    log.error("Error while accepting or handling client", e);
-                }
-            }
-        } finally {
+        try {                
+            handleNextClient(sock);
+        } catch (InterruptedException e) {
+            log.error("Error while accepting or handling client", e);
+        } catch (Exception e) {
+            log.error("Error while accepting or handling client", e);
+        }
+         finally {
             try {
                 sock.close();
             } catch (Throwable e) { /* ignore errors */ }
@@ -125,7 +122,7 @@ public class SimpleHttpStreamServer implements Runnable {
         while ((recv = in.read(buffer)) >= 0) {
             if (recv == 0) {
                 Thread.sleep(10); 
-                continue; 
+                continue;
             }
             out.write((Integer.toHexString(recv) + "\r\n").getBytes());
             out.write(buffer, 0, recv);
