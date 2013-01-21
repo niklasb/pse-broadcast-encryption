@@ -27,7 +27,7 @@ public class ClientApplication extends Application {
         
         ServerHistory serverHistory = new ServerHistory();
         String hostnameInput = "";
-        String portInput = "";
+        String portInput = "21337";
     }
     
     private State state;
