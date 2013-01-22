@@ -3,10 +3,7 @@ package cryptocast.client;
 import java.net.InetSocketAddress;
 import java.util.List;
 
-import cryptocast.client.R;
-
 import android.content.Context;
-import android.content.res.Resources;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.view.LayoutInflater;
@@ -19,7 +16,6 @@ import android.view.ViewGroup;
 public class ServerListAdapter extends ArrayAdapter<InetSocketAddress> {
     private static final int RESOURCE = R.layout.server_list_row;
     private LayoutInflater inflater;
-    private Resources res;
     
     /**
      * Constructs a new instance with the given attributes.
@@ -27,10 +23,9 @@ public class ServerListAdapter extends ArrayAdapter<InetSocketAddress> {
      * @param textViewResourceId The view showing the data.
      * @param objects List with all elements which will be shown by the view.
      */
-    public ServerListAdapter(Context context, Resources res, List<InetSocketAddress> elements) {
+    public ServerListAdapter(Context context, List<InetSocketAddress> elements) {
         super(context, RESOURCE, elements);
         this.inflater = LayoutInflater.from(context);
-        this.res = res;
     }
 
     /**

@@ -29,9 +29,9 @@ public class NPServerContext<T, G extends CyclicGroupOfPrimeOrder<T>>
     private static SecureRandom rnd = new SecureRandom();
     
     public NPServerContext(int t, G group, 
-                                   Generator<NPKey<T, G>> keyGen,
-                                   Polynomial<BigInteger> poly,
-                                   LagrangeInterpolation<BigInteger> lagrange) {
+                           Generator<NPKey<T, G>> keyGen,
+                           Polynomial<BigInteger> poly,
+                           LagrangeInterpolation<BigInteger> lagrange) {
         this.t = t;
         this.group = group;
         this.keyGen = keyGen;

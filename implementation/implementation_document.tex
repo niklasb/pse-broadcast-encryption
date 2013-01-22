@@ -174,46 +174,64 @@ changes are listed and described.
 
 \begin{itemize}
   
-	\item \textbf{\textit{class Controller}} \newline
-	The following methods were added :
+\item \textbf{\textit{class Controller}} \newline
+The class \textit{Controller} now implements the interface \textit{Observer} so registered observers can 
+tell the controllerwhen it has to save the data this controller is connected to.
+The following methods were added :
 	\begin{itemize}
 	 \item \textit{"+start(databaseFile : File , listenAddr : SocketAddress , keyBroadcastIntervalSecs: int ,
-	 serverFactory : NPServerFactory) : Controller"} for creating a instance of this class. This method now 
-	 implements the functionality of the former method \textit{"+init()"}  and 
-	the constructor. Therefore, the access modifier of the constructor has changed to private and the method  
-	\textit{"+init()"} has been removed.
+		 serverFactory : NPServerFactory) : Controller"} for creating a instance of this class. This method now 
+	 	implements the parts of functionality of the former method \textit{"+init()"}  and 
+		the constructor. Therefore, the access modifier of the constructor has changed to private and the method  
+		\textit{"+init()"} has been removed.
 	 \item \textit{"+saveUserKeys(dir : File , users : Set<User<NPIdentity>>) : void"} for saving
-	 the personal keys of the users into a key-file at the given directory.
+		 the personal keys of the users into a key-file at the given directory.
 	 \item \textit{"+saveDatabase() : void"} for saving the database into a specific file.
 	 \item \textit{"+getModel() : NaorPinkasServerData"} to return the data according to Naor-Pinkas.
-	 \item \textit{"+reinitializeCrypto(t : int) : void"} to reinitialize the cryptography so that 
-	 all data of the current session will be lost forever.
-	 \item \textit{"+streamAudio(File file) : void"} to stream a audio.
+	 \item \textit{"+getDatabesFile() : File"} to get the file containing the database or where it should be saved in.
+	\item \textit{"+getT() : int"} returns the amount of users who can be revoked in the current cryptography.
+	\item \textit{"+getListenAddress() :SocketAddredd"} in order to get the address on which port the server listens.
+	 \item \textit{"+reinitializeCrypto(t : int) : void"} to reinitialize the cryptography so that t users can be revoked.
+	 \item \textit{"+streamAudio(File file) : void"} to stream a MPEG-3 audio file.
 	 \item \textit{"+streamSampleText() : void"} to stream a sample text.
-	 \item \textit{"+stream(in : InputStream) : void"} to stream the data.
-	 \item \textit{"+stream(in : InputStream , maxBytesPerSec : long ) : void"} to stream the data with limiting 
-	 the number of bytes read per second.
+	 \item \textit{"+stream(in : InputStream) : void"} to stream the data from the input stream.
+	 \item \textit{"+stream(in : InputStream , maxBytesPerSec : long ) : void"} to stream the data while limiting 
+	 	the number of bytes which are read per second.
+	\item \textit{"+update(o : Observable, arg : Object) : void)} to save the database when it has changed.
 	\end{itemize}
-	
-	\item \textbf{\textit{class Shell<ID>}}\newline
-	The following method was added:
-\begin{itemize}
-	 \item \textit{"+parseInt(strr : String) : Optional<Integer>"} so that converting Strings to Integer is possible.
-\end{itemize}
+The following methods were removed:
+	\begin{itemize}
+	\item \textit{"+init()"}. Reasons for this decicision are stated above in the added method \textit{"+start(...)"}.
+	\item \textit{"+keyGen(amtRevocable : int, amtPrivateKeys : int, keyDir : File)"}
+	\item \textit{"+addUser(name : String)"}, \textit{"+revokeUser(name : String)"}, \textit{"+authorizeUser(name : String)"}
+		and \textit{"+showUsers()"} have been moved to the class \textit{ServerData}. Also some of them have been renamed.
+	\item \textit{"+showStatistics()"} and \textit{"+showInfo()"} have been removed at all because they were not needed anymore.
+	\end{itemize}
+\item \textbf{\textit{class Shell<ID>}}\newline
+The following method was added:
+	\begin{itemize}
+	\item \textit{"+Shell(in : BufferedReader, out: PrintStream, err : PrintStream, control: Controller)"}. The parameter \textit{control : Controller}
+		has been added.
+	\item \textit{"+parseInt(strr : String) : Optional<Integer>"} so that converting Strings to Integer is possible.
+	\end{itemize}
 	
 	\item \textbf{\textit{class ServerData<ID>}}\newline
 	The following methods were added :
   \begin{itemize}
+ 	 \item \textit{"+initAfterDeserialization()"} to initalize the data after it was read from a file.
+	 \item \textit{"+update(o : Observable, arg : Object) : void"} TODO
 	 \item \textit{"+revoke(users : Set<User<ID>>) : void"} so that we can revoke multiple users at the same time.
 	 \item \textit{"+revoke(user : User<ID>) : void"} so that we can revoke only one user.
 	 \item \textit{"+unrevoke(user : User<ID>) : void} so that we can authorize a user.
 	 \item \textit{"+isRevoked(user : User<ID> ) : boolean"} to let us know if a user is revoked or not.
+	 \item \textit{"+Serverdata(userManager : BroadcastSchemeUserManager<ID>, keyManager :  BroadcastSchemeKeyManager<ID>)"} 
+		to provide all classes the Serverdata uses.
 	 \item \textit{"+getUsers() : Set<User<ID>> "} to return all users in our collection.
 	\end{itemize}
 
    \item \textbf{\textit{class LogbackUtils}}
 	\begin{itemize}
-	 \item This class \textit{"LogbackUtils"} was added for providing several Logback related utility methods.
+	 \item This class was added to provied a logger. The logger is used to provide debug information and to provide information to the user.
 	\end{itemize}
 	
 	 \item \textbf{\textit{class NaorPinkasServerData}}
@@ -235,6 +253,16 @@ changes are listed and described.
 
 
 \subsection{Package cryptocast.server.programs}
+This  completely new package contains some classes used for testing and setting up the server:
+\begin{itemize}
+	\item \textit{Benchmarks} gathesr data about the time several functions needed by the cryptography are running
+		with several paramters. The available benchmarks are  lagrange, encrypt, multi-encrypt, decrypt, multi-eval, keygen, multi-exp.
+		TODO: translate bechmarks in proper language, add description below
+	\item \textit{Client} starts a cterminal-based client. A keyfile must be provided to it to run.
+	\item \textit{HttpStreamer} 
+	\item \textit{TcpStreamer}
+	\item \textit{Server}: Runs a server.
+\end{itemize}
 \subsection{Package cryptocast.client}
 \subsection{Package cryptocast.client.filechooser}
 \subsection{Package cryptocast.client.bufferedmediaplayer}

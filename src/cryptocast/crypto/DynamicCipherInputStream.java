@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cryptocast.comm.MessageInChannel;
-import cryptocast.util.ArrayUtils;
 
 import static cryptocast.util.ErrorUtils.*;
 
@@ -64,7 +63,7 @@ public class DynamicCipherInputStream extends InputStream {
         assert size > 0;
         System.arraycopy(rest, 0, buffer, offset, size);
         if (size < rest.length) {
-            rest = ArrayUtils.copyOfRange(rest, size, rest.length);
+            rest = Arrays.copyOfRange(rest, size, rest.length);
         } else {
             rest = null;
         }
@@ -102,21 +101,21 @@ public class DynamicCipherInputStream extends InputStream {
             }
             DynamicCipherKeyUpdateMessage keyUpdate = 
                     DynamicCipherKeyUpdateMessage.unpack(
-                            ArrayUtils.copyOfRange(msg, 1, msg.length));
+                            Arrays.copyOfRange(msg, 1, msg.length));
             if (!Arrays.equals(keyUpdate.getEncryptedKey(), lastEncryptedKey)) {
                 try {
                     key = decodeKey(dec.decrypt(keyUpdate.getEncryptedKey()));
                 } catch (DecryptionError e) {
-                    throwWithCause(new IOException("Error while decrypting session key"), e);
+                    throw new IOException("Error while decrypting session key", e);
                 }
             }
             lastEncryptedKey = keyUpdate.getEncryptedKey();
             try {
                 cipher = createCipher(key, new IvParameterSpec(keyUpdate.getIv()));
             } catch (InvalidKeyException e) {
-                throwWithCause(new IOException("The other side sent an invalid session key"), e);
+                throw new IOException("The other side sent an invalid session key", e);
             } catch (InvalidAlgorithmParameterException e) {
-                throwWithCause(new IOException("The other side sent an invalid IV"), e);
+                throw new IOException("The other side sent an invalid IV", e);
             }
             return;
         case DynamicCipherOutputStream.CTRL_EOF:

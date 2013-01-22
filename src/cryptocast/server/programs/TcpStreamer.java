@@ -92,7 +92,7 @@ public final class TcpStreamer {
             log.info("Waiting at {} for client to connect...", addr);
             Socket client = sock.accept();
             log.info("Got client connection, sending file {}", opts.file);
-            new Thread(new ConnectionHandler(client, opts.file, opts.skip, opts.maxBps)).start();
+            new Thread(new ConnectionHandler(client, opts.file, opts.skip, opts.maxBps), "ConnectionHandler").start();
         }
     }
 }

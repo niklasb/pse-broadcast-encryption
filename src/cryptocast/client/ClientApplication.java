@@ -58,7 +58,6 @@ public class ClientApplication extends Application {
             log.error("Cannot save application state!", e);
         }
     }
-    
 
     /**
      * Returns the hostname input.

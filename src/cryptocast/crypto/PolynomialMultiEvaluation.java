@@ -27,12 +27,9 @@ public class PolynomialMultiEvaluation {
     
     private ImmutableList<BigInteger> xs;
     private byte[][] pointsTwoComplements;
-    
 
     private static boolean haveNative = 
             NativeUtils.tryToLoadNativeLibOrLogFailure("PolynomialMultiEvaluation", log);
-    
-    
     
     /**
      * Creates an instance of the polynomial multi evaluation.

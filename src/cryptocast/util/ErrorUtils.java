@@ -17,7 +17,7 @@ public class ErrorUtils {
      */
     public static void cannotHappen(Throwable e) throws AssertionError {
         log.error("An exception occured of which we stated it cannot occur!", e);
-        throwWithCause(new AssertionError("Impossible exception occured"), e);
+        throw new RuntimeException("Impossible exception occured", e);
     }
     
     /**
@@ -27,17 +27,5 @@ public class ErrorUtils {
      */
     public static void cannotHappen() throws AssertionError {
         throw new AssertionError("Can never be reached. Or can it?");
-    }
-    
-    /**
-     * Throws an exception with the given cause.
-     * 
-     * @param e the exception to throw.
-     * @param cause the cause of the exception.
-     * @throws T
-     */
-    public static <T extends Throwable> void throwWithCause(T e, Throwable cause) throws T {
-        e.initCause(cause);
-        throw e;
     }
 }

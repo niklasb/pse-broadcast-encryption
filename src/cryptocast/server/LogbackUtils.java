@@ -20,10 +20,6 @@ public class LogbackUtils {
     private static LoggerContext ctx = (LoggerContext)LoggerFactory.getILoggerFactory();
     private static Logger rootLogger = ctx.getLogger(Logger.ROOT_LOGGER_NAME);
     
-    public static Logger getRootLogger() {
-        return rootLogger;
-    }
-    
     public static void removeAllAppenders() {
         rootLogger.detachAndStopAllAppenders();
     }

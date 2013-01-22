@@ -45,14 +45,13 @@ public class TestShell {
     }
 
     @Test
-    public void HelpAdd() throws Throwable {
-        String[] args = {"add"};
-        sut.performCommand("help", args);
-        verify(out).printf("Usage: %s %s\n", "add", "<name>");
+    public void helpCmd() throws Throwable {
+        sut.performCommand("help", new String[] { "unrevoke" });
+        verify(out).printf("Usage: %s %s\n", "unrevoke", "<name>");
     }
 
     @Test
-    public void showHelp() throws Throwable {
+    public void help() throws Throwable {
         String[] args = {};
         sut.performCommand("help", args);
         verify(out).println("Use `help <cmd>' to get more information about a specific command");

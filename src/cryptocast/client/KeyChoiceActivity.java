@@ -1,7 +1,6 @@
 package cryptocast.client;
 
 import android.os.Bundle;
-import android.view.Menu;
 import cryptocast.client.filechooser.FileChooser;
 
 /**

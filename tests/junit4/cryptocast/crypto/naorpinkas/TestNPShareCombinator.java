@@ -13,8 +13,7 @@ import cryptocast.crypto.*;
 
 public class TestNPShareCombinator {
     private SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
-    private IntegersModuloPrime modQ = schnorr.getFieldModOrder(),
-                                modP = schnorr.getFieldModP();
+    private IntegersModuloPrime modQ = schnorr.getFieldModOrder();
     
     @Test
     public void canRestoreSecretFromValidShares() {
@@ -28,7 +27,8 @@ public class TestNPShareCombinator {
         shares.add(makeShare(poly, r, 33123));
         shares.add(makeShare(poly, r, 22233333));
         shares.add(makeShare(poly, r, 44411));
-        Optional<BigInteger> actualGRP0 = combi.restore(shares.build());
+        Optional<BigInteger> actualGRP0 = combi.restore(shares.build(), 
+                new LagrangeInterpolation<BigInteger>(modQ));
         assertTrue(actualGRP0.isPresent());
         assertEquals(grp0, actualGRP0.get());
     }
@@ -70,7 +70,8 @@ public class TestNPShareCombinator {
         shares.add(makeShare(poly, r, 123123));
         shares.add(makeShare(poly, r, 33123));
         shares.add(makeShare(poly, r, 22233333));
-        Optional<BigInteger> actualGRP0 = combi.restore(shares.build());
+        Optional<BigInteger> actualGRP0 = combi.restore(shares.build(), 
+                new LagrangeInterpolation<BigInteger>(modQ));
         assertFalse(actualGRP0.isPresent());
     }
     
@@ -85,7 +86,8 @@ public class TestNPShareCombinator {
         shares.add(makeShare(poly, r, 123123));
         shares.add(makeShare(poly, r, 33123));
         shares.add(makeShare(poly, r, 22233333));
-        Optional<BigInteger> actualGRP0 = combi.restore(shares.build());
+        Optional<BigInteger> actualGRP0 = combi.restore(shares.build(), 
+                new LagrangeInterpolation<BigInteger>(modQ));
         assertFalse(actualGRP0.isPresent());
     }
 

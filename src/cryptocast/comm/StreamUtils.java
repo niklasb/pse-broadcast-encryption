@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static cryptocast.util.ErrorUtils.throwWithCause;
-
 /**
  * A byte-based communication channel from which data can be received.
  */
@@ -41,7 +39,7 @@ public class StreamUtils {
             try {
                 Thread.sleep(POLL_INTERVAL);
             } catch (InterruptedException e) {
-                throwWithCause(new IOException("Interrupted during busy waiting"), e);
+                throw new IOException("Interrupted during busy waiting", e);
             }
         }
     }

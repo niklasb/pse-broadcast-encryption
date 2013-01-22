@@ -66,20 +66,4 @@ public class DynamicCipherKeyUpdateMessage {
         buf.get(data);
         return data;
     }
-
-    /**
-     * Unpacks the message from the given buffer.
-     * 
-     * @param buf A byte buffer. 
-     * @return a dynamic cipher key update message instance.
-     */
-    public static DynamicCipherKeyUpdateMessage unpack(ByteBuffer buf) {
-        int keyLength = buf.getInt();
-        byte[] encryptedKey = new byte[keyLength];
-        buf.get(encryptedKey);
-        int ivLength = buf.getInt();
-        byte[] iv = new byte[ivLength];
-        buf.get(iv);
-        return new DynamicCipherKeyUpdateMessage(encryptedKey, iv);
-    }
 }

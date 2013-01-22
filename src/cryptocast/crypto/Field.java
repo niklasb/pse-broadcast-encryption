@@ -63,23 +63,17 @@ public abstract class Field<T> implements Serializable {
     /**
      * @return 2 (in the context of the field)
      */
-    public T two() {
-        return add(one(), one());
-    }
+    public abstract T two();
     
     /**
      * @return 3 (in the context of the field)
      */
-    public T three() {
-        return add(two(), one());
-    }
+    public abstract T three();
     
     /**
      * @return 4 (in the context of the field)
      */
-    public T four() {
-        return add(two(), two());
-    }
+    public abstract T four();
     
     /**
      * @param rnd A randomness provider
@@ -123,16 +117,21 @@ public abstract class Field<T> implements Serializable {
 
     /**
      * Raises an element of the field to an integer power.
+     * Uses a simple square-and-multiply algorithm in the default
+     * implementation.
+     * 
      * @param a The element of the field
      * @param e The exponent
      * @return The value $a^e$
      */
     public T pow(T a, BigInteger e) {
-        T result = one();
-        for (BigInteger i = BigInteger.valueOf(0); 
-                i.compareTo(e) < 0; 
-                i = i.add(BigInteger.valueOf(1)))
-            result = multiply(result, a);
-        return result;
+        T q = one();
+        for (int i = 0, len = e.bitLength(); i < len; i++) {
+            if (e.testBit(i)) {
+                q = multiply(q, a);
+            }
+            a = square(a);
+        }
+        return q;
     }
 }

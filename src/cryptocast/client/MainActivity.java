@@ -31,7 +31,6 @@ public class MainActivity extends ClientActivity {
     private TextView editHostname, editPort;
     private File keyFile;
     private InetSocketAddress addr;
-    private NetworkInfo networkInfo;
     
     @Override
     protected void onCreate(Bundle b) {
@@ -39,8 +38,6 @@ public class MainActivity extends ClientActivity {
         setContentView(R.layout.activity_main);
         editHostname = (TextView) findViewById(R.id.editHostname);
         editPort = (TextView) findViewById(R.id.editPort);
-        networkInfo = ((ConnectivityManager) 
-                getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
     }
     
     @Override
@@ -68,7 +65,7 @@ public class MainActivity extends ClientActivity {
         app.setPortInput(getPortInput());
         super.onPause();
     }
-
+    
     /**
      * Validates the input and connects to the specified server,
      * possibly after letting the user choose a key file.
@@ -80,16 +77,17 @@ public class MainActivity extends ClientActivity {
             showErrorDialog("Invalid hostname/port");
             return;
         }
-        if (!networkInfo.isConnected()) {
+        if (!haveNetwork()) {
             showErrorDialog("Not connected to a network!");
+            return;
         }
         if (mAddr.get().isUnresolved()) {
             showErrorDialog("Could not resolve hostname!");
             return;
         }
-        if (app.getWifiOnlyOption() && !isWifiConnected()) {
-            log.debug("Connecting impossible: Wifi-Only mode on and not connected via Wifi.");
-            showErrorDialog("Connecting not possible, because Wifi-Only mode on and not connected via Wifi!");
+        if (app.getWifiOnlyOption() && !haveWiFi()) {
+            log.debug("Connecting impossible: WiFi-Only mode on and not connected via Wifi.");
+            showErrorDialog("Will not connect without WiFi, please check your options!");
             return;
         }
         Optional<File> mFile = app.getServerHistory().getKeyFile(mAddr.get());
@@ -205,21 +203,26 @@ public class MainActivity extends ClientActivity {
      */
     protected void startStreamViewer(InetSocketAddress addr, File keyFile) {
         log.debug("Starting stream viewer with: connectAddr={} keyFile={}", addr, keyFile);
-        log.debug("Wifi-only mode: {}", app.getWifiOnlyOption() );
-        log.debug("Wifi-connected: {}", isWifiConnected());
         Intent intent = new Intent(this, StreamViewerActivity.class);
         intent.putExtra("connectAddr", addr);
         intent.putExtra("keyFile", keyFile);
         startActivity(intent);
     }
-       
-    private boolean isWifiConnected() {
-        log.debug("checking Wifi connected");
-        if (networkInfo.isConnected()) {
-            return networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
-        } else {
-            return false;
-        }  
+
+    private NetworkInfo getNetworkInfo() {
+        return ((ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+    }
+    
+    private boolean haveNetwork() {
+        NetworkInfo ni = getNetworkInfo();
+        return ni != null && ni.isConnected();
+    }
+    
+    private boolean haveWiFi() {
+        log.debug("checking if connected via WiFi");
+        NetworkInfo ni = getNetworkInfo();
+        return ni != null && ni.isConnected() && ni.getType() == ConnectivityManager.TYPE_WIFI;
     }
 
     public TextView getEditHostname() {

@@ -3,7 +3,6 @@ package cryptocast.server;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
@@ -41,12 +40,10 @@ public class Shell extends InteractiveCommandLineInterface {
                              + "about how to use them is shown. Otherwise more details about the "
                              + "given command can be read by the user."),
         new ShellCommand("add",
-                         "<name>",
-                         "Add a new user to the group of recipients",
+                         "<name> [<name>, [<name>, ... ]]",
+                         "Add new users to the group of recipients",
                          "If no user with the given name exists a new one is created and added "
-                             + "to the group of recipients. Using the command \"save-keys\" "
-                             + "the key assigned to this user can be saved in order to ship "
-                             + "it to the user."),
+                             + "to the group of recipients."),
         new ShellCommand("revoke",
                          "[<name>, [<name>, ... ]]",
                          "Revoke users",
@@ -60,47 +57,42 @@ public class Shell extends InteractiveCommandLineInterface {
                          "Unrevoke a user",
                          "Reverts the revokation of the user with the given name. "
                              + "As a result of this the user will be able to access "
-                             + "the streamed data again. Just like revokations this happens "
-                             + "immediately."),
+                             + "the streamed data again. Just like revokations this takes "
+                             + "immediate effect."),
         new ShellCommand("users",
                          "",
                          "List users",
-                         "Shows the total amount of users, the amount of revokes users, the "
-                             + "amount of possible revocations and a list of all users and the "
-                             + "information which user is revoked."),
+                         "Shows a list of all users along with their corresponding revokation status."),
         new ShellCommand("save-keys",
                          "dir [<user>, [<user>, ...]]",
-                         "Save user keys to a directory",//TODO muss directory bestehen oder wird erstellt?!
+                         "Save user keys to a directory",
                          "Every user has a corresponding keyfile. These keyfiles are saved in the "
-                             + "given directory when using this command. "
+                             + "specified directory when using this command.\n\n"
+                             + "If a list of users is given, only the key files of these users will be saved. "
+                             + "Otherwise, the key files of all users are saved.\n\n"
                              + "Each of these files must be shipped to the correspondig "
-                             + "user on a safe way, because it allows everyone having a key "
-                             + "to access the streamed data(if the user to which this key "
-                             + "belongs is not revoked"),
-        new ShellCommand("stream-stdin",
-                         "",
-                         "Captures input from STDIN and broadcasts it",
-                         "Broadcasts the input from STDIN. This command is only usefull for "
-                             + "testing and debugging, because the android client cannot handle "
-                             + "this stream."),
-        new ShellCommand("stream-sample-text",
-                         "",
-                         "Streams an infinite stream of sample text",
-                         "An infinite stream of text is broadcasted. Because the android client "
-                             + "cannot handle this kind of stream, this command is usefull only "
-                             + "for testing and debugging."),
+                             + "user on a safe way, because it enables its owner "
+                             + "to access the streamed data.\n\n"
+                             + "The specified directory will be created if it does not yet exist."),
+//        new ShellCommand("stream-stdin",
+//                         "",
+//                         "Captures input from STDIN and broadcasts it"),
+//        new ShellCommand("stream-sample-text",
+//                         "",
+//                         "Streams an infinite stream of sample text"),
         new ShellCommand("stream-mp3",
                          "<file>",
                          "Stream an MPEG-3 audio file",
                          "Starts streaming the MPEG-3 audio file specified by the parameter "
-                             + "\"file\". A stream is stopped when a new one is started, the "
-                             + "server is stopped or the whole has been streamed."),
+                             + "`file'. You can switch the current streaming file at any time.\n\n"
+                             + "Variable bitrates are not supported here!"),
         new ShellCommand("init",
                          "<t>",
                          "Create a whole new crypto context",
                          "The old crypto context with all its users and information "
-                             + "is deleted and a new one is created. The paramater \"t\" "
-                             + "describes the amount of users which can be revoked."),
+                             + "is deleted and a new one is created. The paramater `t' "
+                             + "describes the amount of users which can be revoked.\n\n"
+                             + "All clients currently connected will lose their connection."),
     };
 
     private static SortedMap<String, ShellCommand> commandsByName = 
@@ -189,7 +181,11 @@ public class Shell extends InteractiveCommandLineInterface {
             }
             printf("Usage: %s %s\n", helpCmd.getName(), helpCmd.getSyntax());
             println();
-            println(helpCmd.getLongDesc());
+            println(helpCmd.getShortDesc());
+            if (helpCmd.getLongDesc() != null) {
+                println();
+                println(helpCmd.getLongDesc());
+            }
         } else {
             println("Available commands:");
             println();
@@ -248,15 +244,18 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    protected void cmdAdd(ShellCommand cmd, String[] args) throws CommandError {
-        if (args.length != 1) {
+    protected void cmdAdd(ShellCommand cmd, String[] args) throws CommandError, Exit {
+        if (args.length < 1) {
             commandSyntaxError(cmd);
         }
 
-        Optional<User<NPIdentity>> mUser = getModel().createNewUser(args[0]);
-        if (!mUser.isPresent()) {
-            error("User with this name already existing!");
+        for (String name : args) {
+            Optional<User<NPIdentity>> mUser = getModel().createNewUser(name);
+            if (!mUser.isPresent()) {
+                error("User with the name `" + name + "' already exists!");
+            }
         }
+        saveDatabase();
     }
     
     protected void cmdRevoke(ShellCommand cmd, String[] args) throws CommandError {
@@ -273,6 +272,7 @@ public class Shell extends InteractiveCommandLineInterface {
         } catch (NoMoreRevocationsPossibleError e) {
             error("Cannot revoke that many users!");
         }
+        saveDatabase();
     }
     
     protected void cmdUnrevoke(ShellCommand cmd, String[] args) throws CommandError {
@@ -282,16 +282,18 @@ public class Shell extends InteractiveCommandLineInterface {
 
         User<NPIdentity> user = getUser(args[0]);
         getModel().unrevoke(user);
+        saveDatabase();
     }
 
-    protected void cmdSaveKeys(ShellCommand cmd, String[] args) throws CommandError, Exit {
+    protected void cmdSaveKeys(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length < 1) {
             commandSyntaxError(cmd);
         }
 
         File dir = expandPath(args[0]);
+        dir.mkdirs();
         if (!dir.isDirectory()) {
-            error("Target directory does not exist!");
+            error("Could not create target directory!");
         }
         Set<User<NPIdentity>> users;
         if (args.length > 1) {
@@ -305,7 +307,7 @@ public class Shell extends InteractiveCommandLineInterface {
         try {
             control.saveUserKeys(dir, users);
         } catch (Exception e) {
-            fatalError(e);
+            log.error("Could not save user keys", e);
         }
     }
     
@@ -348,7 +350,7 @@ public class Shell extends InteractiveCommandLineInterface {
         try {
             control.streamAudio(file);
         } catch (Exception e) {
-            fatalError(e);
+            error("Could not open the given file: %s", e);
         }
     }
     
@@ -360,6 +362,14 @@ public class Shell extends InteractiveCommandLineInterface {
         return mUser.get();
     }
 
+    private void saveDatabase() throws CommandError {
+        try {
+            control.saveDatabase();
+        } catch (IOException e) {
+            log.error("Could not save database! Please make sure that the location is writable.", e);
+        }
+    }
+    
     private ServerData<NPIdentity> getModel() {
         return control.getModel();
     }

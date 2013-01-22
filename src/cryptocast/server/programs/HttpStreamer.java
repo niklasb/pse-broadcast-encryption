@@ -46,7 +46,7 @@ public final class HttpStreamer {
         for (int i = 0; i < opts.skip; ++i) {
             fis.read();
         }
-        SimpleHttpStreamServer server = new SimpleHttpStreamServer(fis, addr, "audio/mpeg", 0x10000);
-        new Thread(server).start();
+        SimpleHttpStreamServer server = new SimpleHttpStreamServer(fis, addr, "audio/mpeg", 0x10000, null);
+        new Thread(server, "HttpStreamer").start();
     }
 }

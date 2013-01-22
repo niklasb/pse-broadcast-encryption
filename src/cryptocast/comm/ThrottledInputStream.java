@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
 
-import static cryptocast.util.ErrorUtils.throwWithCause;
-
 /**
  * An {@link InputStream} proxy which limits the number of bytes read per second.
  */
@@ -52,7 +50,7 @@ public class ThrottledInputStream extends InputStream {
                 Thread.sleep(wakeElapsed - elapsed);
             }
             catch (InterruptedException e) {
-                throwWithCause(new InterruptedIOException("Interrupted during IO"), e);
+                throw new InterruptedIOException("Interrupted during IO");
             }
         }
         return recv;

@@ -40,43 +40,6 @@ public class Polynomial<T> implements Serializable {
         }
         this.coefficients = this.coefficients.subList(0, size);
     }
-    
-    /**
-     * Returns a polynomial over the zero element of the field.
-     * 
-     * @param field An instance of the field over which the polynomial is formed. 
-     * @return A polynomial over the zero element of the field.
-     */
-    public static <T> Polynomial<T> zero(Field<T> field) {
-        return new Polynomial<T>(field, ImmutableList.<T>of());
-    }
-    
-    /**
-     * Returns a polynomial over the one element of the field.
-     * 
-     * @param field An instance of the field over which the polynomial is formed.
-     * @return A polynomial over the one element of the field.
-     */
-    public static <T> Polynomial<T> one(Field<T> field) {
-        return new Polynomial<T>(field, ImmutableList.of(field.one()));
-    }
-    /**
-     * Returns a new monomial with the given values.
-     * 
-     * @param field An instance of the field over which the monomial is formed.
-     * @param coeff The coefficients $c_i$ of the monomial.
-     * @param exp The exponential for the coefficients.
-     * @return A new monomial.
-     */
-    public static <T> Polynomial<T> monomial(Field<T> field, T coeff, int exp) {
-        Preconditions.checkArgument(exp >= 0, "Exponent must be >= 0");
-        ImmutableList.Builder<T> coeffs = ImmutableList.builder();
-        for (int i = 0; i < exp; ++i) {
-            coeffs.add(field.zero());
-        }
-        coeffs.add(coeff);
-        return new Polynomial<T>(field, coeffs.build());
-    }
 
     /**
      * @return The field associated with this polynomial.

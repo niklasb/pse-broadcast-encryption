@@ -6,6 +6,9 @@ import cryptocast.util.MapUtils;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteArrayDataInput;
@@ -18,6 +21,8 @@ public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
                                  implements Decryptor<byte[]> {
     private NPKey<T, G> key;
     private G group;
+    
+    private static final Logger log = LoggerFactory.getLogger(NPClient.class);
     
     /**
      * Initializes a Naor-Pinkas broadcast client.
@@ -56,10 +61,14 @@ public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
         return data;
     }
     
-    protected abstract byte[] decryptSecretWithItem(byte[] encryptedSecret, T item);
+    protected abstract byte[] decryptSecretWithItem(byte[] encryptedSecret, T item)
+                                        throws DecryptionError;
     
     @Override
-    public byte[] decrypt(byte[] cipher) throws InsufficientInformationError {
+    public byte[] decrypt(byte[] cipher) 
+                    throws InsufficientInformationError, DecryptionError {
+        long t0 = System.currentTimeMillis();
+        log.debug("Starting decryption of the session key...");
         NPMessage<T, G> msg = unpackMessage(cipher);
         NPShareCombinator<T, G> combinator = 
                 new NPShareCombinator<T, G>(msg.getT(), group);
@@ -76,6 +85,7 @@ public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
             throw new InsufficientInformationError(
                     "Cannot restore secret: Redundant or missing information");
         }
+        log.debug("Decryption took {} ms", System.currentTimeMillis() - t0);
         return decryptSecretWithItem(msg.getEncryptedSecret(), mInterpol.get());
     }
 }

@@ -108,8 +108,10 @@ public class LagrangeInterpolation<T> implements Serializable {
         }
         return sum;
     }
+    
     /**
-     * Interpolates the polynomial using the given data point.
+     * Interpolates $P(0)$ where $P$ is the Lagrange polynomial of
+     * the given data point.
      * 
      * @param dataPoints The data points.
      * @return The interpolation result.

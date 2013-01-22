@@ -64,6 +64,7 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
     }
     
     protected NPMessage<T, G> encryptMessage(byte[] secret) {
+        long t0 = System.currentTimeMillis();
         BigInteger r = group.getFieldModOrder().randomElement(rnd);
         T grp0 = group.pow(gp0, r), // g^{r P(0)} is the secret value that can be computed by
                                     // authorized users
@@ -91,6 +92,7 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
             lagrangeCoeffs.add(c);
         }
         
+        log.debug("Encryption took {} ms", System.currentTimeMillis() - t0);
         return new NPMessage<T, G>(
                 t, r, encryptedSecret, group, 
                 lagrangeCoeffs.build(), shares.build());
