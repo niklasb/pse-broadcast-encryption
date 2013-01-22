@@ -263,7 +263,28 @@ This  completely new package contains some classes used for testing and setting 
 	\item \textit{TcpStreamer}
 	\item \textit{Server}: Runs a server.
 \end{itemize}
+
+
 \subsection{Package cryptocast.client}
+
+\begin{itemize}
+   \item \textbf{\textit{class StreamViewerActivity}} \newline
+   This class now implements  \textit{MediaController.MediaPlayerContro}l to provide better 	control of the media player. In addition, the following methods were added:
+	\begin{itemize}
+	 \item \textit{"+setStatusText(text : String)"} to set the player's status text.
+	 \item \textit{"+createErrorPopup(message : String")} to create an error popup from other classes.
+	\end{itemize}
+	
+    \item \textbf{\textit{class StreamConnector}} \newline
+    This class was added to separate work from the StreamViewerActivity class in a separate thread to prevent the GUI not from showing properly. The class implements Runnalbe and the according methods.
+	\begin{itemize}
+	 \item \textit{"+StreamConnector...)"} set up the class to be able to connect when the thread is being started.
+	 \item \textit{"+stop()} to stop the connector 
+	\end{itemize}
+	
+\end{itemize}
+
+	
 \subsection{Package cryptocast.client.filechooser}
 \subsection{Package cryptocast.client.bufferedmediaplayer}
 \subsection{Package cryptocast.crypto}
