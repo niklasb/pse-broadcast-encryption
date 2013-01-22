@@ -2,6 +2,8 @@ package cryptocast.crypto;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +13,6 @@ import org.mockito.invocation.InvocationOnMock;
 
 import cryptocast.comm.*;
 import static cryptocast.util.ByteUtils.str2bytes;
-import cryptocast.util.ArrayUtils;
 
 public class TestDynamicCipherStreams {
     MessageBuffer fifo = new MessageBuffer();
@@ -36,7 +37,7 @@ public class TestDynamicCipherStreams {
         out.close();
         byte[] read = new byte[payload.length + 10];
         assertEquals(payload.length, StreamUtils.readall(in, read, 0, read.length));
-        assertArrayEquals(payload, ArrayUtils.copyOfRange(read, 0, payload.length));
+        assertArrayEquals(payload, Arrays.copyOfRange(read, 0, payload.length));
     }
 
     @Test
@@ -63,7 +64,7 @@ public class TestDynamicCipherStreams {
         
         byte[] read = new byte[payload.length + 10];
         assertEquals(payload.length, StreamUtils.readall(in, read, 0, read.length));
-        assertArrayEquals(payload, ArrayUtils.copyOfRange(read, 0, payload.length));
+        assertArrayEquals(payload, Arrays.copyOfRange(read, 0, payload.length));
     }
     
     @Test
@@ -78,7 +79,7 @@ public class TestDynamicCipherStreams {
         byte[] expected = str2bytes(payload + payload + payload);
         byte[] read = new byte[expected.length + 10];
         assertEquals(expected.length, StreamUtils.readall(in, read, 0, read.length));
-        assertArrayEquals(expected, ArrayUtils.copyOfRange(read, 0, expected.length));
+        assertArrayEquals(expected, Arrays.copyOfRange(read, 0, expected.length));
     }
     
     @Test
@@ -93,7 +94,7 @@ public class TestDynamicCipherStreams {
         byte[] expected = str2bytes(payload + payload + payload);
         byte[] read = new byte[expected.length + 10];
         assertEquals(expected.length, StreamUtils.readall(in, read, 0, read.length));
-        assertArrayEquals(expected, ArrayUtils.copyOfRange(read, 0, expected.length));
+        assertArrayEquals(expected, Arrays.copyOfRange(read, 0, expected.length));
         verify(enc, times(1)).encrypt(any(byte[].class));
         verify(dec, times(1)).decrypt(any(byte[].class));
     }
