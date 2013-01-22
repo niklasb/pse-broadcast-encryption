@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnInfoListener;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -25,9 +24,9 @@ import android.widget.TextView;
 public class StreamViewerActivity extends ClientActivity
                                   implements RawStreamMediaPlayer.OnCompletionListener,
                                              RawStreamMediaPlayer.OnErrorListener,
-                                             MediaController.MediaPlayerControl, 
+                                             MediaController.MediaPlayerControl,
                                              OnTouchListener,
-                                             RawStreamMediaPlayer.OnPreparedListener, 
+                                             RawStreamMediaPlayer.OnPreparedListener,
                                              RawStreamMediaPlayer.OnInfoListener {
     
     private static final Logger log = LoggerFactory

@@ -13,11 +13,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
  /**
@@ -93,7 +89,7 @@ public class MainActivity extends ClientActivity {
         }
         if (app.getWifiOnlyOption() && !isWifiConnected()) {
             log.debug("Connecting impossible: Wifi-Only mode on and not connected via Wifi.");
-            showErrorDialog("Connecting not possible, because Wifi-Only mode on and not connected via Wifi!");
+            showErrorDialog("Will not connect via WiFi, please check your options!");
             return;
         }
         Optional<File> mFile = app.getServerHistory().getKeyFile(mAddr.get());

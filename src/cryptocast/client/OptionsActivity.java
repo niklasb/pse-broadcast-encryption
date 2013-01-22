@@ -2,9 +2,6 @@ package cryptocast.client;
 
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,9 +15,6 @@ import android.widget.ListView;
  * 
  */
 public class OptionsActivity extends ClientActivity {
-    private static final Logger log = LoggerFactory
-            .getLogger(ClientActivity.class);
-    
     private ListView listing;
     private CheckBox wifiCheckBox;
     

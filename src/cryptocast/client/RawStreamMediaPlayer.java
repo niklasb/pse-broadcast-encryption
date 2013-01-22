@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnInfoListener;
 
 import cryptocast.comm.SimpleHttpStreamServer;
 
