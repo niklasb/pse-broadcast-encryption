@@ -38,6 +38,8 @@ public class MainActivity extends ClientActivity {
         setContentView(R.layout.activity_main);
         editHostname = (TextView) findViewById(R.id.editHostname);
         editPort = (TextView) findViewById(R.id.editPort);
+        app.getServerHistory().addServer(new InetSocketAddress("123.123.456", 1234), new java.io.File(""));
+        app.getServerHistory().addServer(new InetSocketAddress("456.123.432", 9999), new java.io.File(""));
     }
     
     @Override

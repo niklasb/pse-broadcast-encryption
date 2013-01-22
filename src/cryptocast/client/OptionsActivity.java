@@ -55,7 +55,7 @@ public class OptionsActivity extends ClientActivity {
       AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
       InetSocketAddress addr = (InetSocketAddress) listing.getItemAtPosition(info.position);
       switch(menuItemIndex) {
-      case 1:
+      case 0:
           app.getServerHistory().deleteServer(addr);
           finish();
           startActivity(getIntent());
