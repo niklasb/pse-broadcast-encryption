@@ -169,34 +169,6 @@ public abstract class CyclicGroupOfPrimeOrder<T> implements Serializable {
         }
         return r;
     }
-    
-    /**
-     * Implements Shamir's trick for two variables.
-     * 
-     * @param a
-     * @param k
-     * @param b
-     * @param l
-     * @return The value $a^k \otimes b^l$.
-     */
-    public T shamir(T a, BigInteger k, T b, BigInteger l) {
-        T z = combine(a, b);
-        T r = identity();
-        int m = Math.max(k.bitLength(), l.bitLength());
-        for (int i = m - 1; i >= 0; --i) {
-            r = twice(r);
-            if (k.testBit(i)) {
-                if (l.testBit(i)) {
-                    r = combine(r, z);
-                } else {
-                    r = combine(r, a);
-                }
-            } else if (l.testBit(i)) {
-                r = combine(r, b);
-            }
-        }
-        return r;
-    }
 
     /**
      * @param a

@@ -3,8 +3,6 @@ package cryptocast.client;
 import java.net.InetSocketAddress;
 import java.util.List;
 
-import cryptocast.client.R;
-
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;

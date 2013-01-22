@@ -13,9 +13,7 @@ import com.google.common.collect.Ordering;
 /**
  * Allows to restore a number from a sufficient number of Naor-Pinkas shares.
  */
-public class NPShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T>> 
-                     implements ShareCombinator<T, NPShare<T, G>, 
-                                                LagrangeInterpolation<BigInteger>> {
+public class NPShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T>> {
     private int t;
     private G group;
     
@@ -32,7 +30,6 @@ public class NPShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T>>
      * @return The reconstructed secret or absent if the information represented
      * by the given shares is insufficient to restore it.
      */
-    @Override
     public Optional<T> restore(List<NPShare<T, G>> shares,
                                LagrangeInterpolation<BigInteger> lagrange) {
         if (hasMissingShares(shares) || hasRedundantShares(shares)) {
@@ -50,22 +47,6 @@ public class NPShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T>>
             exponents.add(e);
         }
         return Optional.of(group.multiexp(bases.build(), exponents.build()));
-    }
-    
-    /**
-     * Restores a secret from several Naor-Pinkas shares and a shnorr group.
-     * 
-     * @param shares The shares.
-     * @param schnorr The scnorr group.
-     * @return The reconstructed secret or absent if the information represented
-     * by the given shares is insufficient to restore it.
-     */
-    public Optional<T> restore(List<NPShare<T, G>> shares) {
-        if (hasMissingShares(shares) || hasRedundantShares(shares)) {
-            return Optional.absent();
-        }
-        return restore(shares, new LagrangeInterpolation<BigInteger>(
-                                     group.getFieldModOrder()));
     }
     
     /**

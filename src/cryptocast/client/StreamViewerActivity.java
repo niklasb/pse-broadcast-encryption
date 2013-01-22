@@ -81,7 +81,7 @@ public class StreamViewerActivity extends ClientActivity
     protected void onStart() {
         super.onStart();
         connector = new StreamConnector(sock, connectAddr, keyFile, player, this);
-        new Thread(connector).start();
+        new Thread(connector, "StreamConnector").start();
     }
     
     @Override

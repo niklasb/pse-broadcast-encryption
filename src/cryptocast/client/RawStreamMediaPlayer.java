@@ -157,7 +157,7 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
                    contentType,
                    0x400000,
                    this);
-        worker = new Thread(server);
+        worker = new Thread(server, "HttpStreamServer");
         worker.start();
         int port = server.waitForListener();
         log.debug("Temporary HTTP server bound to Port " + port);

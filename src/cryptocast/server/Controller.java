@@ -103,7 +103,7 @@ public class Controller implements Observer {
         socket.bind(listenAddr);
         ServerMultiMessageOutChannel multicastServer = new ServerMultiMessageOutChannel(
                 socket, fatalExceptionHandler);
-        new Thread(multicastServer).start();
+        new Thread(multicastServer, "TcpMulticastServer").start();
         
         final BroadcastEncryptionServer<NPIdentity> broadcastServer = 
                 startBroadcastEncryptionServer(data, multicastServer, keyBroadcastIntervalSecs);
@@ -118,7 +118,7 @@ public class Controller implements Observer {
                     fatalExceptionHandler.apply(e);
                 }
             }
-        }).start();
+        }, "StreamCopier").start();
         return new Controller(data, databaseFile, multicastServer,
                 broadcastServer, listenAddr,
                 keyBroadcastIntervalSecs, input, output, serverFactory);
@@ -140,8 +140,7 @@ public class Controller implements Observer {
         for (User<NPIdentity> user : users) {
             File keyFile = new File(dir.getAbsolutePath() + "/"
                     + user.getName() + ".key");
-            Optional<? extends PrivateKey> mKey = data.npServer
-                    .getPersonalKey(user.getIdentity());
+            Optional<? extends PrivateKey> mKey = data.getPersonalKey(user);
             assert mKey.isPresent();
             SerializationUtils.writeToFile(keyFile, mKey.get());
         }
@@ -208,7 +207,7 @@ public class Controller implements Observer {
                 .start(data.userManager, data.npServer, AES_KEY_BITS, rawOut,
                        keyBroadcastIntervalSecs * 1000, // update every 15 seconds
                        fatalExceptionHandler);
-        new Thread(server).start();
+        new Thread(server, "BroadcastEncServer").start();
         return server;
     }
     

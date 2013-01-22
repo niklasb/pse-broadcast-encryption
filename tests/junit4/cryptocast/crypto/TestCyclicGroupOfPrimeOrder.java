@@ -52,19 +52,6 @@ public class TestCyclicGroupOfPrimeOrder {
     }
     
     @Test
-    public void shamir() throws Exception {
-        testShamir(x, BigInteger.valueOf(123123), 
-                   y, new BigInteger("12736128937612378123"), 
-                   sut);
-        testShamir(BigInteger.ONE, BigInteger.ZERO, 
-                   BigInteger.ONE, BigInteger.ZERO, 
-                   sut);
-        testShamir(BigInteger.ONE, BigInteger.ONE, 
-                   BigInteger.ONE, BigInteger.ONE, 
-                   sut);
-    }
-    
-    @Test
     public void shamirWithList() throws Exception {
         testShamir(ImmutableList.<BigInteger>of(),
                    ImmutableList.<BigInteger>of(),
@@ -87,12 +74,6 @@ public class TestCyclicGroupOfPrimeOrder {
                            ImmutableList.of(y, x, y, x, x, y, y),
                            2,
                            sut);
-    }
-    
-    public static <T> void testShamir(T x, BigInteger k, T y, BigInteger l, 
-                                      CyclicGroupOfPrimeOrder<T> group) {
-        assertEquals(group.combine(group.pow(x, k), group.pow(y, l)),
-                     group.shamir(x, k, y, l));
     }
     
     public static <T> void testShamir(List<T> b, List<BigInteger> e, 

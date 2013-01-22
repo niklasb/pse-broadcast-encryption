@@ -40,7 +40,7 @@ public class NPMessage<T, G extends CyclicGroupOfPrimeOrder<T>> {
         this.encryptedSecret = encryptedSecret;
         this.group = group;
         this.lagrangeCoefficients = ImmutableList.copyOf(lagrangeCoefficients);
-        this.shares = ImmutableList.copyOf(shares);;
+        this.shares = ImmutableList.copyOf(shares);
     }
 
     /**

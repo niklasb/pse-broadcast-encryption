@@ -92,6 +92,7 @@ public class SimpleHttpStreamServer implements Runnable {
                 try {                
                     handleNextClient(sock);
                 } catch (InterruptedException e) {
+                    break;
                 } catch (Exception e) {
                     log.error("Error while accepting or handling client", e);
                     if (!excHandler.onError(e)) {

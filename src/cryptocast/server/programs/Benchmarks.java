@@ -398,7 +398,7 @@ public final class Benchmarks {
         }
     }
     
-    static Map<String, Benchmark> commands = ImmutableMap.<String, Benchmark>builder()
+    private static Map<String, Benchmark> commands = ImmutableMap.<String, Benchmark>builder()
             .put("lagrange", new LagrangeBenchmark())
             .put("encrypt", new EncryptBenchmark())
             .put("multi-encrypt", new MultiEncryptBenchmark())

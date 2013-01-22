@@ -18,7 +18,7 @@ public class TestSimpleHttpStreamServer {
         SimpleHttpStreamServer sut = new SimpleHttpStreamServer(
                 in, new InetSocketAddress("127.0.0.1", 0), 
                 "application/octet-stream", 
-                5);
+                5, null);
         Thread t = new Thread(sut);
         t.start();
         int port = sut.waitForListener();
@@ -39,7 +39,7 @@ public class TestSimpleHttpStreamServer {
         SimpleHttpStreamServer sut = new SimpleHttpStreamServer(
                 in, new InetSocketAddress("127.0.0.1", 21312), 
                 "application/octet-stream", 
-                5);
+                5, null);
         Thread t = new Thread(sut);
         t.start();
         Thread.sleep(200);

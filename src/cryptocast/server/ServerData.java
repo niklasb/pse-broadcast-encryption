@@ -109,17 +109,6 @@ public class ServerData<ID> implements Serializable {
         }
         userManager.revoke(identities.build());
     }
-    
-    /**
-     * Revokes a user.
-     * 
-     * @param user The user to revoke.
-     * @return  <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
-     * @throws NoMoreRevocationsPossibleError
-     */
-    public void revoke(User<ID> user) throws NoMoreRevocationsPossibleError {
-        revoke(ImmutableSet.of(user));
-    }
 
     /**
      * Authorizes a user.
