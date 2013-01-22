@@ -34,4 +34,14 @@ public class TestClientApplication {
         assertEquals(Optional.of(new File("bar")), 
                 sut.getServerHistory().getKeyFile(addr));
     }
+    
+    @Test
+    public void savesAndReloadsWifiOnly() {
+        assertFalse(sut.getWifiOnlyOption());
+        sut.setWifiOnlyOption(true);
+        sut.saveState();
+        sut = new ClientApplication();
+        sut.onCreate();
+        assertTrue(sut.getWifiOnlyOption());
+    }
 }

@@ -8,10 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
+import android.media.MediaPlayer.OnInfoListener;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -28,7 +27,8 @@ public class StreamViewerActivity extends ClientActivity
                                              RawStreamMediaPlayer.OnErrorListener,
                                              MediaController.MediaPlayerControl, 
                                              OnTouchListener,
-                                             OnPreparedListener {
+                                             RawStreamMediaPlayer.OnPreparedListener, 
+                                             RawStreamMediaPlayer.OnInfoListener {
     
     private static final Logger log = LoggerFactory
             .getLogger(StreamViewerActivity.class);
@@ -42,12 +42,17 @@ public class StreamViewerActivity extends ClientActivity
     private TextView statusText;
 
     private SocketConnector connector;
+    
+    private static final String READY_TO_PLAY = "Ready to play." +
+    System.getProperty("line.separator") + "(Touch to show controls)";
 
     
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_stream_viewer);
+        // prevent landscape orientation
+        this.setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Bundle args = getIntent().getExtras();
         connectAddr = (InetSocketAddress) args.getSerializable("connectAddr");
         keyFile = (File) args.getSerializable("keyFile");
@@ -56,7 +61,7 @@ public class StreamViewerActivity extends ClientActivity
         mediaController = new MediaController(this);
         mediaController.setMediaPlayer(this);
         mediaController.setAnchorView(findViewById(R.id.MediaController1));
-        mediaController.setEnabled(true);
+        mediaController.setEnabled(false);
         
         findViewById(R.id.MediaController1).setOnTouchListener(this);
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
@@ -68,13 +73,14 @@ public class StreamViewerActivity extends ClientActivity
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
         player.setOnPreparedListener(this);
+        player.setOnInfoListener(this);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        connector = new SocketConnector(sock, connectAddr, keyFile, player,
-                this);
+        connector = new SocketConnector(sock, connectAddr, keyFile, player, this);
         new Thread(connector).start();
     }
     
@@ -186,11 +192,12 @@ public class StreamViewerActivity extends ClientActivity
     }
 
     @Override
-    public void onPrepared(MediaPlayer arg0) {
+    public void onPrepared(RawStreamMediaPlayer arg0) {
         spinner.setVisibility(View.INVISIBLE);
-        setStatusText("Ready to play." + System.getProperty("line.separator") + 
-                "(Touch to show controls)");
+        mediaController.setEnabled(true);
+        setStatusText(READY_TO_PLAY);
         mediaController.show();
+        player.start();
     }
     
     /**
@@ -215,4 +222,16 @@ public class StreamViewerActivity extends ClientActivity
             }
         });
     }
+
+    @Override
+    public void onInfo(RawStreamMediaPlayer p, int what, int extra) {
+        if (what == 701) { // needs to buffer
+            spinner.setVisibility(View.VISIBLE);
+            setStatusText("Buffering...");
+        } else if (what == 702) { // continues playback
+            spinner.setVisibility(View.INVISIBLE);
+            setStatusText(READY_TO_PLAY);
+        }
+    }
+    
 }
