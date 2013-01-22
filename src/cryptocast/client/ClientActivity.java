@@ -13,7 +13,7 @@ import android.view.MenuItem;
  * Defines a client activity. Other activities extend this base activity, which provides basic
  * basic common functionality.
  */
-public class ClientActivity extends FragmentActivity {
+public abstract class ClientActivity extends FragmentActivity {
 	/**
      * The client application.
 	 */

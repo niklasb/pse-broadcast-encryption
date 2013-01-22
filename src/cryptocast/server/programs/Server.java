@@ -40,7 +40,7 @@ public final class Server {
         private int keyBroadcastIntervalSecs = 15;
         
         @Parameter(names = { "-g", "--group" }, description = "The group structure to use ('ec' or 'schnorr')")
-        private String group = "schnorr";
+        private String group = "ec";
         
         @Parameter(names = { "-v", "--verbosity" }, 
                    description = "Control the level of debug output on STDERR (trace, debug, info, warn, error)")

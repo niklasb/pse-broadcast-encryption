@@ -1,15 +1,15 @@
 package cryptocast.client;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import cryptocast.comm.StreamMessageInChannel;
 import cryptocast.crypto.BroadcastEncryptionClient;
-import cryptocast.crypto.SchnorrGroup;
+import cryptocast.crypto.EllipticCurveGroup;
+import cryptocast.crypto.EllipticCurveOverFp;
+import cryptocast.crypto.naorpinkas.ECNPClient;
 import cryptocast.crypto.naorpinkas.NPKey;
-import cryptocast.crypto.naorpinkas.SchnorrNPClient;
 import cryptocast.util.SerializationUtils;
 
 import org.slf4j.Logger;
@@ -21,14 +21,14 @@ import org.slf4j.LoggerFactory;
  * @author Christoph
  *
  */
-public class SocketConnector implements Runnable {
+public class StreamConnector implements Runnable {
     private Socket sock;
     private InetSocketAddress connectAddr;
     private File keyFile;
     private RawStreamMediaPlayer player;
     private StreamViewerActivity streamViewerActivity;
     private static final Logger log = LoggerFactory
-            .getLogger(SocketConnector.class);
+            .getLogger(StreamConnector.class);
     
     /**
      * Creates a SocketConnector with the given socket.
@@ -37,7 +37,7 @@ public class SocketConnector implements Runnable {
      * @param player 
      * @param streamViewerActivity 
      */
-    public SocketConnector(Socket socket, InetSocketAddress connectAddr, File keyFile, 
+    public StreamConnector(Socket socket, InetSocketAddress connectAddr, File keyFile, 
             RawStreamMediaPlayer player, StreamViewerActivity streamViewerActivity) {
         this.sock = socket;
         this.connectAddr = connectAddr;
@@ -56,13 +56,7 @@ public class SocketConnector implements Runnable {
      * Stops the connector.
      */
     public void stop() {
-        try {
-            if (sock != null) {
-                sock.close();
-            }
-        } catch (IOException e) {
-            log.error("Can not stop socket connector.", e);
-        }
+        try { sock.close(); } catch (Throwable e) {}
     }
     
     private void connectToStream() {
@@ -85,14 +79,18 @@ public class SocketConnector implements Runnable {
     }
 
     private void receiveData() {
-        NPKey<BigInteger, SchnorrGroup> key;
+        log.debug("Assuming that the server uses elliptic curves. Erasure makes" +
+        		  " it hard to extract the actual type from the key file");
+        NPKey<EllipticCurveOverFp.Point, 
+              EllipticCurveGroup<BigInteger, 
+                                 EllipticCurveOverFp.Point, 
+                                 EllipticCurveOverFp>> key;
         try {
             key = SerializationUtils.readFromFile(keyFile);
         } catch (Exception e) {
             log.error("Could not load key from file: ", e);
             streamViewerActivity.createErrorPopup("Invalid key file!");
             streamViewerActivity.app.getServerHistory().invalidateKeyFile(connectAddr);
-            
             return;
         }
 
@@ -100,7 +98,7 @@ public class SocketConnector implements Runnable {
             BroadcastEncryptionClient in =
                     new BroadcastEncryptionClient(
                             new StreamMessageInChannel(sock.getInputStream()), 
-                            new SchnorrNPClient(key));
+                            new ECNPClient(key));
             log.debug("Waiting for first byte");
             streamViewerActivity.setStatusText("Waiting for first byte...");
             in.read();

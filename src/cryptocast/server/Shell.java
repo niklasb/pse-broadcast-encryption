@@ -59,47 +59,42 @@ public class Shell extends InteractiveCommandLineInterface {
                          "Unrevoke a user",
                          "Reverts the revokation of the user with the given name. "
                              + "As a result of this the user will be able to access "
-                             + "the streamed data again. Just like revokations this happens "
-                             + "immediately."),
+                             + "the streamed data again. Just like revokations this takes "
+                             + "immediate effect."),
         new ShellCommand("users",
                          "",
                          "List users",
-                         "Shows the total amount of users, the amount of revokes users, the "
-                             + "amount of possible revocations and a list of all users and the "
-                             + "information which user is revoked."),
+                         "Shows a list of all users along with their corresponding revokation status."),
         new ShellCommand("save-keys",
                          "dir [<user>, [<user>, ...]]",
-                         "Save user keys to a directory",//TODO muss directory bestehen oder wird erstellt?!
+                         "Save user keys to a directory",
                          "Every user has a corresponding keyfile. These keyfiles are saved in the "
-                             + "given directory when using this command. "
+                             + "specified directory when using this command.\n\n"
+                             + "If a list of users is given, only the key files of these users will be saved. "
+                             + "Otherwise, the key files of all users are saved.\n\n"
                              + "Each of these files must be shipped to the correspondig "
-                             + "user on a safe way, because it allows everyone having a key "
-                             + "to access the streamed data(if the user to which this key "
-                             + "belongs is not revoked"),
-        new ShellCommand("stream-stdin",
-                         "",
-                         "Captures input from STDIN and broadcasts it",
-                         "Broadcasts the input from STDIN. This command is only usefull for "
-                             + "testing and debugging, because the android client cannot handle "
-                             + "this stream."),
-        new ShellCommand("stream-sample-text",
-                         "",
-                         "Streams an infinite stream of sample text",
-                         "An infinite stream of text is broadcasted. Because the android client "
-                             + "cannot handle this kind of stream, this command is usefull only "
-                             + "for testing and debugging."),
+                             + "user on a safe way, because it enables its owner "
+                             + "to access the streamed data.\n\n"
+                             + "The specified directory will be created if it does not yet exist."),
+//        new ShellCommand("stream-stdin",
+//                         "",
+//                         "Captures input from STDIN and broadcasts it"),
+//        new ShellCommand("stream-sample-text",
+//                         "",
+//                         "Streams an infinite stream of sample text"),
         new ShellCommand("stream-mp3",
                          "<file>",
                          "Stream an MPEG-3 audio file",
                          "Starts streaming the MPEG-3 audio file specified by the parameter "
-                             + "\"file\". A stream is stopped when a new one is started, the "
-                             + "server is stopped or the whole has been streamed."),
+                             + "`file'. You can switch the current streaming file at any time.\n\n"
+                             + "Variable bitrates are not supported here!"),
         new ShellCommand("init",
                          "<t>",
                          "Create a whole new crypto context",
                          "The old crypto context with all its users and information "
-                             + "is deleted and a new one is created. The paramater \"t\" "
-                             + "describes the amount of users which can be revoked."),
+                             + "is deleted and a new one is created. The paramater `t' "
+                             + "describes the amount of users which can be revoked.\n\n"
+                             + "All clients currently connected will lose their connection."),
     };
 
     private static SortedMap<String, ShellCommand> commandsByName = 

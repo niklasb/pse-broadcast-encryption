@@ -40,7 +40,7 @@ public class StreamViewerActivity extends ClientActivity
     private ProgressBar spinner;
     private TextView statusText;
 
-    private SocketConnector connector;
+    private StreamConnector connector;
     
     private static final String READY_TO_PLAY = "Ready to play." +
     System.getProperty("line.separator") + "(Touch to show controls)";
@@ -79,7 +79,7 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onStart() {
         super.onStart();
-        connector = new SocketConnector(sock, connectAddr, keyFile, player, this);
+        connector = new StreamConnector(sock, connectAddr, keyFile, player, this);
         new Thread(connector).start();
     }
     
