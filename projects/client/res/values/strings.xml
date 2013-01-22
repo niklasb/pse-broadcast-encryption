@@ -29,5 +29,8 @@
     <string name="help_text4"><li>You can view the servers you already connected with in options and modify or delete them with a long touch.</li></string>
     <string name="help_text5"><li>You can get back to the main screen at any time by using the Back button.</li></string>
     <string name="show_visited">Show visited</string>
+    <string name="authors">Authors:\n Mohammed Abu Jayyab,\n Niklas Baumstark,\n Tobias Gräf,\n Amrei Loose,\n Christoph Michel</string>
+    <string name="icons">All icons from\n <a href="http://www.visualpharm.com/">http://www.visualpharm.com/</a> </string>
+    
 
 </resources>
