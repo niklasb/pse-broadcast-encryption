@@ -34,7 +34,7 @@ public class OptionsActivity extends ClientActivity {
         wifiCheckBox.setChecked(app.getWifiOnlyOption());
         listing = (ListView) findViewById(R.id.listView1);
         listing.setAdapter(new ServerListAdapter(
-                   app, app.getResources(), app.getServerHistory().getServerList()));
+                   app, app.getServerHistory().getServerList()));
         registerForContextMenu(listing);
     }
     
