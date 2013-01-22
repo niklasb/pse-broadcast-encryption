@@ -56,10 +56,12 @@ public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
         return data;
     }
     
-    protected abstract byte[] decryptSecretWithItem(byte[] encryptedSecret, T item);
+    protected abstract byte[] decryptSecretWithItem(byte[] encryptedSecret, T item)
+                                        throws DecryptionError;
     
     @Override
-    public byte[] decrypt(byte[] cipher) throws InsufficientInformationError {
+    public byte[] decrypt(byte[] cipher) 
+                    throws InsufficientInformationError, DecryptionError {
         NPMessage<T, G> msg = unpackMessage(cipher);
         NPShareCombinator<T, G> combinator = 
                 new NPShareCombinator<T, G>(msg.getT(), group);

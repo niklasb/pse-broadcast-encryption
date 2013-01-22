@@ -21,12 +21,7 @@ public class SchnorrNPServer extends NPServer<BigInteger, SchnorrGroup> {
         if (secret.length >= getContext().getGroup().getP().bitLength() / 8 - 2) {
             return Optional.absent();
         }
-        byte[] bytes = new byte[secret.length + 1];
-        // explicitly set the sign bit so we can safely remove it on the other side
-        bytes[0] = 0x01;
-        System.arraycopy(secret, 0, bytes, 1, secret.length);
-        BigInteger secretAsNum = new BigInteger(bytes);
-        return Optional.of(secretAsNum.xor(key).toByteArray());
+        return Optional.of(CryptoUtils.encryptAndHash(secret, key.toByteArray()));
     }
 
     @Override

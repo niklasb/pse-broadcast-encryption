@@ -34,7 +34,6 @@ public class TestBroadcastEncryptionServer {
 
     @Test
     public void revokeTriggersKeyUpdate() throws Exception {
-        Identity id = new Identity();
         sut.update(userManagerObs, null);
         verify(cipherStream, times(1)).updateKey();
     }

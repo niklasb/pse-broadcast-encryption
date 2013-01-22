@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Random;
 
-import cryptocast.crypto.EllipticCurve.*;
 import cryptocast.crypto.EllipticCurveOverFp.*;
 
 import org.junit.Test;

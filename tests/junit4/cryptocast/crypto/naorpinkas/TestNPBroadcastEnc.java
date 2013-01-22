@@ -2,8 +2,6 @@ package cryptocast.crypto.naorpinkas;
 
 import static org.junit.Assert.*;
 
-import java.math.BigInteger;
-
 import org.junit.Test;
 
 import cryptocast.comm.MessageBuffer;

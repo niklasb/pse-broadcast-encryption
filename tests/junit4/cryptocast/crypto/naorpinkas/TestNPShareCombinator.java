@@ -13,8 +13,7 @@ import cryptocast.crypto.*;
 
 public class TestNPShareCombinator {
     private SchnorrGroup schnorr = SchnorrGroup.getP1024Q160();
-    private IntegersModuloPrime modQ = schnorr.getFieldModOrder(),
-                                modP = schnorr.getFieldModP();
+    private IntegersModuloPrime modQ = schnorr.getFieldModOrder();
     
     @Test
     public void canRestoreSecretFromValidShares() {

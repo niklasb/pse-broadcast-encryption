@@ -6,7 +6,6 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cryptocast.crypto.*;
 import cryptocast.crypto.EllipticCurveOverFp.*;
-import cryptocast.util.ArrayUtils;
 
 public class ECNPClient extends 
          NPClient<Point, 
@@ -31,10 +30,9 @@ public class ECNPClient extends
     }
 
     @Override
-    protected byte[] decryptSecretWithItem(byte[] encryptedSecret, Point p) {
-        BigInteger xor = new BigInteger(encryptedSecret);
+    protected byte[] decryptSecretWithItem(byte[] encryptedSecret, Point p) 
+                          throws DecryptionError {
         BigInteger key = getGroup().getCurve().getAffineCoords(p).get().getX();
-        byte[] bytes = key.xor(xor).toByteArray();
-        return ArrayUtils.copyOfRange(bytes, 1, bytes.length);
+        return CryptoUtils.decryptAndHash(encryptedSecret, key.toByteArray());
     }
 }
