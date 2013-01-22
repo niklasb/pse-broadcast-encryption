@@ -25,7 +25,7 @@ public class ServersFragment extends MessageFragment {
         super(message);
         listing = new ListView(app);
         listing.setAdapter(new ServerListAdapter(
-                    app, app.getResources(), app.getServerHistory().getServerList()));
+                    app, app.getServerHistory().getServerList()));
         listing.setClickable(true);
         listing.setOnItemClickListener(new OnItemClickListener() {
             @Override
