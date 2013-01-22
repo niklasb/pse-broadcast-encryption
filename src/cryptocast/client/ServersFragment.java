@@ -8,11 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 /**
- * This class is used to pop up an error message.
+ * This class is used to pop up a list of all saved servers.
  */
 public class ServersFragment extends MessageFragment {
     public static interface OnServerSelected {
@@ -25,9 +24,8 @@ public class ServersFragment extends MessageFragment {
     public ServersFragment(ClientApplication app, String message, final OnServerSelected callback) {
         super(message);
         listing = new ListView(app);
-        listing.setAdapter(
-                new ServerListAdapter(
-                        app, app.getResources(), app.getServerHistory().getServerList()));
+        listing.setAdapter(new ServerListAdapter(
+                    app, app.getResources(), app.getServerHistory().getServerList()));
         listing.setClickable(true);
         listing.setOnItemClickListener(new OnItemClickListener() {
             @Override

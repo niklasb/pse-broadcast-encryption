@@ -63,6 +63,15 @@ public class ServerHistory implements Serializable {
         servers.put(addr, keyFile);
     }
     
+    /**
+     * Deletes a server from the server history.
+     * @param addr The socket address of the server that's deleted.
+     */
+    public void deleteServer(InetSocketAddress addr) {
+        log.debug("Removing saved server {}", addr);
+        servers.remove(addr);
+    }
+    
     
     /**
      * Removes a saved key file of the server.
