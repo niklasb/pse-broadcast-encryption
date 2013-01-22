@@ -6,19 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-=======
-import android.util.Log;
-import android.view.View;
->>>>>>> bcf91e3088adf70da8b62084d5367e05c078150a
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 /** 
  * The option screen. 

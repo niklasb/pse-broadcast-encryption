@@ -179,8 +179,9 @@ changes are listed and described.
 	\begin{itemize}
 	 \item \textit{"+start(databaseFile : File , listenAddr : SocketAddress , keyBroadcastIntervalSecs: int ,
 	 serverFactory : NPServerFactory) : Controller"} for creating a instance of this class. This method now 
-	 implements the functionality of the former method \textit{"+init()"} and the constructor. Therefore,
-	the access modifier of the constructor has changed to private.
+	 implements the functionality of the former method \textit{"+init()"}  and 
+	the constructor. Therefore, the access modifier of the constructor has changed to private and the method  
+	\textit{"+init()"} has been removed.
 	 \item \textit{"+saveUserKeys(dir : File , users : Set<User<NPIdentity>>) : void"} for saving
 	 the personal keys of the users into a key-file at the given directory.
 	 \item \textit{"+saveDatabase() : void"} for saving the database into a specific file.
