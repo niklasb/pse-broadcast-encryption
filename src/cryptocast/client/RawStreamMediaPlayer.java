@@ -216,7 +216,7 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        log.debug("onBufferingUpdate: percent={}", percent);
+        log.trace("onBufferingUpdate: percent={}", percent);
     }
 
     @Override
