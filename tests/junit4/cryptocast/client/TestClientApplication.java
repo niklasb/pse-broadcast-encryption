@@ -39,6 +39,9 @@ public class TestClientApplication {
     public void savesAndReloadsWifiOnly() {
         assertFalse(sut.getWifiOnlyOption());
         sut.setWifiOnlyOption(true);
+        sut.saveState();
+        sut = new ClientApplication();
+        sut.onCreate();
         assertTrue(sut.getWifiOnlyOption());
     }
 }
