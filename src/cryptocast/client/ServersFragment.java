@@ -26,8 +26,8 @@ public class ServersFragment extends MessageFragment {
         super(message);
         listing = new ListView(app);
         listing.setAdapter(
-                new ArrayAdapter<InetSocketAddress> (
-                        app, R.layout.file_chooser_row, app.getServerHistory().getServerList()));
+                new ServerListAdapter(
+                        app, app.getResources(), app.getServerHistory().getServerList()));
         listing.setClickable(true);
         listing.setOnItemClickListener(new OnItemClickListener() {
             @Override

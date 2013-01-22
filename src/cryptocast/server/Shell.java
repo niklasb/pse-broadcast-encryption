@@ -79,10 +79,16 @@ public class Shell extends InteractiveCommandLineInterface {
                              + "belongs is not revoked"),
         new ShellCommand("stream-stdin",
                          "",
-                         "Captures input from STDIN and broadcasts it"),
+                         "Captures input from STDIN and broadcasts it",
+                         "Broadcasts the input from STDIN. This command is only usefull for "
+                             + "testing and debugging, because the android client cannot handle "
+                             + "this stream."),
         new ShellCommand("stream-sample-text",
                          "",
-                         "Stream an infinite stream of sample text"),
+                         "Streams an infinite stream of sample text",
+                         "An infinite stream of text is broadcasted. Because the android client "
+                             + "cannot handle this kind of stream, this command is usefull only "
+                             + "for testing and debugging."),
         new ShellCommand("stream-mp3",
                          "<file>",
                          "Stream an MPEG-3 audio file",

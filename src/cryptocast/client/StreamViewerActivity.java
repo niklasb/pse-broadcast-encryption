@@ -8,10 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -28,7 +26,7 @@ public class StreamViewerActivity extends ClientActivity
                                              RawStreamMediaPlayer.OnErrorListener,
                                              MediaController.MediaPlayerControl, 
                                              OnTouchListener,
-                                             OnPreparedListener {
+                                             RawStreamMediaPlayer.OnPreparedListener {
     
     private static final Logger log = LoggerFactory
             .getLogger(StreamViewerActivity.class);
@@ -40,6 +38,8 @@ public class StreamViewerActivity extends ClientActivity
     private Socket sock;
     private ProgressBar spinner;
     private TextView statusText;
+
+    private SocketConnector connector;
 
     
     @Override
@@ -54,7 +54,7 @@ public class StreamViewerActivity extends ClientActivity
         mediaController = new MediaController(this);
         mediaController.setMediaPlayer(this);
         mediaController.setAnchorView(findViewById(R.id.MediaController1));
-        mediaController.setEnabled(true);
+        mediaController.setEnabled(false);
         
         findViewById(R.id.MediaController1).setOnTouchListener(this);
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
@@ -71,7 +71,7 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onStart() {
         super.onStart();
-        SocketConnector connector = new SocketConnector(sock, connectAddr, keyFile, player,
+        connector = new SocketConnector(sock, connectAddr, keyFile, player,
                 this);
         new Thread(connector).start();
     }
@@ -85,6 +85,8 @@ public class StreamViewerActivity extends ClientActivity
     @Override
     protected void onPause() {
         player.pause();
+        connector.stop();
+        finish();
         super.onPause();
     }
 
@@ -115,14 +117,6 @@ public class StreamViewerActivity extends ClientActivity
     protected void onStop() {
         player.stop();
         super.onStop();
-    }
-    
-    /** Handles a click on the bottom menu.
-     * @param item The clicked menu item
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return false;
     }
 
     /**
@@ -190,8 +184,9 @@ public class StreamViewerActivity extends ClientActivity
     }
 
     @Override
-    public void onPrepared(MediaPlayer arg0) {
+    public void onPrepared(RawStreamMediaPlayer arg0) {
         spinner.setVisibility(View.INVISIBLE);
+        mediaController.setEnabled(true);
         setStatusText("Ready to play." + System.getProperty("line.separator") + 
                 "(Touch to show controls)");
         mediaController.show();
@@ -202,7 +197,9 @@ public class StreamViewerActivity extends ClientActivity
      * @param message the dialog message
      */
     public void createErrorPopup(String message) {
-        showErrorDialog(message, finishOnClick);
+        if (hasWindowFocus()) {
+            showErrorDialog(message, finishOnClick);
+        }
     }
     
     /**

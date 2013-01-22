@@ -1,6 +1,7 @@
 package cryptocast.client;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -51,6 +52,17 @@ public class SocketConnector implements Runnable {
         connectToStream();
     }
     
+    /**
+     * Stops the connector.
+     */
+    public void stop() {
+        try {
+            sock.close();
+        } catch (IOException e) {
+            log.error("Can not stop socket connector.", e);
+        }
+    }
+    
     private void connectToStream() {
         log.debug("Connecting to {}", connectAddr);
         streamViewerActivity.setStatusText("Connecting to server...");
@@ -78,6 +90,7 @@ public class SocketConnector implements Runnable {
             log.error("Could not load key from file: ", e);
             streamViewerActivity.createErrorPopup("Invalid key file!");
             streamViewerActivity.app.getServerHistory().invalidateKeyFile(connectAddr);
+            
             return;
         }
 
@@ -96,6 +109,7 @@ public class SocketConnector implements Runnable {
         } catch (Exception e) {
             log.error("Error while playing stream", e);
             streamViewerActivity.createErrorPopup("Error while playing stream!");
+            streamViewerActivity.app.getServerHistory().invalidateKeyFile(connectAddr);
             return;
         }
     }

@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 /**
@@ -60,6 +62,20 @@ public class ClientActivity extends FragmentActivity {
             DialogInterface.OnClickListener clickHandler) {
         MessageFragment frag = new MessageFragment(msg, clickHandler);
         frag.show(getSupportFragmentManager(), null);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        if (this instanceof HelpActivity) {
+            menu.findItem(R.id.itemHelp).setEnabled(false);
+        } else if (this instanceof OptionsActivity) {
+            menu.findItem(R.id.itemOptions).setEnabled(false);
+        } else if (this instanceof AboutActivity) {
+            menu.findItem(R.id.itemAbout).setEnabled(false);
+        }
+        return true;
     }
     
     /** 

@@ -2,12 +2,21 @@ package cryptocast.client;
 
 import java.net.InetSocketAddress;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+=======
+import android.util.Log;
+import android.view.View;
+>>>>>>> bcf91e3088adf70da8b62084d5367e05c078150a
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -16,9 +25,12 @@ import android.widget.AdapterView.OnItemClickListener;
  * 
  */
 public class OptionsActivity extends ClientActivity {
+    private static final Logger log = LoggerFactory
+            .getLogger(ClientActivity.class);
     
     private ListView listing;
-
+    private CheckBox wifiCheckBox;
+    
     /** 
      * Receives the saved option state.
      * @param b the old state.
@@ -27,6 +39,8 @@ public class OptionsActivity extends ClientActivity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_options);
+        wifiCheckBox = (CheckBox) findViewById(R.id.checkBoxWifi);
+        wifiCheckBox.setChecked(app.getWifiOnlyOption());
         listing = (ListView) findViewById(R.id.listView1);
         listing.setAdapter(
                 new ArrayAdapter<InetSocketAddress> (
@@ -41,14 +55,15 @@ public class OptionsActivity extends ClientActivity {
          }); 
     }
     
-    /** 
-     * Inflates the option menu.
-     * @param menu The menu.
-     */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_options, menu);
-        return true;
+    protected void onResume() {
+        super.onResume();
+        wifiCheckBox.setChecked(app.getWifiOnlyOption());
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        app.setWifiOnlyOption(wifiCheckBox.isChecked());
     }
 }

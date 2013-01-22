@@ -27,7 +27,8 @@ public class ClientApplication extends Application {
         
         ServerHistory serverHistory = new ServerHistory();
         String hostnameInput = "";
-        String portInput = "";
+        String portInput = "21337";
+        boolean wifiOnlyOption = false;
     }
     
     private State state;
@@ -93,6 +94,24 @@ public class ClientApplication extends Application {
      */
     public void setPortInput(String port) {
         state.portInput = port;
+    }
+    
+    /**
+     * Returns true if the Wifi-Only option is set.
+     * 
+     * @return The status of the Wifi-Only option.
+     */
+    public boolean getWifiOnlyOption() {
+        return state.wifiOnlyOption;
+    }
+    
+    /**
+     * Sets the Wifi-Only option to the given status.
+     * 
+     * @param isSet The status to set. 
+     */
+    public void setWifiOnlyOption(boolean isSet) {
+        state.wifiOnlyOption = isSet;
     }
     
     /**

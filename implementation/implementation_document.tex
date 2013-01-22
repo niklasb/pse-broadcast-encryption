@@ -178,8 +178,9 @@ changes are listed and described.
 	The following methods were added :
 	\begin{itemize}
 	 \item \textit{"+start(databaseFile : File , listenAddr : SocketAddress , keyBroadcastIntervalSecs: int ,
-	 serverFactory : NPServerFactory) : Controller"} for creating a instance of this class 
-	 \textit{"Controller"} with the given values.
+	 serverFactory : NPServerFactory) : Controller"} for creating a instance of this class. This method now 
+	 implements the functionality of the former method \textit{"+init()"} and the constructor. Therefore,
+	the access modifier of the constructor has changed to private.
 	 \item \textit{"+saveUserKeys(dir : File , users : Set<User<NPIdentity>>) : void"} for saving
 	 the personal keys of the users into a key-file at the given directory.
 	 \item \textit{"+saveDatabase() : void"} for saving the database into a specific file.
@@ -192,6 +193,12 @@ changes are listed and described.
 	 \item \textit{"+stream(in : InputStream , maxBytesPerSec : long ) : void"} to stream the data with limiting 
 	 the number of bytes read per second.
 	\end{itemize}
+	
+	\item \textbf{\textit{class Shell<ID>}}\newline
+	The following method was added:
+\begin{itemize}
+	 \item \textit{"+parseInt(strr : String) : Optional<Integer>"} so that converting Strings to Integer is possible.
+\end{itemize}
 	
 	\item \textbf{\textit{class ServerData<ID>}}\newline
 	The following methods were added :
