@@ -108,6 +108,10 @@ public class MainActivity extends ClientActivity {
         }
     }
     
+     /**
+     * Starts a new Server Fragment, showing the list of all servers and a cancel Button.
+     * @param view The view from which this method was called.
+     */
     public void onOldServers(View view) {
         ServersFragment frag = new ServersFragment(app, "Please choose a server.", 
             new ServersFragment.OnServerSelected() {

@@ -6,8 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -37,7 +38,14 @@ public class OptionsActivity extends ClientActivity {
         listing.setAdapter(
                 new ArrayAdapter<InetSocketAddress> (
                         app, R.layout.file_chooser_row, app.getServerHistory().getServerList()));
-
+        listing.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+                return true;
+             }
+            
+         }); 
     }
     
     @Override
