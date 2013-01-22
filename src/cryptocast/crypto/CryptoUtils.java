@@ -6,6 +6,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -13,8 +14,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import cryptocast.util.ArrayUtils;
 
 public class CryptoUtils {
     private static byte[] aesEncryptDecrypt(int opmode, byte[] secret, byte[] key)
@@ -24,7 +23,7 @@ public class CryptoUtils {
         catch (NoSuchPaddingException e) { cannotHappen(e); }
         catch (NoSuchAlgorithmException e) { cannotHappen(e); }
         
-        byte[] rawKey = ArrayUtils.copyOfRange(sha256(key), 0, 16);
+        byte[] rawKey = Arrays.copyOfRange(sha256(key), 0, 16);
         SecretKeySpec skeySpec = new SecretKeySpec(rawKey, "AES");
         try { cipher.init(opmode, skeySpec, new IvParameterSpec(new byte[16])); }
         catch (InvalidKeyException e) { cannotHappen(e); }
@@ -64,10 +63,10 @@ public class CryptoUtils {
         if (plainWithHash.length < 32) {
             throw new DecryptionError("Wrong key or corrupted cipher text");
         }
-        byte[] plain = ArrayUtils.copyOfRange(plainWithHash, 0, plainWithHash.length - 32);
-        byte[] hash = ArrayUtils.copyOfRange(plainWithHash, 
+        byte[] plain = Arrays.copyOfRange(plainWithHash, 0, plainWithHash.length - 32);
+        byte[] hash = Arrays.copyOfRange(plainWithHash, 
                              plainWithHash.length - 32, plainWithHash.length);
-        if (!ArrayUtils.equals(sha256(plain), hash)) {
+        if (!Arrays.equals(sha256(plain), hash)) {
             throw new DecryptionError("Wrong key or corrupted cipher text");
         }
         return plain;

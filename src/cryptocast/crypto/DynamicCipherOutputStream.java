@@ -154,10 +154,10 @@ public class DynamicCipherOutputStream extends OutputStream {
         try {
             createCipher(gen.generateKey());
         } catch (InvalidKeyException e) {
-            throwWithCause(new IllegalArgumentException(
+            throw new IllegalArgumentException(
                     "Creating a cipher failed, if you specified a key size over "
                   + "128 bits, please make sure that you have the Unlimited Strength "
-                  + "Jurisdiction Policy Files installed"), e);
+                  + "Jurisdiction Policy Files installed", e);
         }
         return gen;
     }
