@@ -39,7 +39,8 @@ public class StreamViewerActivity extends ClientActivity
     private Socket sock;
     private ProgressBar spinner;
     private TextView statusText;
-
+    private boolean finished = false;
+    
     private StreamConnector connector;
     
     private static final String READY_TO_PLAY = "Ready to play." +
@@ -91,25 +92,56 @@ public class StreamViewerActivity extends ClientActivity
     
     @Override
     protected void onPause() {
-        player.pause();
-        connector.stop();
-        finish();
+        cleanup();
         super.onPause();
     }
 
+    private void cleanup() {
+        if (finished)
+            return;
+        try {
+            player.stop();
+            connector.stop();
+        } catch (Throwable e) {
+            log.warn("Exception during cleanup:", e);
+        }
+        finished = true;
+    }
+    
     @Override
     public void onCompletion(RawStreamMediaPlayer p) {
-        try {
-            sock.close();
-        } catch (Throwable e) { }
+        connector.stop();
     }
     
     @Override
     public boolean onError(RawStreamMediaPlayer p, int what, int extra) {
+        if (finished) 
+            return false;
         log.error("MediaPlayer error: {} {}", formatError(what), formatError(extra));
+        handleError();
+        return false;
+    }
+
+    @Override
+    public boolean onError(RawStreamMediaPlayer p, Exception e) {
+        if (finished) 
+            return false;
+        log.error("HTTP server error:", e);
+        handleError();
         return false;
     }
     
+    protected void handleError(String msg) {
+        app.getServerHistory().invalidateKeyFile(connectAddr);
+        cleanup();
+        showErrorDialog(msg, finishOnClick);
+    }
+    
+    protected void handleError() {
+        handleError("Error while playing stream! Please try to reconnect "
+                  + "and check if you selected the correct key file.");
+    }
+
     private String formatError(int what) {
         switch (what) {
         case MediaPlayer.MEDIA_ERROR_UNKNOWN: return "MEDIA_ERROR_UNKNOWN";
@@ -118,12 +150,6 @@ public class StreamViewerActivity extends ClientActivity
             return "MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK";
         default: return "MediaError(" + what + ")";
         }
-    }
-
-    @Override
-    protected void onStop() {
-        player.stop();
-        super.onStop();
     }
 
     /**
@@ -195,8 +221,8 @@ public class StreamViewerActivity extends ClientActivity
         spinner.setVisibility(View.INVISIBLE);
         mediaController.setEnabled(true);
         setStatusText(READY_TO_PLAY);
-        mediaController.show();
         player.start();
+        mediaController.show();
     }
     
     /**
@@ -224,13 +250,12 @@ public class StreamViewerActivity extends ClientActivity
 
     @Override
     public void onInfo(RawStreamMediaPlayer p, int what, int extra) {
-        if (what == 701) { // needs to buffer
+        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) { // needs to buffer
             spinner.setVisibility(View.VISIBLE);
             setStatusText("Buffering...");
-        } else if (what == 702) { // continues playback
+        } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) { // continues playback
             spinner.setVisibility(View.INVISIBLE);
             setStatusText(READY_TO_PLAY);
         }
     }
-    
 }

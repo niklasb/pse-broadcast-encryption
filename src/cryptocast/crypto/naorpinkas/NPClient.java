@@ -68,6 +68,7 @@ public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
     public byte[] decrypt(byte[] cipher) 
                     throws InsufficientInformationError, DecryptionError {
         long t0 = System.currentTimeMillis();
+        log.debug("Starting decryption of the session key...");
         NPMessage<T, G> msg = unpackMessage(cipher);
         NPShareCombinator<T, G> combinator = 
                 new NPShareCombinator<T, G>(msg.getT(), group);
@@ -84,7 +85,7 @@ public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
             throw new InsufficientInformationError(
                     "Cannot restore secret: Redundant or missing information");
         }
-        log.debug("Decryption took ~{} ms", System.currentTimeMillis() - t0);
+        log.debug("Decryption took {} ms", System.currentTimeMillis() - t0);
         return decryptSecretWithItem(msg.getEncryptedSecret(), mInterpol.get());
     }
 }

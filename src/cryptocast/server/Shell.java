@@ -2,6 +2,7 @@ package cryptocast.server;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -40,12 +41,10 @@ public class Shell extends InteractiveCommandLineInterface {
                              + "about how to use them is shown. Otherwise more details about the "
                              + "given command can be read by the user."),
         new ShellCommand("add",
-                         "<name>",
-                         "Add a new user to the group of recipients",
+                         "<name> [<name>, [<name>, ... ]]",
+                         "Add new users to the group of recipients",
                          "If no user with the given name exists a new one is created and added "
-                             + "to the group of recipients. Using the command \"save-keys\" "
-                             + "the key assigned to this user can be saved in order to ship "
-                             + "it to the user."),
+                             + "to the group of recipients."),
         new ShellCommand("revoke",
                          "[<name>, [<name>, ... ]]",
                          "Revoke users",
@@ -183,7 +182,11 @@ public class Shell extends InteractiveCommandLineInterface {
             }
             printf("Usage: %s %s\n", helpCmd.getName(), helpCmd.getSyntax());
             println();
-            println(helpCmd.getLongDesc());
+            println(helpCmd.getShortDesc());
+            if (helpCmd.getLongDesc() != null) {
+                println();
+                println(helpCmd.getLongDesc());
+            }
         } else {
             println("Available commands:");
             println();
@@ -242,15 +245,18 @@ public class Shell extends InteractiveCommandLineInterface {
         }
     }
     
-    protected void cmdAdd(ShellCommand cmd, String[] args) throws CommandError {
-        if (args.length != 1) {
+    protected void cmdAdd(ShellCommand cmd, String[] args) throws CommandError, Exit {
+        if (args.length < 1) {
             commandSyntaxError(cmd);
         }
 
-        Optional<User<NPIdentity>> mUser = getModel().createNewUser(args[0]);
-        if (!mUser.isPresent()) {
-            error("User with this name already existing!");
+        for (String name : args) {
+            Optional<User<NPIdentity>> mUser = getModel().createNewUser(name);
+            if (!mUser.isPresent()) {
+                error("User with the name `" + name + "' already exists!");
+            }
         }
+        saveDatabase();
     }
     
     protected void cmdRevoke(ShellCommand cmd, String[] args) throws CommandError {
@@ -267,6 +273,7 @@ public class Shell extends InteractiveCommandLineInterface {
         } catch (NoMoreRevocationsPossibleError e) {
             error("Cannot revoke that many users!");
         }
+        saveDatabase();
     }
     
     protected void cmdUnrevoke(ShellCommand cmd, String[] args) throws CommandError {
@@ -276,16 +283,18 @@ public class Shell extends InteractiveCommandLineInterface {
 
         User<NPIdentity> user = getUser(args[0]);
         getModel().unrevoke(user);
+        saveDatabase();
     }
 
-    protected void cmdSaveKeys(ShellCommand cmd, String[] args) throws CommandError, Exit {
+    protected void cmdSaveKeys(ShellCommand cmd, String[] args) throws CommandError {
         if (args.length < 1) {
             commandSyntaxError(cmd);
         }
 
         File dir = expandPath(args[0]);
+        dir.mkdirs();
         if (!dir.isDirectory()) {
-            error("Target directory does not exist!");
+            error("Could not create target directory!");
         }
         Set<User<NPIdentity>> users;
         if (args.length > 1) {
@@ -299,7 +308,7 @@ public class Shell extends InteractiveCommandLineInterface {
         try {
             control.saveUserKeys(dir, users);
         } catch (Exception e) {
-            fatalError(e);
+            log.error("Could not save user keys", e);
         }
     }
     
@@ -342,7 +351,7 @@ public class Shell extends InteractiveCommandLineInterface {
         try {
             control.streamAudio(file);
         } catch (Exception e) {
-            fatalError(e);
+            error("Could not open the given file: %s", e);
         }
     }
     
@@ -354,6 +363,14 @@ public class Shell extends InteractiveCommandLineInterface {
         return mUser.get();
     }
 
+    private void saveDatabase() throws CommandError {
+        try {
+            control.saveDatabase();
+        } catch (IOException e) {
+            log.error("Could not save database! Please make sure that the location is writable.", e);
+        }
+    }
+    
     private ServerData<NPIdentity> getModel() {
         return control.getModel();
     }

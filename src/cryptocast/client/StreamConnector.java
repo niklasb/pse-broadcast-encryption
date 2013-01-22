@@ -1,15 +1,19 @@
 package cryptocast.client;
 
 import java.io.File;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
 import cryptocast.comm.StreamMessageInChannel;
 import cryptocast.crypto.BroadcastEncryptionClient;
 import cryptocast.crypto.EllipticCurveGroup;
 import cryptocast.crypto.EllipticCurveOverFp;
+import cryptocast.crypto.SchnorrGroup;
 import cryptocast.crypto.naorpinkas.ECNPClient;
 import cryptocast.crypto.naorpinkas.NPKey;
+import cryptocast.crypto.naorpinkas.SchnorrNPClient;
 import cryptocast.util.SerializationUtils;
 
 import org.slf4j.Logger;
@@ -69,7 +73,7 @@ public class StreamConnector implements Runnable {
             sock.connect(connectAddr, 5000);
         } catch (Exception e) {
             log.error("Could not connect to target server", e);
-            streamViewerActivity.createErrorPopup("Could not connect to server!");
+            streamViewerActivity.handleError("Could not connect to server!");
             return;
         }
         log.debug("Connected to {}", connectAddr);
@@ -79,37 +83,43 @@ public class StreamConnector implements Runnable {
     }
 
     private void receiveData() {
-        log.debug("Assuming that the server uses elliptic curves. Erasure makes" +
-        		  " it hard to extract the actual type from the key file");
-        NPKey<EllipticCurveOverFp.Point, 
-              EllipticCurveGroup<BigInteger, 
-                                 EllipticCurveOverFp.Point, 
-                                 EllipticCurveOverFp>> key;
+        log.debug("Assuming that the server uses the NP scheme base on schnorr groups."
+                + " Erasure makes it hard to extract the actual type from the key file");
+//        NPKey<EllipticCurveOverFp.Point, 
+//              EllipticCurveGroup<BigInteger, 
+//                                 EllipticCurveOverFp.Point, 
+//                                 EllipticCurveOverFp>> key;
+        NPKey<BigInteger, SchnorrGroup> key;
         try {
             key = SerializationUtils.readFromFile(keyFile);
         } catch (Exception e) {
             log.error("Could not load key from file: ", e);
-            streamViewerActivity.createErrorPopup("Invalid key file!");
-            streamViewerActivity.app.getServerHistory().invalidateKeyFile(connectAddr);
+            streamViewerActivity.handleError("Invalid key file!");
             return;
         }
 
+        InputStream in;
         try {
-            BroadcastEncryptionClient in =
-                    new BroadcastEncryptionClient(
-                            new StreamMessageInChannel(sock.getInputStream()), 
-                            new ECNPClient(key));
+            in = new BroadcastEncryptionClient(
+                        new StreamMessageInChannel(sock.getInputStream()), 
+                        new SchnorrNPClient(key));
+                        //new ECNPClient(key));
             log.debug("Waiting for first byte");
-            streamViewerActivity.setStatusText("Waiting for first byte...");
+            streamViewerActivity.setStatusText("Decrypting the stream...");
             in.read();
-            log.debug("Buffering media player...");
-            streamViewerActivity.setStatusText("Starting media player...");
+        } catch (Exception e) {
+            log.error("Error while receiving the first byte", e);
+            streamViewerActivity.handleError();
+            return;
+        }
+        log.debug("Preparing media player...");
+        streamViewerActivity.setStatusText("Buffering...");
+        try {
             player.setRawDataSource(in, "audio/mpeg");
             player.prepare();
         } catch (Exception e) {
-            log.error("Error while playing stream", e);
-            streamViewerActivity.createErrorPopup("Error while playing stream!");
-            streamViewerActivity.app.getServerHistory().invalidateKeyFile(connectAddr);
+            log.error("Error while preparing the media player", e);
+            streamViewerActivity.handleError();
             return;
         }
     }

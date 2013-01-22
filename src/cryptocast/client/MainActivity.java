@@ -80,6 +80,7 @@ public class MainActivity extends ClientActivity {
             showErrorDialog("Invalid hostname/port");
             return;
         }
+        log.debug("NetworkInfo: {}", networkInfo != null ? networkInfo.toString() : "<null>");
         if (!networkInfo.isConnected()) {
             showErrorDialog("Not connected to a network!");
         }

@@ -15,10 +15,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static cryptocast.util.ByteUtils.str2bytes;
+
 /**
  * A simple tcp based http server
  */
 public class SimpleHttpStreamServer implements Runnable {
+    public static interface OnErrorListener {
+        public boolean onError(Exception e);
+    }
+    
     private static final int TIMEOUT_MS = 100;
 
     private static final Logger log = LoggerFactory
@@ -30,6 +35,7 @@ public class SimpleHttpStreamServer implements Runnable {
     private SocketAddress addr;
     private ServerSocket sock;
     private CountDownLatch listeningEvent = new CountDownLatch(1);
+    private OnErrorListener excHandler;
     
     /**
      * Creates SimpleHttpStreamServer with the given parameter.
@@ -38,16 +44,21 @@ public class SimpleHttpStreamServer implements Runnable {
      * @param addr the socket address.
      * @param contentType The type of the content.
      * @param bufsize The buffer size.
+     * @param excHandler an exception handler. if it returns true on an exception,
+     *                   we will continue, otherwise we will stop the thread.
      */
     public SimpleHttpStreamServer(InputStream in, 
                                   SocketAddress addr, 
                                   String contentType,
-                                  int bufsize) {
+                                  int bufsize,
+                                  OnErrorListener excHandler) {
         this.in = in;
         this.contentType = contentType;
         this.bufsize = bufsize;
         this.addr = addr;
+        this.excHandler = excHandler;
     }
+    
     /**
      * Waits for a client to send a request. 
      * 
@@ -76,17 +87,19 @@ public class SimpleHttpStreamServer implements Runnable {
         // inform a client sticking at waitForListener()
         // that we are ready for a connection
         listeningEvent.countDown();
-        try {                
-            handleNextClient(sock);
-        } catch (InterruptedException e) {
-            log.error("Error while accepting or handling client", e);
-        } catch (Exception e) {
-            log.error("Error while accepting or handling client", e);
-        }
-         finally {
-            try {
-                sock.close();
-            } catch (Throwable e) { /* ignore errors */ }
+        try {
+            for (;;)
+                try {                
+                    handleNextClient(sock);
+                } catch (InterruptedException e) {
+                } catch (Exception e) {
+                    log.error("Error while accepting or handling client", e);
+                    if (!excHandler.onError(e)) {
+                        break;
+                    }
+                }
+        } finally {
+            try { sock.close(); } catch (Throwable e) { /* ignore errors */ }
         }
     }
     

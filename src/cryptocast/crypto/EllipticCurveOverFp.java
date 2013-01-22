@@ -1,18 +1,24 @@
 package cryptocast.crypto;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 import com.google.common.base.Optional;
 import cryptocast.crypto.EllipticCurveOverFp.Point;
 
-public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point> {
+public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
+                                            Serializable {
+    private static final long serialVersionUID = 3073796632806135558L;
+    
     private IntegersModuloPrime field;
     private BigInteger a, b;
     private Point inf;
     
     private BigInteger _1, _2, _3, _4, _8;
     
-    public static class Point  {
+    public static class Point implements Serializable {
+        private static final long serialVersionUID = -4835674564581364941L;
+        
         private BigInteger jx, jy, jz;
         private EllipticCurveOverFp curve;
         private Point(BigInteger jx, BigInteger jy, BigInteger jz, EllipticCurveOverFp curve) {

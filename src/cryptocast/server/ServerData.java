@@ -10,8 +10,6 @@ import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.security.PrivateKey;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -21,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * Contains the data which is managed by the controller and presented by the view.
  * @param <ID> The type of the user identities
  */
-public class ServerData<ID> extends Observable implements Observer, Serializable {
+public class ServerData<ID> implements Serializable {
     private static final long serialVersionUID = -4614028292663697207L;
     private static final Logger log = LoggerFactory.getLogger(ServerData.class);
 
@@ -54,15 +52,6 @@ public class ServerData<ID> extends Observable implements Observer, Serializable
                       BroadcastSchemeKeyManager<ID> keyManager) {
         this.userManager = userManager;
         this.keyManager = keyManager;
-        initAfterDeserialization();
-    }
-
-    /**
-     * Initialize this instance after deserialization!
-     */
-    public void initAfterDeserialization() {
-        log.trace("Registering as an observer of the user manager");
-        userManager.addObserver(this);
     }
     
     /**
@@ -83,8 +72,6 @@ public class ServerData<ID> extends Observable implements Observer, Serializable
         userByName.put(name, newOne);
         userById.put(userIdent, newOne);
         users.add(newOne);
-        setChanged();
-        notifyObservers();
         return Optional.of(newOne);
     }
 
@@ -159,12 +146,5 @@ public class ServerData<ID> extends Observable implements Observer, Serializable
      */
     public Set<User<ID>> getUsers() {
         return users;
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        log.trace("Set of revoked users changed, notifying observers");
-        setChanged();
-        notifyObservers();
     }
 }

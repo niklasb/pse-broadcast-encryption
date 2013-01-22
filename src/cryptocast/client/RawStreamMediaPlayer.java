@@ -16,10 +16,11 @@ import cryptocast.comm.SimpleHttpStreamServer;
  * Media player to play audio from a raw {@link InputStream}
  */
 public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
-                                               MediaPlayer.OnErrorListener,
-                                               MediaPlayer.OnBufferingUpdateListener,
-                                               MediaPlayer.OnInfoListener, 
-                                               MediaPlayer.OnPreparedListener {
+                                             MediaPlayer.OnErrorListener,
+                                             MediaPlayer.OnBufferingUpdateListener,
+                                             MediaPlayer.OnInfoListener, 
+                                             MediaPlayer.OnPreparedListener,
+                                             SimpleHttpStreamServer.OnErrorListener {
 	/**
 	 * Interface for completion callback.
 	 */
@@ -31,19 +32,29 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     	 */
         public void onCompletion(RawStreamMediaPlayer p);
     }
+    
     /**
      * Interface for error callback.
      */
     public static interface OnErrorListener {
     	/**
-    	 * Called if any error occurs.
+    	 * Called if any error occurs in the media player.
     	 * 
     	 * @param p The media player.
     	 * @param what The error code.
     	 * @param extra Extra info
-    	 * @return <code>true</code>, if any error occurs or <code>false</code> otherwise. 
+    	 * @return true, if the error was handled, false otherwise
     	 */
         public boolean onError(RawStreamMediaPlayer p, int what, int extra);
+        
+        /**
+         * Called if any error occurs in the HTTP server.
+         * 
+         * @param p The media player.
+         * @param e The exception
+         * @return true, if the error was handled, false otherwise
+         */
+        public boolean onError(RawStreamMediaPlayer p, Exception e);
     }
     
     /**
@@ -144,11 +155,13 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
                    in, 
                    new InetSocketAddress("127.0.0.1", 0), 
                    contentType,
-                   0x400000);
+                   0x400000,
+                   this);
         worker = new Thread(server);
         worker.start();
         int port = server.waitForListener();
         log.debug("Temporary HTTP server bound to Port " + port);
+        player.setLooping(false);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setDataSource("http://127.0.0.1:" + port + "/");
         player.setOnErrorListener(this);
@@ -234,10 +247,16 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     }
 
     /**
-     * Returns whether the player is playing.
      * @return whether the player is playing
      */
     public boolean isPlaying() {
         return player.isPlaying();
+    }
+
+    @Override
+    public boolean onError(Exception e) {
+        if (this.errorListener == null)
+            return false;
+        return this.errorListener.onError(this, e);
     }
 }

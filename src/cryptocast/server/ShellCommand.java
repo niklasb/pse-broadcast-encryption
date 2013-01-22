@@ -30,7 +30,7 @@ public class ShellCommand {
         this.name = name;
         this.syntax = syntax;
         this.shortDesc = shortDesc;
-        this.longDesc = shortDesc;
+        this.longDesc = null;
     }
 
     /** @return The command name */
