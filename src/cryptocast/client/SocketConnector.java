@@ -57,7 +57,9 @@ public class SocketConnector implements Runnable {
      */
     public void stop() {
         try {
-            sock.close();
+            if (sock != null) {
+                sock.close();
+            }
         } catch (IOException e) {
             log.error("Can not stop socket connector.", e);
         }

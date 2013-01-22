@@ -51,6 +51,8 @@ public class StreamViewerActivity extends ClientActivity
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_stream_viewer);
+        // prevent landscape orientation
+        this.setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Bundle args = getIntent().getExtras();
         connectAddr = (InetSocketAddress) args.getSerializable("connectAddr");
         keyFile = (File) args.getSerializable("keyFile");
@@ -231,4 +233,5 @@ public class StreamViewerActivity extends ClientActivity
             setStatusText(READY_TO_PLAY);
         }
     }
+    
 }
