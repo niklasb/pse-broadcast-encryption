@@ -102,7 +102,7 @@ public class SocketConnector implements Runnable {
             log.debug("Waiting for first byte");
             streamViewerActivity.setStatusText("Waiting for first byte...");
             in.read();
-            log.debug("Starting media player");
+            log.debug("Buffering media player...");
             streamViewerActivity.setStatusText("Starting media player...");
             player.setRawDataSource(in, "audio/mpeg");
             player.prepare();

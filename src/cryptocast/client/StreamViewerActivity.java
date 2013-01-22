@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnInfoListener;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -26,7 +27,8 @@ public class StreamViewerActivity extends ClientActivity
                                              RawStreamMediaPlayer.OnErrorListener,
                                              MediaController.MediaPlayerControl, 
                                              OnTouchListener,
-                                             RawStreamMediaPlayer.OnPreparedListener {
+                                             RawStreamMediaPlayer.OnPreparedListener, 
+                                             RawStreamMediaPlayer.OnInfoListener {
     
     private static final Logger log = LoggerFactory
             .getLogger(StreamViewerActivity.class);
@@ -40,6 +42,9 @@ public class StreamViewerActivity extends ClientActivity
     private TextView statusText;
 
     private SocketConnector connector;
+    
+    private static final String READY_TO_PLAY = "Ready to play." +
+    System.getProperty("line.separator") + "(Touch to show controls)";
 
     
     @Override
@@ -66,13 +71,14 @@ public class StreamViewerActivity extends ClientActivity
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
         player.setOnPreparedListener(this);
+        player.setOnInfoListener(this);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        connector = new SocketConnector(sock, connectAddr, keyFile, player,
-                this);
+        connector = new SocketConnector(sock, connectAddr, keyFile, player, this);
         new Thread(connector).start();
     }
     
@@ -187,9 +193,9 @@ public class StreamViewerActivity extends ClientActivity
     public void onPrepared(RawStreamMediaPlayer arg0) {
         spinner.setVisibility(View.INVISIBLE);
         mediaController.setEnabled(true);
-        setStatusText("Ready to play." + System.getProperty("line.separator") + 
-                "(Touch to show controls)");
+        setStatusText(READY_TO_PLAY);
         mediaController.show();
+        player.start();
     }
     
     /**
@@ -213,5 +219,16 @@ public class StreamViewerActivity extends ClientActivity
                 statusText.setText(text);
             }
         });
+    }
+
+    @Override
+    public void onInfo(RawStreamMediaPlayer p, int what, int extra) {
+        if (what == 701) { // needs to buffer
+            spinner.setVisibility(View.VISIBLE);
+            setStatusText("Buffering...");
+        } else if (what == 702) { // continues playback
+            spinner.setVisibility(View.INVISIBLE);
+            setStatusText(READY_TO_PLAY);
+        }
     }
 }

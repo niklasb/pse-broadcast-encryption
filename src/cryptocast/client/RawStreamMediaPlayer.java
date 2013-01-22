@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
+import android.media.MediaPlayer.OnInfoListener;
 
 import cryptocast.comm.SimpleHttpStreamServer;
 
@@ -19,7 +19,8 @@ import cryptocast.comm.SimpleHttpStreamServer;
 public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
                                                MediaPlayer.OnErrorListener,
                                                MediaPlayer.OnBufferingUpdateListener,
-                                               MediaPlayer.OnInfoListener {
+                                               MediaPlayer.OnInfoListener, 
+                                               MediaPlayer.OnPreparedListener {
 	/**
 	 * Interface for completion callback.
 	 */
@@ -46,6 +47,30 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
         public boolean onError(RawStreamMediaPlayer p, int what, int extra);
     }
     
+    /**
+     * Interface for on prepared callback.
+     */
+    public static interface OnPreparedListener {
+        /**
+         * Called if player is prepared.
+         * 
+         * @param p The media player.
+         */
+        public void onPrepared(RawStreamMediaPlayer p);
+    }
+    
+    /**
+     * Interface for on info callback.
+     */
+    public static interface OnInfoListener {
+        /**
+         * Called if player provides new info.
+         * 
+         * @param p The media player.
+         */
+        public void onInfo(RawStreamMediaPlayer p, int what, int extra);
+    }
+    
     private static final Logger log = LoggerFactory
             .getLogger(RawStreamMediaPlayer.class);
     
@@ -57,6 +82,7 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     private OnCompletionListener completionListener;
     private OnErrorListener errorListener;
     private OnPreparedListener preparedListener;
+    private OnInfoListener infoListener;
 
     
     /**
@@ -97,6 +123,14 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     }
     
     /**
+     * Set the info listener object.
+     * @param preparedListener prepared listener object to set.
+     */
+    public void setOnInfoListener(OnInfoListener infoListener) {
+        this.infoListener = infoListener;
+    }
+    
+    /**
      * Prepares the player with a data source and event listeners.
      * 
      * @throws IllegalStateException
@@ -122,7 +156,7 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
         player.setOnCompletionListener(this);
         player.setOnBufferingUpdateListener(this);
         player.setOnInfoListener(this);
-        player.setOnPreparedListener(preparedListener);
+        player.setOnPreparedListener(this);
         player.prepare();
     }
 
@@ -174,8 +208,18 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     }
 
     @Override
+    public void onPrepared(MediaPlayer arg0) {
+        log.debug("Player prepared.");
+        if (preparedListener != null)
+            preparedListener.onPrepared(this);
+    }
+
+    @Override
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
         log.debug("onInfo: {} {}", formatInfo(what), extra);
+        if (infoListener != null) {
+            infoListener.onInfo(this, what, extra);
+        }
         return false;
     }
     
