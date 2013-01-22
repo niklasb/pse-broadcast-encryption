@@ -8,10 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -28,7 +26,7 @@ public class StreamViewerActivity extends ClientActivity
                                              RawStreamMediaPlayer.OnErrorListener,
                                              MediaController.MediaPlayerControl, 
                                              OnTouchListener,
-                                             OnPreparedListener {
+                                             RawStreamMediaPlayer.OnPreparedListener {
     
     private static final Logger log = LoggerFactory
             .getLogger(StreamViewerActivity.class);
@@ -56,7 +54,7 @@ public class StreamViewerActivity extends ClientActivity
         mediaController = new MediaController(this);
         mediaController.setMediaPlayer(this);
         mediaController.setAnchorView(findViewById(R.id.MediaController1));
-        mediaController.setEnabled(true);
+        mediaController.setEnabled(false);
         
         findViewById(R.id.MediaController1).setOnTouchListener(this);
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
@@ -186,8 +184,9 @@ public class StreamViewerActivity extends ClientActivity
     }
 
     @Override
-    public void onPrepared(MediaPlayer arg0) {
+    public void onPrepared(RawStreamMediaPlayer arg0) {
         spinner.setVisibility(View.INVISIBLE);
+        mediaController.setEnabled(true);
         setStatusText("Ready to play." + System.getProperty("line.separator") + 
                 "(Touch to show controls)");
         mediaController.show();

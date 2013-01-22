@@ -59,7 +59,7 @@ public class SocketConnector implements Runnable {
         try {
             sock.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Can not stop socket connector.", e);
         }
     }
     
@@ -109,6 +109,7 @@ public class SocketConnector implements Runnable {
         } catch (Exception e) {
             log.error("Error while playing stream", e);
             streamViewerActivity.createErrorPopup("Error while playing stream!");
+            streamViewerActivity.app.getServerHistory().invalidateKeyFile(connectAddr);
             return;
         }
     }
