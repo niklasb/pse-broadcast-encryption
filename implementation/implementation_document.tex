@@ -65,39 +65,43 @@ changes are listed and described.
 \subsection{Package cryptocast.comm}
 
 \begin{itemize}
-   \item \textbf{\textit{class DecoratingMessageOutChannel}}
-	\begin{itemize}
-	 \item This class \textit{"DecoratingMessageOutChannel"} was added for decorating 
-	 a message to send with a certain prefix and suffix.
-	 \item \textit{"+DecoratingMessageOutChannel(inner: MessageOutChannel, prefix: byte[] , suffix: byte[])"} was added. 
-	\end{itemize}
-	 
+   
 	\item \textbf{\textit{class SimpleHttpStreamServer}}
 	\begin{itemize}
-	 \item This class \textit{"SimpleHttpStreamServer"} was added for representing a simple tcp based http server.
-	 \item \textit{"+SimpleHttpStreamServer(in: InputStream, addr: SocketAddress , contentType:  String , bufsize:  int)"} 
-	 was added.
-	 \item \textit{"+waitForListener() : int"} was added.
+	 \item This class was added for representing a simple tcp based http server.
 	\end{itemize}
 	
    \item \textbf{\textit{class MessageBuffer}}
 	\begin{itemize}
-	 \item This class \textit{"MessageBuffer"} was added for representing a buffer for all message.
-	 \item \textit{"+setBlocking(block: boolean) : void"} was added. 
-	 \item \textit{"+close() : void"} was added. 
+	 \item This class was added for representing a buffer for all message.
 	\end{itemize}
 	
 	 \item \textbf{\textit{class StreamUtils}}
 	\begin{itemize}
-	 \item This class \textit{"StreamUtils"} was added for limiting the number of written bytes per second.
-	 \item \textit{"+readall(in: InputStream, buffer: byte[] , offset: int , len: int ) : int"} was added.
-	 \item \textit{"+copyInterruptable(in: InputStream , out: OutputStream , bufsize: int) : void"} was added.
+	 \item This class was added to provide utility methods for input and output streams.
 	\end{itemize}
 	
 	 \item \textbf{\textit{class ThrottledOutputStream}}
 	\begin{itemize}
-	 \item This class \textit{"ThrottledOutputStream"} was added for limiting the number of written bytes per second.
-	 \item \textit{"+ThrottledOutputStream(out: OutputStream , maxBytesPerSec: long)"} was added. 
+	 \item This class was added for representing an IntputStream proxy which limits the number of bytes read per second.
+	\end{itemize}
+	
+	\item \textbf{\textit{class SwitchableOutputStream}}
+	\begin{itemize}
+	 \item This class was added as OutputStream that allows the switching of the underlying stream.
+	\end{itemize}
+	
+	\item \textbf{\textit{class SwitchableInputStream}}
+	\begin{itemize}
+	 \item This class was added as IntputStream that allows the switching of the underlying stream.
+	\end{itemize}
+	
+	\item \textit{\textbf{class ServerMultiMessageOutChannel}}
+	\begin{itemize}
+	 \item The class \textit{"SocketMulticastServer"} was replaced by this class \textit{"ServerMultiMessageOutChannel"}.
+	 \item \textit{"+SocketMulticastServer(socket : ServerSocket)"} was replaced by 
+	 \textit{"+ServerMultiMessageOutChannel(server : ServerSocket , excHandler : Callback<Throwable>)"}.
+	 \item \textit{"+send(data : byte[]) : void"} was deleted.
 	\end{itemize}
 	
    \item \textbf{\textit{class MultiOutputStream}}
@@ -108,42 +112,14 @@ changes are listed and described.
 	 \item \textit{"+removeChannel(channel : OutChannel) : void"} was replaced by 
 	 \textit{"+removeChannel(channel : OutputStream ) : void"}.
 	 \item \textit{"+send(data : byte[]) : void"} was deleted.
-	 \item The static interface \textit{"ErrorHandler"} was added.
-	 \item \textit{"+getChannels() : ImmutableList<OutputStream>"} was added.
-	 \item \textit{"+MultiOutputStream()"} was added.
-	 \item \textit{"+MultiOutputStream(errHandler: ErrorHandler)"} was added.
-	 \item \textit{"+handle(multi: MultiOutputStream, channel: OutputStream, exc: IOException) : void"} was added.
-	 \item \textit{"+removeOnError : ErrorHandler"} was added.
-	 \item \textit{"`+propagateError : ErrorHandler"} was added.
-	\end{itemize}
-	
-   \item \textit{\textbf{class ServerMultiMessageOutChannel}}
-	\begin{itemize}
-	 \item The class \textit{"SocketMulticastServer"} was replaced by this class \textit{"ServerMultiMessageOutChannel"}.
-	 \item \textit{"+SocketMulticastServer(socket : ServerSocket)"} was replaced by 
-	 \textit{"+ServerMultiMessageOutChannel(server : ServerSocket , excHandler : Callback<Throwable>)"}.
-	 \item \textit{"+send(data : byte[]) : void"} was deleted.
-	\end{itemize}
-	 
-   \item \textbf{\textit{class StatisticalInputStream}}
-	\begin{itemize}
-	\item The class \textit{"StatisticalInChannel"} was replaced by this class \textit{"StatisticalInputStream"}.
-	\item \textit{"+StatisticalInChannel(inner : InChannel)"} was replaced by 
-	\textit{"+StatisticalInputStream(inner : InputStream)"}.
-	\item \textit{"+recv(size : int, buffer : byte[]) : void"} was deleted.
-	\end{itemize}
-	
-   \item \textbf{\textit{class StatisticalOutputStream}}
-	\begin{itemize}
-	 \item The class \textit{"StatisticalOutChannel"} was replaced by this class \textit{"StatisticalOutputStream"}.
-	 \item \textit{"+StatisticalOutChannel(inner : OutChannel)"} was replaced by 
-	 \textit{"+StatisticalOutputStream(inner : OutputStream)"}.
-   \item \textit{"+send(data : byte[]) : void"} was deleted.
+	 \item The static interface \textit{"ErrorHandler"} was added to represent an error handler.
+	 \item \textit{"+getChannels() : ImmutableList<OutputStream>"} was added to return an immutable 
+	 list of all output channels.
 	\end{itemize}
  
    \item \textbf{\textit{class StreamMessageInChannel}}
 	\begin{itemize}
-	 \item The class \textit{"MessageInChannel"} was replaced by this \textit{"StreamMessageInChannel"}.
+	 \item The class \textit{"MessageInChannel"} was replaced by this class \textit{"StreamMessageInChannel"}.
 	\end{itemize}
 	
    \item \textbf{\textit{class StreamMessageOutChannel}}
@@ -164,8 +140,8 @@ changes are listed and described.
 	 \item \textbf{\textit{abstract class MessageOutChannel}}
 	\begin{itemize}
 	 \item The interface \textit{"OutChannel"} was replaced by this abstract class \textit{"MessageOutChannel"}.
-	 \item \textit{"+send(data : byte[]) : void"} was renamed to \textit{+sendMessage(data : byte[]) : void"}.
-	 \item \textit{"+sendMessage(data: byte[] , offset: int , len: int) : void"} was added.
+	 \item \textit{"+send(data : byte[]) : void"} was renamed to \textit{"+sendMessage(data : byte[]) : void"}.
+	 \item \textit{"+sendMessage(data: byte[] , offset: int , len: int) : void"} was added to send data.
 	\end{itemize}
 	
 \end{itemize}
@@ -290,6 +266,56 @@ This  completely new package contains some classes used for testing and setting 
 \subsection{Package cryptocast.crypto}
 \subsection{Package cryptocast.crypto.naorpinkas}
 \subsection{Package cryptocast.util}
+
+\begin{itemize}
+  
+   \item \textbf{\textit{class ByteUtils}}
+	\begin{itemize}
+	 \item This class was added to provide several bytes and byte arrays utility functions.
+	\end{itemize}
+	
+	 \item \textbf{\textit{class ErrorUtils}}
+	\begin{itemize}
+	 \item This class was added to provide several error handling utility methods.
+	\end{itemize}
+	
+	 \item \textbf{\textit{class MapUtils}}
+	\begin{itemize}
+	 \item This class was added to provide map utility methods.
+	\end{itemize}
+	
+   \item \textit{\textbf{class NativeUtils}}
+	\begin{itemize}
+	 \item This class was added to provide several utility methods for easier native code calls.
+	\end{itemize}
+	
+	\item \textit{\textbf{class SerializationUtils}}
+	\begin{itemize}
+	 \item This class was added to provide several serialization utility methods.
+	\end{itemize}
+	
+	\item \textit{\textbf{class FileUtils}}
+	\begin{itemize}
+	 \item This class was added to provide file/io utility methods.
+	\end{itemize}
+	
+	\item \textit{\textbf{class Generator<T>}}
+	\begin{itemize}
+	 \item This class was added to represent a range generator.
+	\end{itemize}
+	
+	\item \textit{\textbf{class OptimisticGenerator<T>}}
+	\begin{itemize}
+	 \item This class was added to represent a optimistic generator.
+	\end{itemize}
+	
+	\item \textit{\textbf{interface CanBeObserved}}
+	\begin{itemize}
+	 \item This interface was added to represent an observable object.
+	\end{itemize}
+	
+	
+\end{itemize}
 
 
 
