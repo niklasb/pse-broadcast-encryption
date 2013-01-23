@@ -85,7 +85,7 @@ public final class Benchmarks {
         protected void beforeAll() throws Exception {
             if (isEc()) {
                 serverFactory = new ECNPServerFactory();
-                ecGroup = EllipticCurveGroup.getNamedFpCurve("secp160r1");
+                ecGroup = EllipticCurveGroup.getSecp160R1();
                 log.info("Using an elliptic curve over GF(p) with p 160 bits");
             } else if (isSchnorr()) {
                 serverFactory = new SchnorrNPServerFactory();

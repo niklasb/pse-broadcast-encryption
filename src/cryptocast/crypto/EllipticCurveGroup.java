@@ -4,11 +4,6 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.bouncycastle.jce.ECNamedCurveTable;
-import org.bouncycastle.jce.spec.ECParameterSpec;
-import org.bouncycastle.math.ec.ECCurve;
-import org.bouncycastle.math.ec.ECPoint;
-
 public class EllipticCurveGroup<T, P, C extends EllipticCurve<T, P>>
               extends CyclicGroupOfPrimeOrder<P>
               implements Serializable {
@@ -57,7 +52,7 @@ public class EllipticCurveGroup<T, P, C extends EllipticCurve<T, P>>
     }
     
     /** 
-     * Uses Shamir's trick to get much better performance. Uses {@link subList}, so you'd
+     * Uses Shamir's trick to get much better performance. Uses {@link List.subList}, so you'd
      * better give it {@link ImmutableLists}.
      */
     @Override
@@ -66,24 +61,15 @@ public class EllipticCurveGroup<T, P, C extends EllipticCurve<T, P>>
     }
     
     public static EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp>
-                               getNamedFpCurve(String name) {
-        return fromBCParamSpecFp(ECNamedCurveTable.getParameterSpec(name));
-    }
-    
-    private static EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp> 
-                        fromBCParamSpecFp(ECParameterSpec bcSpec) {
-        ECCurve.Fp bcCurve = (ECCurve.Fp) bcSpec.getCurve();
-        EllipticCurveOverFp curve = new EllipticCurveOverFp(
-                new IntegersModuloPrime(bcCurve.getQ()),
-                bcCurve.getA().toBigInteger(),
-                bcCurve.getB().toBigInteger());
-        ECPoint bcBasePoint = bcSpec.getG();
-        EllipticCurveOverFp.Point basePoint = curve.getPoint(
-                    bcBasePoint.getX().toBigInteger(),
-                    bcBasePoint.getY().toBigInteger()
-                    );
-        return new EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp>(
-                curve, basePoint, 
-                bcSpec.getN());
+                               getSecp160R1() {
+        BigInteger p = new BigInteger("ffffffffffffffffffffffffffffffff7fffffff", 16),
+                   a = new BigInteger("ffffffffffffffffffffffffffffffff7ffffffc", 16),
+                   b = new BigInteger("1c97befc54bd7a8b65acf89f81d4d4adc565fa45", 16),
+                   x = new BigInteger("4a96b5688ef573284664698968c38bb913cbfc82", 16),
+                   y = new BigInteger("23a628553168947d59dcc912042351377ac5fb32", 16),
+                   q = new BigInteger("100000000000000000001f4c8f927aed3ca752257", 16);
+        EllipticCurveOverFp curve = new EllipticCurveOverFp(new IntegersModuloPrime(p), a, b);
+        EllipticCurveOverFp.Point G = curve.getPoint(x, y);
+        return new EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp>(curve, G, q);
     }
 }

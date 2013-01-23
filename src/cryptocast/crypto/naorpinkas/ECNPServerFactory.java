@@ -13,6 +13,6 @@ public class ECNPServerFactory implements NPServerFactory {
     
     @Override
     public ECNPServer construct(int t) {
-        return construct(t, EllipticCurveGroup.getNamedFpCurve("secp160r1"));
+        return construct(t, EllipticCurveGroup.getSecp160R1());
     }
 }
