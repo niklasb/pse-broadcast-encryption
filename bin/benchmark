@@ -1,4 +1,0 @@
-#!/bin/sh
-cd $(dirname "$0")/..
-source bin/common.sh
-$JAVA cryptocast.server.programs.Benchmarks "$@"

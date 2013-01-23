@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="right"
+    android:paddingLeft="0dp"
+    android:paddingTop="0dp"
+    tools:context=".OptionsActivity" >
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:collapseColumns="2"
+        android:stretchColumns="1" >
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="0dp" >
+
+            <CheckBox
+                android:id="@+id/checkBoxWifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/wifi_mode" />
+
+        </TableRow>
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray" />
+
+        <TableRow
+            android:id="@+id/TableRow02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="0dp" >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="@string/server_history"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+         </TableRow>
+                
+                
+                <ListView
+        			android:id="@+id/listView1"
+        			android:layout_width="match_parent"
+        			android:layout_height="wrap_content">
+    			</ListView>
+
+
+
+
+    </TableLayout>
+
+</LinearLayout>

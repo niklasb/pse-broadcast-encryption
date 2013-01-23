@@ -1,4 +1,3 @@
 #!/bin/sh
 cd $(dirname "$0")/..
-source bin/common.sh
-rlwrap $JAVA cryptocast.server.programs.Server "$@"
+JAVA_OPTS=-Djava.library.path=native/lib rlwrap sh modules/server/target/appassembler/bin/server "$@"

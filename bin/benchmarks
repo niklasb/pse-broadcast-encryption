@@ -1,0 +1,3 @@
+#!/bin/sh
+cd $(dirname "$0")/..
+JAVA_OPTS=-Djava.library.path=native/lib sh modules/server/target/appassembler/bin/benchmarks "$@"

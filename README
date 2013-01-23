@@ -1,0 +1,30 @@
+Building
+=================
+
+It's as simple as
+
+    mvn clean install
+    pushd modules/server
+    mvn package appassembler:assemble
+    popd
+
+Or using the shell/batch script `tools/build-all[.cmd]`, which 
+does exactly this.
+
+Running
+=================
+
+Running the server:
+
+    bin/server
+
+on Windows:
+
+    bin\server.bat
+
+Deploying the client app
+=========================
+
+    pushd modules/client
+    mvn android:deploy
+    popd
