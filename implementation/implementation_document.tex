@@ -152,7 +152,7 @@ changes are listed and described.
   
 \item \textbf{\textit{class Controller}} \newline
 The class \textit{Controller} now implements the interface \textit{Observer} so registered observers can 
-tell the controllerwhen it has to save the data this controller is connected to.
+tell the controller when it has to save the data this controller is connected to.
 The following methods were added :
 	\begin{itemize}
 	 \item \textit{"+start(databaseFile : File , listenAddr : SocketAddress , keyBroadcastIntervalSecs: int ,
@@ -195,7 +195,6 @@ The following method was added:
 	The following methods were added :
   \begin{itemize}
  	 \item \textit{"+initAfterDeserialization()"} to initalize the data after it was read from a file.
-	 \item \textit{"+update(o : Observable, arg : Object) : void"} TODO
 	 \item \textit{"+revoke(users : Set<User<ID>>) : void"} so that we can revoke multiple users at the same time.
 	 \item \textit{"+revoke(user : User<ID>) : void"} so that we can revoke only one user.
 	 \item \textit{"+unrevoke(user : User<ID>) : void} so that we can authorize a user.
@@ -231,7 +230,7 @@ The following method was added:
 \subsection{Package cryptocast.server.programs}
 This  completely new package contains some classes used for testing and setting up the server:
 \begin{itemize}
-	\item \textit{Benchmarks} gathesr data about the time several functions needed by the cryptography are running
+	\item \textit{Benchmarks} gathers data about the time several functions needed by the cryptography are running
 		with several paramters. The available benchmarks are  lagrange, encrypt, multi-encrypt, decrypt, multi-eval, keygen, multi-exp.
 		TODO: translate bechmarks in proper language, add description below
 	\item \textit{Client} starts a cterminal-based client. A keyfile must be provided to it to run.
@@ -243,28 +242,99 @@ This  completely new package contains some classes used for testing and setting 
 
 \subsection{Package cryptocast.client}
 
+
 \begin{itemize}
-   \item \textbf{\textit{class StreamViewerActivity}} \newline
-   This class now implements  \textit{MediaController.MediaPlayerContro}l to provide better 	control of the media player. In addition, the following methods were added:
+
+\item \textbf{\textit{class StreamViewerActivity}} \newline
+   This class now implements  \textit{MediaController.MediaPlayerContro}l to provide better 
+	control of the media player. In addition, the following methods were added:
 	\begin{itemize}
 	 \item \textit{"+setStatusText(text : String)"} to set the player's status text.
 	 \item \textit{"+createErrorPopup(message : String")} to create an error popup from other classes.
 	\end{itemize}
 	
-    \item \textbf{\textit{class StreamConnector}} \newline
-    This class was added to separate work from the StreamViewerActivity class in a separate thread to prevent the GUI not from showing properly. The class implements Runnalbe and the according methods.
+	 \item \textbf{\textit{class MainActivity}}
 	\begin{itemize}
-	 \item \textit{"+StreamConnector...)"} set up the class to be able to connect when the thread is being started.
-	 \item \textit{"+stop()} to stop the connector 
+	 \item \textit{"+connectToServer(View view) : void"} was renamed to \textit{+onConnect(View view) : void"}.
+	 \item \textit{"+onOldServers(View view) : void"} was added to start a new server fragment for showing the 
+	  list of all servers.
+		\item \textit{"+getConnectAddr() : Optional<InetSocketAddress>"} was added to get the socket address 
+		and to check, if the host name and the port number are valid.
+	\end{itemize}
+	
+	\item \textbf{\textit{class ServerHistory}} \newline
+	The following methods were added :
+	\begin{itemize}
+   \item \textit{"+deleteServer(InetSocketAddress addr) : void"} to delete a server from the server history.
+	 \item \textit{"+invalidateKeyFile(InetSocketAddress addr) : void"} to delete a saved key file of the server.
+	 \item \textit{"+getKeyFile(InetSocketAddress addr) : Optional<File>"} to return the key file of the given server.
+	\end{itemize}
+
+ \item \textit{\textbf{class ClientActivity}}
+	\begin{itemize}
+	 \item This class was added as base activity, which provides basic common functionality.
+	\end{itemize}
+	 
+    \item \textbf{\textit{class ClientApplication}}
+	\begin{itemize}
+	 \item This class was added for maintaining the global application state.
+	\end{itemize}
+	
+	\item \textbf{\textit{class HelpActivity}}
+	\begin{itemize}
+	 \item This class was added to represent an activity that displays the help page.
+	\end{itemize}
+	
+	\item \textbf{\textit{class AboutActivity}}
+	\begin{itemize}
+	 \item This class was added to represent the about dialog.
+	\end{itemize}
+	
+   \item \textbf{\textit{class MessageFragment}}
+  \begin{itemize}
+	 \item The class \textit{"ErrorFragment"} was renamed to \textit{"MessageFragment"}.
+	\end{itemize}
+	
+	\item \textbf{\textit{class ServersFragment}}
+	\begin{itemize}
+	 \item This class was added to represent a list of all saved servers.
+	\end{itemize}
+	
+	\item \textbf{\textit{class ServerListAdapter}}
+	\begin{itemize}
+	\item This class was added to provide an adapter between the ListElements and the view showing them.
+	\end{itemize}
+	
+	\item \textbf{\textit{class RawStreamMediaPlayer}}
+	\begin{itemize}
+  \item This class was added to provide Media player to play audio from a raw InputStream.
+	\end{itemize}
+	
+    \item \textbf{\textit{class StreamConnector}} 
+	\begin{itemize}
+	 \item This class was added to separate work from the StreamViewerActivity class 
+	in a separate thread to prevent the GUI not from showing properly.
 	\end{itemize}
 	
 \end{itemize}
 
 	
 \subsection{Package cryptocast.client.filechooser}
-\subsection{Package cryptocast.client.bufferedmediaplayer}
-\subsection{Package cryptocast.crypto}
-\subsection{Package cryptocast.crypto.naorpinkas}
+
+\begin{itemize}
+
+ \item \textit{\textbf{class NavigateUpListElement}}
+	\begin{itemize}
+	 \item This class was added as a list element in our file chooser representing a directory.
+	\end{itemize}
+	 
+    \item \textbf{\textit{class FileChooserState}}
+	\begin{itemize}
+	 \item This class was added to represent the state of a file chooser.
+	\end{itemize}
+	
+\end{itemize}
+	
 \subsection{Package cryptocast.util}
 
 \begin{itemize}
@@ -314,8 +384,12 @@ This  completely new package contains some classes used for testing and setting 
 	 \item This interface was added to represent an observable object.
 	\end{itemize}
 	
+	\end{itemize}
 	
-\end{itemize}
+	
+\subsection{Package cryptocast.crypto}
+\subsection{Package cryptocast.crypto.naorpinkas}
+	
 
 
 
