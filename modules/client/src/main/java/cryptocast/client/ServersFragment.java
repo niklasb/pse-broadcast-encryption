@@ -19,7 +19,15 @@ import android.widget.ListView;
  * This class is used to pop up a list of all saved servers.
  */
 public class ServersFragment extends DialogFragment {
+    /**
+     * On server selected interface.
+     *
+     */
     public static interface OnServerSelected {
+        /**
+         * Called on server selection.
+         * @param addr selected address
+         */
         public void onServerSelected(InetSocketAddress addr);
     }
     
@@ -28,6 +36,12 @@ public class ServersFragment extends DialogFragment {
     private String message;
     private OnClickListener clickHandler;
     
+    /**
+     * Creates a servers popup.
+     * @param app global application manager
+     * @param message the message to display
+     * @param callback on selected callback
+     */
     public ServersFragment(ClientApplication app, String message, final OnServerSelected callback) {
         super();
         this.message = message;

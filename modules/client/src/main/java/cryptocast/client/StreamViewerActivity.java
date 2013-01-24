@@ -96,18 +96,17 @@ public class StreamViewerActivity extends ClientActivity
         super.onPause();
     }
 
-    private void cleanup() {
-        if (finished)
-            return;
-        try {
-            player.stop();
-            connector.stop();
-        } catch (Throwable e) {
-            log.warn("Exception during cleanup:", e);
-        }
-        finished = true;
+    protected void handleError(String msg) {
+        app.getServerHistory().invalidateKeyFile(connectAddr);
+        cleanup();
+        showErrorDialog(msg, finishOnClick);
     }
-    
+
+    protected void handleError() {
+        handleError("Error while playing stream! Please try to reconnect "
+                  + "and check if you selected the correct key file.");
+    }
+
     @Override
     public void onCompletion(RawStreamMediaPlayer p) {
         connector.stop();
@@ -131,27 +130,6 @@ public class StreamViewerActivity extends ClientActivity
         return false;
     }
     
-    protected void handleError(String msg) {
-        app.getServerHistory().invalidateKeyFile(connectAddr);
-        cleanup();
-        showErrorDialog(msg, finishOnClick);
-    }
-    
-    protected void handleError() {
-        handleError("Error while playing stream! Please try to reconnect "
-                  + "and check if you selected the correct key file.");
-    }
-
-    private String formatError(int what) {
-        switch (what) {
-        case MediaPlayer.MEDIA_ERROR_UNKNOWN: return "MEDIA_ERROR_UNKNOWN";
-        case MediaPlayer.MEDIA_ERROR_SERVER_DIED: return "MEDIA_ERROR_SERVER_DIED";
-        case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK: 
-            return "MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK";
-        default: return "MediaError(" + what + ")";
-        }
-    }
-
     /**
      * Toggle playback play/pause. Will pause if in play mode and continue if
      * in pause mode.
@@ -257,5 +235,27 @@ public class StreamViewerActivity extends ClientActivity
             spinner.setVisibility(View.INVISIBLE);
             setStatusText(READY_TO_PLAY);
         }
+    }
+
+    private String formatError(int what) {
+        switch (what) {
+        case MediaPlayer.MEDIA_ERROR_UNKNOWN: return "MEDIA_ERROR_UNKNOWN";
+        case MediaPlayer.MEDIA_ERROR_SERVER_DIED: return "MEDIA_ERROR_SERVER_DIED";
+        case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK: 
+            return "MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK";
+        default: return "MediaError(" + what + ")";
+        }
+    }
+
+    private void cleanup() {
+        if (finished)
+            return;
+        try {
+            player.stop();
+            connector.stop();
+        } catch (Throwable e) {
+            log.warn("Exception during cleanup:", e);
+        }
+        finished = true;
     }
 }

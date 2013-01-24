@@ -108,8 +108,8 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     }
 
     /**
-     * 
-     * @param completionListener
+     * Set the on completion listener object.
+     * @param completionListener completion listener object to set
      */
     public void setOnCompletionListener(OnCompletionListener completionListener) {
         this.completionListener = completionListener;
@@ -173,7 +173,7 @@ public class RawStreamMediaPlayer implements MediaPlayer.OnCompletionListener,
     }
 
     /**
-     * Starts the media player
+     * Starts the media player.
      */
     public void start() {
         player.start();

@@ -37,9 +37,9 @@ public class StreamConnector implements Runnable {
     /**
      * Creates a SocketConnector with the given socket.
      * @param socket the socket to connect
-     * @param connectAddr 
-     * @param player 
-     * @param streamViewerActivity 
+     * @param connectAddr address to connect to
+     * @param player player which will be prepared after connection
+     * @param streamViewerActivity activity which contains the statuslabels
      */
     public StreamConnector(Socket socket, InetSocketAddress connectAddr, File keyFile, 
             RawStreamMediaPlayer player, StreamViewerActivity streamViewerActivity) {

@@ -225,10 +225,18 @@ public class MainActivity extends ClientActivity {
         return ni != null && ni.isConnected() && ni.getType() == ConnectivityManager.TYPE_WIFI;
     }
 
+    /**
+     * Returns the hostname textfield.
+     * @return the host textfield
+     */
     public TextView getEditHostname() {
         return editHostname;
     }
 
+    /**
+     * Returns the port textfield.
+     * @return the port textfield
+     */
     public TextView getEditPort() {
         return editPort;
     }

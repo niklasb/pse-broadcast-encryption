@@ -37,6 +37,10 @@ public class ServerHistory implements Serializable {
         return servers;
     }
     
+    /**
+     * Returns the list which contains the saved servers.
+     * @return serverlist
+     */
     public List<InetSocketAddress> getServerList() {
         List<InetSocketAddress> server = new ArrayList<InetSocketAddress>(servers.keySet());
         return server;
