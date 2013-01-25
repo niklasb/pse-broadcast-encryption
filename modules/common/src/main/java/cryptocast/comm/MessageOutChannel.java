@@ -6,20 +6,19 @@ import java.io.IOException;
  * A byte-based communication channel where data can be sent to.
  */
 public abstract class MessageOutChannel {
-	
-	/**
-	 * Sends the data.
-	 * 
-	 * @param data The data to send.
-	 * @param offset The start offset in array data at which the data is written.
-     * @param len The maximum number of bytes to read.
-	 * @throws IOException
-	 */
-    public abstract void sendMessage(byte[] data, int offset, int len) throws IOException;
-    
     /**
-     * Sends the data.
-     * 
+     * Sends a message to the channel.
+     *
+     * @param data The data to send.
+     * @param offset The offset of the payload in the array.
+     * @param len The length of the message.
+     * @throws IOException
+     */
+    public abstract void sendMessage(byte[] data, int offset, int len) throws IOException;
+
+    /**
+     * Sends a message to the channel.
+     *
      * @param data The data to send.
      * @throws IOException
      */

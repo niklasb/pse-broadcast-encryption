@@ -10,20 +10,23 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Function;
 
 /**
- * This class implements channel-based communication via TCP.
+ * This class implements a multicast server based on server sockets. It distributes all outgoing
+ * messages to all connected clients.
  */
 public class ServerMultiMessageOutChannel extends MessageOutChannel implements Runnable {
     private static final Logger log = LoggerFactory
             .getLogger(ServerMultiMessageOutChannel.class);
-    
+
     private MultiOutputStream multi;
     private Function<Throwable, Boolean> excHandler;
     private ServerSocket server;
     private MessageOutChannel out;
-    
+
     /**
      * Creates an instance of a multicast server which uses the given socket.
      * @param server Server socket
+     * @param excHandler A function that is called in case of an error to
+     * determine if we should continue
      */
     public ServerMultiMessageOutChannel(ServerSocket server,
                                         Function<Throwable, Boolean> excHandler) {
@@ -32,7 +35,7 @@ public class ServerMultiMessageOutChannel extends MessageOutChannel implements R
         this.server = server;
         this.excHandler = excHandler;
     };
-    
+
     @Override
     public void run() {
         log.debug("Starting accept loop");

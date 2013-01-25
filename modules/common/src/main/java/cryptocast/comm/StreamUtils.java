@@ -9,11 +9,11 @@ import java.io.OutputStream;
  */
 public class StreamUtils {
     private static final int POLL_INTERVAL = 50; // milliseconds
-    
+
     /**
-     * Receives data. Will read exactly the given number of bytes or 
-     * less on EOF.
-     * 
+     * Receives data. Will read exactly the given number of bytes. Only if the
+     * end-of-file is reached, it might be that we return less bytes.
+     *
      * @param in The stream of data which comes via network.
      * @param buffer The target buffer.
      * @param offset The start offset in array buffer at which the data is written.
@@ -21,7 +21,7 @@ public class StreamUtils {
      * @return The number of bytes actually read is returned as an integer.
      * @throws IOException thrown when interrupted during busy waiting
      */
-    public static int readall(InputStream in, byte[] buffer, int offset, int len) 
+    public static int readall(InputStream in, byte[] buffer, int offset, int len)
                                   throws IOException {
         // use polling to read all data
         int total = 0;
@@ -43,17 +43,17 @@ public class StreamUtils {
             }
         }
     }
-    
+
     /**
-     * Directs the data from input stream into output stream. 
+     * Directs the data from input stream into output stream.
      * The operation is interruptable only if neither input nor output block!
-     * 
+     *
      * @param in The input stream.
      * @param out The output steam.
      * @param bufsize The length of buffer array.
      * @throws IOException
      */
-    public static void copyInterruptable(InputStream in, OutputStream out, int bufsize) 
+    public static void copyInterruptable(InputStream in, OutputStream out, int bufsize)
             throws IOException, InterruptedException {
         byte[] buffer = new byte[bufsize];
         int received;

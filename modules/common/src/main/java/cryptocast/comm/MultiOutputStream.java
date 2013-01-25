@@ -12,38 +12,37 @@ import com.google.common.collect.ImmutableList;
  * destination.
  */
 public class MultiOutputStream extends OutputStream {
-    
-	/**
-	 * 
-	 *	Define an interface of an error handler
-	 */
-	public static interface ErrorHandler {
-       
-		/**
-         * Handle errors.
-         * 
+    /**
+     * An error handler.
+     */
+    public static interface ErrorHandler {
+        /**
+         * Handle an error.
+         *
          * @param multi The multi output stream.
          * @param channel The channel.
-         * @param exc The exception to throw. 
+         * @param exc The exception that occured.
          * @throws IOException
          */
-		public void handle(MultiOutputStream multi, OutputStream channel, 
+        public void handle(MultiOutputStream multi, OutputStream channel, 
                 IOException exc) throws IOException;
     }
-    
-	/**
-	 * Creates an instance of ErrorHandler.
-	 */
+
+    /**
+     * An error handler that just rethrows the exception, effectively
+     * passing the error to the caller of {@link send}.
+     */
     public static ErrorHandler propagateError = new ErrorHandler() {
         @Override
-        public void handle(MultiOutputStream multi, OutputStream channel, 
+        public void handle(MultiOutputStream multi, OutputStream channel,
                 IOException exc) throws IOException {
             throw exc;
         }
     };
-    
+
     /**
-     * Creates an instance of ErrorHandler.
+     * An error handler that surpresses the exception and removes the faulty
+     * channel.
      */
     public static ErrorHandler removeOnError = new ErrorHandler() {
         @Override
@@ -52,28 +51,29 @@ public class MultiOutputStream extends OutputStream {
             multi.removeChannel(channel);
         }
     };
-    
+
     List<OutputStream> channels = new ArrayList<OutputStream>();
     ErrorHandler errHandler;
 
     /**
-     * Creates an instance of MultiOutputStream with the given parameter.
-     * 
-     * @param errHandler The error
+     * Creates an instance of MultiOutputStream.
+     *
+     * @param errHandler An error handler instance.
      */
     public MultiOutputStream(ErrorHandler errHandler) {
         this.errHandler = errHandler;
     }
-    
+
     /**
-     * Creates an instance of MultiOutputStream.
+     * Creates an instance of MultiOutputStream that passes on all errors to
+     * the caller.
      */
     public MultiOutputStream() {
         this.errHandler = propagateError;
     }
 
     /**
-     * @return an immutable list of all output channels
+     * @return the list of output channels
      */
     public ImmutableList<OutputStream> getChannels() {
         return ImmutableList.copyOf(channels);
@@ -86,7 +86,7 @@ public class MultiOutputStream extends OutputStream {
     public void addChannel(OutputStream channel) {
         channels.add(channel);
     }
-    
+
     /**
      * Removes the given channel from the list of receivers.
      * @param channel The channel to remove
@@ -105,7 +105,7 @@ public class MultiOutputStream extends OutputStream {
             }
         }
     }
-    
+
     @Override
     public void write(int b) throws IOException {
         for (OutputStream chan : channels) {

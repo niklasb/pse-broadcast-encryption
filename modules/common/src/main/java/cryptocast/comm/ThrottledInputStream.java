@@ -12,12 +12,12 @@ public class ThrottledInputStream extends InputStream {
     private long bytes = 0;
     private long start;
     private InputStream in;
-    
+
     /**
      * Creates a new instance of ThrottledOutputStream with the given parameter.
      *
-     * @param out The output stream.
-     * @param maxBytesPerSec Maximum bytes per second.
+     * @param in The underlying input stream.
+     * @param maxBytesPerSec Maximum number of bytes per second.
      */
     public ThrottledInputStream(InputStream in, long maxBytesPerSec) {
         this.in = in;
@@ -26,14 +26,14 @@ public class ThrottledInputStream extends InputStream {
     }
 
     private byte[] onebyte = new byte[1];
-    
+
     @Override
     public int read() throws IOException {
         int ret = read(onebyte);
         if (ret < 0) { return ret; }
         return onebyte[0];
     }
-    
+
     @Override
     public int read(byte[] data, int offset, int len) throws IOException {
         int recv = in.read(data, offset, len);
