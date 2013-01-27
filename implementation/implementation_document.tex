@@ -161,87 +161,86 @@ All the main programs are added here. Most notably, theses are:
 Due to missing functionality in the \textit{MediaPlayer} class (for example: buffer callback was not triggered), we decided to upgrade the minimal API level to 10. This decision was made to ensure better feedback for the user about the current status of the program. So for example, the user can see whether the client is currently buffering or not and can react accordingly.
 
 \begin{itemize}
-\item \lstinline|class StreamViewerActivity|
+\item \lstinline|StreamViewerActivity| \newline
    This class now implements  \lstinline|MediaController.MediaPlayerControl| to provide better
   control of the media player. In addition, the following methods were added:
   \begin{itemize}
-   \item \lstinline|"+setStatusText(text : String)"| to set the player's status text.
-   \item \lstinline|"+createErrorPopup(message : String")| to create an error popup from other classes.
+   \item \lstinline|+setStatusText(...)| to set the player's status text.
+   \item \lstinline|+createErrorPopup(...)| to create an error popup from other classes.
   \end{itemize}
 
-   \item \lstinline|class MainActivity|
+   \item \lstinline|MainActivity|
   \begin{itemize}
-   \item \lstinline|"+connectToServer(View view) : void"| was renamed to \textit{+onConnect(View view) : void"}.
-   \item \lstinline|"+onOldServers(View view) : void"| was added to start a new server fragment for showing the
+   \item \lstinline|+connectToServer(...)| was renamed to \lstinline|+onConnect(...)|.
+   \item \lstinline|+onOldServers(...)| was added to start a new server fragment for showing the
     list of all servers.
-    \item \lstinline|"+getConnectAddr() : Optional<InetSocketAddress>"| was added to get the socket address
+    \item \lstinline|+getConnectAddr()| was added to get the socket address
     and to check, if the host name and the port number are valid.
   \end{itemize}
 
-  \item \lstinline|class ServerHistory| \newline
+  \item \lstinline|ServerHistory| \newline
   The following methods were added :
   \begin{itemize}
-   \item \lstinline|"+deleteServer(InetSocketAddress addr) : void"| to delete a server from the server history.
-   \item \lstinline|"+invalidateKeyFile(InetSocketAddress addr) : void"| to delete a saved key file of the server.
-   \item \lstinline|"+getKeyFile(InetSocketAddress addr) : Optional<File>"| to return the key file of the given server.
-   \item \lstinline|"+getServerList() : List<InetSocketAddress>"| to return a list of the saved servers, that simplifies the access for listing them in options and main menu.
+   \item \lstinline|+deleteServer(...)| to delete a server from the server history.
+   \item \lstinline|+invalidateKeyFile(...)| to delete a saved key file of the server.
+   \item \lstinline|+getKeyFile(...)| to return the key file of the given server.
+   \item \lstinline|+getServerList()| to return a list of the saved servers, that simplifies the access for listing them in options and main menu.
   \end{itemize}
 
- \item \lstinline|class ClientActivity|
+ \item \lstinline|ClientActivity|
   \begin{itemize}
    \item This class was added as base activity, which provides basic common functionality like the menu.
   \end{itemize}
 
-    \item \lstinline|class ClientApplication|
+    \item \lstinline|ClientApplication|
   \begin{itemize}
    \item This class was added for maintaining the global application state.
   \end{itemize}
 
-  \item \lstinline|class HelpActivity|
+  \item \lstinline|HelpActivity|
   \begin{itemize}
    \item This class was added to represent an activity that displays the help page.
   \end{itemize}
 
-  \item \lstinline|class AboutActivity|
+  \item \lstinline|AboutActivity|
   \begin{itemize}
    \item This class was added to represent the about dialog.
   \end{itemize}
 
-   \item \lstinline|class MessageFragment|
+   \item \lstinline|MessageFragment|
   \begin{itemize}
    \item The class \textit{"ErrorFragment"} was renamed to \textit{"MessageFragment"}.
   \end{itemize}
 
-  \item \lstinline|class ServersFragment|
+  \item \lstinline|ServersFragment|
   \begin{itemize}
    \item This class was added to represent a dialog with a list of all saved servers and a button.
   \end{itemize}
 
-  \item \lstinline|class ServerListAdapter|
+  \item \lstinline|ServerListAdapter|
   \begin{itemize}
   \item This class was added to provide an adapter between the ListElements and the view showing them. It extends an ArrayAdapter, but changes the way the InetSocketAddress is presented, by not using the toString() method.
   \end{itemize}
 
-  \item \lstinline|class RawStreamMediaPlayer|
+  \item \lstinline|RawStreamMediaPlayer|
   \begin{itemize}
   \item This class was added to provide Media player to play audio from a raw InputStream.
   \end{itemize}
 
-  \item \lstinline|class StreamConnector|
+  \item \lstinline|StreamConnector|
   \begin{itemize}
   \item This class was added to separate work from the StreamViewerActivity class
   in a separate thread to prevent the GUI not from showing properly.
   \end{itemize}
 
-  \item \lstinline|class OptionsActivity|
+  \item \lstinline|OptionsActivity|
   \begin{itemize}
-  \item \lstinline|"+onCreateContextMenu(ContextMenu menu, View ContextMenuInfo menuInfo) : void"| was added to 
+  \item \lstinline|+onCreateContextMenu(...)| was added to 
   create a context menu to edit the server history.
-  \item \lstinline|"+onContextItemSelected(MenuItem item) : boolean"| was added to edit the selected item in the server history
+  \item \lstinline|+onContextItemSelected(...)| was added to edit the selected item in the server history
     \end{itemize}
 
-  
-  \item \lstinline|class KeyChoiceActivity|
+  \item \lstinline|KeyChoiceActivity|
   \begin{itemize}
   \item Methods were removed because the key file arguments are passed new via \lstinline|getIntent().getExtras()|. 
   \end{itemize}
