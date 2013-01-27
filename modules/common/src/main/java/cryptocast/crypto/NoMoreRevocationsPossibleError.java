@@ -1,4 +1,5 @@
 package cryptocast.crypto;
+
 /**
  * An exception which is thrown when no more revocations are possible.
  */

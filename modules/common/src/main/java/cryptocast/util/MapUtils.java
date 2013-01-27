@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableMap;
 public class MapUtils {
     /**
      * Build a map with the given keys and values.
-     * 
+     *
      * @param keys The keys of the map.
      * @param values The values of the map.
      * @return A map with the given keys and values.

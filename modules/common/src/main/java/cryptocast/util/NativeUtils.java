@@ -8,14 +8,14 @@ import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 
 /**
- * Provides several utility methods for easier native code calls.
+ * Provides convenience methods for calling optional native components.
  */
 public class NativeUtils {
     /**
-     * Converts a big integer into a corresponding two-complement.
-     * 
-     * @param bigInts The big integer.
-     * @return A two-complement.
+     * Converts a list of {@link BigInteger} into their two-complements representation.
+     *
+     * @param bigInts The big integers.
+     * @return Their two-complements representations.
      */
     public static byte[][] bigIntListToTwoComplements(List<BigInteger> bigInts) {
         int len = bigInts.size();
@@ -27,10 +27,11 @@ public class NativeUtils {
         return result;
     }
     /**
-     * Converts a two-complement into the corresponding big integer.
-     * 
-     * @param twoComplements The two-complement.
-     * @return A big integer.
+     * Converts numbers given in their two-complements representation  into a list of
+     * {@link BigInteger}s.
+     *
+     * @param twoComplements The two-complements.
+     * @return A list of big integers.
      */
     public static ImmutableList<BigInteger> twoComplementsToBigIntList(byte[][] twoComplements) {
         ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
@@ -39,9 +40,10 @@ public class NativeUtils {
         }
         return builder.build();
     }
+
     /**
-     * Loads a native library, logs an error if loading failed.
-     * 
+     * Tries to load a native library, logs an error if loading failed.
+     *
      * @param lib The library to load.
      * @param log The logger to log the error.
      * @return <code>true</code> if the library could be loaded, <code>false</code> otherwise.

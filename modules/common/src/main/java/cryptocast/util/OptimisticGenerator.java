@@ -9,21 +9,29 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableList;
 
 /**
- * An optimistic generator.
+ * An generator of a function $f: \mathbb{N} \to T$ that computes ranges in
+ * steps of powers of two. That way, we can make optimal use of a {@link getRange}
+ * implementation that is more efficient if the range is large, while ensuring
+ * that we never compute more than twice as many values as we actually need.
+ *
+ * This instance also caches all the generated values, so that no value is
+ * computed twice. This makes it valid for the underlying generator to create
+ * random values and expected them to be saved.
+ *
  * @param <T> the type of the generator object.
  */
 public class OptimisticGenerator<T> extends Generator<T> implements Serializable {
     private static final Logger log = LoggerFactory
             .getLogger(OptimisticGenerator.class);
-    
+
     private static final long serialVersionUID = -544402880183253672L;
-    
+
     ArrayList<T> values = new ArrayList<T>();
     private Generator<T> inner;
 
     /**
      * Creates an instance of this class.
-     * 
+     *
      * @param inner The generator upon which this generator is based.
      */
     public OptimisticGenerator(Generator<T> inner) {
@@ -35,10 +43,10 @@ public class OptimisticGenerator<T> extends Generator<T> implements Serializable
         extend(i + 1);
         return values.get(i);
     }
-    
+
     @Override
     public ImmutableList<T> getRange(int a, int b) {
-        if (a == b) { 
+        if (a == b) {
             return ImmutableList.<T>builder().build();
         }
         extend(b);
@@ -48,7 +56,9 @@ public class OptimisticGenerator<T> extends Generator<T> implements Serializable
         }
         return result.build();
     }
-    
+
+    // compute all the values in the range $[0, 2^{\lceil \log_2 m \rceil})$, where $m$ is the value
+    // of minLen
     private void extend(int minLen) {
         if (minLen <= values.size()) {
             return;
@@ -58,7 +68,7 @@ public class OptimisticGenerator<T> extends Generator<T> implements Serializable
         while (newSize < minLen) {
             newSize <<= 1;
         }
-        
+
         int a = values.size(), b = newSize;
         log.trace("Generating range [{}, {})", a, b);
         long start = System.currentTimeMillis();

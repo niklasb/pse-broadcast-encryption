@@ -6,19 +6,22 @@ import java.math.BigInteger;
 import com.google.common.base.Optional;
 import cryptocast.crypto.EllipticCurveOverFp.Point;
 
+/**
+ * An elliptic curve over $GF(p)$ where $p$ is prime.
+ */
 public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
                                             Serializable {
     private static final long serialVersionUID = 3073796632806135558L;
-    
+
     private IntegersModuloPrime field;
     private BigInteger a, b;
     private Point inf;
-    
-    private BigInteger _1, _2, _3, _4, _8;
-    
+
+    /** A point on the curve. */
+    // opaque type, points represented using jacobian coordinates.
     public static class Point implements Serializable {
         private static final long serialVersionUID = -4835674564581364941L;
-        
+
         private BigInteger jx, jy, jz;
         private EllipticCurveOverFp curve;
         private Point(BigInteger jx, BigInteger jy, BigInteger jz, EllipticCurveOverFp curve) {
@@ -27,7 +30,7 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
             this.jz = jz;
             this.curve = curve;
         }
-        
+
         @Override
         public boolean equals(Object other_) {
             if (other_ == null || getClass() != other_.getClass()) { return false; }
@@ -35,7 +38,14 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
             return curve.getAffineCoords(this).equals(curve.getAffineCoords(other));
         }
     }
-    
+
+    private BigInteger _1, _2, _3, _4, _8;
+
+    /**
+     * @param field The field $GF(p)$
+     * @param a The coefficient $a$ of the curve.
+     * @param b The coefficient $b$ of the curve.
+     */
     public EllipticCurveOverFp(IntegersModuloPrime field,
                                BigInteger a,
                                BigInteger b) {
@@ -54,7 +64,7 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
     public boolean isInfinity(Point point) {
         return point.jz.signum() == 0;
     }
-    
+
     @Override
     public Point getInfinity() {
         return inf;
@@ -69,7 +79,7 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
     public Point getPoint(BigInteger x, BigInteger y) {
         return new Point(x, y, _1, this);
     }
-    
+
     @Override
     public IntegersModuloPrime getField() {
         return field;
@@ -85,7 +95,7 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
     public Point add(Point p, Point q) {
         if (isInfinity(p)) { return q; }
         if (isInfinity(q)) { return p; }
-        
+
         BigInteger Z12 = field.square(p.jz),
                    Z22 = field.square(q.jz),
                    U1 = field.multiply(p.jx, Z22),
@@ -106,7 +116,7 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
                                        field.multiply(_2, field.multiply(U1, H2))),
                    Y3 = field.subtract(
                            field.multiply(
-                              R, 
+                              R,
                               field.subtract(
                                  field.multiply(U1, H2),
                                  X3)),
@@ -114,26 +124,26 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
                    Z3 = field.multiply(field.multiply(H, p.jz), q.jz);
         return new Point(X3, Y3, Z3, this);
     }
-    
+
     @Override
     public Point twice(Point p) {
         if (isInfinity(p) || p.jy.signum() == 0) { return inf; }
         BigInteger // S = 4*X*Y^2
                    S = field.multiply(_4, field.multiply(p.jx, field.square(p.jy))),
-                   // M = 3*X^2 + a*Z^4 
+                   // M = 3*X^2 + a*Z^4
                    M = field.add(field.multiply(_3, field.square(p.jx)),
                                  field.multiply(a, field.pow(p.jz, BigInteger.valueOf(4)))),
                    // X' = M^2 - 2*S
                    XX = field.subtract(field.square(M), field.multiply(_2, S)),
                    // Y' = M*(S - X') - 8*Y^4
-                   YY = field.subtract(field.multiply(M, field.subtract(S, XX)), 
+                   YY = field.subtract(field.multiply(M, field.subtract(S, XX)),
                                        field.multiply(_8, field.pow(p.jy, BigInteger.valueOf(4)))),
                    // Z' = 2*Y*Z
                    ZZ = field.multiply(_2, field.multiply(p.jy, p.jz));
         assert ZZ.signum() != 0;
         return new Point(XX, YY, ZZ, this);
     }
-    
+
     @Override
     public Point multiply(Point p, BigInteger k) {
         if (k.signum() == 0) {
@@ -156,7 +166,8 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
 
         return R;
     }
-    
+
+    /** A representation of a point compressed to the $x$ coordinate. */
     public static class CompressedPoint {
         private BigInteger x;
         private byte info;
@@ -167,7 +178,11 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
         public BigInteger getX() { return x; }
         public byte getInfo() { return info; }
     }
-    
+
+    /**
+     * @param p a point
+     * @return The compressed represntation of $p$.
+     */
     public CompressedPoint compress(Point p) {
         if (isInfinity(p)) {
             return new CompressedPoint(BigInteger.ZERO, (byte) 2);
@@ -176,13 +191,17 @@ public class EllipticCurveOverFp implements EllipticCurve<BigInteger, Point>,
         byte info = (byte) (ap.getY().testBit(0) ? 1 : 0);
         return new CompressedPoint(ap.getX(), info);
     }
-    
+
+    /**
+     * @param p a compressed point
+     * @return The uncompressed representation of $p$.
+     */
     public Point uncompress(CompressedPoint p) {
         if (p.getInfo() == (byte) 2) {
             return getInfinity();
         }
         BigInteger x = p.getX();
-        BigInteger alpha = 
+        BigInteger alpha =
                 field.add(field.multiply(x, field.add(field.square(x), a)), b);
         Optional<BigInteger> mY = field.sqrt(alpha);
         if (!mY.isPresent()) {

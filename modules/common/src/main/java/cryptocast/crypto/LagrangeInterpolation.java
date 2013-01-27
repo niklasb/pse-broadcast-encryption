@@ -17,62 +17,69 @@ import cryptocast.util.MapUtils;
 import cryptocast.util.NativeUtils;
 
 /**
- * Performs a Lagrange interpolation of a polynomial.
+ * Represents the context needed to quickly perform a Lagrange interpolation of
+ * the values $P_i(0)$ arbitrarily many polnomials $P_i$.
+ * Given a set of points ${x_1, ..., x_n}$, the state needed to do this is the
+ * values $c_i = \prod_{i \neq j} \frac{x_j}{x_j - x_i}$.
  * @param <T> The type of items of the polynomial over a field.
  */
 public class LagrangeInterpolation<T> implements Serializable {
     private static int DEFAULT_NUM_THREADS = 2;
-    
+
     private static final long serialVersionUID = 4096286734152138209L;
     private static final Logger log = LoggerFactory
             .getLogger(LagrangeInterpolation.class);
-    
-    private static boolean haveNative = 
+
+    private static boolean haveNative =
             NativeUtils.tryToLoadNativeLibOrLogFailure("LagrangeInterpolation", log);
-    
+
     private Map<T, T> coefficients;
     private Field<T> field;
-    
+
     /**
-     * @return The coefficients of the polynomial.
+     * @return The Lagrange coefficients. This is a map $T \to T$ that assigns places $x_i$
+     * their coefficients
+     * $c_i = \prod_{i \neq j} \frac{x_j}{x_j - x_i}$.
      */
     public Map<T, T> getCoefficients() {
         return coefficients;
     }
-    
+
     /**
-     * @return The field of the polynomial.
+     * @return The field of the interpolation.
      */
     public Field<T> getField() {
         return field;
     }
-    
+
     /**
      * Creates an instance of this class.
-     * 
-     * @param field The field over which the polynomial is constructed
+     *
+     * @param field The field over which the interpolation is constructed.
      */
     public LagrangeInterpolation(Field<T> field) {
         this.field = field;
         this.coefficients = Maps.newHashMap();
     }
-    
+
     /**
      * Creates an instance of this class.
-     * 
-     * @param field The field over which the polynomial is constructed.
-     * @param coefficients The coefficients of the polynomial.
+     *
+     * @param field The field over which the interpolation is constructed.
+     * @param coefficients The initial lagrange coefficients, which is a map
+     * $T \to T$ that assigns places $x_i$ their coefficients
+     * $c_i = \prod_{i \neq j} \frac{x_j}{x_j - x_i}$.
      */
     public LagrangeInterpolation(Field<T> field, Map<T, T> coefficients) {
         this.field = field;
         this.coefficients = Maps.newHashMap(coefficients);
     }
-    
-    /** 
+
+    /**
      * Creates an instance of this class from a list of points.
-     * 
-     * @param field The field over which the polynomial is constructed.
-     * @param xs The list of points.
+     *
+     * @param field The field over which the interpolation is constructed.
+     * @param xs The list of points $x_i$.
      * @param numThreads The number of threads for concurrent evaluation.
      * @return An instance of this class from a list of points.
      */
@@ -81,9 +88,10 @@ public class LagrangeInterpolation<T> implements Serializable {
         ImmutableList<T> coeffs = computeCoefficients(field, xs, numThreads);
         return new LagrangeInterpolation<T>(field, MapUtils.zip(xs, coeffs));
     }
+
     /**
-     * Creates an instance of this class from a list of points using default number of threads.
-     * 
+     * Creates an instance of this class from a list of points using a default number of threads.
+     *
      * @param field The field over which the polynomial is constructed.
      * @param xs The list of points.
      * @return An instance of this class from a list of points using default number of threads.
@@ -91,10 +99,13 @@ public class LagrangeInterpolation<T> implements Serializable {
     public static <T> LagrangeInterpolation<T> fromXs(Field<T> field, ImmutableList<T> xs) {
         return fromXs(field, xs, DEFAULT_NUM_THREADS);
     }
+
     /**
-     * Interpolates the polynomial using the given function.
-     * 
-     * @param evaluate The evaluation function.
+     * Interpolates $P(0)$ using the function $P$ to compute the values
+     * $P(x_i)$.
+     *
+     * @param evaluate The function that evaluates the polynomial $P$ at the
+     * given points.
      * @return The interpolation result.
      */
     public T interpolateP0(Function<? super T, T> evaluate) {
@@ -108,11 +119,11 @@ public class LagrangeInterpolation<T> implements Serializable {
         }
         return sum;
     }
-    
+
     /**
      * Interpolates $P(0)$ where $P$ is the Lagrange polynomial of
      * the given data point.
-     * 
+     *
      * @param dataPoints The data points.
      * @return The interpolation result.
      */
@@ -124,10 +135,10 @@ public class LagrangeInterpolation<T> implements Serializable {
             }
         });
     }
+
     /**
-     * Sets the point list.
-     * 
-     * @param xs The point list to set.
+     * Sets the set ${x_1, ..., x_n}$.
+     * @param xs The set of points.
      */
     public void setXs(Set<T> xs) {
         Sets.SetView<T> removeXs = Sets.difference(coefficients.keySet(), xs);
@@ -135,29 +146,29 @@ public class LagrangeInterpolation<T> implements Serializable {
         removeXs(removeXs.immutableCopy());
         addXs(newXs);
     }
+
     /**
-     * Adds the points.
-     * 
-     * @param newXs The point list to add.
+     * Adds the set ${x_{n+1}, ..., x_{n+m}}$ to the interal set of points.
+     * @param newXs The new points.
      */
     public void addXs(Set<T> newXs) {
         for (T x : newXs) {
             addX(x);
         }
     }
+
     /**
-     * Removes the points.
-     * 
-     * @param removeXs The point list to remove.
+     * Removes the set ${x_{n-m}, ..., x_n}$ from the internal set of points.
+     * @param removeXs The points to remove
      */
     public void removeXs(Set<T> removeXs) {
         for (T x : removeXs) {
             removeX(x);
         }
     }
+
     /**
-     * Adds a point.
-     * 
+     * Adds a point to the internal set of points
      * @param newX The point to add.
      */
     public void addX(T newX) {
@@ -177,12 +188,12 @@ public class LagrangeInterpolation<T> implements Serializable {
         for (T x : coefficients.keySet()) {
             newC = field.multiply(newC, x);
         }
-        
+
         coefficients.put(newX, newC);
     }
+
     /**
-     * Removes a point.
-     * 
+     * Removes a point from the internal set of points.
      * @param removedX The point to remove.
      */
     public void removeX(T removedX) {
@@ -190,7 +201,7 @@ public class LagrangeInterpolation<T> implements Serializable {
             return;
         }
         coefficients.remove(removedX);
-        
+
         for (Map.Entry<T, T> entry : coefficients.entrySet()) {
             T x = entry.getKey();
             T c = entry.getValue();
@@ -198,10 +209,11 @@ public class LagrangeInterpolation<T> implements Serializable {
             entry.setValue(c);
         }
     }
-    
+
     /**
-     * Computes the langrange coefficients.
-     * 
+     * Computes the langrange coefficients for a given list of points.
+     * Uses native acceleration if available.
+     *
      * @return The Lagrange coefficients $\c_i$ of the associated polynomial,
      *         where $\c_i = prod_{j \neq i} \frac{x_j}{x_j - x_i}$
      */
@@ -218,7 +230,7 @@ public class LagrangeInterpolation<T> implements Serializable {
         }
         return genericComputeCoefficients(field, xs);
     }
-    
+
     private static <T> ImmutableList<T> genericComputeCoefficients(
             Field<T> field, ImmutableList<T> xs) {
         T z = field.one();
@@ -237,9 +249,9 @@ public class LagrangeInterpolation<T> implements Serializable {
         }
         return cs.build();
     }
-    
+
     private static native byte[][] nativeComputeCoefficients(byte[][] xs, byte[] mod, int numThreads);
-    
+
     @Override
     public boolean equals(Object other_) {
         if (other_ == null || other_.getClass() != getClass()) { return false; }

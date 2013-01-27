@@ -12,7 +12,7 @@ import cryptocast.crypto.CyclicGroupOfPrimeOrder;
  * $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
  * value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$.
  */
-public class NPShare<T, G extends CyclicGroupOfPrimeOrder<T>> 
+public class NPShare<T, G extends CyclicGroupOfPrimeOrder<T>>
                                   implements Comparable<NPShare<T, G>> {
     private BigInteger i;
     private T grpi;
@@ -20,7 +20,7 @@ public class NPShare<T, G extends CyclicGroupOfPrimeOrder<T>>
 
     /**
      * Creates a new NP share from a tuple $(I, g^{r \cdot P(I)})$
-     * 
+     *
      * @param i An integer $i < q$.
      * @param grpi The value $g^{r \cdot P(I)}) \in G$.
      * @param group The NP group.
@@ -30,17 +30,17 @@ public class NPShare<T, G extends CyclicGroupOfPrimeOrder<T>>
         this.grpi = grpi;
         this.group = group;
     }
-    
+
     /**
      * @return The cyclic group used by NP.
      */
     public G getGroup() { return group; }
-    
+
     /**
      * @return The integer $I$.
      */
     public BigInteger getI() { return i; }
-    
+
     /**
      * @return $g^{r \cdot P(I)}$
      */
@@ -70,14 +70,14 @@ public class NPShare<T, G extends CyclicGroupOfPrimeOrder<T>>
             && grpi.equals(other.grpi)
             && group.equals(other.group);
     }
-    
+
     /**
      * Returns a list of points from shares.
-     * 
+     *
      * @param shares The list of shares.
      * @return The points $I_i$ extracted from the given shares
      */
-    public static <T, G extends CyclicGroupOfPrimeOrder<T>> 
+    public static <T, G extends CyclicGroupOfPrimeOrder<T>>
                 ImmutableList<BigInteger> getXsFromShares(
                                   List<NPShare<T, G>> shares) {
         ImmutableList.Builder<BigInteger> xs = ImmutableList.builder();

@@ -20,25 +20,21 @@ import cryptocast.comm.MessageOutChannel;
 import static cryptocast.util.ErrorUtils.*;
 
 /**
- * Represents a dynamic cipher output stream, which is an output stream that is decrypted upon writing.
+ * Represents an output stream wrapper that encrypts its data on-the-fly using
+ * AES/CBC with a session key that can be switched at any time during
+ * transmission.
  * This stream uses a message-based communication channel.
  */
 public class DynamicCipherOutputStream extends OutputStream {
     private static final Logger log = LoggerFactory
             .getLogger(DynamicCipherOutputStream.class);
-    
-	/**
-	 * Constant for cipher data.
-	 */
-    public static final byte CTRL_CIPHER_DATA = 0;
-    /**
-     * Constant for the update key.
-     */
-    public static final byte CTRL_UPDATE_KEY = 1;
-    /**
-     * Constant for the update key.
-     */
-    public static final byte CTRL_EOF = 2;
+
+    /** The tag for payload messages */
+    protected static final byte CTRL_CIPHER_DATA = 0;
+    /** The tag for key update messages */
+    protected static final byte CTRL_UPDATE_KEY = 1;
+    /** The tag for EOF messages */
+    protected static final byte CTRL_EOF = 2;
 
     private MessageOutChannel inner;
     private SecretKey key;
@@ -57,23 +53,27 @@ public class DynamicCipherOutputStream extends OutputStream {
     }
 
     /**
-     * Returns a new dynamic cipher output stream with the given values. 
-     * 
-     * @param inner The message-based communication channel.
-     * @param keyBits key bits used to init a key generator for a certain size.
-     * @param enc The encryption context.
+     * Creates a new dynamic cipher output stream with the given values.
+     *
+     * @param inner The underlying message-based communication channel.
+     * @param keyBits The width of the symmetric key (128, 192 or 256 bits).
+     * For 192 or 256 bits, the Strong Cryptography Jurasdiction JVM additions
+     * must be installed.
+     * @param enc The strategy for encrypting the session key in key update
+     * messages.
      * @return a new dynamic cipher output stream.
      * @throws IOException
      */
     public static DynamicCipherOutputStream start(MessageOutChannel inner,
                                                   int keyBits,
-                                                  Encryptor<byte[]> enc) 
+                                                  Encryptor<byte[]> enc)
                                       throws IOException {
         return new DynamicCipherOutputStream(inner, keyBits, enc);
     }
 
     /**
-     * Updates the key.
+     * Updates the key. Will send a control message to the other side and
+     * switch the cipher.
      * @throws IOException
      */
     public void updateKey() throws IOException {
@@ -82,9 +82,11 @@ public class DynamicCipherOutputStream extends OutputStream {
         encryptedKey = enc.encrypt(key.getEncoded());
         reinitializeCipher();
     }
-    
+
     /**
-     * Reinitializes the cipher.
+     * Reinitializes the cipher. Will broadcast the old session key to the other
+     * side. If the session key is the same as last time, it will *not* be
+     * reencrypted. The cached version will be used.
      * @throws IOException
      */
     public void reinitializeCipher() throws IOException {
@@ -97,11 +99,11 @@ public class DynamicCipherOutputStream extends OutputStream {
         } catch (InvalidKeyException e) {
             cannotHappen(e); // because we generated the key by ourselves
         }
-        DynamicCipherKeyUpdateMessage keyUpdate = 
+        DynamicCipherKeyUpdateMessage keyUpdate =
                 new DynamicCipherKeyUpdateMessage(encryptedKey, cipher.getIV());
         sendTypedMessage(CTRL_UPDATE_KEY, keyUpdate.pack());
     }
-    
+
     @Override
     public void write(byte[] data, int offset, int len) throws IOException {
         byte[] encData = cipher.update(data, offset, len);
@@ -138,7 +140,7 @@ public class DynamicCipherOutputStream extends OutputStream {
         System.arraycopy(msg, 0, realMsg, 1, msg.length);
         inner.sendMessage(realMsg);
     }
-    
+
     private void sendTypedMessage(byte type) throws IOException {
         sendTypedMessage(type, new byte[0]);
     }
@@ -161,7 +163,7 @@ public class DynamicCipherOutputStream extends OutputStream {
         }
         return gen;
     }
-    
+
     private Cipher createCipher(SecretKey key) throws InvalidKeyException {
         Cipher cipher = null;
         try {

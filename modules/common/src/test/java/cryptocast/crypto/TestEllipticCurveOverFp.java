@@ -18,7 +18,7 @@ public class TestEllipticCurveOverFp {
                        b = BigInteger.valueOf(5);
     EllipticCurveOverFp curve = new EllipticCurveOverFp(
          new IntegersModuloPrime(p), a, b);
-    
+
     @Test
     public void negate() {
         Point point = curve.getPoint(BigInteger.valueOf(3), BigInteger.valueOf(4)),
@@ -26,7 +26,7 @@ public class TestEllipticCurveOverFp {
         assertEquals(neg, curve.negate(point));
         assertEquals(curve.getInfinity(), curve.negate(curve.getInfinity()));
     }
-    
+
     @Test
     public void twice() {
         Point point = curve.getPoint(BigInteger.valueOf(3), BigInteger.valueOf(4)),
@@ -39,7 +39,7 @@ public class TestEllipticCurveOverFp {
         assertEquals(inf, curve.twice(inf));
         assertEquals(inf, curve.twice(halfOfInf));
     }
-    
+
     @Test
     public void add() {
         Point
@@ -55,7 +55,7 @@ public class TestEllipticCurveOverFp {
         assertEquals(p4, curve.add(inf, p4));
         assertEquals(p5, curve.add(p1, p1));
     }
-    
+
     @Test
     public void multiply() {
         Point
@@ -74,27 +74,27 @@ public class TestEllipticCurveOverFp {
         assertEquals(inf, curve.multiply(p3, BigInteger.ZERO));
         assertEquals(p2, curve.multiply(p3, BigInteger.valueOf(3)));
     }
-    
+
     @Test
     public void largeMultiplyTest() {
-        EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp> group = 
+        EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp> group =
                 EllipticCurveGroup.getSecp160R1();
         EllipticCurveOverFp curve = group.getCurve();
         BigInteger k = new BigInteger("333333333333333333333333333333337c964c53", 16);
-        Point actual = curve.multiply(group.getBasePoint(), k),
+        Point actual = curve.multiply(group.getGenerator(), k),
               expected = curve.getPoint(
                     new BigInteger("8db96f262ee7e04484a75e4b330210636f1c4554", 16),
                     new BigInteger("db66abe61619a3e871d23a6e11251c1778aba93", 16));
         assertEquals(expected, actual);
     }
-    
+
     @Test
     public void multiexpWorks() {
-        EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp> group = 
+        EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp> group =
                 EllipticCurveGroup.getSecp160R1();
         List<Point> bases = Lists.newArrayList();
         List<BigInteger> exps = Lists.newArrayList();
-        bases.add(group.getBasePoint());
+        bases.add(group.getGenerator());
         bases.add(group.identity());
         bases.add(group.getPowerOfG(new BigInteger("fffffffffffff213", 16)));
         Random rnd = new Random();

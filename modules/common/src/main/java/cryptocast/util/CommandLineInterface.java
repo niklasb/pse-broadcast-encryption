@@ -14,9 +14,9 @@ public abstract class CommandLineInterface {
      */
     public class Exit extends Throwable {
         private static final long serialVersionUID = 6306942436754821406L;
-        
+
         private int status;
-        
+
         /**
          * Initializes a new Exit instance.
          * @param status The exit code
@@ -108,7 +108,7 @@ public abstract class CommandLineInterface {
 
     /**
      * Prints an error message.
-     * 
+     *
      * @param e The causing exception
      * @throws Exit
      */

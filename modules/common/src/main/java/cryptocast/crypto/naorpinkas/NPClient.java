@@ -17,13 +17,13 @@ import com.google.common.io.ByteStreams;
 /**
  * A client in the Naor-Pinkas broadcast encryption scheme.
  */
-public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>> 
+public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
                                  implements Decryptor<byte[]> {
     private NPKey<T, G> key;
     private G group;
-    
+
     private static final Logger log = LoggerFactory.getLogger(NPClient.class);
-    
+
     /**
      * Initializes a Naor-Pinkas broadcast client.
      * @param key The personal key used to reconstruct a secret from the stream.
@@ -33,10 +33,16 @@ public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
         group = key.getGroup();
     }
 
+    /**
+     * @return The underlying group.
+     */
     public G getGroup() { return group; }
 
     protected abstract NPShare<T, G> readShare(ByteArrayDataInput in);
 
+    /**
+     * Parse a NP message.
+     */
     public NPMessage<T, G> unpackMessage(byte[] msg) {
         ByteArrayDataInput in = ByteStreams.newDataInput(msg);
         int t = in.readInt();
@@ -50,7 +56,7 @@ public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
         for (int i = 0; i < t; ++i) {
             shares.add(readShare(in));
         }
-        return new NPMessage<T, G>(t, r, encryptedSecret, group, 
+        return new NPMessage<T, G>(t, r, encryptedSecret, group,
                                            lagrangeCoeffs.build(), shares.build());
     }
 
@@ -60,25 +66,25 @@ public abstract class NPClient<T, G extends CyclicGroupOfPrimeOrder<T>>
         in.readFully(data);
         return data;
     }
-    
+
     protected abstract byte[] decryptSecretWithItem(byte[] encryptedSecret, T item)
                                         throws DecryptionError;
-    
+
     @Override
-    public byte[] decrypt(byte[] cipher) 
+    public byte[] decrypt(byte[] cipher)
                     throws InsufficientInformationError, DecryptionError {
         long t0 = System.currentTimeMillis();
         log.debug("Starting decryption of the session key...");
         NPMessage<T, G> msg = unpackMessage(cipher);
-        NPShareCombinator<T, G> combinator = 
+        NPShareCombinator<T, G> combinator =
                 new NPShareCombinator<T, G>(msg.getT(), group);
         List<NPShare<T, G>> allShares = ImmutableList.<NPShare<T, G>>builder()
                                                   .addAll(msg.getShares())
                                                   .add(key.getShare(msg.getR()))
                                                   .build();
-        LagrangeInterpolation<BigInteger> lagrange = 
-                new LagrangeInterpolation<BigInteger>(group.getFieldModOrder(), 
-                        MapUtils.zip(NPShare.getXsFromShares(msg.getShares()), 
+        LagrangeInterpolation<BigInteger> lagrange =
+                new LagrangeInterpolation<BigInteger>(group.getFieldModOrder(),
+                        MapUtils.zip(NPShare.getXsFromShares(msg.getShares()),
                                 msg.getLagrangeCoeffs()));
         Optional<T> mInterpol = combinator.restore(allShares, lagrange);
         if (!mInterpol.isPresent()) {

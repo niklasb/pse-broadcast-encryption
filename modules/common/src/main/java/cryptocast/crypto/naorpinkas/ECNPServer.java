@@ -8,13 +8,14 @@ import com.google.common.io.ByteArrayDataOutput;
 import cryptocast.crypto.*;
 import cryptocast.crypto.EllipticCurveOverFp.*;
 
-public class ECNPServer 
-      extends NPServer<Point, 
+/** The server of the NP variant the uses elliptic curves. */
+public class ECNPServer
+      extends NPServer<Point,
                        EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>> {
     private static final long serialVersionUID = 1656507589897819277L;
 
     protected ECNPServer(
-            NPServerContext<Point, 
+            NPServerContext<Point,
                             EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>> ctx) {
         super(ctx);
     }
@@ -22,7 +23,7 @@ public class ECNPServer
     private EllipticCurveOverFp getCurve() {
         return getContext().getGroup().getCurve();
     }
-    
+
     @Override
     protected Optional<byte[]> encryptSecretWithItem(byte[] secret, Point p) {
         // check if secret is small enough to be properly encrypted.
@@ -37,7 +38,7 @@ public class ECNPServer
     }
 
     @Override
-    protected void writeShare(ByteArrayDataOutput out, 
+    protected void writeShare(ByteArrayDataOutput out,
             NPShare<Point,
                     EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>> share) {
         putBytes(out, share.getI().toByteArray());

@@ -15,9 +15,9 @@ import cryptocast.util.NativeUtils;
 import org.bouncycastle.math.ec.ECFieldElement.Fp;
 
 /**
- * The field $\mathbb{Z}/p\mathbb{Z}$ of integers modulo a prime $p > 2$.
+ * The field $GF(p)$ of integers modulo a prime $p > 2$.
  */
-public class IntegersModuloPrime extends Field<BigInteger> 
+public class IntegersModuloPrime extends Field<BigInteger>
                                  implements Serializable {
     private static final long serialVersionUID = -2607220779180962188L;
     private static final Logger log = LoggerFactory
@@ -30,7 +30,7 @@ public class IntegersModuloPrime extends Field<BigInteger>
     private BigInteger mu;
     private int alpha, beta;
 
-    private static boolean haveNative = 
+    private static boolean haveNative =
             NativeUtils.tryToLoadNativeLibOrLogFailure("IntegersModuloPrime", log);
 
     /**
@@ -40,8 +40,8 @@ public class IntegersModuloPrime extends Field<BigInteger>
      */
     public BigInteger reduce(BigInteger a) {
         return a.mod(p);
-        
-//        // perform a barrett reduction
+        // TODO find and fix the bug in the below code on Dalvik
+//        // perform a Barrett reduction
 //        BigInteger qq = a.shiftRight(n + beta).multiply(mu).shiftRight(alpha - beta);
 //        BigInteger z = a.subtract(qq.multiply(p));
 //        if (z.compareTo(p) >= 0) {
@@ -57,6 +57,7 @@ public class IntegersModuloPrime extends Field<BigInteger>
     public IntegersModuloPrime(BigInteger p) {
         assert p.testBit(0);
         this.p = p;
+        // pre-compute values for Barrett reduction
         n = p.bitLength();
         alpha = n + 1;
         beta = -2;
@@ -98,17 +99,17 @@ public class IntegersModuloPrime extends Field<BigInteger>
     public BigInteger one() {
         return BigInteger.ONE;
     }
-    
+
     @Override
     public BigInteger two() {
         return reduce(BigInteger.valueOf(2));
     }
-    
+
     @Override
     public BigInteger three() {
         return reduce(BigInteger.valueOf(3));
     }
-    
+
     @Override
     public BigInteger four() {
         return reduce(BigInteger.valueOf(4));
@@ -132,23 +133,23 @@ public class IntegersModuloPrime extends Field<BigInteger>
     }
 
     private static native byte[] nativeModPow(byte[] x, byte[] e, byte[] m);
-    
+
     @Override
     public BigInteger randomElement(Random rnd) {
         BigInteger r;
-        // TODO improve performance. Check out 
+        // TODO improve performance. Check out
         // http://stackoverflow.com/questions/2290057/how-to-generate-a-random-biginteger-value-in-java
         do {
             r = new BigInteger(p.bitLength(), rnd);
         } while (r.compareTo(p) >= 0);
         return r;
     }
-    
+
     @Override
     public boolean isZero(BigInteger a) {
         return a.signum() == 0;
     }
-    
+
     @Override
     public boolean equals(Object other) {
         if (other == null || other.getClass() != getClass()) { return false; }

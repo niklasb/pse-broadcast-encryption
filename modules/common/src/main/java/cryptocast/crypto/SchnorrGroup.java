@@ -6,7 +6,8 @@ import java.math.BigInteger;
 import static com.google.common.base.Preconditions.*;
 
 /**
- * Represents a schnorr group.
+ * Represents a schnorr group, which is a large-prime-order subgroup of
+ * $\mathbb{Z}_p^\times$.
  */
 public class SchnorrGroup extends CyclicGroupOfPrimeOrder<BigInteger>
                           implements Serializable {
@@ -14,14 +15,14 @@ public class SchnorrGroup extends CyclicGroupOfPrimeOrder<BigInteger>
 
     private BigInteger p;
     private IntegersModuloPrime modP;
-    
+
     /**
      * Creates a schnorr group with the given values:
      * $q$ and $p$ prime, $p = qr + 1$ and $g$ generates
      * a subgroup of $\mathbb{Z}_p^\times$ with order $q$.
      * @param p $p$, a large prime
      * @param q $q$, a prime factor of $p - 1$
-     * @param g $g$, the generator of a subgroup of $\mathbb{Z}_p^\times$ 
+     * @param g $g$, the generator of a subgroup of $\mathbb{Z}_p^\times$
      *          with order $q$
      */
     public SchnorrGroup(BigInteger p, BigInteger q, BigInteger g) {
@@ -61,12 +62,11 @@ public class SchnorrGroup extends CyclicGroupOfPrimeOrder<BigInteger>
     public IntegersModuloPrime getFieldModP() {
         return modP;
     }
-    
+
     /**
-     * Initializes a 1024-bit Diffie-Hellman MODP group
+     * @return a 1024-bit Diffie-Hellman MODP group
      * with a 160-bit prime order subgroup.
      * It is taken from http://tools.ietf.org/html/rfc5114#section-2.1
-     * @return The group
      */
     public static SchnorrGroup getP1024Q160() {
         BigInteger p = hexStringToBigInt(
@@ -90,11 +90,11 @@ public class SchnorrGroup extends CyclicGroupOfPrimeOrder<BigInteger>
             );
         return new SchnorrGroup(p, q, g);
     }
-    
+
     private static BigInteger hexStringToBigInt(String hex) {
         return new BigInteger(hex.replaceAll("\\s+", ""), 16);
     }
-    
+
     @Override
     public boolean equals(Object other_) {
         if (other_ == null || other_.getClass() != getClass()) { return false; }

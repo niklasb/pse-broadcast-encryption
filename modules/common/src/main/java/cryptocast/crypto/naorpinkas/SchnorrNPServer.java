@@ -7,6 +7,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import cryptocast.crypto.*;
 
+/** The server of the NP variant the uses a Schnorr group. */
 public class SchnorrNPServer extends NPServer<BigInteger, SchnorrGroup> {
     private static final long serialVersionUID = 1656507589897819277L;
 
@@ -25,7 +26,7 @@ public class SchnorrNPServer extends NPServer<BigInteger, SchnorrGroup> {
     }
 
     @Override
-    protected void writeShare(ByteArrayDataOutput out, 
+    protected void writeShare(ByteArrayDataOutput out,
                               NPShare<BigInteger, SchnorrGroup> share) {
         putBytes(out, share.getI().toByteArray());
         putBytes(out, share.getGRPI().toByteArray());

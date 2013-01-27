@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public class Polynomial<T> implements Serializable {
     private static final long serialVersionUID = -1360253235247059379L;
-    
+
     private Field<T> field;
     private ImmutableList<T> coefficients;
     int size;
@@ -49,9 +49,9 @@ public class Polynomial<T> implements Serializable {
     }
 
     /**
-     * Evaluates the polynomial at a single point x.
+     * Evaluates the polynomial at a single point $x$.
      * @param x The point
-     * @return P(x) the evaluation result.
+     * @return $P(x)$
      */
     public T evaluate(T x) {
         T result = field.zero();
@@ -62,9 +62,7 @@ public class Polynomial<T> implements Serializable {
     }
 
     /**
-     * Returns the evaluation function for this polynomial.
-     * 
-     * @return The evaluation function for this polynomial.
+     * @return A function evaluating this polynomial.
      */
     public Function<T, T> getEvaluator() {
         return new Function<T, T>() {
@@ -73,9 +71,9 @@ public class Polynomial<T> implements Serializable {
             }
         };
     }
-    
+
     /**
-     * Evaluates the polynomial at multiple points.
+     * Evaluates the polynomial at multiple points using a naive algorithm.
      * @param xs The points $x_i$ to evaluate
      * @return The array a defined by $a_i := P(x_i)$.
      */
@@ -89,7 +87,6 @@ public class Polynomial<T> implements Serializable {
 
     /**
      * Returns the coefficients list of this polynomial.
-     * 
      * @return $c_i$
      */
     public ImmutableList<T> getCoefficients() {
@@ -103,17 +100,16 @@ public class Polynomial<T> implements Serializable {
     public int getSize() {
         return size;
     }
-    
+
     /**
-     * @return The degree of the polynomial or -1 if the polynomial 
-     * is zero.
+     * @return The degree of the polynomial or -1 if the polynomial is zero.
      */
     public int getDegree() {
         return size - 1;
     }
 
     /**
-     * Generates a random polynomial over the field.
+     * Generates a random polynomial over a field.
      * @param <T> The type of the field's elements over which the random polynomial is formed.
      * @param rnd The source of randomness
      * @param field An instance of the field over which the polynomial is formed.
@@ -133,7 +129,7 @@ public class Polynomial<T> implements Serializable {
         coefficients.add(highest);
         return new Polynomial<T>(field, coefficients.build());
     }
-    
+
     @Override
     public boolean equals(Object other_) {
         if (other_ == null || other_.getClass() != getClass()) { return false; }
@@ -147,7 +143,7 @@ public class Polynomial<T> implements Serializable {
         }
         return field.equals(other.field);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

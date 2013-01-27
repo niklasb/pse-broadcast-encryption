@@ -4,15 +4,16 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * A message for dynamic updates of the cipher key.
+ * A model for the message passed between the {@link DynamicCipherOutputStream}
+ * and the {@link DynamicCipherInputStream}.
  */
 public class DynamicCipherKeyUpdateMessage {
     private byte[] encryptedKey, iv;
     /**
      * Creates a message with the given values.
-     * 
+     *
      * @param encryptedKey the encypted key.
-     * @param iv
+     * @param iv The initialization vector.
      */
     public DynamicCipherKeyUpdateMessage(byte[] encryptedKey, byte[] iv) {
         this.encryptedKey = encryptedKey;
@@ -20,13 +21,12 @@ public class DynamicCipherKeyUpdateMessage {
     }
 
     /**
-     * Returns the encypted key.
      * @return The encypted key.
      */
     public byte[] getEncryptedKey() { return encryptedKey; }
+
     /**
-     * Returns the
-     * @return The
+     * @return The initialization vector.
      */
     public byte[] getIv() { return iv; }
 
@@ -42,10 +42,10 @@ public class DynamicCipherKeyUpdateMessage {
         packByteArray(buf, iv);
         return buf.array();
     }
-    
+
     /**
      * Parses a binary format created by {@link pack}.
-     * @param the packed array
+     * @param packed the packed message.
      * @return The parsed message
      */
     public static DynamicCipherKeyUpdateMessage unpack(byte[] packed) {
@@ -54,12 +54,12 @@ public class DynamicCipherKeyUpdateMessage {
         byte[] iv = unpackByteArray(buf);
         return new DynamicCipherKeyUpdateMessage(key, iv);
     }
-    
+
     private static void packByteArray(ByteBuffer buf, byte[] data) {
         buf.putInt(data.length);
         buf.put(data);
     }
-    
+
     private static byte[] unpackByteArray(ByteBuffer buf) {
         int len = buf.getInt();
         byte[] data = new byte[len];

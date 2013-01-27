@@ -21,13 +21,13 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * A server in the Naor-Pinkas broadcast encryption scheme. It knows
- * the entire polynomial and therefore all the private keys of its users. 
+ * the entire polynomial and therefore all the private keys of its users.
  */
 public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
           extends Observable
           implements NPServerInterface, Serializable {
     private static final Logger log = LoggerFactory.getLogger(NPServer.class);
-    
+
     private static final long serialVersionUID = -6864326409385317975L;
 
     private NPServerContext<T, G> context;
@@ -35,10 +35,10 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
     private Map<NPIdentity, NPKey<T, G>> keyByIdentity =
                                 Maps.newHashMap();
     private Set<NPIdentity> revokedUsers = Sets.newHashSet();
-    
+
     private G group;
     private int t;
-    
+
     private static SecureRandom rnd = new SecureRandom();
 
     protected NPServer(NPServerContext<T, G> context) {
@@ -53,16 +53,17 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
     public int getT() {
         return t;
     }
-    
+
+    /** @return The NP server context. */
     public NPServerContext<T, G> getContext() { return context; }
 
     protected abstract Optional<byte[]> encryptSecretWithItem(byte[] secret, T key);
-    
+
     @Override
     public byte[] encrypt(byte[] secret) {
         return packMessage(encryptMessage(secret));
     }
-    
+
     protected NPMessage<T, G> encryptMessage(byte[] secret) {
         long t0 = System.currentTimeMillis();
         BigInteger r = group.getFieldModOrder().randomElement(rnd);
@@ -72,7 +73,7 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
         Optional<byte[]> mEncryptedSecret = encryptSecretWithItem(secret, grp0);
         checkArgument(mEncryptedSecret.isPresent(), "Secret is too large to encrypt");
         byte[] encryptedSecret = mEncryptedSecret.get();
-        
+
         ImmutableList.Builder<NPShare<T, G>> shares = ImmutableList.builder();
         int i = 0;
         int dummies = t - revokedUsers.size();
@@ -91,15 +92,15 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
             assert c != null;
             lagrangeCoeffs.add(c);
         }
-        
+
         log.debug("Encryption took {} ms", System.currentTimeMillis() - t0);
         return new NPMessage<T, G>(
-                t, r, encryptedSecret, group, 
+                t, r, encryptedSecret, group,
                 lagrangeCoeffs.build(), shares.build());
     }
-    
+
     protected abstract void writeShare(ByteArrayDataOutput out, NPShare<T, G> share);
-    
+
     private byte[] packMessage(NPMessage<T, G> msg) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeInt(msg.getT());
@@ -113,12 +114,12 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
         }
         return out.toByteArray();
     }
-    
+
     protected void putBytes(ByteArrayDataOutput out, byte[] x) {
         out.writeInt(x.length);
         out.write(x);
     }
-    
+
     /**
      * @param i An index.
      * @return The identity with the given index.
@@ -141,7 +142,7 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
 
     /**
      * Revokes multiple users.
-     * 
+     *
      * @param id The identities of the users
      * @return true, if the set of revoked users changed or false otherwise
      */
@@ -160,10 +161,10 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
         notifyObservers();
         return true;
     }
-    
+
     /**
      * Revokes a user.
-     * 
+     *
      * @param id The identity of the user
      * @return true, if the set of revoked users changed or false otherwise
      */
@@ -171,7 +172,7 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
     public boolean revoke(NPIdentity id) throws NoMoreRevocationsPossibleError {
         return revoke(ImmutableSet.of(id));
     }
-    
+
     // must only be called if we know revocation will be successful
     // and that the user is not already revoked!
     private void revokeUnconditional(NPIdentity id) {
@@ -183,14 +184,14 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
         context.getLagrange().addX(id.getI());
         revokedUsers.add(id);
     }
-    
+
     private int getRemainingRevocations() {
         return t - revokedUsers.size();
     }
-    
+
     /**
      * Authorizes a user.
-     * 
+     *
      * @param id The identity of the user
      * @return true, if the set of revoked users changed or false otherwise
      */
@@ -208,7 +209,7 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
         notifyObservers();
         return true;
     }
-    
+
     /**
      * @param id The identity of the user
      * @return Whether the user is revoked.
@@ -217,7 +218,7 @@ public abstract class NPServer<T, G extends CyclicGroupOfPrimeOrder<T>>
     public boolean isRevoked(NPIdentity id) {
         return revokedUsers.contains(id);
     }
-    
+
     /**
      * @param id The identity to look up
      * @return The private key of the user or absent if no

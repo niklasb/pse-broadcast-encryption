@@ -16,17 +16,17 @@ import com.google.common.collect.Ordering;
 public class NPShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T>> {
     private int t;
     private G group;
-    
+
     public NPShareCombinator(int t, G group) {
         this.t = t;
         this.group = group;
     }
-    
+
     /**
      * Restores a secret from several Naor-Pinkas shares.
      * @param shares The shares
      * @param lagrange The precomputed Lagrange coefficients
-     * 
+     *
      * @return The reconstructed secret or absent if the information represented
      * by the given shares is insufficient to restore it.
      */
@@ -35,7 +35,7 @@ public class NPShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T>> {
         if (hasMissingShares(shares) || hasRedundantShares(shares)) {
             return Optional.absent();
         }
-        
+
         ImmutableList.Builder<T> bases = ImmutableList.builder();
         ImmutableList.Builder<BigInteger> exponents = ImmutableList.builder();
 
@@ -48,10 +48,10 @@ public class NPShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T>> {
         }
         return Optional.of(group.multiexp(bases.build(), exponents.build()));
     }
-    
+
     /**
      * Checks whether missing shares exist.
-     * 
+     *
      * @param shares The shares to check.
      * @return <code>true</code> if there are any missing shares, <code>false</code> otherwise.
      */
@@ -61,15 +61,15 @@ public class NPShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T>> {
         }
         return false;
     }
-    
+
     /**
      * Checks whether redundant shares exist.
-     * 
+     *
      * @param shares The shares.
      * @return <code>true</code> if there are any redundant shares, <code>false</code> otherwise.
      */
     public boolean hasRedundantShares(List<NPShare<T, G>> shares) {
-        ImmutableList<NPShare<T, G>> sortedShares = 
+        ImmutableList<NPShare<T, G>> sortedShares =
                 Ordering.natural().immutableSortedCopy(shares);
         BigInteger lastX = null;
         for (NPShare<T, G> share : sortedShares) {

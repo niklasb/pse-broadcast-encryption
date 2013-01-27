@@ -12,7 +12,7 @@ import com.google.common.base.Optional;
 public interface BroadcastSchemeKeyManager<ID> extends Serializable {
     /**
      * @param id The identity to look up
-     * @return The private key of the user
+     * @return The private key of the user or absent if the user doesn't exist.
      */
     public Optional<? extends PrivateKey> getPersonalKey(ID id);
 }

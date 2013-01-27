@@ -13,7 +13,7 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
     /** An error within one of the commands. Will be caught by the main loop. */
     public class CommandError extends Throwable {
         private static final long serialVersionUID = -4421363972121773980L;
-        
+
         public String msg;
         /** Initializes the error.
         * @param msg The error message
@@ -63,7 +63,7 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
             if (raw.matches("\\s*")) {
                 continue;
             }
-            
+
             String[] cmdline = raw.trim().split("\\s+");
             String cmd = cmdline[0];
             String[] args = new String[cmdline.length - 1];
@@ -81,7 +81,7 @@ public abstract class InteractiveCommandLineInterface extends CommandLineInterfa
      * @param cmd The command name
      * @param args The command arguments
      */
-    protected abstract void performCommand(String cmd, String[] args) 
+    protected abstract void performCommand(String cmd, String[] args)
             throws CommandError, Exit;
 
     /**

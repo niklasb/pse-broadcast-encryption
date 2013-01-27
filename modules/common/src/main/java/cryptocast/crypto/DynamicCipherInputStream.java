@@ -23,13 +23,14 @@ import cryptocast.comm.MessageInChannel;
 import static cryptocast.util.ErrorUtils.*;
 
 /**
- * Represents a dynamic cipher input stream, which is an input stream that needs to be decrypted.
- * This stream uses a message-based communication channel.
+ * The client side of a {@link DynamicCipherOutputStream}. It provides a stream
+ * of data that is symmetrically encrypted using AES/CBC with dynamically
+ * switching session keys.
  */
 public class DynamicCipherInputStream extends InputStream {
     private static final Logger log = LoggerFactory
             .getLogger(DynamicCipherInputStream.class);
-    
+
     MessageInChannel inner;
     SecretKey key;
     byte[] lastEncryptedKey;
@@ -37,12 +38,13 @@ public class DynamicCipherInputStream extends InputStream {
     private Decryptor<byte[]> dec;
     byte[] rest;
     boolean eof = false;
-    
+
     /**
      * Initializes a new instance of DynamicCipherInputStream.
-     * 
+     *
      * @param inner The message-based underlying communication channel.
-     * @param dec The decryption context.
+     * @param dec The strategy to decrypt the new session key from the key
+     * update message sent by the other side.
      * @throws IOException
      */
     public DynamicCipherInputStream(MessageInChannel inner,
@@ -69,12 +71,12 @@ public class DynamicCipherInputStream extends InputStream {
         }
         return size;
     }
-    
+
     @Override
     public int read() throws IOException {
         byte[] buf = new byte[1];
-        if (read(buf, 0, 1) < 0) { 
-            return -1; 
+        if (read(buf, 0, 1) < 0) {
+            return -1;
         }
         return buf[0];
     }
@@ -85,7 +87,7 @@ public class DynamicCipherInputStream extends InputStream {
             // stream should be terminated by a special EOF message
             throw new IOException("Unexpected EOF");
         }
-        
+
         switch (msg[0]) { // switch on the message type
         case DynamicCipherOutputStream.CTRL_CIPHER_DATA:
             if (cipher == null) {
@@ -99,7 +101,7 @@ public class DynamicCipherInputStream extends InputStream {
             if (cipher != null) {
                 finalizeCipher();
             }
-            DynamicCipherKeyUpdateMessage keyUpdate = 
+            DynamicCipherKeyUpdateMessage keyUpdate =
                     DynamicCipherKeyUpdateMessage.unpack(
                             Arrays.copyOfRange(msg, 1, msg.length));
             if (!Arrays.equals(keyUpdate.getEncryptedKey(), lastEncryptedKey)) {
@@ -141,7 +143,7 @@ public class DynamicCipherInputStream extends InputStream {
         return new SecretKeySpec(enc, "AES");
     }
 
-    private Cipher createCipher(SecretKey key, IvParameterSpec iv) 
+    private Cipher createCipher(SecretKey key, IvParameterSpec iv)
                 throws InvalidKeyException, InvalidAlgorithmParameterException {
         Cipher cipher = null;
         try {

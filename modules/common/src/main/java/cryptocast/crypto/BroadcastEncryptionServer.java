@@ -17,23 +17,23 @@ import com.google.common.base.Function;
  * The server side of a broadcast encryption scheme.
  * @param <ID> The type of the identities
  */
-public class BroadcastEncryptionServer<ID> extends OutputStream 
+public class BroadcastEncryptionServer<ID> extends OutputStream
                                            implements Runnable, Observer {
     private static final Logger log = LoggerFactory
             .getLogger(BroadcastEncryptionServer.class);
-    
+
     private DynamicCipherOutputStream cipherStream;
     private int intervalMilliseconds;
     private Function<Throwable, Boolean> excHandler;
-    
+
     /**
      * Initializes a broadcast encryption server.
-     * 
-     * @param context The user management context.
-     * @param cipherStream The ciphered input stream.
-     * @param intervalMilliseconds The broadcast time interval in millis.
-     * @param excHandler Handler callback, which is called if an exception occurs in 
-     *                   the key update loop. If it returns <code>true</code>, the 
+     *
+     * @param context The user manager.
+     * @param cipherStream The switchable cipher output stream.
+     * @param intervalMilliseconds The key broadcast time interval in milliseconds.
+     * @param excHandler Handler callback, which is called if an exception occurs in
+     *                   the key update loop. If it returns <code>true</code>, the
      *                   exception is ignored, otherwise the loop is exited.
      */
     public BroadcastEncryptionServer(CanBeObserved userManager,
@@ -47,13 +47,13 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
     }
 
     /**
-     * Returns a broadcast encyption server with the given values.
-     * 
+     * Creates a broadcast encyption server with the given values.
+     *
      * @param context The user management context.
      * @param enc The encryption context.
-     * @param symmetricKeyBits Symmetric key bits used to init a key generator for a certain size.
+     * @param symmetricKeyBits The width of the session keys.
      * @param inner The message-based communication channel to send outgoing data to.
-     * @param intervalMilliseconds The broadcast time interval in millis.
+     * @param intervalMilliseconds The key broadcast time interval in milliseconds.
      * @param excHandler The exceptions handler callback.
      * @return A broadcast encyption server with the given values.
      * @throws IOException
@@ -65,7 +65,7 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
             MessageOutChannel inner,
             int intervalMilliseconds,
             Function<Throwable, Boolean> excHandler) throws IOException {
-        return new BroadcastEncryptionServer<ID>(context, 
+        return new BroadcastEncryptionServer<ID>(context,
                 DynamicCipherOutputStream.start(inner, symmetricKeyBits, enc),
                 intervalMilliseconds,
                 excHandler);
@@ -115,17 +115,17 @@ public class BroadcastEncryptionServer<ID> extends OutputStream
     public synchronized void close() throws IOException  {
         cipherStream.close();
     }
-    
+
     @Override
     public synchronized void flush() throws IOException {
         cipherStream.flush();
     }
-    
+
     @Override
     public synchronized void write(int b) throws IOException {
         cipherStream.write(b);
     }
-    
+
     @Override
     public synchronized void write(byte[] buf, int offset, int len) throws IOException {
         cipherStream.write(buf, offset, len);

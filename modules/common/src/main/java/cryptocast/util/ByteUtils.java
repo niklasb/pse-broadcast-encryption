@@ -10,7 +10,7 @@ import static cryptocast.util.ErrorUtils.cannotHappen;
 public class ByteUtils {
     /**
      * Converts a string to byte array.
-     * 
+     *
      * @param str The string.
      * @return A byte array.
      */
@@ -22,12 +22,12 @@ public class ByteUtils {
             return null; // just to make the compiler happy
         }
     }
-    
+
     /**
-     * Encodes a string to utf-8 byte array.
-     * 
+     * Encodes a string using UTF-8.
+     *
      * @param str The string.
-     * @return A utf-8 byte array.
+     * @return A byte array representing the UTF-8 encoded string.
      */
     public static byte[] encodeUtf8(String str) {
         try {

@@ -4,19 +4,29 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
+/** Represents the cyclic group structure of the set of points $kG$ generated
+ * by a generator $G$, which is a point on an elliptic curve.
+ * @param <T> The type of coordinates of the curves points.
+ * @param <P> The type of points of the curve.
+ * @param <C> The type of the curve.
+ */
 public class EllipticCurveGroup<T, P, C extends EllipticCurve<T, P>>
               extends CyclicGroupOfPrimeOrder<P>
               implements Serializable {
     private static final long serialVersionUID = 1276532022589756079L;
-    
+
     private C curve;
     private P basePoint;
     private BigInteger basePointOrder;
-    
+
+    /** @return The curve. */
     public C getCurve() { return curve; }
-    public P getBasePoint() { return basePoint; }
-    public BigInteger getBasePointOrder() { return basePointOrder; }
-    
+
+    /** Generates a group from the given parameters.
+     * @param curve The elliptic curve.
+     * @param basePoint The generator point.
+     * @param basePointOrder The order of the generator point.
+     */
     public EllipticCurveGroup(C curve,
             P basePoint,
             BigInteger basePointOrder) {
@@ -25,33 +35,33 @@ public class EllipticCurveGroup<T, P, C extends EllipticCurve<T, P>>
         this.basePoint = basePoint;
         this.basePointOrder = basePointOrder;
     }
-    
+
     @Override
     public P combine(P a, P b) {
         return curve.add(a, b);
     }
-    
+
     @Override
     public P twice(P a) {
         return curve.twice(a);
     }
-    
+
     @Override
     public P pow(P a, BigInteger k) {
         return curve.multiply(a, k);
     }
-    
+
     @Override
     public P invert(P a) {
         return curve.negate(a);
     }
-    
+
     @Override
     public P identity() {
         return curve.getInfinity();
     }
-    
-    /** 
+
+    /**
      * Uses Shamir's trick to get much better performance. Uses {@link List.subList}, so you'd
      * better give it {@link ImmutableLists}.
      */
@@ -59,7 +69,10 @@ public class EllipticCurveGroup<T, P, C extends EllipticCurve<T, P>>
     public P multiexp(List<P> bases, List<BigInteger> exponents) {
         return multiexpShamir(bases, exponents, 5);
     }
-    
+
+    /**
+     * @returns the named group <code>secp160r1</code>.
+     */
     public static EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp>
                                getSecp160R1() {
         BigInteger p = new BigInteger("ffffffffffffffffffffffffffffffff7fffffff", 16),

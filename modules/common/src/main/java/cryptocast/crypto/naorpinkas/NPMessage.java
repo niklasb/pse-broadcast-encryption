@@ -21,7 +21,7 @@ public class NPMessage<T, G extends CyclicGroupOfPrimeOrder<T>> {
 
     /**
      * Creates a new instance of NaorPinkasMessage with the given parameters.
-     * 
+     *
      * @param t The degree of the polynomial.
      * @param r The $r$ value.
      * @param encryptedSecret A value, from which we can restore the secret
@@ -30,7 +30,7 @@ public class NPMessage<T, G extends CyclicGroupOfPrimeOrder<T>> {
      * @param lagrange The lagrange coefficients belonging to the shares.
      * @param shares The shares.
      */
-    public NPMessage(int t, BigInteger r, byte[] encryptedSecret, 
+    public NPMessage(int t, BigInteger r, byte[] encryptedSecret,
                              G group,
                              List<BigInteger> lagrangeCoefficients,
                              List<NPShare<T, G>> shares) {
@@ -47,33 +47,33 @@ public class NPMessage<T, G extends CyclicGroupOfPrimeOrder<T>> {
      * @return The value $t$.
      */
     public int getT() { return t; }
-    
+
     /**
      * @return The group.
      */
     public G getGroup() {
         return group;
     }
-    
+
     /**
      * @return The encrypted secret.
      */
     public byte[] getEncryptedSecret() { return encryptedSecret; }
-    
+
     /**
      * @return The value $r$.
      */
     public BigInteger getR() { return r; }
-    
+
     /**
      * @return The shares.
      */
     public ImmutableList<NPShare<T, G>> getShares() { return shares; }
-    
+
     /**
      * @return The lagrange coefficients belonging to the shares.
      */
-    public ImmutableList<BigInteger> getLagrangeCoeffs() { 
-        return lagrangeCoefficients; 
+    public ImmutableList<BigInteger> getLagrangeCoeffs() {
+        return lagrangeCoefficients;
     }
 }

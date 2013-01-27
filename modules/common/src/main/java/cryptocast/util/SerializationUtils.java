@@ -9,12 +9,22 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+
 /**
- * Provides several serialization utility methods.
+ * Provides several utility function for object serialization.
  */
-public class SerializationUtils {    
+public class SerializationUtils {
+    /**
+     * Deserializes an object from a stream.
+     *
+     * @param in The stream to read from.
+     * @param <T> The type of which we want to deserialize an instance.
+     * @return An instance of T
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     @SuppressWarnings("unchecked")
-    public static <T extends Serializable> T readFromStream(InputStream in) 
+    public static <T extends Serializable> T readFromStream(InputStream in)
                throws IOException, ClassNotFoundException {
         ObjectInputStream objIn = new ObjectInputStream(in);
         try {
@@ -25,14 +35,15 @@ public class SerializationUtils {
     }
 
     /**
-     * Reads a file and returns a serializable object.
-     * 
+     * Deserializes an object from a file.
+     *
      * @param file The file to read from.
-     * @return A serializable object.
+     * @param <T> The type of which we want to deserialize an instance.
+     * @return An instance of T
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static <T extends Serializable> T readFromFile(File file) 
+    public static <T extends Serializable> T readFromFile(File file)
                throws IOException, ClassNotFoundException {
         InputStream fis = new FileInputStream(file);
         try {
@@ -43,8 +54,8 @@ public class SerializationUtils {
     }
 
     /**
-     * Writes a serializable object into an output stream.
-     * 
+     * Serialize an object into an output stream.
+     *
      * @param out The output stream.
      * @param obj The object to write.
      * @throws IOException
@@ -58,15 +69,15 @@ public class SerializationUtils {
             objOut.close();
         }
     }
-   
+
     /**
-     * Writes a serializable object into a file.
-     * 
+     * Serialize an object into a file.
+     *
      * @param file The file to write in.
      * @param obj The object to write.
      * @throws IOException
      */
-    public static void writeToFile(File file, Serializable obj) 
+    public static void writeToFile(File file, Serializable obj)
                                         throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
         try {

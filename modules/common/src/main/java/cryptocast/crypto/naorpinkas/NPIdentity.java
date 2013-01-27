@@ -8,11 +8,11 @@ import java.math.BigInteger;
  */
 public class NPIdentity implements Serializable {
     private static final long serialVersionUID = -4137161426277758109L;
-    
+
     BigInteger i;
 
     /**
-     * initializes NaorPinkasIdentity
+     * initializes an instance.
      * @param i The identity code.
      */
     protected NPIdentity(BigInteger i) {
@@ -21,13 +21,13 @@ public class NPIdentity implements Serializable {
 
     /**
      * Returns the identity code.
-     * 
+     *
      * @return identity code.
      */
-    protected BigInteger getI() { 
-        return i; 
+    protected BigInteger getI() {
+        return i;
     }
-    
+
     @Override
     public int hashCode() {
         return i.hashCode();

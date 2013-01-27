@@ -7,7 +7,7 @@ import cryptocast.crypto.CyclicGroupOfPrimeOrder;
 
 /**
  * A user's personal key in the Naor-Pinkas broadcast encryption scheme.
- * It consists of a value $I$ and the value $P(I)$, which is the value of 
+ * It consists of a value $I$ and the value $P(I)$, which is the value of
  * the Naor-Pinkas polynomial at $I$.
  */
 public class NPKey<T, G extends CyclicGroupOfPrimeOrder<T>>
@@ -17,15 +17,15 @@ public class NPKey<T, G extends CyclicGroupOfPrimeOrder<T>>
     private BigInteger i, pi;
     private G group;
     private NPIdentity id;
-    
+
     /**
      * Creates a new instance of NaorPinkasPersonalKey with the given parameters.
-     * 
+     *
      * @param i A point $I$.
      * @param pi $P(I)$, the value of the polynomial at $I$.
      * @param schnorr The schnorr group.
      */
-    protected NPKey(BigInteger i, BigInteger pi, 
+    protected NPKey(BigInteger i, BigInteger pi,
                                     G group) {
         this.i = i;
         id = new NPIdentity(i);
@@ -39,7 +39,7 @@ public class NPKey<T, G extends CyclicGroupOfPrimeOrder<T>>
     public G getGroup() {
         return group;
     }
-    
+
     /**
      * @param r The integer $r$.
      * @param gr The value $g^r$.
@@ -49,7 +49,7 @@ public class NPKey<T, G extends CyclicGroupOfPrimeOrder<T>>
         T x = group.pow(gr, pi);
         return new NPShare<T, G>(i, x, group);
     }
-    
+
     /**
      * @param r The integer $r$
      * @return a NP share constructed from this key and the given $r$.
@@ -69,12 +69,12 @@ public class NPKey<T, G extends CyclicGroupOfPrimeOrder<T>>
      * @return the name of the algorithm associated with this key.
      */
     public String getAlgorithm() { return "Naor-Pinkas"; }
-    
+
     /**
      * @return null
      */
     public byte[] getEncoded() { return null; }
-    
+
     /**
      * @return null
      */
