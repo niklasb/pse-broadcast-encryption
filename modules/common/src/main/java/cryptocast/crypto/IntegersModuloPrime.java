@@ -36,7 +36,7 @@ public class IntegersModuloPrime extends Field<BigInteger>
     /**
      * Reduces an integer $a < p^2$ modulo $p$.
      * @param a ($a < p^2$)
-     * @return $a \mod p$
+     * @return $a \bmod{p}$
      */
     public BigInteger reduce(BigInteger a) {
         return a.mod(p);

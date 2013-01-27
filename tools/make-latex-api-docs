@@ -1,0 +1,4 @@
+#!/bin/sh
+cd `dirname $0`/..
+tools/javadoc-to-xml
+python2 tools/generate_latex.py javadoc.xml docs

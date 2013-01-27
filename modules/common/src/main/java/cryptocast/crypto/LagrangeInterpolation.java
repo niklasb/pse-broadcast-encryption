@@ -18,7 +18,7 @@ import cryptocast.util.NativeUtils;
 
 /**
  * Represents the context needed to quickly perform a Lagrange interpolation of
- * the values $P_i(0)$ arbitrarily many polnomials $P_i$.
+ * the values $P_i(0)$ of arbitrarily many polnomials $P_i$.
  * Given a set of points ${x_1, ..., x_n}$, the state needed to do this is the
  * values $c_i = \prod_{i \neq j} \frac{x_j}{x_j - x_i}$.
  * @param <T> The type of items of the polynomial over a field.
@@ -214,8 +214,11 @@ public class LagrangeInterpolation<T> implements Serializable {
      * Computes the langrange coefficients for a given list of points.
      * Uses native acceleration if available.
      *
-     * @return The Lagrange coefficients $\c_i$ of the associated polynomial,
-     *         where $\c_i = prod_{j \neq i} \frac{x_j}{x_j - x_i}$
+     * @param field The field
+     * @param xs The list $x_i$
+     * @param numThreads the number of threds to use for parallelisation
+     * @return The Lagrange coefficients $c_i$,
+     *         where $c_i = prod_{j \neq i} \frac{x_j}{x_j - x_i}$
      */
     @SuppressWarnings("unchecked")
     public static <T> ImmutableList<T> computeCoefficients(

@@ -5,6 +5,9 @@ import re
 
 boilerplate_classes = ['java.lang.Object']
 
+def escape_latex(txt):
+    return txt.replace("_", "\\_")
+
 def class_name(cls):
     name = cls.find("name").text
     typevars = cls.find("typeVariables")
@@ -19,6 +22,7 @@ def parse_bool(s, default=False):
     return s.strip() == 'true'
 
 def transform_type(typ, simple=True):
+    if typ.tag == "string": return typ.text
     dim = typ.find("dimension").text or ""
     gen = ""
     typevars = typ.find("generics")
@@ -59,7 +63,7 @@ def render_method(meth):
                                         for p in paramscom))
     returntxt = ""
     if res != None and res.find("comment") != None:
-        returntxt = "\emph{Returns:} %s" % res.find("comment").text
+        returntxt = "\emph{Returns:} %s" % (res.find("comment").text or "").replace("#", "\\#")
 
     description = text_or(meth.find("comment"))
     if not description.strip() and returntxt.strip():
@@ -85,7 +89,8 @@ def render_method(meth):
 
 def render_tikz_param(param, varargs=False):
     dim = "..." if varargs else ""
-    return "%s : %s%s" % (param.find("name").text, transform_type(param.find("type")), dim)
+    return "%s : %s%s" % (escape_latex(param.find("name").text),
+                          transform_type(param.find("type")), dim)
 
 def render_tikz_method(meth, abstract=False):
     varargs = parse_bool(meth.find("isVarArgs").text)
@@ -95,7 +100,10 @@ def render_tikz_method(meth, abstract=False):
         typ = transform_type(res.find("type"))
         if typ != "void":
             rettype = " : " + typ
-    access = {"public":"+", "protected":"\\#", "private":"--"}[meth.find("scope").text]
+    access = {"public":"+",
+              "protected":"\\#",
+              "private":"--",
+              "packageprivate":"\\#"}[meth.find("scope").text]
     params = list(meth.iter("parameter"))
     paramstxt = ", ".join(render_tikz_param(params[i], varargs and i == len(params)-1)
                           for i in xrange(len(params)))
@@ -113,7 +121,7 @@ def render_class_diagram(cls):
     methodsel = cls.find("methods")
     methods = ""
     if methodsel is not None:
-        methods = " \\\\ ".join(render_tikz_method(m, interface) for m in methodsel.iter("method"))
+        methods = " \\\\\n".join(render_tikz_method(m, interface) for m in methodsel.iter("method"))
     return dedent("""\
         \\noindent\\begin{{minipage}}[t]{{5cm}}
         \\vspace{{0.3em}}
@@ -201,7 +209,7 @@ def render_class(cls, indent=2):
            """).format(classtype=("Interface" if interface else "Class"),
                        diagram=render_class_diagram(cls),
                        classname=class_name(cls),
-                       description=cls.find("comment").text,
+                       description=(cls.find("comment").text or "").replace("#", "\\#"),
                        typevars=typevarstxt,
                        constructortxt=constructortxt,
                        methodtxt=methodtxt,

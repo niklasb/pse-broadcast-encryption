@@ -1,0 +1,796 @@
+\subsection{Package \lstinline!cryptocast.server.programs!}
+
+\input{cryptocast.server.programs.custom.tex}
+\subsubsection{Class \lstinline|Result|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Result}{
+
+}{
++ getMax() : double \\
++ getMin() : double \\
++ getAvg() : double \\
+\# report(t : double) \\
++ print()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|Result|\lstinline|(int freq)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public double| \lstinline|getMax|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public double| \lstinline|getMin|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public double| \lstinline|getAvg|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|packageprivate void| \lstinline|report|\lstinline|(double t)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|print|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|TcpStreamer|}
+The main method to start the server. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{TcpStreamer}{
+
+}{
+\umlstatic{+ main(argv : String[])}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public static void| \lstinline|main|\lstinline|(String[] argv)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|TcpStreamer.Options|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{TcpStreamer.Options}{
+
+}{
+
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.OptParse.WithHelp|
+\end{itemize}
+
+
+
+\subsubsection{Class \lstinline|TcpStreamer.ConnectionHandler|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{TcpStreamer.ConnectionHandler}{
+
+}{
++ run()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.lang.Runnable|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|TcpStreamer.ConnectionHandler|\lstinline|(Socket sock, File file, int skip, long maxBps)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|HttpStreamer|}
+The main method to start the server. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{HttpStreamer}{
+
+}{
+\umlstatic{+ main(argv : String[])}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public static void| \lstinline|main|\lstinline|(String[] argv)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|HttpStreamer.Options|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{HttpStreamer.Options}{
+
+}{
+
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.OptParse.WithHelp|
+\end{itemize}
+
+
+
+\subsubsection{Class \lstinline|Benchmarks|}
+The main method to start the server. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks}{
+
+}{
+\umlstatic{-- printCommands()} \\
+\umlstatic{+ main(argv : String[])} \\
+\umlstatic{-- runBenchmark(benchmark : Benchmark, rep : int, freq : int)} \\
+\umlstatic{-- measure(benchmark : Benchmark, rep : int, freq : int) : Result} \\
+\umlstatic{-- makePrime(b : int) : BigInteger}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|private static void| \lstinline|printCommands|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public static void| \lstinline|main|\lstinline|(String[] argv)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private static void| \lstinline|runBenchmark|\lstinline|(Benchmark benchmark, int rep, int freq)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private static Result| \lstinline|measure|\lstinline|(Benchmark benchmark, int rep, int freq)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private static BigInteger| \lstinline|makePrime|\lstinline|(int b)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Benchmarks.OptsCommon|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks.OptsCommon}{
+
+}{
+
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.OptParse.WithHelp|
+\end{itemize}
+
+
+
+\subsubsection{Class \lstinline|Benchmarks.WithECOrSchnorr|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks.WithECOrSchnorr}{
+
+}{
+\# beforeAll() \\
+\# createServer(t : int) \\
+\# isEc() : boolean \\
+\# isSchnorr() : boolean
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|protected void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|createServer|\lstinline|(int t)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected boolean| \lstinline|isEc|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected boolean| \lstinline|isSchnorr|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Benchmarks.LagrangeBenchmark|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks.LagrangeBenchmark}{
+
+}{
++ beforeAll() \\
++ before() \\
++ run()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.programs.Benchmark|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|before|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Benchmarks.MultiExpBenchmark|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks.MultiExpBenchmark}{
+
+}{
++ beforeAll() \\
++ before() \\
++ run()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.programs.Benchmarks.WithECOrSchnorr|
+\item \lstinline|cryptocast.server.programs.Benchmark|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|before|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Benchmarks.EncryptBenchmark|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks.EncryptBenchmark}{
+
+}{
++ beforeAll() \\
++ before() \\
++ run()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.programs.Benchmarks.WithECOrSchnorr|
+\item \lstinline|cryptocast.server.programs.Benchmark|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|before|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Benchmarks.MultiEncryptBenchmark|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks.MultiEncryptBenchmark}{
+
+}{
++ beforeAll() \\
++ before() \\
++ run()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.programs.Benchmarks.WithECOrSchnorr|
+\item \lstinline|cryptocast.server.programs.Benchmark|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|before|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Benchmarks.DecryptBenchmark|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks.DecryptBenchmark}{
+
+}{
++ beforeAll() \\
++ before() \\
++ run()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.programs.Benchmarks.WithECOrSchnorr|
+\item \lstinline|cryptocast.server.programs.Benchmark|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|before|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Benchmarks.MultiEvalBenchmark|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks.MultiEvalBenchmark}{
+
+}{
++ beforeAll() \\
++ before() \\
++ run()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.programs.Benchmark|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|before|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Benchmarks.KeygenBenchmark|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Benchmarks.KeygenBenchmark}{
+
+}{
++ beforeAll() \\
++ before() \\
++ run()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.programs.Benchmarks.WithECOrSchnorr|
+\item \lstinline|cryptocast.server.programs.Benchmark|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|before|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Client|}
+The main method to start the server. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Client}{
+
+}{
+\umlstatic{+ main(argv : String[])}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public static void| \lstinline|main|\lstinline|(String[] argv)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Client.Options|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Client.Options}{
+
+}{
+
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.OptParse.WithHelp|
+\end{itemize}
+
+
+
+\subsubsection{Class \lstinline|Server|}
+The main method to start the server. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Server}{
+
+}{
+\umlstatic{+ main(argv : String[])}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public static void| \lstinline|main|\lstinline|(String[] argv)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|Server.Options|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Server.Options}{
+
+}{
+
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.server.OptParse.WithHelp|
+\end{itemize}
+
+
+
+\subsubsection{Interface \lstinline|Benchmark|}
+ \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{Benchmark}{
+
+}{
+\umlvirt{+ beforeAll()} \\
+\umlvirt{+ before()}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.lang.Runnable|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|before|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+

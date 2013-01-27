@@ -10,35 +10,48 @@ This package contains the server application used to send data to a specific gro
 
  It puts together the communication, cryptography and utility packages to implement its functionality.
 \input{cryptocast.server.custom.tex}
-\subsubsection{Class \lstinline|Controller<ID>|}
-Deals with user-interactions and therefore changes data in Model if necessary. \\
+\subsubsection{Class \lstinline|Controller|}
+Deals with user-interactions and therefore changes data in the model if
+ necessary. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{Controller<ID>}{
+\umlclass[]{Controller}{
 
 }{
-+ init() \\ + keyGen(amtRevocable : int, amtPrivateKeys : int, keyDir : File) \\ + addUser(name : String) \\ + revokeUser(name : String) \\ + authorizeUser(name : String) \\ + stream(data : InputStream) \\ + showStatistics() \\ + showUsers() \\ + showInfo()
+\umlstatic{+ start(databaseFile : File, listenAddr : SocketAddress, keyBroadcastIntervalSecs : int, serverFactory : NPServerFactory) : Controller} \\
+\umlstatic{-- createNewData(t : int, serverFactory : NPServerFactory) : NaorPinkasServerData} \\
++ saveUserKeys(dir : File, users : Set<User<NPIdentity>, NPIdentity>) \\
++ saveDatabase() \\
++ getModel() : NaorPinkasServerData \\
++ reinitializeCrypto(t : int) \\
++ stream(in : InputStream) \\
++ stream(in : InputStream, maxBytesPerSec : long) \\
+\umlstatic{-- startBroadcastEncryptionServer(data : NaorPinkasServerData, rawOut : MessageOutChannel, keyBroadcastIntervalSecs : int) : BroadcastEncryptionServer<NPIdentity>} \\
++ getDatabaseFile() : File \\
++ getT() : int \\
++ getListenAddress() : SocketAddress \\
++ streamSampleText() \\
++ streamAudio(file : File) \\
++ update(o : Observable, arg : Object)
 }
 \end{tikzpicture}
 \vspace{0.3em}
 \end{minipage}
 
-\begin{itemize}
-\item \lstinline|<ID>|: The type of the user identities
-\end{itemize}
 
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.util.Observer|
+\end{itemize}
 
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|Controller|\lstinline|(ServerData<ID> data, Shell<ID> shell)|\\ \\[-0.6em]
-Initializes a new controller with the given arguments.
-\begin{itemize}
-\item \lstinline|data|: The data administrated by this controller.
-\item \lstinline|shell|: The operator interface from which this controller gets its input.
-\end{itemize}
+\item \lstinline|private| \lstinline|Controller|\lstinline|(NaorPinkasServerData data, File databaseFile, MessageOutChannel rawOut, BroadcastEncryptionServer<NPIdentity> encServer, SocketAddress listenAddr, int keyBroadcastIntervalSecs, SwitchableInputStream switchableInput, SwitchableOutputStream switchableOutput, NPServerFactory serverFactory)| \\[-0.6em]
+
 
 
 
@@ -47,65 +60,101 @@ Initializes a new controller with the given arguments.
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|init|\lstinline|()|\\ \\[-0.6em]
-Initializes the server on start by loading data from a file.
-
-
-
-\item \lstinline|public void| \lstinline|keyGen|\lstinline|(int amtRevocable, int amtPrivateKeys, File keyDir)|\\ \\[-0.6em]
-Tries to start a new group to which data can be sent by generating private keys.
+\item \lstinline|public static Controller| \lstinline|start|\lstinline|(File databaseFile, SocketAddress listenAddr, int keyBroadcastIntervalSecs, NPServerFactory serverFactory)|\\ \\[-0.6em]
+Creates a Controller with the given parameters
 \begin{itemize}
-\item \lstinline|amtRevocable|: The amount of user which can be revoked.
-\item \lstinline|amtPrivateKeys|: The amount of private keys which are produced.
-\item \lstinline|keyDir|: The directory to save the keyfiles in.
+\item \lstinline|databaseFile|: The database file.
+\item \lstinline|listenAddr|: The socket address to bind to.
+\item \lstinline|keyBroadcastIntervalSecs|: the broadcast interval in seconds
+\end{itemize}
+
+\emph{Returns:} The controller
+
+\item \lstinline|private static NaorPinkasServerData| \lstinline|createNewData|\lstinline|(int t, NPServerFactory serverFactory)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|saveUserKeys|\lstinline|(File dir, Set<User<NPIdentity>, NPIdentity> users)|\\ \\[-0.6em]
+Saves the users's personal keys in a keyfile at the given directory.
+\begin{itemize}
+\item \lstinline|dir|: The directory to save the keyfiles in.
+\item \lstinline|users|: The users who their personal keys will be saved.
 \end{itemize}
 
 
 
-\item \lstinline|public void| \lstinline|addUser|\lstinline|(String name)|\\ \\[-0.6em]
-Adds a new user and assigns a private key to that user.
+\item \lstinline|public void| \lstinline|saveDatabase|\lstinline|()|\\ \\[-0.6em]
+Saves the database.
+
+
+
+\item \lstinline|public NaorPinkasServerData| \lstinline|getModel|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the data.
+
+
+
+\item \lstinline|public void| \lstinline|reinitializeCrypto|\lstinline|(int t)|\\ \\[-0.6em]
+Reinitializes the cryptography. 
+ All data of the current session will be lost forever!
 \begin{itemize}
-\item \lstinline|name|: The name of the user which is added.
+\item \lstinline|t|: the size of the polynomial.
 \end{itemize}
 
 
 
-\item \lstinline|public void| \lstinline|revokeUser|\lstinline|(String name)|\\ \\[-0.6em]
-Bans a user from the stream by adding it to the list of revoked users.
+\item \lstinline|public void| \lstinline|stream|\lstinline|(InputStream in)|\\ \\[-0.6em]
+Streams the data.
 \begin{itemize}
-\item \lstinline|name|: The name of the user that is revoked.
+\item \lstinline|in|: The input stream.
 \end{itemize}
 
 
 
-\item \lstinline|public void| \lstinline|authorizeUser|\lstinline|(String name)|\\ \\[-0.6em]
-Authorizes a user to watch the stream by removing it from the list of revoked users.
+\item \lstinline|public void| \lstinline|stream|\lstinline|(InputStream in, long maxBytesPerSec)|\\ \\[-0.6em]
+Streams the data.
 \begin{itemize}
-\item \lstinline|name|: The name of the user who is unbanned.
+\item \lstinline|in|: The input stream.
+\item \lstinline|maxBytesPerSec|: Maximum bytes per second.
 \end{itemize}
 
 
 
-\item \lstinline|public void| \lstinline|stream|\lstinline|(InputStream data)|\\ \\[-0.6em]
-Starts the data stream.
+\item \lstinline|private static BroadcastEncryptionServer<NPIdentity>| \lstinline|startBroadcastEncryptionServer|\lstinline|(NaorPinkasServerData data, MessageOutChannel rawOut, int keyBroadcastIntervalSecs)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public File| \lstinline|getDatabaseFile|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The database file.
+
+
+
+\item \lstinline|public int| \lstinline|getT|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The size of the polynomial.
+
+
+
+\item \lstinline|public SocketAddress| \lstinline|getListenAddress|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The socket listening address to bind to.
+
+
+
+\item \lstinline|public void| \lstinline|streamSampleText|\lstinline|()|\\ \\[-0.6em]
+Streams simple text.
+
+
+
+\item \lstinline|public void| \lstinline|streamAudio|\lstinline|(File file)|\\ \\[-0.6em]
+Streams audio.
 \begin{itemize}
-\item \lstinline|data|: The file from which the data is read.
+\item \lstinline|file|: The audio file from which the data is read.
 \end{itemize}
 
 
 
-\item \lstinline|public void| \lstinline|showStatistics|\lstinline|()|\\ \\[-0.6em]
-Prints information about traffic.
+\item \lstinline|public void| \lstinline|update|\lstinline|(Observable o, Object arg)| \\[-0.6em]
 
-
-
-\item \lstinline|public void| \lstinline|showUsers|\lstinline|()|\\ \\[-0.6em]
-Prints users and the keys assigned to them.
-
-
-
-\item \lstinline|public void| \lstinline|showInfo|\lstinline|()|\\ \\[-0.6em]
-Prints information about the data which is currently sent.
 
 
 
@@ -120,7 +169,8 @@ Represents a user in our application. \\
 \umlclass[]{User<ID>}{
 
 }{
-+ getName() : String \\ + getIdentity() : ID
++ getName() : String \\
++ getIdentity() : ID
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -131,14 +181,19 @@ Represents a user in our application. \\
 \end{itemize}
 
 
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
 \item \lstinline|public| \lstinline|User|\lstinline|(String name, ID id)|\\ \\[-0.6em]
 Creates a User with the given attributes.
 \begin{itemize}
-\item \lstinline|name|: The name of this user
-\item \lstinline|id|: The ID of this user
+\item \lstinline|name|: The name of this user.
+\item \lstinline|id|: The ID of this user.
 \end{itemize}
 
 
@@ -160,24 +215,74 @@ Creates a User with the given attributes.
 
 \end{itemize}
 
-\subsubsection{Class \lstinline|Shell<ID>|}
-Implements the user interface of the server as an interactive console application. \\
+\subsubsection{Class \lstinline|NaorPinkasServerData|}
+Server data according to Naor-Pinkas. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{Shell<ID>}{
+\umlclass[]{NaorPinkasServerData}{
 
 }{
-\# performCommand(cmd : String, args : String[]) \\ -- help()
+
 }
 \end{tikzpicture}
 \vspace{0.3em}
 \end{minipage}
 
+
+
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|<ID>|: The type of the user identities.
+\item \lstinline|cryptocast.server.ServerData<NPIdentity>|
 \end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NaorPinkasServerData|\lstinline|(NPServerInterface npServer)|\\ \\[-0.6em]
+Creates NaorPinkas server data with the given Naor-Pinkas server.
+\begin{itemize}
+\item \lstinline|npServer|: A Naor-Pinkas server.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\subsubsection{Class \lstinline|Shell|}
+Implements the user interface of the server as an interactive console application. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{Shell}{
+
+}{
+\# start() \\
+\# performCommand(cmdName : String, args : String[]) \\
+-- capitalizeCmdName(name : String) : String \\
+\# cmdHelp(cmd : ShellCommand, args : String[]) \\
+\# cmdInit(cmd : ShellCommand, args : String[]) \\
+\# cmdUsers(cmd : ShellCommand, args : String[]) \\
+\# cmdAdd(cmd : ShellCommand, args : String[]) \\
+\# cmdRevoke(cmd : ShellCommand, args : String[]) \\
+\# cmdUnrevoke(cmd : ShellCommand, args : String[]) \\
+\# cmdSaveKeys(cmd : ShellCommand, args : String[]) \\
+\# cmdStreamSampleText(cmd : ShellCommand, args : String[]) \\
+\# cmdStreamStdin(cmd : ShellCommand, args : String[]) \\
+\# cmdStreamMp3(cmd : ShellCommand, args : String[]) \\
+-- getUser(name : String) : User<NPIdentity> \\
+-- saveDatabase() \\
+-- getModel() : ServerData<NPIdentity> \\
+-- commandSyntaxError(cmd : ShellCommand) \\
+\umlstatic{+ parseInt(str : String) : Optional<Integer>}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
 
 
 \textbf{\sffamily Superclasses and Interfaces}
@@ -188,7 +293,7 @@ Implements the user interface of the server as an interactive console applicatio
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|Shell|\lstinline|(InputStream in, PrintStream out, PrintStream err)|\\ \\[-0.6em]
+\item \lstinline|public| \lstinline|Shell|\lstinline|(BufferedReader in, PrintStream out, PrintStream err, Controller control)|\\ \\[-0.6em]
 Creates a new Shell object with the given parameters.
 \begin{itemize}
 \item \lstinline|in|: The input stream
@@ -203,15 +308,98 @@ Creates a new Shell object with the given parameters.
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|protected void| \lstinline|performCommand|\lstinline|(String cmd, String[] args)| \\[-0.6em]
+\item \lstinline|protected void| \lstinline|start|\lstinline|()| \\[-0.6em]
 
 
 
 
-\item \lstinline|private void| \lstinline|help|\lstinline|()|\\ \\[-0.6em]
+\item \lstinline|protected void| \lstinline|performCommand|\lstinline|(String cmdName, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private String| \lstinline|capitalizeCmdName|\lstinline|(String name)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|cmdHelp|\lstinline|(ShellCommand cmd, String[] args)|\\ \\[-0.6em]
 Prints all commands this shell can perform with information about how to use them.
 
 
+
+\item \lstinline|protected void| \lstinline|cmdInit|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|cmdUsers|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|cmdAdd|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|cmdRevoke|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|cmdUnrevoke|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|cmdSaveKeys|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|cmdStreamSampleText|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|cmdStreamStdin|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|cmdStreamMp3|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private User<NPIdentity>| \lstinline|getUser|\lstinline|(String name)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private void| \lstinline|saveDatabase|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|private ServerData<NPIdentity>| \lstinline|getModel|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|private void| \lstinline|commandSyntaxError|\lstinline|(ShellCommand cmd)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public static Optional<Integer>| \lstinline|parseInt|\lstinline|(String str)|\\ \\[-0.6em]
+Parses the string.
+\begin{itemize}
+\item \lstinline|str|: The string to be parsed.
+\end{itemize}
+
+\emph{Returns:} An integer.
 
 \end{itemize}
 
@@ -224,7 +412,13 @@ Contains the data which is managed by the controller and presented by the view. 
 \umlclass[]{ServerData<ID>}{
 
 }{
-+ createNewUser(name : String) : Optional<User<ID>, ID> \\ + getUserByName(name : String) : Optional<User<ID>, ID> \\ + getPersonalKey(user : User<ID>) : Optional<PrivateKey>
++ createNewUser(name : String) : Optional<User<ID>, ID> \\
++ getUserByName(name : String) : Optional<User<ID>, ID> \\
++ getPersonalKey(user : User<ID>) : Optional<?, PrivateKey> \\
++ revoke(users : Set<User<ID>, ID>) \\
++ unrevoke(user : User<ID>) \\
++ isRevoked(user : User<ID>) : boolean \\
++ getUsers() : Set<User<ID>, ID>
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -241,16 +435,30 @@ Contains the data which is managed by the controller and presented by the view. 
 \end{itemize}
 
 
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServerData|\lstinline|(BroadcastSchemeUserManager<ID> userManager, BroadcastSchemeKeyManager<ID> keyManager)|\\ \\[-0.6em]
+Creates ServerData with the given parameter.
+\begin{itemize}
+\item \lstinline|userManager|: Manages the users.
+\item \lstinline|keyManager|: Manages the keys.
+\end{itemize}
+
+
+
+\end{itemize}
+
 
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public Optional<User<ID>, ID>| \lstinline|createNewUser|\lstinline|(String name)|\\ \\[-0.6em]
 Creates and saves a new user by name.
 \begin{itemize}
-\item \lstinline|name|: The user's name
+\item \lstinline|name|: The user's name.
 \end{itemize}
 
-\emph{Returns:} The new user if he has been added successfully, else absent is returned.
+\emph{Returns:} The new user if it has been added successfully or absent
+         if a user with the same name already existed.
 
 \item \lstinline|public Optional<User<ID>, ID>| \lstinline|getUserByName|\lstinline|(String name)|\\ \\[-0.6em]
 Retrieves a user by name.
@@ -260,26 +468,58 @@ Retrieves a user by name.
 
 \emph{Returns:} A user instance, if it was found, or absent otherwise
 
-\item \lstinline|public Optional<PrivateKey>| \lstinline|getPersonalKey|\lstinline|(User<ID> user)|\\ \\[-0.6em]
+\item \lstinline|public Optional<?, PrivateKey>| \lstinline|getPersonalKey|\lstinline|(User<ID> user)|\\ \\[-0.6em]
 Retrieves a user's personal key.
 \begin{itemize}
-\item \lstinline|user|: The user object
+\item \lstinline|user|: The user object.
 \end{itemize}
 
-\emph{Returns:} The private key
+\emph{Returns:} The private key.
+
+\item \lstinline|public void| \lstinline|revoke|\lstinline|(Set<User<ID>, ID> users)|\\ \\[-0.6em]
+Revokes users.
+\begin{itemize}
+\item \lstinline|users|: The users to revoke.
+\end{itemize}
+
+\emph{Returns:} <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
+
+\item \lstinline|public void| \lstinline|unrevoke|\lstinline|(User<ID> user)|\\ \\[-0.6em]
+Authorizes a user.
+\begin{itemize}
+\item \lstinline|user|: The user to authorize.
+\end{itemize}
+
+\emph{Returns:} <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
+
+\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(User<ID> user)|\\ \\[-0.6em]
+Checks whether the user is revoked.
+\begin{itemize}
+\item \lstinline|user|: The user.
+\end{itemize}
+
+\emph{Returns:} <code>true</code>, if the user was revoked or <code>false</code> otherwise.
+
+\item \lstinline|public Set<User<ID>, ID>| \lstinline|getUsers|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} all users.
+
+
 
 \end{itemize}
 
-\subsubsection{Class \lstinline|Main|}
-The main method to start the server. \\
+\subsubsection{Class \lstinline|ShellCommand|}
+Represents the commands available in the shell. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{Main}{
+\umlclass[]{ShellCommand}{
 
 }{
-\umlstatic{+ main(args : String[])}
++ getName() : String \\
++ getSyntax() : String \\
++ getShortDesc() : String \\
++ getLongDesc() : String
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -290,8 +530,21 @@ The main method to start the server. \\
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|private| \lstinline|Main|\lstinline|()| \\[-0.6em]
+\item \lstinline|public| \lstinline|ShellCommand|\lstinline|(String name, String syntax, String shortDesc, String longDesc)|\\ \\[-0.6em]
+Creates a new Command with the given values
+\begin{itemize}
+\item \lstinline|name|: The name of the command
+\item \lstinline|syntax|: The syntax of the command
+\end{itemize}
 
+
+
+\item \lstinline|public| \lstinline|ShellCommand|\lstinline|(String name, String syntax, String shortDesc)|\\ \\[-0.6em]
+Creates a new Command with the given values.
+\begin{itemize}
+\item \lstinline|name|: The name of the command.
+\item \lstinline|syntax|: The syntax of the command.
+\end{itemize}
 
 
 
@@ -300,14 +553,142 @@ The main method to start the server. \\
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public static void| \lstinline|main|\lstinline|(String[] args)| \\[-0.6em]
+\item \lstinline|public String| \lstinline|getName|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The command name
 
+
+
+\item \lstinline|public String| \lstinline|getSyntax|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The command syntax
+
+
+
+\item \lstinline|public String| \lstinline|getShortDesc|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The short command description
+
+
+
+\item \lstinline|public String| \lstinline|getLongDesc|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The long command description
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|LogbackUtils|}
+Helper functions to work with Logback. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{LogbackUtils}{
+
+}{
+\umlstatic{+ removeAllAppenders()} \\
+\umlstatic{+ setRootLogLevel(level : Level)} \\
+\umlstatic{+ addFileAppender(logFile : File, level : Level, pattern : String)} \\
+\umlstatic{+ addFileAppender(logFile : File, level : Level)} \\
+\umlstatic{+ addStderrLogger(level : Level, pattern : String)} \\
+\umlstatic{+ addStderrLogger(level : Level)} \\
+\umlstatic{+ makeThresholdFilter(level : Level) : ThresholdFilter}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|args|: command line arguments
+\item \lstinline|public static void| \lstinline|removeAllAppenders|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public static void| \lstinline|setRootLogLevel|\lstinline|(Level level)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public static void| \lstinline|addFileAppender|\lstinline|(File logFile, Level level, String pattern)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public static void| \lstinline|addFileAppender|\lstinline|(File logFile, Level level)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public static void| \lstinline|addStderrLogger|\lstinline|(Level level, String pattern)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public static void| \lstinline|addStderrLogger|\lstinline|(Level level)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public static ThresholdFilter| \lstinline|makeThresholdFilter|\lstinline|(Level level)| \\[-0.6em]
+
+
+
+
 \end{itemize}
 
+\subsubsection{Class \lstinline|OptParse|}
+A Command line option parser. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{OptParse}{
 
+}{
+\umlstatic{+ parseArgs(jcOpts : T, programName : String, argv : String[]) : T}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public static T| \lstinline|parseArgs|\lstinline|(T jcOpts, String programName, String[] argv)|\\ \\[-0.6em]
+Parses the program's arguments
+\begin{itemize}
+\item \lstinline|jcOpts|: jcommander options for parsing.
+\item \lstinline|programName|: Program name.
+\item \lstinline|argv|: Program arguments.
+\end{itemize}
+
+\emph{Returns:} parsed options.
 
 \end{itemize}
+
+\subsubsection{Class \lstinline|OptParse.WithHelp|}
+A base class for option beans the provide a help flag \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{OptParse.WithHelp}{
+
+}{
+
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
 
 

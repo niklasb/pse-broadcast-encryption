@@ -26,12 +26,12 @@ import com.google.common.base.Optional;
 public class MainActivity extends ClientActivity {
     private static final Logger log = LoggerFactory
             .getLogger(MainActivity.class);
-    
+
     private static final int RESULT_KEY_CHOICE = 1;
     private TextView editHostname, editPort;
     private File keyFile;
     private InetSocketAddress addr;
-    
+
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
@@ -39,7 +39,7 @@ public class MainActivity extends ClientActivity {
         editHostname = (TextView) findViewById(R.id.editHostname);
         editPort = (TextView) findViewById(R.id.editPort);
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -58,14 +58,14 @@ public class MainActivity extends ClientActivity {
             keyFile = null;
         }
     }
-    
+
     @Override
     protected void onPause() {
         app.setHostnameInput(getHostnameInput());
         app.setPortInput(getPortInput());
         super.onPause();
     }
-    
+
     /**
      * Validates the input and connects to the specified server,
      * possibly after letting the user choose a key file.
@@ -101,13 +101,13 @@ public class MainActivity extends ClientActivity {
             startKeyChooserForResult();
         }
     }
-    
+
      /**
      * Starts a new Server Fragment, showing the list of all servers and a cancel Button.
      * @param view The view from which this method was called.
      */
     public void onOldServers(View view) {
-        ServersFragment frag = new ServersFragment(app, "Please choose a server.", 
+        ServersFragment frag = new ServersFragment(app, "Please choose a server.",
             new ServersFragment.OnServerSelected() {
                 @Override
                 public void onServerSelected(InetSocketAddress addr) {
@@ -117,7 +117,7 @@ public class MainActivity extends ClientActivity {
             });
         frag.show(getSupportFragmentManager(), null);
     }
-    
+
     /**
      * Gets the socket address and checks, if the hostname and the port number are valid.
      * @return The socket address.
@@ -135,10 +135,10 @@ public class MainActivity extends ClientActivity {
         }
         return Optional.of(new InetSocketAddress(hostname, port));
     }
-    
+
     /**
      * Checks whether the hostname is correct.
-     * 
+     *
      * @param hostname The hostname.
      * @return <code>true</code>, if the hostname is correct; <code>false</code> otherwise.
      */
@@ -146,10 +146,10 @@ public class MainActivity extends ClientActivity {
         // TODO any other criterion?
         return hostname.length() > 0;
     }
-    
+
     /**
     * Checks whether the port number is correct.
-    * 
+    *
     * @param port The port number.
     * @return <code>true</code>, if the the port number; <code>false</code> otherwise.
     */
@@ -159,16 +159,16 @@ public class MainActivity extends ClientActivity {
 
     /**
      * Displays text to the user and optionally allows them to edit it.
-	 * 
+	 *
 	 * @return String representation of the hostname.
      */
     protected String getHostnameInput() {
         return editHostname.getText().toString();
     }
-    
+
     /**
      * Displays text to the user and optionally allows them to edit it.
-	 * 
+	 *
 	 * @return String representation of the port number.
      */
     protected String getPortInput() {
@@ -195,9 +195,9 @@ public class MainActivity extends ClientActivity {
     }
 
     /**
-     * Starts the {@link StreamViewerActivity} to process the stream after 
+     * Starts the {@link StreamViewerActivity} to process the stream after
      * the key file was chosen.
-     * 
+     *
      * @param addr The socket address.
      * @param keyFile The key file.
      */
@@ -213,32 +213,15 @@ public class MainActivity extends ClientActivity {
         return ((ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
     }
-    
+
     private boolean haveNetwork() {
         NetworkInfo ni = getNetworkInfo();
         return ni != null && ni.isConnected();
     }
-    
+
     private boolean haveWiFi() {
         log.debug("checking if connected via WiFi");
         NetworkInfo ni = getNetworkInfo();
         return ni != null && ni.isConnected() && ni.getType() == ConnectivityManager.TYPE_WIFI;
     }
-
-    /**
-     * Returns the hostname textfield.
-     * @return the host textfield
-     */
-    public TextView getEditHostname() {
-        return editHostname;
-    }
-
-    /**
-     * Returns the port textfield.
-     * @return the port textfield
-     */
-    public TextView getEditPort() {
-        return editPort;
-    }
-
 }

@@ -6,8 +6,9 @@ import com.beust.jcommander.*;
  * A Command line option parser.
  */
 public class OptParse {
-    public static class WithHelp {        
-        @Parameter(names = { "-h", "--help" }, help = true, 
+    /** A base class for option beans the provide a help flag */
+    public static class WithHelp {
+        @Parameter(names = { "-h", "--help" }, help = true,
                    description = "Show this help")
         /**
          * Whether to print usage message.
@@ -17,7 +18,7 @@ public class OptParse {
 
     /**
      * Parses the program's arguments
-     * 
+     *
      * @param jcOpts jcommander options for parsing.
      * @param programName Program name.
      * @param argv Program arguments.
@@ -32,7 +33,7 @@ public class OptParse {
         } catch (ParameterException e) {
             System.err.println("Parameter error: " + e.getMessage());
             System.err.println();
-            jc.usage(); 
+            jc.usage();
             System.exit(1);
         }
         if (jcOpts.help) {

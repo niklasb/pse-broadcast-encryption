@@ -5,6 +5,147 @@ The client contains an instance of \lstinline|FileChooser|, which can be used to
  in an instance of \lstinline|ServerHistory| and therefore can be saved and loaded after closing the client.
  Every error is displayed by using a simple pop up window defined by the class \lstinline|ErrorFragment|.
 \input{cryptocast.client.custom.tex}
+\subsubsection{Class \lstinline|ClientApplication|}
+Maintains the global application state. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{ClientApplication}{
+
+}{
++ onCreate() \\
++ saveState() \\
++ getHostnameInput() : String \\
++ setHostnameInput(hostname : String) \\
++ getPortInput() : String \\
++ setPortInput(port : String) \\
++ getWifiOnlyOption() : boolean \\
++ setWifiOnlyOption(isSet : boolean) \\
++ getServerHistory() : ServerHistory \\
++ getServerHistoryHostnames() : String[] \\
++ getServerArray() : InetSocketAddress[] \\
++ getServerStringArray() : String[] \\
++ setServerHistory(serverHistory : ServerHistory)
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|android.app.Application|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|onCreate|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|saveState|\lstinline|()|\\ \\[-0.6em]
+Saves the application state.
+
+
+
+\item \lstinline|public String| \lstinline|getHostnameInput|\lstinline|()|\\ \\[-0.6em]
+Returns the hostname input.
+
+\emph{Returns:} The hostname input.
+
+\item \lstinline|public void| \lstinline|setHostnameInput|\lstinline|(String hostname)|\\ \\[-0.6em]
+Sets the hostname input.
+\begin{itemize}
+\item \lstinline|hostname|: The hostname to set.
+\end{itemize}
+
+
+
+\item \lstinline|public String| \lstinline|getPortInput|\lstinline|()|\\ \\[-0.6em]
+Returns the port input.
+
+\emph{Returns:} The port input.
+
+\item \lstinline|public void| \lstinline|setPortInput|\lstinline|(String port)|\\ \\[-0.6em]
+Sets the port input.
+\begin{itemize}
+\item \lstinline|port|: The port to set.
+\end{itemize}
+
+
+
+\item \lstinline|public boolean| \lstinline|getWifiOnlyOption|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} whether the Wifi-Only option is set.
+
+
+
+\item \lstinline|public void| \lstinline|setWifiOnlyOption|\lstinline|(boolean isSet)|\\ \\[-0.6em]
+Sets the Wifi-Only option to the given status.
+\begin{itemize}
+\item \lstinline|isSet|: The status to set.
+\end{itemize}
+
+
+
+\item \lstinline|public ServerHistory| \lstinline|getServerHistory|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The server history.
+
+
+
+\item \lstinline|public String[]| \lstinline|getServerHistoryHostnames|\lstinline|()|\\ \\[-0.6em]
+Returns an array of the server history host names
+
+\emph{Returns:} the string array of host names
+
+\item \lstinline|public InetSocketAddress[]| \lstinline|getServerArray|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public String[]| \lstinline|getServerStringArray|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|setServerHistory|\lstinline|(ServerHistory serverHistory)|\\ \\[-0.6em]
+Sets the server history
+\begin{itemize}
+\item \lstinline|serverHistory|: The server history to set.
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ClientApplication.State|}
+The global application state with the respective default values. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{ClientApplication.State}{
+
+}{
+
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+
+
 \subsubsection{Class \lstinline|StreamViewerActivity|}
 This activity is responsible for decrypting the received data
  and viewing it. \\
@@ -15,7 +156,33 @@ This activity is responsible for decrypting the received data
 \umlclass[]{StreamViewerActivity}{
 
 }{
-+ onOptionsItemSelected(item : MenuItem) : boolean \\ + togglePlay() \\ + isPlaying() : boolean
+\# onCreate(b : Bundle) \\
+\# onStart() \\
+\# onResume() \\
+\# onPause() \\
+\# handleError(msg : String) \\
+\# handleError() \\
++ onCompletion(p : RawStreamMediaPlayer) \\
++ onError(p : RawStreamMediaPlayer, what : int, extra : int) : boolean \\
++ onError(p : RawStreamMediaPlayer, e : Exception) : boolean \\
++ togglePlay() \\
++ isPlaying() : boolean \\
++ canPause() : boolean \\
++ canSeekBackward() : boolean \\
++ canSeekForward() : boolean \\
++ getBufferPercentage() : int \\
++ getCurrentPosition() : int \\
++ getDuration() : int \\
++ pause() \\
++ seekTo(pos : int) \\
++ start() \\
++ onTouch(arg0 : View, arg1 : MotionEvent) : boolean \\
++ onPrepared(arg0 : RawStreamMediaPlayer) \\
++ createErrorPopup(message : String) \\
++ setStatusText(text : String) \\
++ onInfo(p : RawStreamMediaPlayer, what : int, extra : int) \\
+-- formatError(what : int) : String \\
+-- cleanup()
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -25,30 +192,61 @@ This activity is responsible for decrypting the received data
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|FragmentActivity|
+\item \lstinline|cryptocast.client.ClientActivity|
+\item \lstinline|android.view.View.OnTouchListener|
+\item \lstinline|android.widget.MediaController.MediaPlayerControl|
+\item \lstinline|cryptocast.client.RawStreamMediaPlayer.OnCompletionListener|
+\item \lstinline|cryptocast.client.RawStreamMediaPlayer.OnErrorListener|
+\item \lstinline|cryptocast.client.RawStreamMediaPlayer.OnInfoListener|
+\item \lstinline|cryptocast.client.RawStreamMediaPlayer.OnPreparedListener|
 \end{itemize}
 
-
-\textbf{\sffamily Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|StreamViewerActivity|\lstinline|(InChannel inputStream)|\\ \\[-0.6em]
-Initializes a viewer.
-\begin{itemize}
-\item \lstinline|inputStream|: The data stream
-\end{itemize}
-
-
-
-\end{itemize}
 
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public boolean| \lstinline|onOptionsItemSelected|\lstinline|(MenuItem item)|\\ \\[-0.6em]
-Handles a click on the bottom menu.
-\begin{itemize}
-\item \lstinline|item|: The clicked menu item
-\end{itemize}
+\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|onStart|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|onResume|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|onPause|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|handleError|\lstinline|(String msg)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|handleError|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|onCompletion|\lstinline|(RawStreamMediaPlayer p)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|onError|\lstinline|(RawStreamMediaPlayer p, int what, int extra)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|onError|\lstinline|(RawStreamMediaPlayer p, Exception e)| \\[-0.6em]
+
 
 
 
@@ -58,8 +256,194 @@ Toggle playback play/pause. Will pause if in play mode and continue if
 
 
 
-\item \lstinline|public boolean| \lstinline|isPlaying|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} Whether the player is in playing mode.
+\item \lstinline|public boolean| \lstinline|isPlaying|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|canPause|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|canSeekBackward|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|canSeekForward|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public int| \lstinline|getBufferPercentage|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public int| \lstinline|getCurrentPosition|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public int| \lstinline|getDuration|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|pause|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|seekTo|\lstinline|(int pos)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|start|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|onTouch|\lstinline|(View arg0, MotionEvent arg1)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|onPrepared|\lstinline|(RawStreamMediaPlayer arg0)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|createErrorPopup|\lstinline|(String message)|\\ \\[-0.6em]
+Creates a error dialog and finishes the activity on click.
+\begin{itemize}
+\item \lstinline|message|: the dialog message
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|setStatusText|\lstinline|(String text)|\\ \\[-0.6em]
+Updates the status label text. Usable from other threads,
+\begin{itemize}
+\item \lstinline|text|: the text
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|onInfo|\lstinline|(RawStreamMediaPlayer p, int what, int extra)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private String| \lstinline|formatError|\lstinline|(int what)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private void| \lstinline|cleanup|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|HelpActivity|}
+This activity lets a user get help if he needs. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{HelpActivity}{
+
+}{
+\# onCreate(b : Bundle)
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.client.ClientActivity|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|StreamConnector|}
+This class does StreamViewerActivity's work to ensure that the activity is displayed
+ correctly. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{StreamConnector}{
+
+}{
++ run() \\
++ stop() \\
+-- connectToStream() \\
+-- receiveData()
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.lang.Runnable|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|StreamConnector|\lstinline|(Socket socket, InetSocketAddress connectAddr, File keyFile, RawStreamMediaPlayer player, StreamViewerActivity streamViewerActivity)|\\ \\[-0.6em]
+Creates a SocketConnector with the given socket.
+\begin{itemize}
+\item \lstinline|socket|: the socket to connect
+\item \lstinline|connectAddr|: address to connect to
+\item \lstinline|player|: player which will be prepared after connection
+\item \lstinline|streamViewerActivity|: activity which contains the statuslabels
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|stop|\lstinline|()|\\ \\[-0.6em]
+Stops the connector.
+
+
+
+\item \lstinline|private void| \lstinline|connectToStream|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|private void| \lstinline|receiveData|\lstinline|()| \\[-0.6em]
+
 
 
 
@@ -75,7 +459,12 @@ This class is responsible for saving recently selected servers
 \umlclass[]{ServerHistory}{
 
 }{
-+ getServers() : Map<String, File> \\ + addServer(hostname : String, keyfile : File)
++ getServers() : Map<InetSocketAddress, File> \\
++ getServerList() : List<InetSocketAddress> \\
++ getKeyFile(addr : InetSocketAddress) : Optional<File> \\
++ addServer(addr : InetSocketAddress, keyFile : File) \\
++ deleteServer(addr : InetSocketAddress) \\
++ invalidateKeyFile(addr : InetSocketAddress)
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -92,16 +481,44 @@ This class is responsible for saving recently selected servers
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public Map<String, File>| \lstinline|getServers|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} The servers
+\item \lstinline|public Map<InetSocketAddress, File>| \lstinline|getServers|\lstinline|()|\\ \\[-0.6em]
+Returns the servers and their corresponding key files.
 
+\emph{Returns:} The servers and their corresponding key files.
 
+\item \lstinline|public List<InetSocketAddress>| \lstinline|getServerList|\lstinline|()|\\ \\[-0.6em]
+Returns the list which contains the saved servers.
 
-\item \lstinline|public void| \lstinline|addServer|\lstinline|(String hostname, File keyfile)|\\ \\[-0.6em]
+\emph{Returns:} serverlist
+
+\item \lstinline|public Optional<File>| \lstinline|getKeyFile|\lstinline|(InetSocketAddress addr)|\\ \\[-0.6em]
+Gets the key file of the given server.
+\begin{itemize}
+\item \lstinline|addr|: The socket address of the server.
+\end{itemize}
+
+\emph{Returns:} The key file of the corresponding server.
+
+\item \lstinline|public void| \lstinline|addServer|\lstinline|(InetSocketAddress addr, File keyFile)|\\ \\[-0.6em]
 Adds a server to the list of servers.
 \begin{itemize}
-\item \lstinline|hostname|: The server's hostname
-\item \lstinline|keyfile|: The keyfile the user has chosen for this server.
+\item \lstinline|addr|: The socket address of the server.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|deleteServer|\lstinline|(InetSocketAddress addr)|\\ \\[-0.6em]
+Deletes a server from the server history.
+\begin{itemize}
+\item \lstinline|addr|: The socket address of the server that's deleted.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|invalidateKeyFile|\lstinline|(InetSocketAddress addr)|\\ \\[-0.6em]
+Removes a saved key file of the server.
+\begin{itemize}
+\item \lstinline|addr|: The socket address of the server.
 \end{itemize}
 
 
@@ -121,7 +538,22 @@ This class represents the activity to connect to the server.
 \umlclass[]{MainActivity}{
 
 }{
-+ connectToServer(view : View) \\ + onOptionsItemSelected(item : MenuItem) : boolean
+\# onCreate(b : Bundle) \\
+\# onResume() \\
+\# onPause() \\
++ onConnect(view : View) \\
++ onOldServers(view : View) \\
+\# getConnectAddr() : Optional<InetSocketAddress> \\
+\# checkHostname(hostname : String) : boolean \\
+\# checkPort(port : int) : boolean \\
+\# getHostnameInput() : String \\
+\# getPortInput() : String \\
+\# onActivityResult(requestCode : int, resultCode : int, data : Intent) \\
+\# startKeyChooserForResult() \\
+\# startStreamViewer(addr : InetSocketAddress, keyFile : File) \\
+-- getNetworkInfo() : NetworkInfo \\
+-- haveNetwork() : boolean \\
+-- haveWiFi() : boolean
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -131,26 +563,372 @@ This class represents the activity to connect to the server.
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|FragmentActivity|
+\item \lstinline|cryptocast.client.ClientActivity|
 \end{itemize}
 
 
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|connectToServer|\lstinline|(View view)|\\ \\[-0.6em]
-Connects to a server.
+\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|onResume|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|onPause|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|onConnect|\lstinline|(View view)|\\ \\[-0.6em]
+Validates the input and connects to the specified server,
+ possibly after letting the user choose a key file.
 \begin{itemize}
 \item \lstinline|view|: The view from which this method was called.
 \end{itemize}
 
 
 
+\item \lstinline|public void| \lstinline|onOldServers|\lstinline|(View view)|\\ \\[-0.6em]
+Starts a new Server Fragment, showing the list of all servers and a cancel Button.
+\begin{itemize}
+\item \lstinline|view|: The view from which this method was called.
+\end{itemize}
+
+
+
+\item \lstinline|protected Optional<InetSocketAddress>| \lstinline|getConnectAddr|\lstinline|()|\\ \\[-0.6em]
+Gets the socket address and checks, if the hostname and the port number are valid.
+
+\emph{Returns:} The socket address.
+
+\item \lstinline|protected boolean| \lstinline|checkHostname|\lstinline|(String hostname)|\\ \\[-0.6em]
+Checks whether the hostname is correct.
+\begin{itemize}
+\item \lstinline|hostname|: The hostname.
+\end{itemize}
+
+\emph{Returns:} <code>true</code>, if the hostname is correct; <code>false</code> otherwise.
+
+\item \lstinline|protected boolean| \lstinline|checkPort|\lstinline|(int port)|\\ \\[-0.6em]
+Checks whether the port number is correct.
+\begin{itemize}
+\item \lstinline|port|: The port number.
+\end{itemize}
+
+\emph{Returns:} <code>true</code>, if the the port number; <code>false</code> otherwise.
+
+\item \lstinline|protected String| \lstinline|getHostnameInput|\lstinline|()|\\ \\[-0.6em]
+Displays text to the user and optionally allows them to edit it.
+
+\emph{Returns:} String representation of the hostname.
+
+\item \lstinline|protected String| \lstinline|getPortInput|\lstinline|()|\\ \\[-0.6em]
+Displays text to the user and optionally allows them to edit it.
+
+\emph{Returns:} String representation of the port number.
+
+\item \lstinline|protected void| \lstinline|onActivityResult|\lstinline|(int requestCode, int resultCode, Intent data)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|startKeyChooserForResult|\lstinline|()|\\ \\[-0.6em]
+Stars the \lstinline|KeyChoiceActivity| to let the user choose an key file.
+
+
+
+\item \lstinline|protected void| \lstinline|startStreamViewer|\lstinline|(InetSocketAddress addr, File keyFile)|\\ \\[-0.6em]
+Starts the \lstinline|StreamViewerActivity| to process the stream after
+ the key file was chosen.
+\begin{itemize}
+\item \lstinline|addr|: The socket address.
+\item \lstinline|keyFile|: The key file.
+\end{itemize}
+
+
+
+\item \lstinline|private NetworkInfo| \lstinline|getNetworkInfo|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|private boolean| \lstinline|haveNetwork|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|private boolean| \lstinline|haveWiFi|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServerListAdapter|}
+An adapter between the ListElements and the view showing them. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{ServerListAdapter}{
+
+}{
++ getView(position : int, convertView : View, parent : ViewGroup) : View
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|android.widget.ArrayAdapter<InetSocketAddress>|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServerListAdapter|\lstinline|(Context context, List<InetSocketAddress> elements)|\\ \\[-0.6em]
+Constructs a new instance with the given attributes.
+\begin{itemize}
+\item \lstinline|context|: The context in which this adapter is used.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public View| \lstinline|getView|\lstinline|(int position, View convertView, ViewGroup parent)|\\ \\[-0.6em]
+\emph{Returns:} A custom view of a list element at the given position in the list.
+\begin{itemize}
+\item \lstinline|position|: The position of the element in the list
+\item \lstinline|convertView|: View which should be converted
+\item \lstinline|parent|: The parent view group
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MessageFragment|}
+This class is used to pop up an error message. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{MessageFragment}{
+
+}{
++ getMessage() : String \\
++ onCreateDialog(b : Bundle) : Dialog
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|android.support.v4.app.DialogFragment|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|MessageFragment|\lstinline|(String message, OnClickListener clickHandler)|\\ \\[-0.6em]
+Creates a new ErrorFragment which can be used to print the given error message.
+\begin{itemize}
+\item \lstinline|message|: Error message describing the error which occured before this fragment pops up.
+\item \lstinline|clickHandler|: The click handler.
+\end{itemize}
+
+
+
+\item \lstinline|public| \lstinline|MessageFragment|\lstinline|(String message)|\\ \\[-0.6em]
+Creates a new ErrorFragment which can be used to print the given error message.
+\begin{itemize}
+\item \lstinline|message|: Error message describing the error which occured before this fragment pops up.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public String| \lstinline|getMessage|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The error message
+
+
+
+\item \lstinline|public Dialog| \lstinline|onCreateDialog|\lstinline|(Bundle b)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ClientActivity|}
+Defines a client activity. Other activities extend this base activity, which provides basic
+ basic common functionality. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{ClientActivity}{
+
+}{
+\# onCreate(b : Bundle) \\
+\# onPause() \\
+\# showErrorDialog(msg : String) \\
+\# showErrorDialog(msg : String, clickHandler : OnClickListener) \\
++ onCreateOptionsMenu(menu : Menu) : boolean \\
++ onOptionsItemSelected(item : MenuItem) : boolean
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|android.support.v4.app.FragmentActivity|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|onPause|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|showErrorDialog|\lstinline|(String msg)|\\ \\[-0.6em]
+Shows a error message dialog.
+\begin{itemize}
+\item \lstinline|msg|: The error message.
+\end{itemize}
+
+
+
+\item \lstinline|protected void| \lstinline|showErrorDialog|\lstinline|(String msg, OnClickListener clickHandler)|\\ \\[-0.6em]
+Shows a error message dialog by clicking a button.
+\begin{itemize}
+\item \lstinline|msg|: The error message.
+\item \lstinline|clickHandler|: The click handler.
+\end{itemize}
+
+
+
+\item \lstinline|public boolean| \lstinline|onCreateOptionsMenu|\lstinline|(Menu menu)| \\[-0.6em]
+
+
+
+
 \item \lstinline|public boolean| \lstinline|onOptionsItemSelected|\lstinline|(MenuItem item)|\\ \\[-0.6em]
 Handles a click on the main menu.
 \begin{itemize}
-\item \lstinline|item|: The clicked item
+\item \lstinline|item|: The clicked item.
 \end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|AboutActivity|}
+This activity contains the abouts. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{AboutActivity}{
+
+}{
+\# onCreate(b : Bundle)
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.client.ClientActivity|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServersFragment|}
+This class is used to pop up a list of all saved servers. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{ServersFragment}{
+
+}{
++ onCreateDialog(b : Bundle) : Dialog
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|android.support.v4.app.DialogFragment|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ServersFragment|\lstinline|(ClientApplication app, String message, OnServerSelected callback)|\\ \\[-0.6em]
+Creates a servers popup.
+\begin{itemize}
+\item \lstinline|app|: global application manager
+\item \lstinline|message|: the message to display
+\item \lstinline|callback|: on selected callback
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public Dialog| \lstinline|onCreateDialog|\lstinline|(Bundle b)| \\[-0.6em]
+
 
 
 
@@ -165,7 +943,11 @@ The option screen. \\
 \umlclass[]{OptionsActivity}{
 
 }{
-\# onCreate(savedInstanceState : Bundle) \\ + onCreateOptionsMenu(menu : Menu) : boolean
+\# onCreate(b : Bundle) \\
++ onCreateContextMenu(menu : ContextMenu, v : View, menuInfo : ContextMenuInfo) \\
++ onContextItemSelected(item : MenuItem) : boolean \\
+\# onResume() \\
+\# onPause()
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -175,26 +957,38 @@ The option screen. \\
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|android.app.Activity|
+\item \lstinline|cryptocast.client.ClientActivity|
 \end{itemize}
 
 
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle savedInstanceState)|\\ \\[-0.6em]
+\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)|\\ \\[-0.6em]
 Receives the saved option state.
 \begin{itemize}
-\item \lstinline|savedInstanceState|: the old state
+\item \lstinline|b|: the old state.
 \end{itemize}
 
 
 
-\item \lstinline|public boolean| \lstinline|onCreateOptionsMenu|\lstinline|(Menu menu)|\\ \\[-0.6em]
-Inflates the option menu.
-\begin{itemize}
-\item \lstinline|menu|: The menu
-\end{itemize}
+\item \lstinline|public void| \lstinline|onCreateContextMenu|\lstinline|(ContextMenu menu, View v, ContextMenuInfo menuInfo)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|onContextItemSelected|\lstinline|(MenuItem item)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|onResume|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|onPause|\lstinline|()| \\[-0.6em]
+
 
 
 
@@ -210,7 +1004,7 @@ This activity lets a user choose an encryption key file
 \umlclass[]{KeyChoiceActivity}{
 
 }{
-+ getChosenFile() : Optional<File> \\ + onFileClick(item : ListElement)
++ onCreate(b : Bundle)
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -220,38 +1014,46 @@ This activity lets a user choose an encryption key file
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|cryptocast.client.fileChooser.FileChooser|
+\item \lstinline|cryptocast.client.ClientActivity|
 \end{itemize}
 
 
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public Optional<File>| \lstinline|getChosenFile|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} The chosen file or absent on abort.
+\item \lstinline|public void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
 
-
-
-\item \lstinline|public void| \lstinline|onFileClick|\lstinline|(ListElement item)|\\ \\[-0.6em]
-Called when the user clicks a file in the list.
-\begin{itemize}
-\item \lstinline|item|: The clicked list item.
-\end{itemize}
 
 
 
 \end{itemize}
 
-\subsubsection{Class \lstinline|ErrorFragment|}
-This class is used to pop up an error message. \\
+\subsubsection{Class \lstinline|RawStreamMediaPlayer|}
+Media player to play audio from a raw \lstinline|InputStream| \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{ErrorFragment}{
+\umlclass[]{RawStreamMediaPlayer}{
 
 }{
-+ getMessage() : String
++ setRawDataSource(in : InputStream, contentType : String) \\
++ setOnCompletionListener(completionListener : OnCompletionListener) \\
++ setOnErrorListener(errorListener : OnErrorListener) \\
++ setOnPreparedListener(preparedListener : OnPreparedListener) \\
++ setOnInfoListener(infoListener : OnInfoListener) \\
++ prepare() \\
++ start() \\
++ stop() \\
++ pause() \\
++ onError(p : MediaPlayer, what : int, extra : int) : boolean \\
++ onCompletion(p : MediaPlayer) \\
++ onBufferingUpdate(mp : MediaPlayer, percent : int) \\
++ onPrepared(arg0 : MediaPlayer) \\
++ onInfo(mp : MediaPlayer, what : int, extra : int) : boolean \\
+-- formatInfo(what : int) : String \\
++ isPlaying() : boolean \\
++ onError(e : Exception) : boolean
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -261,27 +1063,280 @@ This class is used to pop up an error message. \\
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|DialogFragment|
+\item \lstinline|android.media.MediaPlayer.OnBufferingUpdateListener|
+\item \lstinline|android.media.MediaPlayer.OnCompletionListener|
+\item \lstinline|android.media.MediaPlayer.OnErrorListener|
+\item \lstinline|android.media.MediaPlayer.OnInfoListener|
+\item \lstinline|android.media.MediaPlayer.OnPreparedListener|
+\item \lstinline|cryptocast.comm.SimpleHttpStreamServer.OnErrorListener|
 \end{itemize}
 
-
-\textbf{\sffamily Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|ErrorFragment|\lstinline|(String message)|\\ \\[-0.6em]
-Creates a new ErrorFragment which can be used to print the given error message.
-\begin{itemize}
-\item \lstinline|message|: Error message describing the error which occured before this fragment pops up.
-\end{itemize}
-
-
-
-\end{itemize}
 
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public String| \lstinline|getMessage|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} The error message
+\item \lstinline|public void| \lstinline|setRawDataSource|\lstinline|(InputStream in, String contentType)|\\ \\[-0.6em]
+Sets the raw data.
+\begin{itemize}
+\item \lstinline|in|: The input stream.
+\item \lstinline|contentType|: The type of content.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|setOnCompletionListener|\lstinline|(OnCompletionListener completionListener)|\\ \\[-0.6em]
+Set the on completion listener object.
+\begin{itemize}
+\item \lstinline|completionListener|: completion listener object to set
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|setOnErrorListener|\lstinline|(OnErrorListener errorListener)|\\ \\[-0.6em]
+Set the error listener object.
+\begin{itemize}
+\item \lstinline|errorListener|: error listener object to set.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|setOnPreparedListener|\lstinline|(OnPreparedListener preparedListener)|\\ \\[-0.6em]
+Set the prepared listener object.
+\begin{itemize}
+\item \lstinline|preparedListener|: prepared listener object to set.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|setOnInfoListener|\lstinline|(OnInfoListener infoListener)|\\ \\[-0.6em]
+Set the info listener object.
+
+
+
+\item \lstinline|public void| \lstinline|prepare|\lstinline|()|\\ \\[-0.6em]
+Prepares the player with a data source and event listeners.
+
+
+
+\item \lstinline|public void| \lstinline|start|\lstinline|()|\\ \\[-0.6em]
+Starts the media player.
+
+
+
+\item \lstinline|public void| \lstinline|stop|\lstinline|()|\\ \\[-0.6em]
+Stops the media player.
+
+
+
+\item \lstinline|public void| \lstinline|pause|\lstinline|()|\\ \\[-0.6em]
+Pauses the media player.
+
+
+
+\item \lstinline|public boolean| \lstinline|onError|\lstinline|(MediaPlayer p, int what, int extra)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|onCompletion|\lstinline|(MediaPlayer p)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|onBufferingUpdate|\lstinline|(MediaPlayer mp, int percent)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|onPrepared|\lstinline|(MediaPlayer arg0)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|onInfo|\lstinline|(MediaPlayer mp, int what, int extra)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private String| \lstinline|formatInfo|\lstinline|(int what)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|isPlaying|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} whether the player is playing
+
+
+
+\item \lstinline|public boolean| \lstinline|onError|\lstinline|(Exception e)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|ServersFragment.OnServerSelected|}
+On server selected interface. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{ServersFragment.OnServerSelected}{
+
+}{
+\umlvirt{+ onServerSelected(addr : InetSocketAddress)}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|onServerSelected|\lstinline|(InetSocketAddress addr)|\\ \\[-0.6em]
+Called on server selection.
+\begin{itemize}
+\item \lstinline|addr|: selected address
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|RawStreamMediaPlayer.OnCompletionListener|}
+Interface for completion callback. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{RawStreamMediaPlayer.OnCompletionListener}{
+
+}{
+\umlvirt{+ onCompletion(p : RawStreamMediaPlayer)}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|onCompletion|\lstinline|(RawStreamMediaPlayer p)|\\ \\[-0.6em]
+Called after completion.
+\begin{itemize}
+\item \lstinline|p|: The media player.
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|RawStreamMediaPlayer.OnErrorListener|}
+Interface for error callback. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{RawStreamMediaPlayer.OnErrorListener}{
+
+}{
+\umlvirt{+ onError(p : RawStreamMediaPlayer, what : int, extra : int) : boolean} \\
+\umlvirt{+ onError(p : RawStreamMediaPlayer, e : Exception) : boolean}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public boolean| \lstinline|onError|\lstinline|(RawStreamMediaPlayer p, int what, int extra)|\\ \\[-0.6em]
+Called if any error occurs in the media player.
+\begin{itemize}
+\item \lstinline|p|: The media player.
+\item \lstinline|what|: The error code.
+\item \lstinline|extra|: Extra info
+\end{itemize}
+
+\emph{Returns:} true, if the error was handled, false otherwise
+
+\item \lstinline|public boolean| \lstinline|onError|\lstinline|(RawStreamMediaPlayer p, Exception e)|\\ \\[-0.6em]
+Called if any error occurs in the HTTP server.
+\begin{itemize}
+\item \lstinline|p|: The media player.
+\item \lstinline|e|: The exception
+\end{itemize}
+
+\emph{Returns:} true, if the error was handled, false otherwise
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|RawStreamMediaPlayer.OnPreparedListener|}
+Interface for on prepared callback. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{RawStreamMediaPlayer.OnPreparedListener}{
+
+}{
+\umlvirt{+ onPrepared(p : RawStreamMediaPlayer)}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|onPrepared|\lstinline|(RawStreamMediaPlayer p)|\\ \\[-0.6em]
+Called if player is prepared.
+\begin{itemize}
+\item \lstinline|p|: The media player.
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|RawStreamMediaPlayer.OnInfoListener|}
+Interface for on info callback. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{RawStreamMediaPlayer.OnInfoListener}{
+
+}{
+\umlvirt{+ onInfo(p : RawStreamMediaPlayer, what : int, extra : int)}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|onInfo|\lstinline|(RawStreamMediaPlayer p, int what, int extra)|\\ \\[-0.6em]
+Called if player provides new info.
+\begin{itemize}
+\item \lstinline|p|: The media player.
+\end{itemize}
 
 
 

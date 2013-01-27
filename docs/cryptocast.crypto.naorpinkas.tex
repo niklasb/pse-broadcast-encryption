@@ -2,16 +2,185 @@
 An implementation of the Naor-Pinkas protocol based on the primitives provided by the crypto
  subpackage.
 \input{cryptocast.crypto.naorpinkas.custom.tex}
-\subsubsection{Class \lstinline|NaorPinkasClient|}
-A client in the Naor-Pinkas broadcast encryption scheme. \\
+\subsubsection{Class \lstinline|NPServer<T, G>|}
+A server in the Naor-Pinkas broadcast encryption scheme. It knows
+ the entire polynomial and therefore all the private keys of its users. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{NaorPinkasClient}{
+\umlclass[type=abstract]{NPServer<T, G>}{
 
 }{
-+ decrypt(cipher : byte[]) : BigInteger
++ getT() : int \\
++ getContext() : NPServerContext<T, G> \\
+\umlvirt{\# encryptSecretWithItem(secret : byte[], key : T) : Optional<byte[]>} \\
++ encrypt(secret : byte[]) : byte[] \\
+\# encryptMessage(secret : byte[]) : NPMessage<T, G> \\
+\umlvirt{\# writeShare(out : ByteArrayDataOutput, share : NPShare<T, G>)} \\
+-- packMessage(msg : NPMessage<T, G>) : byte[] \\
+\# putBytes(out : ByteArrayDataOutput, x : byte[]) \\
++ getIdentity(i : int) : NPIdentity \\
+-- getUserKey(i : int) : NPKey<T, G> \\
+-- getDummyKey(i : int) : NPKey<T, G> \\
++ revoke(ids : Set<NPIdentity>) : boolean \\
++ revoke(id : NPIdentity) : boolean \\
+-- revokeUnconditional(id : NPIdentity) \\
+-- getRemainingRevocations() : int \\
++ unrevoke(id : NPIdentity) : boolean \\
++ isRevoked(id : NPIdentity) : boolean \\
++ getPersonalKey(id : NPIdentity) : Optional<NPKey<T, G>, T, G>
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+\begin{itemize}
+\item \lstinline|<T>|: 
+\item \lstinline|<G>|: 
+\end{itemize}
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.util.Observable|
+\item \lstinline|cryptocast.crypto.naorpinkas.NPServerInterface|
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|protected| \lstinline|NPServer|\lstinline|(NPServerContext<T, G> context)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public int| \lstinline|getT|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public NPServerContext<T, G>| \lstinline|getContext|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The NP server context.
+
+
+
+\item \lstinline|protected abstract Optional<byte[]>| \lstinline|encryptSecretWithItem|\lstinline|(byte[] secret, T key)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(byte[] secret)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected NPMessage<T, G>| \lstinline|encryptMessage|\lstinline|(byte[] secret)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected abstract void| \lstinline|writeShare|\lstinline|(ByteArrayDataOutput out, NPShare<T, G> share)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private byte[]| \lstinline|packMessage|\lstinline|(NPMessage<T, G> msg)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|putBytes|\lstinline|(ByteArrayDataOutput out, byte[] x)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public NPIdentity| \lstinline|getIdentity|\lstinline|(int i)|\\ \\[-0.6em]
+\emph{Returns:} The identity with the given index.
+\begin{itemize}
+\item \lstinline|i|: An index.
+\end{itemize}
+
+
+
+\item \lstinline|private NPKey<T, G>| \lstinline|getUserKey|\lstinline|(int i)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private NPKey<T, G>| \lstinline|getDummyKey|\lstinline|(int i)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|revoke|\lstinline|(Set<NPIdentity> ids)|\\ \\[-0.6em]
+Revokes multiple users.
+
+\emph{Returns:} true, if the set of revoked users changed or false otherwise
+
+\item \lstinline|public boolean| \lstinline|revoke|\lstinline|(NPIdentity id)|\\ \\[-0.6em]
+Revokes a user.
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+\emph{Returns:} true, if the set of revoked users changed or false otherwise
+
+\item \lstinline|private void| \lstinline|revokeUnconditional|\lstinline|(NPIdentity id)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private int| \lstinline|getRemainingRevocations|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|unrevoke|\lstinline|(NPIdentity id)|\\ \\[-0.6em]
+Authorizes a user.
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+\emph{Returns:} true, if the set of revoked users changed or false otherwise
+
+\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(NPIdentity id)|\\ \\[-0.6em]
+\emph{Returns:} Whether the user is revoked.
+\begin{itemize}
+\item \lstinline|id|: The identity of the user
+\end{itemize}
+
+
+
+\item \lstinline|public Optional<NPKey<T, G>, T, G>| \lstinline|getPersonalKey|\lstinline|(NPIdentity id)|\\ \\[-0.6em]
+\emph{Returns:} The private key of the user or absent if no
+ such user exists
+\begin{itemize}
+\item \lstinline|id|: The identity to look up
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ECNPServerFactory|}
+Creates instances of NP servers that use the variant based on elliptic
+ curves. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{ECNPServerFactory}{
+
+}{
++ construct(t : int, g : EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>) : ECNPServer \\
++ construct(t : int) : ECNPServer
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -21,13 +190,166 @@ A client in the Naor-Pinkas broadcast encryption scheme. \\
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|cryptocast.crypto.Decryptor<BigInteger>|
+\item \lstinline|cryptocast.crypto.naorpinkas.NPServerFactory|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public ECNPServer| \lstinline|construct|\lstinline|(int t, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp> g)|\\ \\[-0.6em]
+\emph{Returns:} An NP server instance.
+\begin{itemize}
+\item \lstinline|t|: The parameter $t$ of the NP scheme.
+\item \lstinline|g|: An EC group.
+\end{itemize}
+
+
+
+\item \lstinline|public ECNPServer| \lstinline|construct|\lstinline|(int t)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|SchnorrNPClient|}
+A client of the NP variant that uses a Schnorr group. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{SchnorrNPClient}{
+
+}{
+\# readShare(in : ByteArrayDataInput) : NPShare<BigInteger, SchnorrGroup> \\
+\# decryptSecretWithItem(encryptedSecret : byte[], item : BigInteger) : byte[]
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.naorpinkas.NPClient<BigInteger, SchnorrGroup>|
 \end{itemize}
 
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|NaorPinkasClient|\lstinline|(NaorPinkasPersonalKey key)|\\ \\[-0.6em]
+\item \lstinline|public| \lstinline|SchnorrNPClient|\lstinline|(NPKey<BigInteger, SchnorrGroup> key)|\\ \\[-0.6em]
+Initializes an instance.
+\begin{itemize}
+\item \lstinline|key|: The personal key of the user
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|protected NPShare<BigInteger, SchnorrGroup>| \lstinline|readShare|\lstinline|(ByteArrayDataInput in)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected byte[]| \lstinline|decryptSecretWithItem|\lstinline|(byte[] encryptedSecret, BigInteger item)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ECNPClient|}
+A client of the NP variant that uses elliptic curves. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{ECNPClient}{
+
+}{
+\# readShare(in : ByteArrayDataInput) : NPShare<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp> \\
+\# decryptSecretWithItem(encryptedSecret : byte[], p : Point) : byte[]
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.naorpinkas.NPClient<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp>|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|ECNPClient|\lstinline|(NPKey<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp> key)|\\ \\[-0.6em]
+Initializes an instance.
+\begin{itemize}
+\item \lstinline|key|: The personal key of the user
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|protected NPShare<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp>| \lstinline|readShare|\lstinline|(ByteArrayDataInput in)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected byte[]| \lstinline|decryptSecretWithItem|\lstinline|(byte[] encryptedSecret, Point p)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NPClient<T, G>|}
+A client in the Naor-Pinkas broadcast encryption scheme. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{NPClient<T, G>}{
+
+}{
++ getGroup() : G \\
+\umlvirt{\# readShare(in : ByteArrayDataInput) : NPShare<T, G>} \\
++ unpackMessage(msg : byte[]) : NPMessage<T, G> \\
+\# readBytes(in : ByteArrayDataInput) : byte[] \\
+\umlvirt{\# decryptSecretWithItem(encryptedSecret : byte[], item : T) : byte[]} \\
++ decrypt(cipher : byte[]) : byte[]
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+\begin{itemize}
+\item \lstinline|<T>|: 
+\item \lstinline|<G>|: 
+\end{itemize}
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.Decryptor<byte[]>|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|protected| \lstinline|NPClient|\lstinline|(NPKey<T, G> key)|\\ \\[-0.6em]
 Initializes a Naor-Pinkas broadcast client.
 \begin{itemize}
 \item \lstinline|key|: The personal key used to reconstruct a secret from the stream.
@@ -40,28 +362,130 @@ Initializes a Naor-Pinkas broadcast client.
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public BigInteger| \lstinline|decrypt|\lstinline|(byte[] cipher)|\\ \\[-0.6em]
-Decrypts a secret.
-\begin{itemize}
-\item \lstinline|cipher|: The encrypted secret
+\item \lstinline|public G| \lstinline|getGroup|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The underlying group.
+
+
+
+\item \lstinline|protected abstract NPShare<T, G>| \lstinline|readShare|\lstinline|(ByteArrayDataInput in)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public NPMessage<T, G>| \lstinline|unpackMessage|\lstinline|(byte[] msg)|\\ \\[-0.6em]
+Parse a NP message.
+
+
+
+\item \lstinline|protected byte[]| \lstinline|readBytes|\lstinline|(ByteArrayDataInput in)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected abstract byte[]| \lstinline|decryptSecretWithItem|\lstinline|(byte[] encryptedSecret, T item)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public byte[]| \lstinline|decrypt|\lstinline|(byte[] cipher)| \\[-0.6em]
+
+
+
+
 \end{itemize}
 
-\emph{Returns:} The decrypted secret
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|NaorPinkasServer|}
-A server in the Naor-Pinkas broadcast encryption scheme. It knows
- the entire polynomial and therefore all the private keys of its users. This makes the implementation
- of the interpolation algorithm a bit more efficient. \\
+\subsubsection{Class \lstinline|NPServerContext<T, G>|}
+Represents the state of a NP server \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{NaorPinkasServer}{
+\umlclass[]{NPServerContext<T, G>}{
 
 }{
-+ encrypt(secret : BigInteger) : byte[] \\ + getIdentity(i : int) : NaorPinkasIdentity \\ + revoke(x : NaorPinkasIdentity) \\ + isRevoked(id : NaorPinkasIdentity) : boolean \\ + getPersonalKey(id : NaorPinkasIdentity) : NaorPinkasPersonalKey
++ getLagrange() : LagrangeInterpolation<BigInteger> \\
++ getGroup() : G \\
++ getKeyGen() : Generator<NPKey<T, G>, T, G> \\
++ getPoly() : Polynomial<BigInteger> \\
++ getT() : int \\
+\umlstatic{+ generate(t : int, group : G) : NPServerContext<T, G>}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+\begin{itemize}
+\item \lstinline|<T>|: 
+\item \lstinline|<G>|: 
+\end{itemize}
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NPServerContext|\lstinline|(int t, G group, Generator<NPKey<T, G>, T, G> keyGen, Polynomial<BigInteger> poly, LagrangeInterpolation<BigInteger> lagrange)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public LagrangeInterpolation<BigInteger>| \lstinline|getLagrange|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public G| \lstinline|getGroup|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public Generator<NPKey<T, G>, T, G>| \lstinline|getKeyGen|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public Polynomial<BigInteger>| \lstinline|getPoly|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public int| \lstinline|getT|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The degree of the polynomial.
+
+
+
+\item \lstinline|public static NPServerContext<T, G>| \lstinline|generate|\lstinline|(int t, G group)|\\ \\[-0.6em]
+Generates a NP server context.
+\begin{itemize}
+\item \lstinline|t|: The degree of the polynomial.
+\item \lstinline|group|: The NP group.
+\end{itemize}
+
+\emph{Returns:} Naor-pinkas server instance.
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NPIdentity|}
+An identity in the Naor-Pinkas broadcast encryption scheme \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{NPIdentity}{
+
+}{
+\# getI() : BigInteger \\
++ hashCode() : int \\
++ equals(other : Object) : boolean
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -71,70 +495,377 @@ A server in the Naor-Pinkas broadcast encryption scheme. It knows
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|cryptocast.crypto.BroadcastSchemeKeyManager<NaorPinkasIdentity>|
-\item \lstinline|cryptocast.crypto.BroadcastSchemeUserManager<NaorPinkasIdentity>|
-\item \lstinline|cryptocast.crypto.Encryptor<BigInteger>|
 \item \lstinline|java.io.Serializable|
 \end{itemize}
 
 
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|protected| \lstinline|NPIdentity|\lstinline|(BigInteger i)|\\ \\[-0.6em]
+initializes an instance.
+\begin{itemize}
+\item \lstinline|i|: The identity code.
+\end{itemize}
+
+
+
+\end{itemize}
+
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(BigInteger secret)|\\ \\[-0.6em]
-Encrypts a secret.
-\begin{itemize}
-\item \lstinline|secret|: the secret
-\end{itemize}
+\item \lstinline|protected BigInteger| \lstinline|getI|\lstinline|()|\\ \\[-0.6em]
+Returns the identity code.
 
-\emph{Returns:} The cipher text
+\emph{Returns:} identity code.
 
-\item \lstinline|public NaorPinkasIdentity| \lstinline|getIdentity|\lstinline|(int i)|\\ \\[-0.6em]
-\emph{Returns:} The identity with the given index
-\begin{itemize}
-\item \lstinline|i|: An index
-\end{itemize}
+\item \lstinline|public int| \lstinline|hashCode|\lstinline|()| \\[-0.6em]
 
 
 
-\item \lstinline|public void| \lstinline|revoke|\lstinline|(NaorPinkasIdentity x)|\\ \\[-0.6em]
-Revokes a user.
 
+\item \lstinline|public boolean| \lstinline|equals|\lstinline|(Object other)| \\[-0.6em]
 
-
-\item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(NaorPinkasIdentity id)|\\ \\[-0.6em]
-\emph{Returns:} Whether the user is revoked.
-\begin{itemize}
-\item \lstinline|id|: The identity of the user
-\end{itemize}
-
-
-
-\item \lstinline|public NaorPinkasPersonalKey| \lstinline|getPersonalKey|\lstinline|(NaorPinkasIdentity id)|\\ \\[-0.6em]
-\emph{Returns:} The private key of the user
-\begin{itemize}
-\item \lstinline|id|: The identity to look up
-\end{itemize}
 
 
 
 \end{itemize}
 
-\subsubsection{Class \lstinline|NaorPinkasPersonalKey|}
-A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
+\subsubsection{Class \lstinline|NPMessage<T, G>|}
+This class represents a NP message sent from the
+ server to the clients. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{NaorPinkasPersonalKey}{
+\umlclass[]{NPMessage<T, G>}{
 
 }{
-+ getAlgorithm() : String \\ + getEncoded() : byte[] \\ + getFormat() : String
++ getT() : int \\
++ getGroup() : G \\
++ getEncryptedSecret() : byte[] \\
++ getR() : BigInteger \\
++ getShares() : ImmutableList<NPShare<T, G>, T, G> \\
++ getLagrangeCoeffs() : ImmutableList<BigInteger>
 }
 \end{tikzpicture}
 \vspace{0.3em}
 \end{minipage}
 
+\begin{itemize}
+\item \lstinline|<T>|: 
+\item \lstinline|<G>|: 
+\end{itemize}
+
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NPMessage|\lstinline|(int t, BigInteger r, byte[] encryptedSecret, G group, List<BigInteger> lagrangeCoefficients, List<NPShare<T, G>, T, G> shares)|\\ \\[-0.6em]
+Creates a new instance of NaorPinkasMessage with the given parameters.
+\begin{itemize}
+\item \lstinline|t|: The degree of the polynomial.
+\item \lstinline|r|: The $r$ value.
+\item \lstinline|encryptedSecret|: A value, from which we can restore the secret
+                        together with the value $g^{r \cdot P(0)}$
+\item \lstinline|shares|: The shares.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public int| \lstinline|getT|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The value $t$.
+
+
+
+\item \lstinline|public G| \lstinline|getGroup|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The group.
+
+
+
+\item \lstinline|public byte[]| \lstinline|getEncryptedSecret|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The encrypted secret.
+
+
+
+\item \lstinline|public BigInteger| \lstinline|getR|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The value $r$.
+
+
+
+\item \lstinline|public ImmutableList<NPShare<T, G>, T, G>| \lstinline|getShares|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The shares.
+
+
+
+\item \lstinline|public ImmutableList<BigInteger>| \lstinline|getLagrangeCoeffs|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The lagrange coefficients belonging to the shares.
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NPShare<T, G>|}
+A share in the Naor-Pinkas broadcast encryption scheme. It consists of a tuple
+ $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
+ value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{NPShare<T, G>}{
+
+}{
++ getGroup() : G \\
++ getI() : BigInteger \\
++ getGRPI() : T \\
++ getIdentity() : NPIdentity \\
++ compareTo(other : NPShare<T, G>) : int \\
++ equals(other\_ : Object) : boolean \\
+\umlstatic{+ getXsFromShares(shares : List<NPShare<T, G>, T, G>) : ImmutableList<BigInteger>}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+\begin{itemize}
+\item \lstinline|<T>|: 
+\item \lstinline|<G>|: 
+\end{itemize}
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.lang.Comparable<NPShare<T, G>, T, G>|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NPShare|\lstinline|(BigInteger i, T grpi, G group)|\\ \\[-0.6em]
+Creates a new NP share from a tuple $(I, g^{r \cdot P(I)})$
+\begin{itemize}
+\item \lstinline|i|: An integer $i < q$.
+\item \lstinline|grpi|: The value $g^{r \cdot P(I)}) \in G$.
+\item \lstinline|group|: The NP group.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public G| \lstinline|getGroup|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The cyclic group used by NP.
+
+
+
+\item \lstinline|public BigInteger| \lstinline|getI|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The integer $I$.
+
+
+
+\item \lstinline|public T| \lstinline|getGRPI|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} $g^{r \cdot P(I)}$
+
+
+
+\item \lstinline|public NPIdentity| \lstinline|getIdentity|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The identity
+
+
+
+\item \lstinline|public int| \lstinline|compareTo|\lstinline|(NPShare<T, G> other)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public boolean| \lstinline|equals|\lstinline|(Object other_)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public static ImmutableList<BigInteger>| \lstinline|getXsFromShares|\lstinline|(List<NPShare<T, G>, T, G> shares)|\\ \\[-0.6em]
+Returns a list of points from shares.
+\begin{itemize}
+\item \lstinline|shares|: The list of shares.
+\end{itemize}
+
+\emph{Returns:} The points $I_i$ extracted from the given shares
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NPKeyGenerator<T, G>|}
+A class generating NP keys. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{NPKeyGenerator<T, G>}{
+
+}{
++ get(i : int) : NPKey<T, G> \\
++ getRange(a : int, b : int) : ImmutableList<NPKey<T, G>, T, G> \\
++ getKey(id : NPIdentity) : Optional<NPKey<T, G>, T, G> \\
+-- addKey(key : NPKey<T, G>)
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+\begin{itemize}
+\item \lstinline|<T>|: 
+\item \lstinline|<G>|: 
+\end{itemize}
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.util.Generator<NPKey<T, G>, T, G>|
+\item \lstinline|java.io.Serializable|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NPKeyGenerator|\lstinline|(SecureRandom rnd, G group, Polynomial<BigInteger> poly)|\\ \\[-0.6em]
+Creates a new instance of NaorPinkasKeyGenerator with the given parameters.
+\begin{itemize}
+\item \lstinline|rnd|: The secure random number generator.
+\item \lstinline|group|: The NP group.
+\item \lstinline|poly|: The polynomial.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public NPKey<T, G>| \lstinline|get|\lstinline|(int i)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public ImmutableList<NPKey<T, G>, T, G>| \lstinline|getRange|\lstinline|(int a, int b)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public Optional<NPKey<T, G>, T, G>| \lstinline|getKey|\lstinline|(NPIdentity id)|\\ \\[-0.6em]
+\emph{Returns:} the key for the given identity.
+\begin{itemize}
+\item \lstinline|id|: An identity.
+\end{itemize}
+
+
+
+\item \lstinline|private void| \lstinline|addKey|\lstinline|(NPKey<T, G> key)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NPShareCombinator<T, G>|}
+Allows to restore a number from a sufficient number of Naor-Pinkas shares. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{NPShareCombinator<T, G>}{
+
+}{
++ restore(shares : List<NPShare<T, G>, T, G>, lagrange : LagrangeInterpolation<BigInteger>) : Optional<T> \\
++ hasMissingShares(shares : List<NPShare<T, G>, T, G>) : boolean \\
++ hasRedundantShares(shares : List<NPShare<T, G>, T, G>) : boolean
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+\begin{itemize}
+\item \lstinline|<T>|: 
+\item \lstinline|<G>|: 
+\end{itemize}
+
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|NPShareCombinator|\lstinline|(int t, G group)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public Optional<T>| \lstinline|restore|\lstinline|(List<NPShare<T, G>, T, G> shares, LagrangeInterpolation<BigInteger> lagrange)|\\ \\[-0.6em]
+Restores a secret from several Naor-Pinkas shares.
+\begin{itemize}
+\item \lstinline|shares|: The shares
+\item \lstinline|lagrange|: The precomputed Lagrange coefficients
+\end{itemize}
+
+\emph{Returns:} The reconstructed secret or absent if the information represented
+ by the given shares is insufficient to restore it.
+
+\item \lstinline|public boolean| \lstinline|hasMissingShares|\lstinline|(List<NPShare<T, G>, T, G> shares)|\\ \\[-0.6em]
+Checks whether missing shares exist.
+\begin{itemize}
+\item \lstinline|shares|: The shares to check.
+\end{itemize}
+
+\emph{Returns:} <code>true</code> if there are any missing shares, <code>false</code> otherwise.
+
+\item \lstinline|public boolean| \lstinline|hasRedundantShares|\lstinline|(List<NPShare<T, G>, T, G> shares)|\\ \\[-0.6em]
+Checks whether redundant shares exist.
+\begin{itemize}
+\item \lstinline|shares|: The shares.
+\end{itemize}
+
+\emph{Returns:} <code>true</code> if there are any redundant shares, <code>false</code> otherwise.
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|NPKey<T, G>|}
+A user's personal key in the Naor-Pinkas broadcast encryption scheme.
+ It consists of a value $I$ and the value $P(I)$, which is the value of
+ the Naor-Pinkas polynomial at $I$. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{NPKey<T, G>}{
+
+}{
++ getGroup() : G \\
++ getShare(r : BigInteger, gr : T) : NPShare<T, G> \\
++ getShare(r : BigInteger) : NPShare<T, G> \\
++ getIdentity() : NPIdentity \\
++ getAlgorithm() : String \\
++ getEncoded() : byte[] \\
++ getFormat() : String
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+\begin{itemize}
+\item \lstinline|<T>|: 
+\item \lstinline|<G>|: 
+\end{itemize}
 
 
 \textbf{\sffamily Superclasses and Interfaces}
@@ -143,36 +874,78 @@ A user's personal key in the Naor-Pinkas broadcast encryption scheme. \\
 \end{itemize}
 
 
-
-\textbf{\sffamily Methods}
+\textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public String| \lstinline|getAlgorithm|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|public byte[]| \lstinline|getEncoded|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|public String| \lstinline|getFormat|\lstinline|()| \\[-0.6em]
-
+\item \lstinline|protected| \lstinline|NPKey|\lstinline|(BigInteger i, BigInteger pi, G group)|\\ \\[-0.6em]
+Creates a new instance of NaorPinkasPersonalKey with the given parameters.
+\begin{itemize}
+\item \lstinline|i|: A point $I$.
+\item \lstinline|pi|: $P(I)$, the value of the polynomial at $I$.
+\end{itemize}
 
 
 
 \end{itemize}
 
-\subsubsection{Class \lstinline|NaorPinkasShareCombinator|}
-Allows to restore a number from a sufficient number of Naor-Pinkas shares. \\
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public G| \lstinline|getGroup|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The NP group.
+
+
+
+\item \lstinline|public NPShare<T, G>| \lstinline|getShare|\lstinline|(BigInteger r, T gr)|\\ \\[-0.6em]
+\emph{Returns:} a NP share constructed from this key and the given values.
+\begin{itemize}
+\item \lstinline|r|: The integer $r$.
+\item \lstinline|gr|: The value $g^r$.
+\end{itemize}
+
+
+
+\item \lstinline|public NPShare<T, G>| \lstinline|getShare|\lstinline|(BigInteger r)|\\ \\[-0.6em]
+\emph{Returns:} a NP share constructed from this key and the given $r$.
+\begin{itemize}
+\item \lstinline|r|: The integer $r$
+\end{itemize}
+
+
+
+\item \lstinline|public NPIdentity| \lstinline|getIdentity|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the NP identity.
+
+
+
+\item \lstinline|public String| \lstinline|getAlgorithm|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the name of the algorithm associated with this key.
+
+
+
+\item \lstinline|public byte[]| \lstinline|getEncoded|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} null
+
+
+
+\item \lstinline|public String| \lstinline|getFormat|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} null
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ECNPServer|}
+The server of the NP variant the uses elliptic curves. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{NaorPinkasShareCombinator}{
+\umlclass[]{ECNPServer}{
 
 }{
-+ restore(shares : Collection<NaorPinkasShare>) : Optional<BigInteger>
+-- getCurve() : EllipticCurveOverFp \\
+\# encryptSecretWithItem(secret : byte[], p : Point) : Optional<byte[]> \\
+\# writeShare(out : ByteArrayDataOutput, share : NPShare<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp>)
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -182,66 +955,13 @@ Allows to restore a number from a sufficient number of Naor-Pinkas shares. \\
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|cryptocast.crypto.ShareCombinator<BigInteger, NaorPinkasShare>|
+\item \lstinline|cryptocast.crypto.naorpinkas.NPServer<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp>|
 \end{itemize}
-
-
-
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|public Optional<BigInteger>| \lstinline|restore|\lstinline|(Collection<NaorPinkasShare> shares)|\\ \\[-0.6em]
-Restores a secret from several Naor-Pinkas shares.
-\begin{itemize}
-\item \lstinline|shares|: The shares
-\end{itemize}
-
-\emph{Returns:} The reconstructed secret or absent if the information represented
- by the given shares is insufficient to restore it.
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|NaorPinkasShare|}
-A share in the Naor-Pinkas broadcast encryption scheme. It consists of a tuple
- $(r, I, g^{r P(I)})$. $t + 1$ distinct shares of this form are sufficient to restore the
- value $g^{r P(0)}$, where $t$ is the degree of the polynomial $P$. \\
-\noindent\begin{minipage}[t]{5cm}
-\vspace{0.3em}
-\hspace*{2em}
-\begin{tikzpicture}
-\umlclass[]{NaorPinkasShare}{
-
-}{
-
-}
-\end{tikzpicture}
-\vspace{0.3em}
-\end{minipage}
-
-
-
-
-
-\subsubsection{Class \lstinline|NaorPinkasIdentity|}
-An identity in the Naor-Pinkas broadcast encryption scheme \\
-\noindent\begin{minipage}[t]{5cm}
-\vspace{0.3em}
-\hspace*{2em}
-\begin{tikzpicture}
-\umlclass[]{NaorPinkasIdentity}{
-
-}{
--- getId() : BigInteger
-}
-\end{tikzpicture}
-\vspace{0.3em}
-\end{minipage}
-
-
 
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|private| \lstinline|NaorPinkasIdentity|\lstinline|(BigInteger id)| \\[-0.6em]
+\item \lstinline|protected| \lstinline|ECNPServer|\lstinline|(NPServerContext<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp> ctx)| \\[-0.6em]
 
 
 
@@ -251,8 +971,177 @@ An identity in the Naor-Pinkas broadcast encryption scheme \\
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|private BigInteger| \lstinline|getId|\lstinline|()| \\[-0.6em]
+\item \lstinline|private EllipticCurveOverFp| \lstinline|getCurve|\lstinline|()| \\[-0.6em]
 
+
+
+
+\item \lstinline|protected Optional<byte[]>| \lstinline|encryptSecretWithItem|\lstinline|(byte[] secret, Point p)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|writeShare|\lstinline|(ByteArrayDataOutput out, NPShare<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp> share)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|SchnorrNPServerFactory|}
+Creates instances of NP servers that use the variant based on a Schnorr
+ group. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{SchnorrNPServerFactory}{
+
+}{
++ construct(t : int, g : SchnorrGroup) : SchnorrNPServer \\
++ construct(t : int) : SchnorrNPServer
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.naorpinkas.NPServerFactory|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public SchnorrNPServer| \lstinline|construct|\lstinline|(int t, SchnorrGroup g)|\\ \\[-0.6em]
+\emph{Returns:} An NP server instance.
+\begin{itemize}
+\item \lstinline|t|: The parameter $t$ of the NP scheme.
+\item \lstinline|g|: A group instance.
+\end{itemize}
+
+
+
+\item \lstinline|public SchnorrNPServer| \lstinline|construct|\lstinline|(int t)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|SchnorrNPServer|}
+The server of the NP variant the uses a Schnorr group. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{SchnorrNPServer}{
+
+}{
+\# encryptSecretWithItem(secret : byte[], key : BigInteger) : Optional<byte[]> \\
+\# writeShare(out : ByteArrayDataOutput, share : NPShare<BigInteger, SchnorrGroup>)
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.naorpinkas.NPServer<BigInteger, SchnorrGroup>|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|protected| \lstinline|SchnorrNPServer|\lstinline|(NPServerContext<BigInteger, SchnorrGroup> ctx)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|protected Optional<byte[]>| \lstinline|encryptSecretWithItem|\lstinline|(byte[] secret, BigInteger key)| \\[-0.6em]
+
+
+
+
+\item \lstinline|protected void| \lstinline|writeShare|\lstinline|(ByteArrayDataOutput out, NPShare<BigInteger, SchnorrGroup> share)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|NPServerInterface|}
+The common interface of NP servers based on different underlying group
+ structures. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{NPServerInterface}{
+
+}{
+\umlvirt{+ getT() : int}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.crypto.BroadcastSchemeKeyManager|
+\item \lstinline|cryptocast.crypto.BroadcastSchemeUserManager|
+\item \lstinline|cryptocast.crypto.Encryptor|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public int| \lstinline|getT|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} $t$
+
+
+
+\end{itemize}
+
+\subsubsection{Interface \lstinline|NPServerFactory|}
+A strategy to create NP servers. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{NPServerFactory}{
+
+}{
+\umlvirt{+ construct(t : int) : NPServerInterface}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public NPServerInterface| \lstinline|construct|\lstinline|(int t)|\\ \\[-0.6em]
+\emph{Returns:} A newly generated NP server instance
+\begin{itemize}
+\item \lstinline|t|: The parameter $t$ of the NP scheme
+\end{itemize}
 
 
 
