@@ -21,14 +21,12 @@ Deals with user-interactions and therefore changes data in the model if
 
 }{
 \umlstatic{+ start(databaseFile : File, listenAddr : SocketAddress, keyBroadcastIntervalSecs : int, serverFactory : NPServerFactory) : Controller} \\
-\umlstatic{-- createNewData(t : int, serverFactory : NPServerFactory) : NaorPinkasServerData} \\
 + saveUserKeys(dir : File, users : Set<User<NPIdentity>, NPIdentity>) \\
 + saveDatabase() \\
 + getModel() : NaorPinkasServerData \\
 + reinitializeCrypto(t : int) \\
 + stream(in : InputStream) \\
 + stream(in : InputStream, maxBytesPerSec : long) \\
-\umlstatic{-- startBroadcastEncryptionServer(data : NaorPinkasServerData, rawOut : MessageOutChannel, keyBroadcastIntervalSecs : int) : BroadcastEncryptionServer<NPIdentity>} \\
 + getDatabaseFile() : File \\
 + getT() : int \\
 + getListenAddress() : SocketAddress \\
@@ -69,11 +67,6 @@ Creates a Controller with the given parameters
 \end{itemize}
 
 \emph{Returns:} The controller
-
-\item \lstinline|private static NaorPinkasServerData| \lstinline|createNewData|\lstinline|(int t, NPServerFactory serverFactory)| \\[-0.6em]
-
-
-
 
 \item \lstinline|public void| \lstinline|saveUserKeys|\lstinline|(File dir, Set<User<NPIdentity>, NPIdentity> users)|\\ \\[-0.6em]
 Saves the users's personal keys in a keyfile at the given directory.
@@ -117,11 +110,6 @@ Streams the data.
 \item \lstinline|in|: The input stream.
 \item \lstinline|maxBytesPerSec|: Maximum bytes per second.
 \end{itemize}
-
-
-
-\item \lstinline|private static BroadcastEncryptionServer<NPIdentity>| \lstinline|startBroadcastEncryptionServer|\lstinline|(NaorPinkasServerData data, MessageOutChannel rawOut, int keyBroadcastIntervalSecs)| \\[-0.6em]
-
 
 
 
@@ -260,23 +248,6 @@ Implements the user interface of the server as an interactive console applicatio
 \umlclass[]{Shell}{
 
 }{
-\# start() \\
-\# performCommand(cmdName : String, args : String[]) \\
--- capitalizeCmdName(name : String) : String \\
-\# cmdHelp(cmd : ShellCommand, args : String[]) \\
-\# cmdInit(cmd : ShellCommand, args : String[]) \\
-\# cmdUsers(cmd : ShellCommand, args : String[]) \\
-\# cmdAdd(cmd : ShellCommand, args : String[]) \\
-\# cmdRevoke(cmd : ShellCommand, args : String[]) \\
-\# cmdUnrevoke(cmd : ShellCommand, args : String[]) \\
-\# cmdSaveKeys(cmd : ShellCommand, args : String[]) \\
-\# cmdStreamSampleText(cmd : ShellCommand, args : String[]) \\
-\# cmdStreamStdin(cmd : ShellCommand, args : String[]) \\
-\# cmdStreamMp3(cmd : ShellCommand, args : String[]) \\
--- getUser(name : String) : User<NPIdentity> \\
--- saveDatabase() \\
--- getModel() : ServerData<NPIdentity> \\
--- commandSyntaxError(cmd : ShellCommand) \\
 \umlstatic{+ parseInt(str : String) : Optional<Integer>}
 }
 \end{tikzpicture}
@@ -308,91 +279,6 @@ Creates a new Shell object with the given parameters.
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|protected void| \lstinline|start|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|performCommand|\lstinline|(String cmdName, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private String| \lstinline|capitalizeCmdName|\lstinline|(String name)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|cmdHelp|\lstinline|(ShellCommand cmd, String[] args)|\\ \\[-0.6em]
-Prints all commands this shell can perform with information about how to use them.
-
-
-
-\item \lstinline|protected void| \lstinline|cmdInit|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|cmdUsers|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|cmdAdd|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|cmdRevoke|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|cmdUnrevoke|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|cmdSaveKeys|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|cmdStreamSampleText|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|cmdStreamStdin|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|cmdStreamMp3|\lstinline|(ShellCommand cmd, String[] args)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private User<NPIdentity>| \lstinline|getUser|\lstinline|(String name)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|saveDatabase|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private ServerData<NPIdentity>| \lstinline|getModel|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|commandSyntaxError|\lstinline|(ShellCommand cmd)| \\[-0.6em]
-
-
-
-
 \item \lstinline|public static Optional<Integer>| \lstinline|parseInt|\lstinline|(String str)|\\ \\[-0.6em]
 Parses the string.
 \begin{itemize}
@@ -482,7 +368,7 @@ Revokes users.
 \item \lstinline|users|: The users to revoke.
 \end{itemize}
 
-\emph{Returns:} <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
+\emph{Returns:} \lstinline|true|, if the set of revoked users changed or \lstinline|false| otherwise.
 
 \item \lstinline|public void| \lstinline|unrevoke|\lstinline|(User<ID> user)|\\ \\[-0.6em]
 Authorizes a user.
@@ -490,7 +376,7 @@ Authorizes a user.
 \item \lstinline|user|: The user to authorize.
 \end{itemize}
 
-\emph{Returns:} <code>true</code>, if the set of revoked users changed or <code>false</code> otherwise.
+\emph{Returns:} \lstinline|true|, if the set of revoked users changed or \lstinline|false| otherwise.
 
 \item \lstinline|public boolean| \lstinline|isRevoked|\lstinline|(User<ID> user)|\\ \\[-0.6em]
 Checks whether the user is revoked.
@@ -498,7 +384,7 @@ Checks whether the user is revoked.
 \item \lstinline|user|: The user.
 \end{itemize}
 
-\emph{Returns:} <code>true</code>, if the user was revoked or <code>false</code> otherwise.
+\emph{Returns:} \lstinline|true|, if the user was revoked or \lstinline|false| otherwise.
 
 \item \lstinline|public Set<User<ID>, ID>| \lstinline|getUsers|\lstinline|()|\\ \\[-0.6em]
 \emph{Returns:} all users.

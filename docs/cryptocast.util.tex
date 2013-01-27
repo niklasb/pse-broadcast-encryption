@@ -18,8 +18,7 @@ An generator of a function $f: \mathbb{N} \to T$ that computes ranges in
 
 }{
 + get(i : int) : T \\
-+ getRange(a : int, b : int) : ImmutableList<T> \\
--- extend(minLen : int)
++ getRange(a : int, b : int) : ImmutableList<T>
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -58,11 +57,6 @@ Creates an instance of this class.
 
 
 \item \lstinline|public ImmutableList<T>| \lstinline|getRange|\lstinline|(int a, int b)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|extend|\lstinline|(int minLen)| \\[-0.6em]
 
 
 
@@ -178,16 +172,7 @@ A simple framework for command line programs. \\
 \umlclass[type=abstract]{CommandLineInterface}{
 
 }{
-+ run() : int \\
-\umlvirt{\# start()} \\
-\# printf(format : String, args : Object[]...) \\
-\# print(str : String) \\
-\# println(str : String) \\
-\# println() \\
-\# getErrorFormat() : String \\
-\# fatalError(format : String, args : Object[]...) \\
-\# fatalError(e : Throwable) \\
-\# exit(status : int)
++ run() : int
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -217,72 +202,6 @@ Initializes a new CLI instance.
 Runs the application.
 
 \emph{Returns:} The exit code
-
-\item \lstinline|protected abstract void| \lstinline|start|\lstinline|()|\\ \\[-0.6em]
-The main program logic (must be overridden by subclasses)
-
-
-
-\item \lstinline|protected void| \lstinline|printf|\lstinline|(String format, Object[] args...)|\\ \\[-0.6em]
-Prints a string to the output stream.
-\begin{itemize}
-\item \lstinline|format|: The string to print (printf format string).
-\item \lstinline|args|: The printf arguments
-\end{itemize}
-
-
-
-\item \lstinline|protected void| \lstinline|print|\lstinline|(String str)|\\ \\[-0.6em]
-Prints a string to the output stream.
-\begin{itemize}
-\item \lstinline|str|: The string to print.
-\end{itemize}
-
-
-
-\item \lstinline|protected void| \lstinline|println|\lstinline|(String str)|\\ \\[-0.6em]
-Prints a string to the output stream after appending a newline.
-\begin{itemize}
-\item \lstinline|str|: The string to print.
-\end{itemize}
-
-
-
-\item \lstinline|protected void| \lstinline|println|\lstinline|()|\\ \\[-0.6em]
-Prints the out stream.
-
-
-
-\item \lstinline|protected String| \lstinline|getErrorFormat|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} The string format to use for writing error messages to the
- screen.
-
-
-
-\item \lstinline|protected void| \lstinline|fatalError|\lstinline|(String format, Object[] args...)|\\ \\[-0.6em]
-Prints an error and exits.
-\begin{itemize}
-\item \lstinline|format|: The error message (printf format string)
-\item \lstinline|args|: The printf arguments
-\end{itemize}
-
-
-
-\item \lstinline|protected void| \lstinline|fatalError|\lstinline|(Throwable e)|\\ \\[-0.6em]
-Prints an error message.
-\begin{itemize}
-\item \lstinline|e|: The causing exception
-\end{itemize}
-
-
-
-\item \lstinline|protected void| \lstinline|exit|\lstinline|(int status)|\\ \\[-0.6em]
-Exits the application.
-\begin{itemize}
-\item \lstinline|status|: The exit code
-\end{itemize}
-
-
 
 \end{itemize}
 
@@ -428,7 +347,7 @@ Provides utility methods for file paths. \\
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public static File| \lstinline|expandPath|\lstinline|(String path)|\\ \\[-0.6em]
-Expands the given tilde-path (<code>~/path/to/something</code>) into an absolute path.
+Expands the given tilde-path (\lstinline|~/path/to/something|) into an absolute path.
 \begin{itemize}
 \item \lstinline|path|: The given path.
 \end{itemize}
@@ -448,11 +367,7 @@ A framework class to implement interactive command-line interfaces. The class im
 \umlclass[type=abstract]{InteractiveCommandLineInterface}{
 
 }{
-\# start() \\
-\# mainloop() \\
-\umlvirt{\# performCommand(cmd : String, args : String[])} \\
-\# error(format : String, args : Object[]...) \\
-\# getPrompt() : String
+
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -480,44 +395,6 @@ Initializes a new interactive CLI instance.
 
 \end{itemize}
 
-
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|protected void| \lstinline|start|\lstinline|()|\\ \\[-0.6em]
-The main program logic. This method just starts the main loop.
-
-
-
-\item \lstinline|protected void| \lstinline|mainloop|\lstinline|()|\\ \\[-0.6em]
-Starts the interactive Prompt-Read-Evaluate main loop.
-
-
-
-\item \lstinline|protected abstract void| \lstinline|performCommand|\lstinline|(String cmd, String[] args)|\\ \\[-0.6em]
-Executes the given command with the given arguments. Must be implemented by subclasses.
-\begin{itemize}
-\item \lstinline|cmd|: The command name
-\item \lstinline|args|: The command arguments
-\end{itemize}
-
-
-
-\item \lstinline|protected void| \lstinline|error|\lstinline|(String format, Object[] args...)|\\ \\[-0.6em]
-Helper function to trigger an error withing a command's execution and break out to
- the main loop.
-\begin{itemize}
-\item \lstinline|format|: The format string
-\item \lstinline|args|: The format string arguments
-\end{itemize}
-
-
-
-\item \lstinline|protected String| \lstinline|getPrompt|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} The input prompt
-
-
-
-\end{itemize}
 
 \subsubsection{Class \lstinline|InteractiveCommandLineInterface.CommandError|}
 An error within one of the commands. Will be caught by the main loop. \\
@@ -588,8 +465,8 @@ Provides several error handing utility methods. \\
 \begin{itemize}
 \item \lstinline|public static void| \lstinline|cannotHappen|\lstinline|(Throwable e)|\\ \\[-0.6em]
 Throws an exception/error when an exception occurs which shouldn't have happened.
- We use this function to assert that an exception <code>e</code> cannot happen by
- catching it and calling <code>cannotHappen(e)</code>.
+ We use this function to assert that an exception \lstinline|e| cannot happen by
+ catching it and calling \lstinline|cannotHappen(e)|.
 \begin{itemize}
 \item \lstinline|e|: The exception that shouldn't have happened.
 \end{itemize}
@@ -651,7 +528,7 @@ Tries to load a native library, logs an error if loading failed.
 \item \lstinline|log|: The logger to log the error.
 \end{itemize}
 
-\emph{Returns:} <code>true</code> if the library could be loaded, <code>false</code> otherwise.
+\emph{Returns:} \lstinline|true| if the library could be loaded, \lstinline|false| otherwise.
 
 \end{itemize}
 

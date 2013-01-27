@@ -156,12 +156,6 @@ This activity is responsible for decrypting the received data
 \umlclass[]{StreamViewerActivity}{
 
 }{
-\# onCreate(b : Bundle) \\
-\# onStart() \\
-\# onResume() \\
-\# onPause() \\
-\# handleError(msg : String) \\
-\# handleError() \\
 + onCompletion(p : RawStreamMediaPlayer) \\
 + onError(p : RawStreamMediaPlayer, what : int, extra : int) : boolean \\
 + onError(p : RawStreamMediaPlayer, e : Exception) : boolean \\
@@ -180,9 +174,7 @@ This activity is responsible for decrypting the received data
 + onPrepared(arg0 : RawStreamMediaPlayer) \\
 + createErrorPopup(message : String) \\
 + setStatusText(text : String) \\
-+ onInfo(p : RawStreamMediaPlayer, what : int, extra : int) \\
--- formatError(what : int) : String \\
--- cleanup()
++ onInfo(p : RawStreamMediaPlayer, what : int, extra : int)
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -205,36 +197,6 @@ This activity is responsible for decrypting the received data
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|onStart|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|onResume|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|onPause|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|handleError|\lstinline|(String msg)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|handleError|\lstinline|()| \\[-0.6em]
-
-
-
-
 \item \lstinline|public void| \lstinline|onCompletion|\lstinline|(RawStreamMediaPlayer p)| \\[-0.6em]
 
 
@@ -337,16 +299,6 @@ Updates the status label text. Usable from other threads,
 
 
 
-\item \lstinline|private String| \lstinline|formatError|\lstinline|(int what)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|cleanup|\lstinline|()| \\[-0.6em]
-
-
-
-
 \end{itemize}
 
 \subsubsection{Class \lstinline|HelpActivity|}
@@ -358,7 +310,7 @@ This activity lets a user get help if he needs. \\
 \umlclass[]{HelpActivity}{
 
 }{
-\# onCreate(b : Bundle)
+
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -373,15 +325,6 @@ This activity lets a user get help if he needs. \\
 
 
 
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
-
-
-
-
-\end{itemize}
-
 \subsubsection{Class \lstinline|StreamConnector|}
 This class does StreamViewerActivity's work to ensure that the activity is displayed
  correctly. \\
@@ -393,9 +336,7 @@ This class does StreamViewerActivity's work to ensure that the activity is displ
 
 }{
 + run() \\
-+ stop() \\
--- connectToStream() \\
--- receiveData()
++ stop()
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -434,16 +375,6 @@ Creates a SocketConnector with the given socket.
 
 \item \lstinline|public void| \lstinline|stop|\lstinline|()|\\ \\[-0.6em]
 Stops the connector.
-
-
-
-\item \lstinline|private void| \lstinline|connectToStream|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|receiveData|\lstinline|()| \\[-0.6em]
-
 
 
 
@@ -538,22 +469,8 @@ This class represents the activity to connect to the server.
 \umlclass[]{MainActivity}{
 
 }{
-\# onCreate(b : Bundle) \\
-\# onResume() \\
-\# onPause() \\
 + onConnect(view : View) \\
-+ onOldServers(view : View) \\
-\# getConnectAddr() : Optional<InetSocketAddress> \\
-\# checkHostname(hostname : String) : boolean \\
-\# checkPort(port : int) : boolean \\
-\# getHostnameInput() : String \\
-\# getPortInput() : String \\
-\# onActivityResult(requestCode : int, resultCode : int, data : Intent) \\
-\# startKeyChooserForResult() \\
-\# startStreamViewer(addr : InetSocketAddress, keyFile : File) \\
--- getNetworkInfo() : NetworkInfo \\
--- haveNetwork() : boolean \\
--- haveWiFi() : boolean
++ onOldServers(view : View)
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -570,21 +487,6 @@ This class represents the activity to connect to the server.
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|onResume|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|onPause|\lstinline|()| \\[-0.6em]
-
-
-
-
 \item \lstinline|public void| \lstinline|onConnect|\lstinline|(View view)|\\ \\[-0.6em]
 Validates the input and connects to the specified server,
  possibly after letting the user choose a key file.
@@ -599,72 +501,6 @@ Starts a new Server Fragment, showing the list of all servers and a cancel Butto
 \begin{itemize}
 \item \lstinline|view|: The view from which this method was called.
 \end{itemize}
-
-
-
-\item \lstinline|protected Optional<InetSocketAddress>| \lstinline|getConnectAddr|\lstinline|()|\\ \\[-0.6em]
-Gets the socket address and checks, if the hostname and the port number are valid.
-
-\emph{Returns:} The socket address.
-
-\item \lstinline|protected boolean| \lstinline|checkHostname|\lstinline|(String hostname)|\\ \\[-0.6em]
-Checks whether the hostname is correct.
-\begin{itemize}
-\item \lstinline|hostname|: The hostname.
-\end{itemize}
-
-\emph{Returns:} <code>true</code>, if the hostname is correct; <code>false</code> otherwise.
-
-\item \lstinline|protected boolean| \lstinline|checkPort|\lstinline|(int port)|\\ \\[-0.6em]
-Checks whether the port number is correct.
-\begin{itemize}
-\item \lstinline|port|: The port number.
-\end{itemize}
-
-\emph{Returns:} <code>true</code>, if the the port number; <code>false</code> otherwise.
-
-\item \lstinline|protected String| \lstinline|getHostnameInput|\lstinline|()|\\ \\[-0.6em]
-Displays text to the user and optionally allows them to edit it.
-
-\emph{Returns:} String representation of the hostname.
-
-\item \lstinline|protected String| \lstinline|getPortInput|\lstinline|()|\\ \\[-0.6em]
-Displays text to the user and optionally allows them to edit it.
-
-\emph{Returns:} String representation of the port number.
-
-\item \lstinline|protected void| \lstinline|onActivityResult|\lstinline|(int requestCode, int resultCode, Intent data)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|startKeyChooserForResult|\lstinline|()|\\ \\[-0.6em]
-Stars the \lstinline|KeyChoiceActivity| to let the user choose an key file.
-
-
-
-\item \lstinline|protected void| \lstinline|startStreamViewer|\lstinline|(InetSocketAddress addr, File keyFile)|\\ \\[-0.6em]
-Starts the \lstinline|StreamViewerActivity| to process the stream after
- the key file was chosen.
-\begin{itemize}
-\item \lstinline|addr|: The socket address.
-\item \lstinline|keyFile|: The key file.
-\end{itemize}
-
-
-
-\item \lstinline|private NetworkInfo| \lstinline|getNetworkInfo|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private boolean| \lstinline|haveNetwork|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private boolean| \lstinline|haveWiFi|\lstinline|()| \\[-0.6em]
-
 
 
 
@@ -790,10 +626,6 @@ Defines a client activity. Other activities extend this base activity, which pro
 \umlclass[type=abstract]{ClientActivity}{
 
 }{
-\# onCreate(b : Bundle) \\
-\# onPause() \\
-\# showErrorDialog(msg : String) \\
-\# showErrorDialog(msg : String, clickHandler : OnClickListener) \\
 + onCreateOptionsMenu(menu : Menu) : boolean \\
 + onOptionsItemSelected(item : MenuItem) : boolean
 }
@@ -812,33 +644,6 @@ Defines a client activity. Other activities extend this base activity, which pro
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|onPause|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|showErrorDialog|\lstinline|(String msg)|\\ \\[-0.6em]
-Shows a error message dialog.
-\begin{itemize}
-\item \lstinline|msg|: The error message.
-\end{itemize}
-
-
-
-\item \lstinline|protected void| \lstinline|showErrorDialog|\lstinline|(String msg, OnClickListener clickHandler)|\\ \\[-0.6em]
-Shows a error message dialog by clicking a button.
-\begin{itemize}
-\item \lstinline|msg|: The error message.
-\item \lstinline|clickHandler|: The click handler.
-\end{itemize}
-
-
-
 \item \lstinline|public boolean| \lstinline|onCreateOptionsMenu|\lstinline|(Menu menu)| \\[-0.6em]
 
 
@@ -863,7 +668,7 @@ This activity contains the abouts. \\
 \umlclass[]{AboutActivity}{
 
 }{
-\# onCreate(b : Bundle)
+
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -877,15 +682,6 @@ This activity contains the abouts. \\
 \end{itemize}
 
 
-
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)| \\[-0.6em]
-
-
-
-
-\end{itemize}
 
 \subsubsection{Class \lstinline|ServersFragment|}
 This class is used to pop up a list of all saved servers. \\
@@ -943,11 +739,8 @@ The option screen. \\
 \umlclass[]{OptionsActivity}{
 
 }{
-\# onCreate(b : Bundle) \\
 + onCreateContextMenu(menu : ContextMenu, v : View, menuInfo : ContextMenuInfo) \\
-+ onContextItemSelected(item : MenuItem) : boolean \\
-\# onResume() \\
-\# onPause()
++ onContextItemSelected(item : MenuItem) : boolean
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -964,30 +757,12 @@ The option screen. \\
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|protected void| \lstinline|onCreate|\lstinline|(Bundle b)|\\ \\[-0.6em]
-Receives the saved option state.
-\begin{itemize}
-\item \lstinline|b|: the old state.
-\end{itemize}
-
-
-
 \item \lstinline|public void| \lstinline|onCreateContextMenu|\lstinline|(ContextMenu menu, View v, ContextMenuInfo menuInfo)| \\[-0.6em]
 
 
 
 
 \item \lstinline|public boolean| \lstinline|onContextItemSelected|\lstinline|(MenuItem item)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|onResume|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|onPause|\lstinline|()| \\[-0.6em]
 
 
 
@@ -1051,7 +826,6 @@ Media player to play audio from a raw \lstinline|InputStream| \\
 + onBufferingUpdate(mp : MediaPlayer, percent : int) \\
 + onPrepared(arg0 : MediaPlayer) \\
 + onInfo(mp : MediaPlayer, what : int, extra : int) : boolean \\
--- formatInfo(what : int) : String \\
 + isPlaying() : boolean \\
 + onError(e : Exception) : boolean
 }
@@ -1154,11 +928,6 @@ Pauses the media player.
 
 
 \item \lstinline|public boolean| \lstinline|onInfo|\lstinline|(MediaPlayer mp, int what, int extra)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private String| \lstinline|formatInfo|\lstinline|(int what)| \\[-0.6em]
 
 
 

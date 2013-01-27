@@ -13,7 +13,6 @@
 + getMax() : double \\
 + getMin() : double \\
 + getAvg() : double \\
-\# report(t : double) \\
 + print()
 }
 \end{tikzpicture}
@@ -46,11 +45,6 @@
 
 
 \item \lstinline|public double| \lstinline|getAvg|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|packageprivate void| \lstinline|report|\lstinline|(double t)| \\[-0.6em]
 
 
 
@@ -217,11 +211,7 @@ The main method to start the server. \\
 \umlclass[]{Benchmarks}{
 
 }{
-\umlstatic{-- printCommands()} \\
-\umlstatic{+ main(argv : String[])} \\
-\umlstatic{-- runBenchmark(benchmark : Benchmark, rep : int, freq : int)} \\
-\umlstatic{-- measure(benchmark : Benchmark, rep : int, freq : int) : Result} \\
-\umlstatic{-- makePrime(b : int) : BigInteger}
+\umlstatic{+ main(argv : String[])}
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -233,27 +223,7 @@ The main method to start the server. \\
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|private static void| \lstinline|printCommands|\lstinline|()| \\[-0.6em]
-
-
-
-
 \item \lstinline|public static void| \lstinline|main|\lstinline|(String[] argv)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private static void| \lstinline|runBenchmark|\lstinline|(Benchmark benchmark, int rep, int freq)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private static Result| \lstinline|measure|\lstinline|(Benchmark benchmark, int rep, int freq)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private static BigInteger| \lstinline|makePrime|\lstinline|(int b)| \\[-0.6em]
 
 
 
@@ -293,10 +263,7 @@ The main method to start the server. \\
 \umlclass[]{Benchmarks.WithECOrSchnorr}{
 
 }{
-\# beforeAll() \\
-\# createServer(t : int) \\
-\# isEc() : boolean \\
-\# isSchnorr() : boolean
+
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -305,30 +272,6 @@ The main method to start the server. \\
 
 
 
-
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|protected void| \lstinline|beforeAll|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|createServer|\lstinline|(int t)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected boolean| \lstinline|isEc|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected boolean| \lstinline|isSchnorr|\lstinline|()| \\[-0.6em]
-
-
-
-
-\end{itemize}
 
 \subsubsection{Class \lstinline|Benchmarks.LagrangeBenchmark|}
  \\

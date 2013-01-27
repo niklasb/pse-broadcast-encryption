@@ -32,8 +32,10 @@ def transform_type(typ, simple=True):
     res = typ.find("qualifiedName").text + gen + dim
     return res.split(".")[-1] if simple else res
 
-def replace_links(txt):
-    return re.sub(r"{@link\s+([^}]*)}", r"\lstinline|\1|", txt)
+def replace_code(txt):
+    txt = re.sub(r"{@link\s+([^}]*)}", r"\lstinline|\1|", txt)
+    txt = re.sub(r"<code>([^<]*)</code>", r"\lstinline|\1|", txt)
+    return txt
 
 def render_param(param, varargs=False):
     dim = "..." if varargs else ""
@@ -52,7 +54,7 @@ def render_method(meth):
     params = list(meth.iter("parameter"))
     varargs = parse_bool(meth.find("isVarArgs").text)
     paramtxt = ""
-    paramscom = [p for p in params if p.find("comment") != None]
+    paramscom = [p for p in params if p.find("comment") != None and p.find("comment").text != None]
     if paramscom:
         paramtxt = dedent("""\
             \\begin{{itemize}}
@@ -121,7 +123,8 @@ def render_class_diagram(cls):
     methodsel = cls.find("methods")
     methods = ""
     if methodsel is not None:
-        methods = " \\\\\n".join(render_tikz_method(m, interface) for m in methodsel.iter("method"))
+        pubmethods = filter(lambda m: m.find("scope").text == "public", methodsel.iter("method"))
+        methods = " \\\\\n".join(render_tikz_method(m, interface) for m in pubmethods)
     return dedent("""\
         \\noindent\\begin{{minipage}}[t]{{5cm}}
         \\vspace{{0.3em}}
@@ -189,15 +192,17 @@ def render_class(cls, indent=2):
                         items="\n".join("\\item %s" % render_method(m) for m in constr))
     methodsel = cls.find("methods")
     if methodsel is not None:
-        methodtxt = dedent("""\
+        pubmethods = filter(lambda m: m.find("scope").text == "public", methodsel.iter("method"))
+        if pubmethods:
+            methodtxt = dedent("""\
 
-            {caption}
-            \\begin{{itemize}}
-            {items}
-            \\end{{itemize}}
-            """).format(caption=captionize("Methods"),
-                        items="\n".join("\\item %s" % render_method(m)
-                                        for m in methodsel.iter("method")))
+                {caption}
+                \\begin{{itemize}}
+                {items}
+                \\end{{itemize}}
+                """).format(caption=captionize("Methods"),
+                            items="\n".join("\\item %s" % render_method(m)
+                                            for m in pubmethods))
     return dedent("""\
            \\{sub}section{{{classtype} \\lstinline|{classname}|}}
            {description} \\\\
@@ -218,7 +223,7 @@ def render_class(cls, indent=2):
 
 def render_package(pkg, indent=1):
     classes = list(pkg.iter("class")) + list(pkg.iter("interface"))
-    return replace_links(dedent("""\
+    return replace_code(dedent("""\
            \\{sub}section{{Package \\lstinline!{pkgname}!}}
            {comment}
            \\input{{{pkgname}.custom.tex}}

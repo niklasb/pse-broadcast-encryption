@@ -10,8 +10,7 @@ A comparator for ListElements based on their type id. \\
 \umlclass[]{ElementComparator}{
 
 }{
-+ compare(e1 : ListElement, e2 : ListElement) : int \\
--- getTypeId(e : ListElement) : int
++ compare(e1 : ListElement, e2 : ListElement) : int
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -29,11 +28,6 @@ A comparator for ListElements based on their type id. \\
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public int| \lstinline|compare|\lstinline|(ListElement e1, ListElement e2)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private int| \lstinline|getTypeId|\lstinline|(ListElement e)| \\[-0.6em]
 
 
 
@@ -297,12 +291,8 @@ A file chooser that is used to choose a key file from the filesystem. \\
 
 }{
 + getFilePattern() : String \\
--- getStateFromDir(dir : File) : FileChooserState \\
 + init(act : Activity) \\
-+ onItemClick(arg0 : AdapterView<?>, arg1 : View, pos : int, arg3 : long) \\
--- handleFileClick(file : File) \\
--- handleDirClick(dir : File) \\
--- updateState(state : FileChooserState)
++ onItemClick(arg0 : AdapterView<?>, arg1 : View, pos : int, arg3 : long)
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -336,11 +326,6 @@ Returns the pattern of the file.
 
 \emph{Returns:} The pattern of the file.
 
-\item \lstinline|private FileChooserState| \lstinline|getStateFromDir|\lstinline|(File dir)| \\[-0.6em]
-
-
-
-
 \item \lstinline|public void| \lstinline|init|\lstinline|(Activity act)|\\ \\[-0.6em]
 initializes the file chooser for the given activity.
 \begin{itemize}
@@ -350,21 +335,6 @@ initializes the file chooser for the given activity.
 
 
 \item \lstinline|public void| \lstinline|onItemClick|\lstinline|(AdapterView<?> arg0, View arg1, int pos, long arg3)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|handleFileClick|\lstinline|(File file)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|handleDirClick|\lstinline|(File dir)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|updateState|\lstinline|(FileChooserState state)| \\[-0.6em]
 
 
 

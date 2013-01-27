@@ -218,7 +218,7 @@ public class LagrangeInterpolation<T> implements Serializable {
      * @param xs The list $x_i$
      * @param numThreads the number of threds to use for parallelisation
      * @return The Lagrange coefficients $c_i$,
-     *         where $c_i = prod_{j \neq i} \frac{x_j}{x_j - x_i}$
+     *         where $c_i = \prod_{j \neq i} \frac{x_j}{x_j - x_i}$
      */
     @SuppressWarnings("unchecked")
     public static <T> ImmutableList<T> computeCoefficients(

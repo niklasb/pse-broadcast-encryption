@@ -64,8 +64,6 @@ Represents the context needed to quickly perform a Lagrange interpolation of
 + addX(newX : T) \\
 + removeX(removedX : T) \\
 \umlstatic{+ computeCoefficients(field : Field<T>, xs : ImmutableList<T>, numThreads : int) : ImmutableList<T>} \\
-\umlstatic{-- genericComputeCoefficients(field : Field<T>, xs : ImmutableList<T>) : ImmutableList<T>} \\
-\umlstatic{-- nativeComputeCoefficients(xs : byte[][], mod : byte[], numThreads : int) : byte[][]} \\
 + equals(other\_ : Object) : boolean
 }
 \end{tikzpicture}
@@ -209,17 +207,7 @@ Computes the langrange coefficients for a given list of points.
 \end{itemize}
 
 \emph{Returns:} The Lagrange coefficients $c_i$,
-         where $c_i = prod_{j \neq i} \frac{x_j}{x_j - x_i}$
-
-\item \lstinline|private static ImmutableList<T>| \lstinline|genericComputeCoefficients|\lstinline|(Field<T> field, ImmutableList<T> xs)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private static byte[][]| \lstinline|nativeComputeCoefficients|\lstinline|(byte[][] xs, byte[] mod, int numThreads)| \\[-0.6em]
-
-
-
+         where $c_i = \prod_{j \neq i} \frac{x_j}{x_j - x_i}$
 
 \item \lstinline|public boolean| \lstinline|equals|\lstinline|(Object other_)| \\[-0.6em]
 
@@ -245,12 +233,7 @@ Represents an output stream wrapper that encrypts its data on-the-fly using
 + reinitializeCipher() \\
 + write(data : byte[], offset : int, len : int) \\
 + write(b : int) \\
-+ close() \\
--- finalizeCipher() \\
--- sendTypedMessage(type : byte, msg : byte[]) \\
--- sendTypedMessage(type : byte) \\
--- createKeygen(keyBits : int) : KeyGenerator \\
--- createCipher(key : SecretKey) : Cipher
++ close()
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -317,31 +300,6 @@ Reinitializes the cipher. Will broadcast the old session key to the other
 
 
 
-\item \lstinline|private void| \lstinline|finalizeCipher|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|sendTypedMessage|\lstinline|(byte type, byte[] msg)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|sendTypedMessage|\lstinline|(byte type)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private KeyGenerator| \lstinline|createKeygen|\lstinline|(int keyBits)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private Cipher| \lstinline|createCipher|\lstinline|(SecretKey key)| \\[-0.6em]
-
-
-
-
 \end{itemize}
 
 \subsubsection{Class \lstinline|PolynomialMultiEvaluation|}
@@ -354,9 +312,7 @@ Used to evaluate a polynomial at multiple points. A native function is used, if 
 \umlclass[]{PolynomialMultiEvaluation}{
 
 }{
-+ evaluate(poly : Polynomial<BigInteger>) : ImmutableList<BigInteger> \\
-\umlstatic{-- nativeMultiEval(points : byte[][], coefficients : byte[][], mod : byte[], numThreads : int, chunkSize : int) : byte[][]} \\
--- getPointsTwoComplements() : byte[][]
++ evaluate(poly : Polynomial<BigInteger>) : ImmutableList<BigInteger>
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -397,16 +353,6 @@ Evaluates the polynomial.
 \end{itemize}
 
 \emph{Returns:} The evaluation result.
-
-\item \lstinline|private static byte[][]| \lstinline|nativeMultiEval|\lstinline|(byte[][] points, byte[][] coefficients, byte[] mod, int numThreads, int chunkSize)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private byte[][]| \lstinline|getPointsTwoComplements|\lstinline|()| \\[-0.6em]
-
-
-
 
 \end{itemize}
 
@@ -516,7 +462,6 @@ Simple helper functions for symmetric encryption/decryption and hashing. \\
 \umlclass[]{CryptoUtils}{
 
 }{
-\umlstatic{-- aesEncryptDecrypt(opmode : int, secret : byte[], key : byte[]) : byte[]} \\
 \umlstatic{+ encrypt(plain : byte[], key : byte[]) : byte[]} \\
 \umlstatic{+ decrypt(cipher : byte[], key : byte[]) : byte[]} \\
 \umlstatic{+ encryptAndHash(plain : byte[], key : byte[]) : byte[]} \\
@@ -533,11 +478,6 @@ Simple helper functions for symmetric encryption/decryption and hashing. \\
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|private static byte[]| \lstinline|aesEncryptDecrypt|\lstinline|(int opmode, byte[] secret, byte[] key)| \\[-0.6em]
-
-
-
-
 \item \lstinline|public static byte[]| \lstinline|encrypt|\lstinline|(byte[] plain, byte[] key)|\\ \\[-0.6em]
 Encrypts a plain text using AES-128 with the given key.
 \begin{itemize}
@@ -608,7 +548,6 @@ The field $GF(p)$ of integers modulo a prime $p > 2$. \\
 + four() : BigInteger \\
 + subtract(a : BigInteger, b : BigInteger) : BigInteger \\
 + pow(a : BigInteger, e : BigInteger) : BigInteger \\
-\umlstatic{-- nativeModPow(x : byte[], e : byte[], m : byte[]) : byte[]} \\
 + randomElement(rnd : Random) : BigInteger \\
 + isZero(a : BigInteger) : boolean \\
 + equals(other : Object) : boolean \\
@@ -706,11 +645,6 @@ Reduces an integer $a < p^2$ modulo $p$.
 
 
 \item \lstinline|public BigInteger| \lstinline|pow|\lstinline|(BigInteger a, BigInteger e)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private static byte[]| \lstinline|nativeModPow|\lstinline|(byte[] x, byte[] e, byte[] m)| \\[-0.6em]
 
 
 
@@ -1148,7 +1082,6 @@ Represents a cyclic group $(G, \otimes)$ of prime order $q$ over a subset
 + pow(a : T, k : BigInteger) : T \\
 + multiexp(bases : List<T>, exponents : List<BigInteger>) : T \\
 + multiexpShamir(bases : List<T>, exponents : List<BigInteger>, k : int) : T \\
-\# shamir(bases : List<T>, exponents : List<BigInteger>) : T \\
 \umlvirt{+ invert(a : T) : T} \\
 \umlvirt{+ identity() : T}
 }
@@ -1254,23 +1187,9 @@ Implements multi-exponentation by applying Shamir's trick
 \emph{Returns:} $\bigotimes_{i=1}^n b_i^{e_i}$, where $n$
          is the size of the input lists
 
-\item \lstinline|protected T| \lstinline|shamir|\lstinline|(List<T> bases, List<BigInteger> exponents)|\\ \\[-0.6em]
-Implements Shamir's trick for multiple variables.
- Needs space exponential in the number of variables!
-\begin{itemize}
-\item \lstinline|bases|: The items $b_i$
-\item \lstinline|exponents|: The exponents $e_i$
-\end{itemize}
-
-\emph{Returns:} $\bigotimes_{i=1}^n b_i^{e_i}$, where $n$
-         is the size of the input lists
-
 \item \lstinline|public abstract T| \lstinline|invert|\lstinline|(T a)|\\ \\[-0.6em]
 \emph{Returns:} The unique inverse element $a^{-1} \in G$, such that
          $a \otimes a^{-1} = e$
-\begin{itemize}
-\item \lstinline|a|: None
-\end{itemize}
 
 
 
@@ -1293,11 +1212,7 @@ The client side of a \lstinline|DynamicCipherOutputStream|. It provides a stream
 
 }{
 + read(buffer : byte[], offset : int, len : int) : int \\
-+ read() : int \\
--- processMessage() \\
--- finalizeCipher() \\
--- decodeKey(enc : byte[]) : SecretKey \\
--- createCipher(key : SecretKey, iv : IvParameterSpec) : Cipher
++ read() : int
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -1334,26 +1249,6 @@ Initializes a new instance of DynamicCipherInputStream.
 
 
 \item \lstinline|public int| \lstinline|read|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|processMessage|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|finalizeCipher|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private SecretKey| \lstinline|decodeKey|\lstinline|(byte[] enc)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private Cipher| \lstinline|createCipher|\lstinline|(SecretKey key, IvParameterSpec iv)| \\[-0.6em]
 
 
 
@@ -1448,9 +1343,6 @@ Multiplies two elements of the field.
 
 \item \lstinline|public T| \lstinline|square|\lstinline|(T x)|\\ \\[-0.6em]
 \emph{Returns:} $x \cdot x$
-\begin{itemize}
-\item \lstinline|x|: None
-\end{itemize}
 
 
 
@@ -1523,9 +1415,6 @@ Divides two elements of the field.
 
 \item \lstinline|public boolean| \lstinline|isZero|\lstinline|(T a)|\\ \\[-0.6em]
 \emph{Returns:} whether $a = 0$
-\begin{itemize}
-\item \lstinline|a|: None
-\end{itemize}
 
 
 
@@ -1628,7 +1517,7 @@ Initializes a broadcast encryption server.
 \item \lstinline|cipherStream|: The switchable cipher output stream.
 \item \lstinline|intervalMilliseconds|: The key broadcast time interval in milliseconds.
 \item \lstinline|excHandler|: Handler callback, which is called if an exception occurs in
-                   the key update loop. If it returns <code>true</code>, the
+                   the key update loop. If it returns \lstinline|true|, the
                    exception is ignored, otherwise the loop is exited.
 \end{itemize}
 
@@ -1708,9 +1597,7 @@ A model for the message passed between the \lstinline|DynamicCipherOutputStream|
 + getEncryptedKey() : byte[] \\
 + getIv() : byte[] \\
 + pack() : byte[] \\
-\umlstatic{+ unpack(packed : byte[]) : DynamicCipherKeyUpdateMessage} \\
-\umlstatic{-- packByteArray(buf : ByteBuffer, data : byte[])} \\
-\umlstatic{-- unpackByteArray(buf : ByteBuffer) : byte[]}
+\umlstatic{+ unpack(packed : byte[]) : DynamicCipherKeyUpdateMessage}
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -1759,16 +1646,6 @@ Parses a binary format created by \lstinline|pack|.
 
 \emph{Returns:} The parsed message
 
-\item \lstinline|private static void| \lstinline|packByteArray|\lstinline|(ByteBuffer buf, byte[] data)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private static byte[]| \lstinline|unpackByteArray|\lstinline|(ByteBuffer buf)| \\[-0.6em]
-
-
-
-
 \end{itemize}
 
 \subsubsection{Class \lstinline|SchnorrGroup|}
@@ -1788,7 +1665,6 @@ Represents a schnorr group, which is a large-prime-order subgroup of
 + getP() : BigInteger \\
 + getFieldModP() : IntegersModuloPrime \\
 \umlstatic{+ getP1024Q160() : SchnorrGroup} \\
-\umlstatic{-- hexStringToBigInt(hex : String) : BigInteger} \\
 + equals(other\_ : Object) : boolean
 }
 \end{tikzpicture}
@@ -1858,11 +1734,6 @@ Creates a schnorr group with the given values:
 \emph{Returns:} a 1024-bit Diffie-Hellman MODP group
  with a 160-bit prime order subgroup.
  It is taken from http://tools.ietf.org/html/rfc5114\#section-2.1
-
-
-
-\item \lstinline|private static BigInteger| \lstinline|hexStringToBigInt|\lstinline|(String hex)| \\[-0.6em]
-
 
 
 
@@ -2098,7 +1969,7 @@ Represents an elliptic curve in a field over values of type T. \\
 
 
 \item \lstinline|public boolean| \lstinline|isInfinity|\lstinline|(P point)|\\ \\[-0.6em]
-\emph{Returns:} whether <code>point</code> is the identity element.
+\emph{Returns:} whether \lstinline|point| is the identity element.
 \begin{itemize}
 \item \lstinline|point|: a point on the curve.
 \end{itemize}
@@ -2125,44 +1996,26 @@ Creates a point on the curve with the given coordinates.
 
 \item \lstinline|public P| \lstinline|negate|\lstinline|(P a)|\\ \\[-0.6em]
 \emph{Returns:} The point $-a$.
-\begin{itemize}
-\item \lstinline|a|: None
-\end{itemize}
 
 
 
 \item \lstinline|public P| \lstinline|add|\lstinline|(P a, P b)|\\ \\[-0.6em]
 \emph{Returns:} The point $a + b$.
-\begin{itemize}
-\item \lstinline|a|: None
-\item \lstinline|b|: None
-\end{itemize}
 
 
 
 \item \lstinline|public P| \lstinline|subtract|\lstinline|(P a, P b)|\\ \\[-0.6em]
 \emph{Returns:} The point $a - b$.
-\begin{itemize}
-\item \lstinline|a|: None
-\item \lstinline|b|: None
-\end{itemize}
 
 
 
 \item \lstinline|public P| \lstinline|twice|\lstinline|(P a)|\\ \\[-0.6em]
 \emph{Returns:} The point $a + a$.
-\begin{itemize}
-\item \lstinline|a|: None
-\end{itemize}
 
 
 
 \item \lstinline|public P| \lstinline|multiply|\lstinline|(P a, BigInteger k)|\\ \\[-0.6em]
 \emph{Returns:} The point $k \cdot a$.
-\begin{itemize}
-\item \lstinline|a|: None
-\item \lstinline|k|: None
-\end{itemize}
 
 
 

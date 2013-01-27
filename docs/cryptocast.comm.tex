@@ -440,12 +440,7 @@ A simple HTTP server that serves an input stream via chunked encoding. \\
 
 }{
 + waitForListener() : int \\
-+ run() \\
--- handleNextClient(sock : ServerSocket) \\
-\umlstatic{-- acceptInterruptable(sock : ServerSocket) : Socket} \\
--- sendChunked(out : OutputStream, in : InputStream) \\
-\umlstatic{-- checkInterrupt()} \\
--- getChunkedResponseHeader() : byte[]
++ run()
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -465,7 +460,7 @@ A simple HTTP server that serves an input stream via chunked encoding. \\
 Creates SimpleHttpStreamServer with the given parameter.
 \begin{itemize}
 \item \lstinline|in|: The input stream.
-\item \lstinline|addr|: the bind address. The port can be <code>0</code>, in which
+\item \lstinline|addr|: the bind address. The port can be \lstinline|0|, in which
  case a random unused port will be assigned to us by the OS.
 \item \lstinline|contentType|: The MIME type of the content.
 \item \lstinline|bufsize|: The buffer size for transferring data to the client.
@@ -486,31 +481,6 @@ Waits for the server to bind to the socket.
 \emph{Returns:} The actual local port where the server is listening.
 
 \item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|handleNextClient|\lstinline|(ServerSocket sock)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private static Socket| \lstinline|acceptInterruptable|\lstinline|(ServerSocket sock)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private void| \lstinline|sendChunked|\lstinline|(OutputStream out, InputStream in)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private static void| \lstinline|checkInterrupt|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|private byte[]| \lstinline|getChunkedResponseHeader|\lstinline|()| \\[-0.6em]
 
 
 
@@ -675,7 +645,7 @@ A byte-based communication channel from which data can be received. \\
 \textbf{\sffamily Methods}
 \begin{itemize}
 \item \lstinline|public byte[]| \lstinline|recvMessage|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} The data or <code>null</code>, if the end-of-file is reached.
+\emph{Returns:} The data or \lstinline|null|, if the end-of-file is reached.
 
 
 
@@ -708,8 +678,8 @@ Called when an error occurs while handling a client connection.
 \item \lstinline|e|: The exception
 \end{itemize}
 
-\emph{Returns:} <code>true</code>, if we should continue listening,
- <code>false</code> if we should abort.
+\emph{Returns:} \lstinline|true|, if we should continue listening,
+ \lstinline|false| if we should abort.
 
 \end{itemize}
 

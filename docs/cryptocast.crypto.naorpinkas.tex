@@ -14,19 +14,10 @@ A server in the Naor-Pinkas broadcast encryption scheme. It knows
 }{
 + getT() : int \\
 + getContext() : NPServerContext<T, G> \\
-\umlvirt{\# encryptSecretWithItem(secret : byte[], key : T) : Optional<byte[]>} \\
 + encrypt(secret : byte[]) : byte[] \\
-\# encryptMessage(secret : byte[]) : NPMessage<T, G> \\
-\umlvirt{\# writeShare(out : ByteArrayDataOutput, share : NPShare<T, G>)} \\
--- packMessage(msg : NPMessage<T, G>) : byte[] \\
-\# putBytes(out : ByteArrayDataOutput, x : byte[]) \\
 + getIdentity(i : int) : NPIdentity \\
--- getUserKey(i : int) : NPKey<T, G> \\
--- getDummyKey(i : int) : NPKey<T, G> \\
 + revoke(ids : Set<NPIdentity>) : boolean \\
 + revoke(id : NPIdentity) : boolean \\
--- revokeUnconditional(id : NPIdentity) \\
--- getRemainingRevocations() : int \\
 + unrevoke(id : NPIdentity) : boolean \\
 + isRevoked(id : NPIdentity) : boolean \\
 + getPersonalKey(id : NPIdentity) : Optional<NPKey<T, G>, T, G>
@@ -71,32 +62,7 @@ A server in the Naor-Pinkas broadcast encryption scheme. It knows
 
 
 
-\item \lstinline|protected abstract Optional<byte[]>| \lstinline|encryptSecretWithItem|\lstinline|(byte[] secret, T key)| \\[-0.6em]
-
-
-
-
 \item \lstinline|public byte[]| \lstinline|encrypt|\lstinline|(byte[] secret)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected NPMessage<T, G>| \lstinline|encryptMessage|\lstinline|(byte[] secret)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected abstract void| \lstinline|writeShare|\lstinline|(ByteArrayDataOutput out, NPShare<T, G> share)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private byte[]| \lstinline|packMessage|\lstinline|(NPMessage<T, G> msg)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|putBytes|\lstinline|(ByteArrayDataOutput out, byte[] x)| \\[-0.6em]
 
 
 
@@ -106,16 +72,6 @@ A server in the Naor-Pinkas broadcast encryption scheme. It knows
 \begin{itemize}
 \item \lstinline|i|: An index.
 \end{itemize}
-
-
-
-\item \lstinline|private NPKey<T, G>| \lstinline|getUserKey|\lstinline|(int i)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private NPKey<T, G>| \lstinline|getDummyKey|\lstinline|(int i)| \\[-0.6em]
-
 
 
 
@@ -131,16 +87,6 @@ Revokes a user.
 \end{itemize}
 
 \emph{Returns:} true, if the set of revoked users changed or false otherwise
-
-\item \lstinline|private void| \lstinline|revokeUnconditional|\lstinline|(NPIdentity id)| \\[-0.6em]
-
-
-
-
-\item \lstinline|private int| \lstinline|getRemainingRevocations|\lstinline|()| \\[-0.6em]
-
-
-
 
 \item \lstinline|public boolean| \lstinline|unrevoke|\lstinline|(NPIdentity id)|\\ \\[-0.6em]
 Authorizes a user.
@@ -222,8 +168,7 @@ A client of the NP variant that uses a Schnorr group. \\
 \umlclass[]{SchnorrNPClient}{
 
 }{
-\# readShare(in : ByteArrayDataInput) : NPShare<BigInteger, SchnorrGroup> \\
-\# decryptSecretWithItem(encryptedSecret : byte[], item : BigInteger) : byte[]
+
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -250,20 +195,6 @@ Initializes an instance.
 \end{itemize}
 
 
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|protected NPShare<BigInteger, SchnorrGroup>| \lstinline|readShare|\lstinline|(ByteArrayDataInput in)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected byte[]| \lstinline|decryptSecretWithItem|\lstinline|(byte[] encryptedSecret, BigInteger item)| \\[-0.6em]
-
-
-
-
-\end{itemize}
-
 \subsubsection{Class \lstinline|ECNPClient|}
 A client of the NP variant that uses elliptic curves. \\
 \noindent\begin{minipage}[t]{5cm}
@@ -273,8 +204,7 @@ A client of the NP variant that uses elliptic curves. \\
 \umlclass[]{ECNPClient}{
 
 }{
-\# readShare(in : ByteArrayDataInput) : NPShare<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp> \\
-\# decryptSecretWithItem(encryptedSecret : byte[], p : Point) : byte[]
+
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -301,20 +231,6 @@ Initializes an instance.
 \end{itemize}
 
 
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|protected NPShare<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp>| \lstinline|readShare|\lstinline|(ByteArrayDataInput in)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected byte[]| \lstinline|decryptSecretWithItem|\lstinline|(byte[] encryptedSecret, Point p)| \\[-0.6em]
-
-
-
-
-\end{itemize}
-
 \subsubsection{Class \lstinline|NPClient<T, G>|}
 A client in the Naor-Pinkas broadcast encryption scheme. \\
 \noindent\begin{minipage}[t]{5cm}
@@ -325,10 +241,7 @@ A client in the Naor-Pinkas broadcast encryption scheme. \\
 
 }{
 + getGroup() : G \\
-\umlvirt{\# readShare(in : ByteArrayDataInput) : NPShare<T, G>} \\
 + unpackMessage(msg : byte[]) : NPMessage<T, G> \\
-\# readBytes(in : ByteArrayDataInput) : byte[] \\
-\umlvirt{\# decryptSecretWithItem(encryptedSecret : byte[], item : T) : byte[]} \\
 + decrypt(cipher : byte[]) : byte[]
 }
 \end{tikzpicture}
@@ -367,23 +280,8 @@ Initializes a Naor-Pinkas broadcast client.
 
 
 
-\item \lstinline|protected abstract NPShare<T, G>| \lstinline|readShare|\lstinline|(ByteArrayDataInput in)| \\[-0.6em]
-
-
-
-
 \item \lstinline|public NPMessage<T, G>| \lstinline|unpackMessage|\lstinline|(byte[] msg)|\\ \\[-0.6em]
 Parse a NP message.
-
-
-
-\item \lstinline|protected byte[]| \lstinline|readBytes|\lstinline|(ByteArrayDataInput in)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected abstract byte[]| \lstinline|decryptSecretWithItem|\lstinline|(byte[] encryptedSecret, T item)| \\[-0.6em]
-
 
 
 
@@ -483,7 +381,6 @@ An identity in the Naor-Pinkas broadcast encryption scheme \\
 \umlclass[]{NPIdentity}{
 
 }{
-\# getI() : BigInteger \\
 + hashCode() : int \\
 + equals(other : Object) : boolean
 }
@@ -514,11 +411,6 @@ initializes an instance.
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|protected BigInteger| \lstinline|getI|\lstinline|()|\\ \\[-0.6em]
-Returns the identity code.
-
-\emph{Returns:} identity code.
-
 \item \lstinline|public int| \lstinline|hashCode|\lstinline|()| \\[-0.6em]
 
 
@@ -713,8 +605,7 @@ A class generating NP keys. \\
 }{
 + get(i : int) : NPKey<T, G> \\
 + getRange(a : int, b : int) : ImmutableList<NPKey<T, G>, T, G> \\
-+ getKey(id : NPIdentity) : Optional<NPKey<T, G>, T, G> \\
--- addKey(key : NPKey<T, G>)
++ getKey(id : NPIdentity) : Optional<NPKey<T, G>, T, G>
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -765,11 +656,6 @@ Creates a new instance of NaorPinkasKeyGenerator with the given parameters.
 \begin{itemize}
 \item \lstinline|id|: An identity.
 \end{itemize}
-
-
-
-\item \lstinline|private void| \lstinline|addKey|\lstinline|(NPKey<T, G> key)| \\[-0.6em]
-
 
 
 
@@ -827,7 +713,7 @@ Checks whether missing shares exist.
 \item \lstinline|shares|: The shares to check.
 \end{itemize}
 
-\emph{Returns:} <code>true</code> if there are any missing shares, <code>false</code> otherwise.
+\emph{Returns:} \lstinline|true| if there are any missing shares, \lstinline|false| otherwise.
 
 \item \lstinline|public boolean| \lstinline|hasRedundantShares|\lstinline|(List<NPShare<T, G>, T, G> shares)|\\ \\[-0.6em]
 Checks whether redundant shares exist.
@@ -835,7 +721,7 @@ Checks whether redundant shares exist.
 \item \lstinline|shares|: The shares.
 \end{itemize}
 
-\emph{Returns:} <code>true</code> if there are any redundant shares, <code>false</code> otherwise.
+\emph{Returns:} \lstinline|true| if there are any redundant shares, \lstinline|false| otherwise.
 
 \end{itemize}
 
@@ -943,9 +829,7 @@ The server of the NP variant the uses elliptic curves. \\
 \umlclass[]{ECNPServer}{
 
 }{
--- getCurve() : EllipticCurveOverFp \\
-\# encryptSecretWithItem(secret : byte[], p : Point) : Optional<byte[]> \\
-\# writeShare(out : ByteArrayDataOutput, share : NPShare<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp>)
+
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -968,25 +852,6 @@ The server of the NP variant the uses elliptic curves. \\
 
 \end{itemize}
 
-
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|private EllipticCurveOverFp| \lstinline|getCurve|\lstinline|()| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected Optional<byte[]>| \lstinline|encryptSecretWithItem|\lstinline|(byte[] secret, Point p)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|writeShare|\lstinline|(ByteArrayDataOutput out, NPShare<Point, EllipticCurveGroup<BigInteger, Point, EllipticCurveOverFp>, BigInteger, Point, EllipticCurveOverFp> share)| \\[-0.6em]
-
-
-
-
-\end{itemize}
 
 \subsubsection{Class \lstinline|SchnorrNPServerFactory|}
 Creates instances of NP servers that use the variant based on a Schnorr
@@ -1041,8 +906,7 @@ The server of the NP variant the uses a Schnorr group. \\
 \umlclass[]{SchnorrNPServer}{
 
 }{
-\# encryptSecretWithItem(secret : byte[], key : BigInteger) : Optional<byte[]> \\
-\# writeShare(out : ByteArrayDataOutput, share : NPShare<BigInteger, SchnorrGroup>)
+
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -1065,20 +929,6 @@ The server of the NP variant the uses a Schnorr group. \\
 
 \end{itemize}
 
-
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|protected Optional<byte[]>| \lstinline|encryptSecretWithItem|\lstinline|(byte[] secret, BigInteger key)| \\[-0.6em]
-
-
-
-
-\item \lstinline|protected void| \lstinline|writeShare|\lstinline|(ByteArrayDataOutput out, NPShare<BigInteger, SchnorrGroup> share)| \\[-0.6em]
-
-
-
-
-\end{itemize}
 
 \subsubsection{Interface \lstinline|NPServerInterface|}
 The common interface of NP servers based on different underlying group
