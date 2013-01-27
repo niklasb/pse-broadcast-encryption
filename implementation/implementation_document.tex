@@ -56,20 +56,17 @@
 \clearpage
 
 \section{Introduction}
-This document contains the changes applied on the implementation with respect to the design document.
-Some of these changes were necessary, and then there are additional changes to improve the performance.
-The elements as attributes, methods and classes were renamed, whenever it was useful. In the following the
-changes are listed and described.
+This document contains the changes applied on the implementation with respect to the design document, along with a brief description of why the changes were necessary or sensible.
 
 \section{Changes in the packages}
-\subsection{Package cryptocast.comm}
+\subsection{\lstinline|cryptocast.comm|}
 
 \begin{itemize}
 
   \item \lstinline|SimpleHttpStreamServer|
   \begin{itemize}
-   \item This class was added to have a working HTTP implementation to supply the Android
-	  \lstinline|MediaPlayer|.
+   \item This class was added to have a working HTTP implementation to supply Android's
+    \lstinline|MediaPlayer|.
   \end{itemize}
 
    \item \lstinline|MessageBuffer|
@@ -99,26 +96,26 @@ changes are listed and described.
 
   \item \lstinline|MessageInChannel|, \lstinline|MessageOutChannel|
   \begin{itemize}
-	 \item Transformed into an interface, because there is more than one sensible implementation.
-	 \lstinline|StreamMessage{In,Out}Channel| realize the reference implementation based on streams.
+   \item Transformed into an interface, because there is more than one sensible implementation.
+   \lstinline|StreamMessage{In,Out}Channel| realize the reference implementation based on streams.
   \end{itemize}
 
-	\item \lstinline|MultiOutChannel|
+  \item \lstinline|MultiOutChannel|
   \begin{itemize}
-	 \item Replaces the \lstinline|MultiOutStream|. We realized that we need multiplexing on a
-	       message level, rather than on the stream level, so we don't need message synchronization
-				 on the receiver end.
+   \item Replaces the \lstinline|MultiOutStream|. We realized that we need multiplexing on a
+         message level, rather than on the stream level, so we don't need message synchronization
+         on the receiver end.
   \end{itemize}
 
   \item \lstinline|ServerMultiMessageOutChannel|
   \begin{itemize}
-	 \item Replaces \lstinline|ServerMultiMessageOutChannel| because we need multiplexing
-	 on a message level (see above).
-	 \item Added the possibility to register an error handler.
+   \item Replaces \lstinline|ServerMultiMessageOutChannel| because we need multiplexing
+   on a message level (see above).
+   \item Added the possibility to register an error handler.
   \end{itemize}
 \end{itemize}
 
-\subsection{Package cryptocast.server}
+\subsection{\lstinline|cryptocast.server|}
 
 \begin{itemize}
 
@@ -130,11 +127,11 @@ changes are listed and described.
 
 \item \lstinline|ServerData<ID|
 \begin{itemize}
-	\item Transformed into an abstract class. All the functionality in here is now
-	      independent of the NP scheme. The reference implementation that is used for
-				NP is called \lstinline|NaorPinkasServerData|.
-	\item Added an interface to revoke multiple users (because revoking users must cause a
-	      key update!)
+  \item Transformed into an abstract class. All the functionality in here is now
+        independent of the NP scheme. The reference implementation that is used for
+        NP is called \lstinline|NaorPinkasServerData|.
+  \item Added an interface to revoke multiple users (because revoking users must cause a
+        key update!)
 \end{itemize}
 
 \item \lstinline|LogbackUtils|
@@ -144,12 +141,12 @@ changes are listed and described.
 
 \item \lstinline|OptParse|
 \begin{itemize}
-	\item Convenience when working with command line arguments and the \emph{JCommander} library.
+  \item Convenience when working with command line arguments and the \emph{JCommander} library.
 \end{itemize}
 
 \end{itemize}
 
-\subsection{Package cryptocast.server.programs}
+\subsection{\lstinline|cryptocast.server.programs|}
 All the main programs are added here. Most notably, theses are:
 \begin{itemize}
  \item \lstinline|Benchmarks| Several benchmarks for various operations that the
@@ -157,8 +154,9 @@ All the main programs are added here. Most notably, theses are:
  \item \lstinline|Server|  The CryptoCast server.
 \end{itemize}
 
-\subsection{Package cryptocast.client}
-Due to missing functionality in the \textit{MediaPlayer} class (for example: buffer callback was not triggered), we decided to upgrade the minimal API level to 10. This decision was made to ensure better feedback for the user about the current status of the program. So for example, the user can see whether the client is currently buffering or not and can react accordingly.
+\subsection{\lstinline|cryptocast.client|}
+
+Due to missing functionality in Android's \lstinline|MediaPlayer| class (for example: buffer callback was not triggered), we decided to upgrade the minimal API level to 10. This decision was made to ensure better feedback for the user about the current status of the program. So for example, the user can see whether the client is currently buffering or not and can react accordingly.
 
 \begin{itemize}
 \item \lstinline|StreamViewerActivity| \newline
@@ -235,14 +233,14 @@ Due to missing functionality in the \textit{MediaPlayer} class (for example: buf
 
   \item \lstinline|OptionsActivity|
   \begin{itemize}
-  \item \lstinline|+onCreateContextMenu(...)| was added to 
+  \item \lstinline|+onCreateContextMenu(...)| was added to
   create a context menu to edit the server history.
   \item \lstinline|+onContextItemSelected(...)| was added to edit the selected item in the server history
     \end{itemize}
 
   \item \lstinline|KeyChoiceActivity|
   \begin{itemize}
-  \item Methods were removed because the key file arguments are passed new via \lstinline|getIntent().getExtras()|. 
+  \item Methods were removed because the key file arguments are passed new via \lstinline|getIntent().getExtras()|.
   \end{itemize}
 
 
@@ -250,7 +248,7 @@ Due to missing functionality in the \textit{MediaPlayer} class (for example: buf
 \end{itemize}
 
 
-\subsection{Package cryptocast.client.filechooser}
+\subsection{\lstinline|cryptocast.client.filechooser|}
 
 \begin{itemize}
 
@@ -266,7 +264,7 @@ Due to missing functionality in the \textit{MediaPlayer} class (for example: buf
 
 \end{itemize}
 
-\subsection{Package cryptocast.util}
+\subsection{\lstinline|cryptocast.util|}
 
 Mostly everything in this package are helper functions that were extracted from code
 in other packages during refactoring.
@@ -275,70 +273,70 @@ in other packages during refactoring.
   \item \lstinline|OptimisticGenerator|
   \begin{itemize}
    \item Provides a very generic and powerful abstraction of a range generator. We use this
-	 for the user key generation, because our polynomial evaluation algorithm is fast only
-	 if we generate keys in bulks. So we just compute the keys in blocks of powers of two.
-	 The result is that we never have more than $2n$ keys ready, where $n$ is the number of users
-	 and that we can dynamically grow the number of users efficiently.
+   for the user key generation, because our polynomial evaluation algorithm is fast only
+   if we generate keys in bulks. So we just compute the keys in blocks of powers of two.
+   The result is that we never have more than $2n$ keys ready, where $n$ is the number of users
+   and that we can dynamically grow the number of users efficiently.
   \end{itemize}
 
   \item \lstinline|CanBeObserved|
   \begin{itemize}
    \item This interface was added because we need it in the declaration of \lstinline|NPServerInterface|,
-	 where we can't use the abstract class \lstinline|java.util.Observable|
+   where we can't use the abstract class \lstinline|java.util.Observable|
   \end{itemize}
 
   \end{itemize}
 
-\subsection{Package cryptocast.crypto}
+\subsection{\lstinline|cryptocast.crypto|}
 
 \begin{itemize}
    \item \lstinline|BroadcastSchemeUserManager|
-	 \begin{itemize}
-	 	 \item Revocation of users is a costly operation: A new session key must be encrypted
-		 using Naor-Pinkas and decrypted on the client side. If a user wants to revoke multiple
-		 users, he needed to do so using repeated calls to the \lstinline|revoke| method.
-		 A straightforward implementation of \lstinline|BroadcastEncryptionServer| just triggers
-		 a key update whenever a user is revoked. Since this is the implementation we decided to
-		 stick with, we provide a method to revoke multiple users at once, triggering only
-		 a single key update. This method is exposed to the user by an extension of the \lstinline|revoke| command
-		 in the server shell.
-	\end{itemize}
+   \begin{itemize}
+      \item Revocation of users is a costly operation: A new session key must be encrypted
+     using Naor-Pinkas and decrypted on the client side. If a user wants to revoke multiple
+     users, he needed to do so using repeated calls to the \lstinline|revoke| method.
+     A straightforward implementation of \lstinline|BroadcastEncryptionServer| just triggers
+     a key update whenever a user is revoked. Since this is the implementation we decided to
+     stick with, we provide a method to revoke multiple users at once, triggering only
+     a single key update. This method is exposed to the user by an extension of the \lstinline|revoke| command
+     in the server shell.
+  \end{itemize}
 
    \item \lstinline|CyclicGroupOfPrimeOrder|
   \begin{itemize}
-		\item Captures the common interface between the DDH groups we support:
-	 \lstinline|SchnorrGroup| and \lstinline|EllipticCurveGroup|. A great advantage
-	 is that we can formulate multiexponentation using Shamir's trick generically. Even more importantly,
-	 we can formulate the Naor-Pinkas-Scheme completely independently from the group we use!
+    \item Captures the common interface between the DDH groups we support:
+   \lstinline|SchnorrGroup| and \lstinline|EllipticCurveGroup|. A great advantage
+   is that we can formulate multiexponentation using Shamir's trick generically. Even more importantly,
+   we can formulate the Naor-Pinkas-Scheme completely independently from the group we use!
   \end{itemize}
 
    \item \lstinline|CryptoUtils|
   \begin{itemize}
    \item Simple helper methods for one-shot encryption and decryption using AES. We use this
-	 to encrypt the session key with the shared Naor-Pinkas secret. We also add a function that
-	 encrypts a hashed version of a plain text, so we notice when we obtain the wrong session
-	 key because we used a keyfile for the wrong server (because Lagrange interpolation will work,
-	 it will just give us a wrong result).
+   to encrypt the session key with the shared Naor-Pinkas secret. We also add a function that
+   encrypts a hashed version of a plain text, so we notice when we obtain the wrong session
+   key because we used a keyfile for the wrong server (because Lagrange interpolation will work,
+   it will just give us a wrong result).
   \end{itemize}
 
   \item \lstinline|DynamicCipherInputStream|, \lstinline|DynamicCipherOutputStream|
   \begin{itemize}
    \item These classes provide the core abstraction of out broadcast scheme protocol: They
-	 implement the network protocol used between a server and the clients. \\
-	 It is based on symmetric encryption with a session key that can be changed at any
-	 time during transmission.
-	 The protocol works with two types of messages: Payload messages and key updates.
-	 Payload messages contain AES-encrypted data and key update messages contain a new session key,
-	 encrypted and decrypted with an abstract \lstinline|Encryptor|/\lstinline|Decryptor| pair. \\
-	 In the case of CryptoCast, the two instances use the Naor-Pinkas scheme to communicate
-	 the secret between the server and authorized clients.
+   implement the network protocol used between a server and the clients. \\
+   It is based on symmetric encryption with a session key that can be changed at any
+   time during transmission.
+   The protocol works with two types of messages: Payload messages and key updates.
+   Payload messages contain AES-encrypted data and key update messages contain a new session key,
+   encrypted and decrypted with an abstract \lstinline|Encryptor|/\lstinline|Decryptor| pair. \\
+   In the case of CryptoCast, the two instances use the Naor-Pinkas scheme to communicate
+   the secret between the server and authorized clients.
   \end{itemize}
 
   \item \lstinline|EllipticCurve|, \lstinline|EllipticCurveOverFp|, \lstinline|EllipticCurveGroup|
   \begin{itemize}
    \item Provide the mathematical means to implement Naor-Pinkas based on elliptic curves.
-	 The common structure of \lstinline|EllipticCurveGroup| and \lstinline|SchnorrGroup| is
-	 captured by  \lstinline|CyclicGroupOfPrimeOrder| (see above).
+   The common structure of \lstinline|EllipticCurveGroup| and \lstinline|SchnorrGroup| is
+   captured by  \lstinline|CyclicGroupOfPrimeOrder| (see above).
   \end{itemize}
 
    \item \lstinline|DecryptionError|, \lstinline|InsufficientInformationError|, \lstinline|NoMoreRevocationsPossibleError|
@@ -349,12 +347,12 @@ in other packages during refactoring.
   \item \lstinline|SchnorrGroup|
   \begin{itemize}
    \item Represents the mathematical structure that is used in the Naor-Pinkas paper
-	 to implement the scheme.
+   to implement the scheme.
   \end{itemize}
 
 \end{itemize}
 
-\subsection{Package cryptocast.crypto.naorpinkas}
+\subsection{\lstinline|cryptocast.crypto.naorpinkas|}
 
 The prefix of the \lstinline|NaorPinkas{Name}| classes was changed to just \lstinline|NP{Name}| for readability.
 
@@ -369,18 +367,26 @@ confusion between the different implementations and avoids casting.
 
 \begin{itemize}
   \item \lstinline|NPServerInterface|
-	\begin{itemize}
-		\item Describes the interface of the NP server that is available to users of the API.
-		      This is what the CryptoCast server uses.
-	\end{itemize}
+  \begin{itemize}
+    \item Describes the interface of the NP server that is available to users of the API.
+          This is what the CryptoCast server uses.
+  \end{itemize}
 
-	\item \lstinline|NPServerFactory|
-	\begin{itemize}
-		\item Describes a strategy to generate server instance. Implementations are
-		      \lstinline|ECNPServerFactory| and \lstinline|SchnorrNPServerFactory|, which
-					create the differrent server implementations.
-	\end{itemize}
+  \item \lstinline|NPServerFactory|
+  \begin{itemize}
+    \item Describes a strategy to generate server instance. Implementations are
+          \lstinline|ECNPServerFactory| and \lstinline|SchnorrNPServerFactory|, which
+          create the differrent server implementations.
+  \end{itemize}
 \end{itemize}
+
+\section{Approximate time plan}
+
+The following diagram was created by examining the Git commit log of the project:
+
+\begin{illustration}{An approximate time table of the project}
+\includegraphics[width=400px]{timetable.png}
+\end{illustration}
 
 \end{document}
 
