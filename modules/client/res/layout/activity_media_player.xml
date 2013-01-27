@@ -13,6 +13,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/button1"
         android:layout_marginTop="28dp"
+        android:textSize="20sp"
         android:text="TextView" />
 
     <Button
