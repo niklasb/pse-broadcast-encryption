@@ -20,17 +20,17 @@ import android.content.Context;
 public class ClientApplication extends Application {
     private static final Logger log = LoggerFactory
             .getLogger(ClientApplication.class);
-    
-    // the global application state with the respective default values
+
+    /** The global application state with the respective default values. */
     private static class State implements Serializable {
         private static final long serialVersionUID = 6185775452467276764L;
-        
+
         ServerHistory serverHistory = new ServerHistory();
         String hostnameInput = "";
         String portInput = "21337";
         boolean wifiOnlyOption = false;
     }
-    
+
     private State state;
     private static final String STATE_FILE_NAME = "cryptocast_state";
 
@@ -61,16 +61,16 @@ public class ClientApplication extends Application {
 
     /**
      * Returns the hostname input.
-	 * 
-	 * @return The hostname input.
+     *
+     * @return The hostname input.
      */
     public String getHostnameInput() {
         return state.hostnameInput;
     }
 
     /**
-	 * Sets the hostname input.
-	 *
+     * Sets the hostname input.
+     *
      * @param hostname The hostname to set.
      */
     public void setHostnameInput(String hostname) {
@@ -79,51 +79,47 @@ public class ClientApplication extends Application {
 
     /**
      * Returns the port input.
-	 * 
-	 * @return The port input.
+     *
+     * @return The port input.
      */
     public String getPortInput() {
         return state.portInput;
     }
 
     /**
-	 * Sets the port input.
-	 * 
-	 * @param port The port to set.
+     * Sets the port input.
+     *
+     * @param port The port to set.
      */
     public void setPortInput(String port) {
         state.portInput = port;
     }
-    
+
     /**
-     * Returns true if the Wifi-Only option is set.
-     * 
-     * @return The status of the Wifi-Only option.
+     * @return whether the Wifi-Only option is set.
      */
     public boolean getWifiOnlyOption() {
         return state.wifiOnlyOption;
     }
-    
+
     /**
      * Sets the Wifi-Only option to the given status.
-     * 
-     * @param isSet The status to set. 
+     *
+     * @param isSet The status to set.
      */
     public void setWifiOnlyOption(boolean isSet) {
         state.wifiOnlyOption = isSet;
     }
-    
+
     /**
-     * Returns the server history.
-	 * 
-	 * @return The server history.
+     * @return The server history.
      */
     public ServerHistory getServerHistory() {
         return state.serverHistory;
     }
-    
+
     /**
-     * Returns an array of the server history host names 
+     * Returns an array of the server history host names
      * @return the string array of host names
      */
     public String[] getServerHistoryHostnames() {
@@ -134,7 +130,7 @@ public class ClientApplication extends Application {
         }
         return hostNames;
     }
-    
+
     public InetSocketAddress[] getServerArray() {
         InetSocketAddress[] servers = (InetSocketAddress[]) getServerHistory().getServers().keySet().toArray();
         return servers;
@@ -147,13 +143,13 @@ public class ClientApplication extends Application {
             serverStrings[i] = servers[i].toString();
         }
         return serverStrings;
-            
-        
+
+
     }
-    
+
     /**
      * Sets the server history
-     * 
+     *
      * @param serverHistory The server history to set.
      */
     public void setServerHistory(ServerHistory serverHistory) {

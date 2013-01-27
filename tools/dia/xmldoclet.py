@@ -2,7 +2,7 @@
 import dia
 import xml.etree.ElementTree as ET
 
-visibility = {'public':0, 'private':1, 'protected':2};
+visibility = {'public':0, 'private':1, 'protected':2, 'packageprivate':2};
 inheritance = {'pure-virtual':0, 'virtual':1, 'non-virtual':2}
 
 boilerplate_classes = ['java.lang.Object']
@@ -39,6 +39,7 @@ def text_or(el, default=""):
     return el.text if el is not None else default
 
 def transform_type(typ, simple=True):
+    if typ.tag == "string": return typ.text
     dim = typ.find("dimension").text or ""
     gen = ""
     typevars = typ.find("generics")

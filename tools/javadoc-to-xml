@@ -1,5 +1,7 @@
 #!/bin/sh
 cd $(dirname $0)/..
 ROOT=$(pwd)
-CLASSPATH=$ROOT/3rd_party/guava-13.0.1.jar:$ROOT/3rd_party/android.jar
-sh $ROOT/3rd_party/xml-doclet/target/appassembler/bin/xmldoclet -cp $CLASSPATH:. -sp $ROOT/src -sub cryptocast
+CLASSPATH=$ROOT/3rd_party/guava-13.0.1.jar:$ROOT/3rd_party/android.jar:$ROOT/3rd_party/android-support-v4.jar:$ROOT/3rd_party/jcommander-1.31-SNAPSHOT.jar:$ROOT/3rd_party/logback-core-1.0.9.jar:$ROOT/3rd_party/slf4j-api-1.7.2.jar
+mkdir -p tmp/src
+cp -r modules/{client,server,common}/src/main/java/cryptocast tmp/src
+sh $ROOT/3rd_party/xml-doclet/target/appassembler/bin/xmldoclet -cp $CLASSPATH:. -sp $ROOT/tmp/src -sub cryptocast

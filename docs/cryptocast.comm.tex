@@ -5,17 +5,21 @@ This package provides functionality related to communication between the differe
  streams that represent the core of this project.
  Useful abstractions for layered protocols are also included.
 \input{cryptocast.comm.custom.tex}
-\subsubsection{Class \lstinline|WritableByteChannelAdapter|}
-Adapter to use an instance of \lstinline|WritableByteChannel| (for example, a file or socket instance) as
- an \lstinline|OutChannel|. \\
+\subsubsection{Class \lstinline|MultiOutputStream|}
+Multiplexes several instances of \lstinline|OutputStream|s so that they can be used as a single
+ destination. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{WritableByteChannelAdapter}{
+\umlclass[]{MultiOutputStream}{
 
 }{
-+ send(data : byte[])
++ getChannels() : ImmutableList<OutputStream> \\
++ addChannel(channel : OutputStream) \\
++ removeChannel(channel : OutputStream) \\
++ write(data : byte[], offset : int, len : int) \\
++ write(b : int)
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -25,17 +29,23 @@ Adapter to use an instance of \lstinline|WritableByteChannel| (for example, a fi
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|cryptocast.comm.OutChannel|
+\item \lstinline|java.io.OutputStream|
 \end{itemize}
 
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|WritableByteChannelAdapter|\lstinline|(WritableByteChannel inner)|\\ \\[-0.6em]
-Initializes the adapter.
+\item \lstinline|public| \lstinline|MultiOutputStream|\lstinline|(ErrorHandler errHandler)|\\ \\[-0.6em]
+Creates an instance of MultiOutputStream.
 \begin{itemize}
-\item \lstinline|inner|: The wrapped instance
+\item \lstinline|errHandler|: An error handler instance.
 \end{itemize}
+
+
+
+\item \lstinline|public| \lstinline|MultiOutputStream|\lstinline|()|\\ \\[-0.6em]
+Creates an instance of MultiOutputStream that passes on all errors to
+ the caller.
 
 
 
@@ -44,26 +54,51 @@ Initializes the adapter.
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
-Sends the given data.
+\item \lstinline|public ImmutableList<OutputStream>| \lstinline|getChannels|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} the list of output channels
+
+
+
+\item \lstinline|public void| \lstinline|addChannel|\lstinline|(OutputStream channel)|\\ \\[-0.6em]
+Adds the given channel to the list of receivers.
 \begin{itemize}
-\item \lstinline|data|: The data to send
+\item \lstinline|channel|: The channel to add
 \end{itemize}
 
 
 
+\item \lstinline|public void| \lstinline|removeChannel|\lstinline|(OutputStream channel)|\\ \\[-0.6em]
+Removes the given channel from the list of receivers.
+\begin{itemize}
+\item \lstinline|channel|: The channel to remove
 \end{itemize}
 
-\subsubsection{Class \lstinline|StatisticalOutChannel|}
-Wrapper around an instance of \lstinline|OutChannel| that counts outgoing bytes. \\
+
+
+\item \lstinline|public void| \lstinline|write|\lstinline|(byte[] data, int offset, int len)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|write|\lstinline|(int b)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|SwitchableInputStream|}
+An input stream where the source can be dynamically switched. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{StatisticalOutChannel}{
+\umlclass[]{SwitchableInputStream}{
 
 }{
-+ send(data : byte[]) \\ + getSentBytes() : int
++ switchInput(newInput : InputStream) \\
++ read() : int \\
++ read(buffer : byte[], offset : int, len : int) : int
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -73,50 +108,92 @@ Wrapper around an instance of \lstinline|OutChannel| that counts outgoing bytes.
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|cryptocast.comm.OutChannel|
+\item \lstinline|java.io.InputStream|
 \end{itemize}
 
-
-\textbf{\sffamily Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|StatisticalOutChannel|\lstinline|(OutChannel inner)|\\ \\[-0.6em]
-Initializes the proxy
-\begin{itemize}
-\item \lstinline|inner|: The wrapped channel
-\end{itemize}
-
-
-
-\end{itemize}
 
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
-Sends the given data.
+\item \lstinline|public void| \lstinline|switchInput|\lstinline|(InputStream newInput)|\\ \\[-0.6em]
+Sets a new source
 \begin{itemize}
-\item \lstinline|data|: The data to send
+\item \lstinline|newInput|: the new input
 \end{itemize}
 
 
 
-\item \lstinline|public int| \lstinline|getSentBytes|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} The number of sent bytes
+\item \lstinline|public int| \lstinline|read|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public int| \lstinline|read|\lstinline|(byte[] buffer, int offset, int len)| \\[-0.6em]
+
 
 
 
 \end{itemize}
 
-\subsubsection{Class \lstinline|SocketMulticastServer|}
-This class implements channel-based communication via TCP. \\
+\subsubsection{Class \lstinline|StreamUtils|}
+A byte-based communication channel from which data can be received. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{SocketMulticastServer}{
+\umlclass[]{StreamUtils}{
 
 }{
-+ send(data : byte[])
+\umlstatic{+ readall(in : InputStream, buffer : byte[], offset : int, len : int) : int} \\
+\umlstatic{+ copyInterruptable(in : InputStream, out : OutputStream, bufsize : int)}
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public static int| \lstinline|readall|\lstinline|(InputStream in, byte[] buffer, int offset, int len)|\\ \\[-0.6em]
+Receives data. Will read exactly the given number of bytes. Only if the
+ end-of-file is reached, it might be that we return less bytes.
+\begin{itemize}
+\item \lstinline|in|: The stream of data which comes via network.
+\item \lstinline|buffer|: The target buffer.
+\item \lstinline|offset|: The start offset in array buffer at which the data is written.
+\item \lstinline|len|: The maximum number of bytes to read.
+\end{itemize}
+
+\emph{Returns:} The number of bytes actually read is returned as an integer.
+
+\item \lstinline|public static void| \lstinline|copyInterruptable|\lstinline|(InputStream in, OutputStream out, int bufsize)|\\ \\[-0.6em]
+Directs the data from input stream into output stream.
+ The operation is interruptable only if neither input nor output block!
+\begin{itemize}
+\item \lstinline|in|: The input stream.
+\item \lstinline|out|: The output steam.
+\item \lstinline|bufsize|: The length of buffer array.
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|ServerMultiMessageOutChannel|}
+This class implements a multicast server based on server sockets. It distributes all outgoing
+ messages to all connected clients. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{ServerMultiMessageOutChannel}{
+
+}{
++ run() \\
++ sendMessage(data : byte[], offset : int, len : int)
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -126,16 +203,19 @@ This class implements channel-based communication via TCP. \\
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|cryptocast.comm.OutChannel|
+\item \lstinline|cryptocast.comm.MessageOutChannel|
+\item \lstinline|java.lang.Runnable|
 \end{itemize}
 
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|SocketMulticastServer|\lstinline|(ServerSocket socket)|\\ \\[-0.6em]
+\item \lstinline|public| \lstinline|ServerMultiMessageOutChannel|\lstinline|(ServerSocket server, Function<Throwable, Boolean> excHandler)|\\ \\[-0.6em]
 Creates an instance of a multicast server which uses the given socket.
 \begin{itemize}
-\item \lstinline|socket|: Server socket
+\item \lstinline|server|: Server socket
+\item \lstinline|excHandler|: A function that is called in case of an error to
+ determine if we should continue
 \end{itemize}
 
 
@@ -145,27 +225,29 @@ Creates an instance of a multicast server which uses the given socket.
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
-Sends bytes via the channel.
-\begin{itemize}
-\item \lstinline|data|: The data to send
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(byte[] data, int offset, int len)| \\[-0.6em]
+
+
+
+
 \end{itemize}
 
-
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|MessageInChannel|}
-Wraps a byte-based instance of \lstinline|InChannel| and allows to use it as a message-based
+\subsubsection{Class \lstinline|StreamMessageOutChannel|}
+Wraps a byte-based instance of \lstinline|OutputStream| and allows to use it as a message-based
  channel. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{MessageInChannel}{
+\umlclass[]{StreamMessageOutChannel}{
 
 }{
-+ recvMessage() : byte[]
++ sendMessage(data : byte[], offset : int, len : int)
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -173,51 +255,15 @@ Wraps a byte-based instance of \lstinline|InChannel| and allows to use it as a m
 
 
 
-
-\textbf{\sffamily Constructors}
+\textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|public| \lstinline|MessageInChannel|\lstinline|(InChannel inner)|\\ \\[-0.6em]
-Creates an instance of MessageInChannel which wraps the given inner channel.
-\begin{itemize}
-\item \lstinline|inner|: The wrapped channel
+\item \lstinline|cryptocast.comm.MessageOutChannel|
 \end{itemize}
-
-
-
-\end{itemize}
-
-
-\textbf{\sffamily Methods}
-\begin{itemize}
-\item \lstinline|public byte[]| \lstinline|recvMessage|\lstinline|()|\\ \\[-0.6em]
-Receives a message via the channel.
-
-\emph{Returns:} The received data
-
-\end{itemize}
-
-\subsubsection{Class \lstinline|MessageOutChannel|}
-Wraps a byte-based instance of \lstinline|OutChannel| and allows to use it as a message-based
- channel. \\
-\noindent\begin{minipage}[t]{5cm}
-\vspace{0.3em}
-\hspace*{2em}
-\begin{tikzpicture}
-\umlclass[]{MessageOutChannel}{
-
-}{
-+ sendMessage(data : byte[])
-}
-\end{tikzpicture}
-\vspace{0.3em}
-\end{minipage}
-
-
 
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|MessageOutChannel|\lstinline|(OutChannel inner)|\\ \\[-0.6em]
+\item \lstinline|public| \lstinline|StreamMessageOutChannel|\lstinline|(OutputStream inner)|\\ \\[-0.6em]
 Creates a new instance of MessageOutChannel with the given OutChannel as inner channel.
 \begin{itemize}
 \item \lstinline|inner|: The OutChannel which will be wrapped.
@@ -230,26 +276,29 @@ Creates a new instance of MessageOutChannel with the given OutChannel as inner c
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(byte[] data)|\\ \\[-0.6em]
-Sends the given message via the channel.
+\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(byte[] data, int offset, int len)|\\ \\[-0.6em]
+Sends the given message via the channel using a single write.
 \begin{itemize}
 \item \lstinline|data|: The data to send.
+\item \lstinline|offset|: The start offset in array data at which the data is written.
+\item \lstinline|len|: The maximum number of bytes to read.
 \end{itemize}
 
 
 
 \end{itemize}
 
-\subsubsection{Class \lstinline|StatisticalInChannel|}
-Wrapper around an instance of \lstinline|InChannel| that counts incoming bytes. \\
+\subsubsection{Class \lstinline|ThrottledInputStream|}
+An \lstinline|InputStream| proxy which limits the number of bytes read per second. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{StatisticalInChannel}{
+\umlclass[]{ThrottledInputStream}{
 
 }{
-+ recv(size : int, buffer : byte[]) \\ + getReceivedBytes() : int
++ read() : int \\
++ read(data : byte[], offset : int, len : int) : int
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -259,14 +308,244 @@ Wrapper around an instance of \lstinline|InChannel| that counts incoming bytes. 
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|cryptocast.comm.InChannel|
+\item \lstinline|java.io.InputStream|
 \end{itemize}
 
 
 \textbf{\sffamily Constructors}
 \begin{itemize}
-\item \lstinline|public| \lstinline|StatisticalInChannel|\lstinline|(InChannel inner)|\\ \\[-0.6em]
-Initializes the proxy.
+\item \lstinline|public| \lstinline|ThrottledInputStream|\lstinline|(InputStream in, long maxBytesPerSec)|\\ \\[-0.6em]
+Creates a new instance of ThrottledOutputStream with the given parameter.
+\begin{itemize}
+\item \lstinline|in|: The underlying input stream.
+\item \lstinline|maxBytesPerSec|: Maximum number of bytes per second.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public int| \lstinline|read|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public int| \lstinline|read|\lstinline|(byte[] data, int offset, int len)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|MessageOutChannel|}
+A byte-based communication channel where data can be sent to. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[type=abstract]{MessageOutChannel}{
+
+}{
+\umlvirt{+ sendMessage(data : byte[], offset : int, len : int)} \\
++ sendMessage(data : byte[])
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public abstract void| \lstinline|sendMessage|\lstinline|(byte[] data, int offset, int len)|\\ \\[-0.6em]
+Sends a message to the channel.
+\begin{itemize}
+\item \lstinline|data|: The data to send.
+\item \lstinline|offset|: The offset of the payload in the array.
+\item \lstinline|len|: The length of the message.
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(byte[] data)|\\ \\[-0.6em]
+Sends a message to the channel.
+\begin{itemize}
+\item \lstinline|data|: The data to send.
+\end{itemize}
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|SwitchableOutputStream|}
+An output stream where the actual destination can be changed dynamically \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{SwitchableOutputStream}{
+
+}{
++ switchOutput(newOutput : OutputStream) \\
++ write(b : int) \\
++ write(buffer : byte[], offset : int, len : int)
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.io.OutputStream|
+\end{itemize}
+
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public void| \lstinline|switchOutput|\lstinline|(OutputStream newOutput)|\\ \\[-0.6em]
+Sets a new output stream.
+\begin{itemize}
+\item \lstinline|newOutput|: The new sink
+\end{itemize}
+
+
+
+\item \lstinline|public void| \lstinline|write|\lstinline|(int b)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|write|\lstinline|(byte[] buffer, int offset, int len)| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|SimpleHttpStreamServer|}
+A simple HTTP server that serves an input stream via chunked encoding. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{SimpleHttpStreamServer}{
+
+}{
++ waitForListener() : int \\
++ run() \\
+-- handleNextClient(sock : ServerSocket) \\
+\umlstatic{-- acceptInterruptable(sock : ServerSocket) : Socket} \\
+-- sendChunked(out : OutputStream, in : InputStream) \\
+\umlstatic{-- checkInterrupt()} \\
+-- getChunkedResponseHeader() : byte[]
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|java.lang.Runnable|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|SimpleHttpStreamServer|\lstinline|(InputStream in, SocketAddress addr, String contentType, int bufsize, OnErrorListener excHandler)|\\ \\[-0.6em]
+Creates SimpleHttpStreamServer with the given parameter.
+\begin{itemize}
+\item \lstinline|in|: The input stream.
+\item \lstinline|addr|: the bind address. The port can be <code>0</code>, in which
+ case a random unused port will be assigned to us by the OS.
+\item \lstinline|contentType|: The MIME type of the content.
+\item \lstinline|bufsize|: The buffer size for transferring data to the client.
+\item \lstinline|excHandler|: an exception handler. if it returns true on an exception,
+                   we will continue, otherwise we will stop the thread.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\textbf{\sffamily Methods}
+\begin{itemize}
+\item \lstinline|public int| \lstinline|waitForListener|\lstinline|()|\\ \\[-0.6em]
+Waits for the server to bind to the socket.
+
+\emph{Returns:} The actual local port where the server is listening.
+
+\item \lstinline|public void| \lstinline|run|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|private void| \lstinline|handleNextClient|\lstinline|(ServerSocket sock)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private static Socket| \lstinline|acceptInterruptable|\lstinline|(ServerSocket sock)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private void| \lstinline|sendChunked|\lstinline|(OutputStream out, InputStream in)| \\[-0.6em]
+
+
+
+
+\item \lstinline|private static void| \lstinline|checkInterrupt|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|private byte[]| \lstinline|getChunkedResponseHeader|\lstinline|()| \\[-0.6em]
+
+
+
+
+\end{itemize}
+
+\subsubsection{Class \lstinline|StreamMessageInChannel|}
+Wraps a byte-based instance of \lstinline|InputStream| and allows to use it as a
+ message-based channel. \\
+\noindent\begin{minipage}[t]{5cm}
+\vspace{0.3em}
+\hspace*{2em}
+\begin{tikzpicture}
+\umlclass[]{StreamMessageInChannel}{
+
+}{
++ recvMessage() : byte[]
+}
+\end{tikzpicture}
+\vspace{0.3em}
+\end{minipage}
+
+
+
+\textbf{\sffamily Superclasses and Interfaces}
+\begin{itemize}
+\item \lstinline|cryptocast.comm.MessageInChannel|
+\end{itemize}
+
+
+\textbf{\sffamily Constructors}
+\begin{itemize}
+\item \lstinline|public| \lstinline|StreamMessageInChannel|\lstinline|(InputStream inner)|\\ \\[-0.6em]
+Creates an instance of MessageInChannel which wraps the given inner
+ channel.
 \begin{itemize}
 \item \lstinline|inner|: The wrapped channel
 \end{itemize}
@@ -278,33 +557,27 @@ Initializes the proxy.
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
-Receives data.
-\begin{itemize}
-\item \lstinline|size|: Maximum amount of bytes to read
-\item \lstinline|buffer|: The target buffer
-\end{itemize}
+\item \lstinline|public byte[]| \lstinline|recvMessage|\lstinline|()|\\ \\[-0.6em]
+Receives a message via the channel or null on EOF.
 
-
-
-\item \lstinline|public int| \lstinline|getReceivedBytes|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} The number of received bytes
-
-
+\emph{Returns:} The received data.
 
 \end{itemize}
 
-\subsubsection{Class \lstinline|ReadableByteChannelAdapter|}
-Adapter to use an instance of \lstinline|ReadableByteChannel| (for example, a file or socket instance) 
- as an \lstinline|InChannel|. \\
+\subsubsection{Class \lstinline|MessageBuffer|}
+A message channgel implementation that just buffers all incoming messages
+ in memory and returns them when a message is received. For testing purposes. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{ReadableByteChannelAdapter}{
+\umlclass[]{MessageBuffer}{
 
 }{
-+ recv(size : int, buffer : byte[])
++ setBlocking(block : boolean) \\
++ recvMessage() : byte[] \\
++ sendMessage(data : byte[], offset : int, len : int) \\
++ close()
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -314,47 +587,49 @@ Adapter to use an instance of \lstinline|ReadableByteChannel| (for example, a fi
 
 \textbf{\sffamily Superclasses and Interfaces}
 \begin{itemize}
-\item \lstinline|cryptocast.comm.InChannel|
+\item \lstinline|cryptocast.comm.MessageOutChannel|
+\item \lstinline|cryptocast.comm.MessageInChannel|
 \end{itemize}
 
-
-\textbf{\sffamily Constructors}
-\begin{itemize}
-\item \lstinline|public| \lstinline|ReadableByteChannelAdapter|\lstinline|(ReadableByteChannel inner)|\\ \\[-0.6em]
-Initializes the adapter.
-\begin{itemize}
-\item \lstinline|inner|: The wrapped instance
-\end{itemize}
-
-
-
-\end{itemize}
 
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
-Receives data.
+\item \lstinline|public void| \lstinline|setBlocking|\lstinline|(boolean block)|\\ \\[-0.6em]
+Sets the blocking mode of this message buffer
 \begin{itemize}
-\item \lstinline|size|: Maximum amount of bytes to read
-\item \lstinline|buffer|: The target buffer
+\item \lstinline|block|: The block to set.
 \end{itemize}
 
 
 
+\item \lstinline|public byte[]| \lstinline|recvMessage|\lstinline|()| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|sendMessage|\lstinline|(byte[] data, int offset, int len)| \\[-0.6em]
+
+
+
+
+\item \lstinline|public void| \lstinline|close|\lstinline|()| \\[-0.6em]
+
+
+
+
 \end{itemize}
 
-\subsubsection{Class \lstinline|MultiOutChannel|}
-Multiplexes several instances  of \lstinline|OutChannel|s so that they can be used as a single
- destination. \\
+\subsubsection{Interface \lstinline|MultiOutputStream.ErrorHandler|}
+An error handler. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[]{MultiOutChannel}{
+\umlclass[type=abstract]{MultiOutputStream.ErrorHandler}{
 
 }{
-+ addChannel(channel : OutChannel) \\ + removeChannel(channel : OutChannel) \\ + send(data : byte[])
+\umlvirt{+ handle(multi : MultiOutputStream, channel : OutputStream, exc : IOException)}
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -362,51 +637,32 @@ Multiplexes several instances  of \lstinline|OutChannel|s so that they can be us
 
 
 
-\textbf{\sffamily Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|cryptocast.comm.OutChannel|
-\end{itemize}
-
 
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|addChannel|\lstinline|(OutChannel channel)|\\ \\[-0.6em]
-Adds the given channel to the list of receivers.
+\item \lstinline|public void| \lstinline|handle|\lstinline|(MultiOutputStream multi, OutputStream channel, IOException exc)|\\ \\[-0.6em]
+Handle an error.
 \begin{itemize}
-\item \lstinline|channel|: The channel to add
-\end{itemize}
-
-
-
-\item \lstinline|public void| \lstinline|removeChannel|\lstinline|(OutChannel channel)|\\ \\[-0.6em]
-Removes the given channel from the list of receivers.
-\begin{itemize}
-\item \lstinline|channel|: The channel to remove
-\end{itemize}
-
-
-
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
-Sends the given data.
-\begin{itemize}
-\item \lstinline|data|: The data to send
+\item \lstinline|multi|: The multi output stream.
+\item \lstinline|channel|: The channel.
+\item \lstinline|exc|: The exception that occured.
 \end{itemize}
 
 
 
 \end{itemize}
 
-\subsubsection{Interface \lstinline|InChannel|}
+\subsubsection{Interface \lstinline|MessageInChannel|}
 A byte-based communication channel from which data can be received. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[type=abstract]{InChannel}{
+\umlclass[type=abstract]{MessageInChannel}{
 
 }{
-\umlvirt{+ recv(size : int, buffer : byte[])}
+\umlvirt{+ recvMessage() : byte[]}
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -418,27 +674,23 @@ A byte-based communication channel from which data can be received. \\
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|recv|\lstinline|(int size, byte[] buffer)|\\ \\[-0.6em]
-Receives data.
-\begin{itemize}
-\item \lstinline|size|: Maximum amount of bytes to read
-\item \lstinline|buffer|: The target buffer
-\end{itemize}
+\item \lstinline|public byte[]| \lstinline|recvMessage|\lstinline|()|\\ \\[-0.6em]
+\emph{Returns:} The data or <code>null</code>, if the end-of-file is reached.
 
 
 
 \end{itemize}
 
-\subsubsection{Interface \lstinline|OutChannel|}
-A byte-based communication channel where data can be sent to. \\
+\subsubsection{Interface \lstinline|SimpleHttpStreamServer.OnErrorListener|}
+An error handler. \\
 \noindent\begin{minipage}[t]{5cm}
 \vspace{0.3em}
 \hspace*{2em}
 \begin{tikzpicture}
-\umlclass[type=abstract]{OutChannel}{
+\umlclass[type=abstract]{SimpleHttpStreamServer.OnErrorListener}{
 
 }{
-\umlvirt{+ send(data : byte[])}
+\umlvirt{+ onError(e : Exception) : boolean}
 }
 \end{tikzpicture}
 \vspace{0.3em}
@@ -450,13 +702,14 @@ A byte-based communication channel where data can be sent to. \\
 
 \textbf{\sffamily Methods}
 \begin{itemize}
-\item \lstinline|public void| \lstinline|send|\lstinline|(byte[] data)|\\ \\[-0.6em]
-Sends the given data.
+\item \lstinline|public boolean| \lstinline|onError|\lstinline|(Exception e)|\\ \\[-0.6em]
+Called when an error occurs while handling a client connection.
 \begin{itemize}
-\item \lstinline|data|: The data to send
+\item \lstinline|e|: The exception
 \end{itemize}
 
-
+\emph{Returns:} <code>true</code>, if we should continue listening,
+ <code>false</code> if we should abort.
 
 \end{itemize}
 
