@@ -158,79 +158,95 @@ All the main programs are added here. Most notably, theses are:
 \end{itemize}
 
 \subsection{Package cryptocast.client}
+Due to missing functionality in the \textit{MediaPlayer} class (for example: buffer callback was not triggered), we decided to upgrade the minimal API level to 10. This decision was made to ensure better feedback for the user about the current status of the program. So for example, the user can see whether the client is currently buffering or not and can react accordingly.
 
 \begin{itemize}
-\item \textbf{\textit{class StreamViewerActivity}} \newline
-   This class now implements  \textit{MediaController.MediaPlayerContro}l to provide better
+\item \lstinline|class StreamViewerActivity|
+   This class now implements  \lstinline|MediaController.MediaPlayerControl| to provide better
   control of the media player. In addition, the following methods were added:
   \begin{itemize}
-   \item \textit{"+setStatusText(text : String)"} to set the player's status text.
-   \item \textit{"+createErrorPopup(message : String")} to create an error popup from other classes.
+   \item \lstinline|"+setStatusText(text : String)"| to set the player's status text.
+   \item \lstinline|"+createErrorPopup(message : String")| to create an error popup from other classes.
   \end{itemize}
 
-   \item \textbf{\textit{class MainActivity}}
+   \item \lstinline|class MainActivity|
   \begin{itemize}
-   \item \textit{"+connectToServer(View view) : void"} was renamed to \textit{+onConnect(View view) : void"}.
-   \item \textit{"+onOldServers(View view) : void"} was added to start a new server fragment for showing the
+   \item \lstinline|"+connectToServer(View view) : void"| was renamed to \textit{+onConnect(View view) : void"}.
+   \item \lstinline|"+onOldServers(View view) : void"| was added to start a new server fragment for showing the
     list of all servers.
-    \item \textit{"+getConnectAddr() : Optional<InetSocketAddress>"} was added to get the socket address
+    \item \lstinline|"+getConnectAddr() : Optional<InetSocketAddress>"| was added to get the socket address
     and to check, if the host name and the port number are valid.
   \end{itemize}
 
-  \item \textbf{\textit{class ServerHistory}} \newline
+  \item \lstinline|class ServerHistory| \newline
   The following methods were added :
   \begin{itemize}
-   \item \textit{"+deleteServer(InetSocketAddress addr) : void"} to delete a server from the server history.
-   \item \textit{"+invalidateKeyFile(InetSocketAddress addr) : void"} to delete a saved key file of the server.
-   \item \textit{"+getKeyFile(InetSocketAddress addr) : Optional<File>"} to return the key file of the given server.
-   \item \textit{"+getServerList() : List<InetSocketAddress>"} to return a list of the saved servers, that simplifies the access for listing them in options and main menu.
+   \item \lstinline|"+deleteServer(InetSocketAddress addr) : void"| to delete a server from the server history.
+   \item \lstinline|"+invalidateKeyFile(InetSocketAddress addr) : void"| to delete a saved key file of the server.
+   \item \lstinline|"+getKeyFile(InetSocketAddress addr) : Optional<File>"| to return the key file of the given server.
+   \item \lstinline|"+getServerList() : List<InetSocketAddress>"| to return a list of the saved servers, that simplifies the access for listing them in options and main menu.
   \end{itemize}
 
- \item \textit{\textbf{class ClientActivity}}
+ \item \lstinline|class ClientActivity|
   \begin{itemize}
    \item This class was added as base activity, which provides basic common functionality.
   \end{itemize}
 
-    \item \textbf{\textit{class ClientApplication}}
+    \item \lstinline|class ClientApplication|
   \begin{itemize}
    \item This class was added for maintaining the global application state.
   \end{itemize}
 
-  \item \textbf{\textit{class HelpActivity}}
+  \item \lstinline|class HelpActivity|
   \begin{itemize}
    \item This class was added to represent an activity that displays the help page.
   \end{itemize}
 
-  \item \textbf{\textit{class AboutActivity}}
+  \item \lstinline|class AboutActivity|
   \begin{itemize}
    \item This class was added to represent the about dialog.
   \end{itemize}
 
-   \item \textbf{\textit{class MessageFragment}}
+   \item \lstinline|class MessageFragment|
   \begin{itemize}
    \item The class \textit{"ErrorFragment"} was renamed to \textit{"MessageFragment"}.
   \end{itemize}
 
-  \item \textbf{\textit{class ServersFragment}}
+  \item \lstinline|class ServersFragment|
   \begin{itemize}
    \item This class was added to represent a dialog with a list of all saved servers and a button.
   \end{itemize}
 
-  \item \textbf{\textit{class ServerListAdapter}}
+  \item \lstinline|class ServerListAdapter|
   \begin{itemize}
   \item This class was added to provide an adapter between the ListElements and the view showing them.
   \end{itemize}
 
-  \item \textbf{\textit{class RawStreamMediaPlayer}}
+  \item \lstinline|class RawStreamMediaPlayer|
   \begin{itemize}
   \item This class was added to provide Media player to play audio from a raw InputStream.
   \end{itemize}
 
-    \item \textbf{\textit{class StreamConnector}}
+  \item \lstinline|class StreamConnector|
   \begin{itemize}
-   \item This class was added to separate work from the StreamViewerActivity class
+  \item This class was added to separate work from the StreamViewerActivity class
   in a separate thread to prevent the GUI not from showing properly.
   \end{itemize}
+
+  \item \lstinline|class OptionsActivity|
+  \begin{itemize}
+  \item \lstinline|"+onCreateContextMenu(ContextMenu menu, View ContextMenuInfo menuInfo) : void"| was added to 
+  create a context menu to edit the server history.
+  \item \lstinline|"+onContextItemSelected(MenuItem item) : boolean"| was added to edit the selected item in the server history
+    \end{itemize}
+
+  
+  \item \lstinline|class KeyChoiceActivity|
+  \begin{itemize}
+  \item Methods were removed because the key file arguments are passed new via \lstinline|getIntent().getExtras()|. 
+  \end{itemize}
+
+
 
 \end{itemize}
 
@@ -239,12 +255,12 @@ All the main programs are added here. Most notably, theses are:
 
 \begin{itemize}
 
- \item \textit{\textbf{class NavigateUpListElement}}
+ \item \lstinline|class NavigateUpListElement|
   \begin{itemize}
    \item This class was added as a list element in our file chooser representing a directory.
   \end{itemize}
 
-    \item \textbf{\textit{class FileChooserState}}
+    \item \lstinline|class FileChooserState|
   \begin{itemize}
    \item This class was added to represent the state of a file chooser.
   \end{itemize}
