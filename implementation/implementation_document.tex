@@ -268,6 +268,7 @@ This  completely new package contains some classes used for testing and setting 
    \item \textit{"+deleteServer(InetSocketAddress addr) : void"} to delete a server from the server history.
 	 \item \textit{"+invalidateKeyFile(InetSocketAddress addr) : void"} to delete a saved key file of the server.
 	 \item \textit{"+getKeyFile(InetSocketAddress addr) : Optional<File>"} to return the key file of the given server.
+	 \item \textit{"+getServerList() : List<InetSocketAddress>"} to return a list of the saved servers, that simplifies the access for listing them in options and main menu.
 	\end{itemize}
 
  \item \textit{\textbf{class ClientActivity}}
@@ -297,7 +298,7 @@ This  completely new package contains some classes used for testing and setting 
 	
 	\item \textbf{\textit{class ServersFragment}}
 	\begin{itemize}
-	 \item This class was added to represent a list of all saved servers.
+	 \item This class was added to represent a dialog with a list of all saved servers and a button.
 	\end{itemize}
 	
 	\item \textbf{\textit{class ServerListAdapter}}
