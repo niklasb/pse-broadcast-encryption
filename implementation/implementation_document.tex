@@ -189,7 +189,7 @@ Due to missing functionality in the \textit{MediaPlayer} class (for example: buf
 
  \item \lstinline|class ClientActivity|
   \begin{itemize}
-   \item This class was added as base activity, which provides basic common functionality.
+   \item This class was added as base activity, which provides basic common functionality like the menu.
   \end{itemize}
 
     \item \lstinline|class ClientApplication|
@@ -219,7 +219,7 @@ Due to missing functionality in the \textit{MediaPlayer} class (for example: buf
 
   \item \lstinline|class ServerListAdapter|
   \begin{itemize}
-  \item This class was added to provide an adapter between the ListElements and the view showing them.
+  \item This class was added to provide an adapter between the ListElements and the view showing them. It extends an ArrayAdapter, but changes the way the InetSocketAddress is presented, by not using the toString() method.
   \end{itemize}
 
   \item \lstinline|class RawStreamMediaPlayer|
