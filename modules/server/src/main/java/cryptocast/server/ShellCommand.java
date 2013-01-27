@@ -10,7 +10,8 @@ public class ShellCommand {
      * Creates a new Command with the given values
      * @param name The name of the command
      * @param syntax The syntax of the command
-     * @param description A short description of the functionality
+     * @param shortDesc A short description of the functionality
+     * @param longDesc A long description of the funktionality
      */
     public ShellCommand(String name, String syntax, String shortDesc, String longDesc) {
         this.name = name;
