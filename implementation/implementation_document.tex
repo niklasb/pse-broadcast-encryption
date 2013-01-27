@@ -58,506 +58,314 @@
 \section{Introduction}
 This document contains the changes applied on the implementation with respect to the design document.
 Some of these changes were necessary, and then there are additional changes to improve the performance.
-The elements as attributes, methods and classes were renamed, whenever it was useful. In the following the 
+The elements as attributes, methods and classes were renamed, whenever it was useful. In the following the
 changes are listed and described.
 
 \section{Changes in the packages}
 \subsection{Package cryptocast.comm}
 
 \begin{itemize}
-   
-	\item \textbf{\textit{class SimpleHttpStreamServer}}
-	\begin{itemize}
-	 \item This class was added for representing a simple tcp based http server.
-	\end{itemize}
-	
-   \item \textbf{\textit{class MessageBuffer}}
-	\begin{itemize}
-	 \item This class was added for representing a buffer for all message.
-	\end{itemize}
-	
-	 \item \textbf{\textit{class StreamUtils}}
-	\begin{itemize}
-	 \item This class was added to provide utility methods for input and output streams.
-	\end{itemize}
-	
-	 \item \textbf{\textit{class ThrottledOutputStream}}
-	\begin{itemize}
-	 \item This class was added for representing an IntputStream proxy which limits the number of bytes read per second.
-	\end{itemize}
-	
-	\item \textbf{\textit{class SwitchableOutputStream}}
-	\begin{itemize}
-	 \item This class was added as OutputStream that allows the switching of the underlying stream.
-	\end{itemize}
-	
-	\item \textbf{\textit{class SwitchableInputStream}}
-	\begin{itemize}
-	 \item This class was added as IntputStream that allows the switching of the underlying stream.
-	\end{itemize}
-	
-	\item \textit{\textbf{class ServerMultiMessageOutChannel}}
-	\begin{itemize}
-	 \item The class \textit{"SocketMulticastServer"} was replaced by this class \textit{"ServerMultiMessageOutChannel"}.
-	 \item \textit{"+SocketMulticastServer(socket : ServerSocket)"} was replaced by 
-	 \textit{"+ServerMultiMessageOutChannel(server : ServerSocket , excHandler : Callback<Throwable>)"}.
-	 \item \textit{"+send(data : byte[]) : void"} was deleted.
-	\end{itemize}
-	
-   \item \textbf{\textit{class MultiOutputStream}}
+
+  \item \lstinline|SimpleHttpStreamServer|
   \begin{itemize}
-	 \item The class \textit{"MultiOutChannel"} was replaced by this class \textit{"MultiOutputStream"}.
-	 \item \textit{"+addChannel(channel : OutChannel) : void"} was replaced by 
-	 \textit{"+addChannel(channel : OutputStream ) : void"}.
-	 \item \textit{"+removeChannel(channel : OutChannel) : void"} was replaced by 
-	 \textit{"+removeChannel(channel : OutputStream ) : void"}.
-	 \item \textit{"+send(data : byte[]) : void"} was deleted.
-	 \item The static interface \textit{"ErrorHandler"} was added to represent an error handler.
-	 \item \textit{"+getChannels() : ImmutableList<OutputStream>"} was added to return an immutable 
-	 list of all output channels.
-	\end{itemize}
- 
-   \item \textbf{\textit{class StreamMessageInChannel}}
-	\begin{itemize}
-	 \item The class \textit{"MessageInChannel"} was replaced by this class \textit{"StreamMessageInChannel"}.
-	\end{itemize}
-	
-   \item \textbf{\textit{class StreamMessageOutChannel}}
-	\begin{itemize}
-	 \item The class \textit{"MessageOutChannel""} was replaced by this class \textit{"StreamMessageOutChannel"}.
-	 \item \textit{"+MessageOutChannel(inner : OutChannel)"} was replaced by 
-	 \textit{"+StreamMessageOutChannel(inner : OutputStream)"}.
-	 \item \textit{"+sendMessage(data : byte[]) : void"} was replaced by 
-	 \textit{"+sendMessage(data: byte[], offset: int , len: int) : void"}.
-	\end{itemize}
-	
-   \item \textbf{\textit{interface MessageInChannel}}
-	\begin{itemize}
-	 \item The interface \textit{""InChannel"} was renamed to \textit{"MessageInChannel"}.
-	 \item \textit{"+recv(size : int, buffer : byte[]) : void"} was replaced by \textit{"+recvMessage() : byte[]"}.
-	\end{itemize}
-	
-	 \item \textbf{\textit{abstract class MessageOutChannel}}
-	\begin{itemize}
-	 \item The interface \textit{"OutChannel"} was replaced by this abstract class \textit{"MessageOutChannel"}.
-	 \item \textit{"+send(data : byte[]) : void"} was renamed to \textit{"+sendMessage(data : byte[]) : void"}.
-	 \item \textit{"+sendMessage(data: byte[] , offset: int , len: int) : void"} was added to send data.
-	\end{itemize}
-	
+   \item This class was added to have a working HTTP implementation to supply the Android
+	  \lstinline|MediaPlayer|.
+  \end{itemize}
+
+   \item \lstinline|MessageBuffer|
+  \begin{itemize}
+   \item Added solely for testing purposes.
+  \end{itemize}
+
+   \item \lstinline|StreamUtils|
+  \begin{itemize}
+   \item Added several utility function for the implementation of the \lstinline|cryptocast.comm| package.
+  \end{itemize}
+
+   \item \lstinline|ThrottledOutputStream|
+  \begin{itemize}
+   \item Added because we needed a way to throttle a media stream to the bitrate of the source file.
+  \end{itemize}
+
+  \item \lstinline|SwitchableOutputStream|
+  \begin{itemize}
+   \item Added for usage in the server controller when doing a reinitialization.
+  \end{itemize}
+
+  \item \lstinline|SwitchableInputStream|
+  \begin{itemize}
+   \item Added for on-the-fly switching of the media source in the server controller.
+  \end{itemize}
+
+  \item \lstinline|MessageInChannel|, \lstinline|MessageOutChannel|
+  \begin{itemize}
+	 \item Transformed into an interface, because there is more than one sensible implementation.
+	 \lstinline|StreamMessage{In,Out}Channel| realize the reference implementation based on streams.
+  \end{itemize}
+
+	\item \lstinline|MultiOutChannel|
+  \begin{itemize}
+	 \item Replaces the \lstinline|MultiOutStream|. We realized that we need multiplexing on a
+	       message level, rather than on the stream level, so we don't need message synchronization
+				 on the receiver end.
+  \end{itemize}
+
+  \item \lstinline|ServerMultiMessageOutChannel|
+  \begin{itemize}
+	 \item Replaces \lstinline|ServerMultiMessageOutChannel| because we need multiplexing
+	 on a message level (see above).
+	 \item Added the possibility to register an error handler.
+  \end{itemize}
 \end{itemize}
 
 \subsection{Package cryptocast.server}
 
 \begin{itemize}
-  
-\item \textbf{\textit{class Controller}} \newline
-The class \textit{Controller} now implements the interface \textit{Observer} so registered observers can 
-tell the controller when it has to save the data this controller is connected to.
-The following methods were added :
-	\begin{itemize}
-	 \item \textit{"+start(databaseFile : File , listenAddr : SocketAddress , keyBroadcastIntervalSecs: int ,
-		 serverFactory : NPServerFactory) : Controller"} for creating a instance of this class. This method now 
-	 	implements the parts of functionality of the former method \textit{"+init()"}  and 
-		the constructor. Therefore, the access modifier of the constructor has changed to private and the method  
-		\textit{"+init()"} has been removed.
-	 \item \textit{"+saveUserKeys(dir : File , users : Set<User<NPIdentity>>) : void"} for saving
-		 the personal keys of the users into a key-file at the given directory.
-	 \item \textit{"+saveDatabase() : void"} for saving the database into a specific file.
-	 \item \textit{"+getModel() : NaorPinkasServerData"} to return the data according to Naor-Pinkas.
-	 \item \textit{"+getDatabesFile() : File"} to get the file containing the database or where it should be saved in.
-	\item \textit{"+getT() : int"} returns the amount of users who can be revoked in the current cryptography.
-	\item \textit{"+getListenAddress() :SocketAddredd"} in order to get the address on which port the server listens.
-	 \item \textit{"+reinitializeCrypto(t : int) : void"} to reinitialize the cryptography so that t users can be revoked.
-	 \item \textit{"+streamAudio(File file) : void"} to stream a MPEG-3 audio file.
-	 \item \textit{"+streamSampleText() : void"} to stream a sample text.
-	 \item \textit{"+stream(in : InputStream) : void"} to stream the data from the input stream.
-	 \item \textit{"+stream(in : InputStream , maxBytesPerSec : long ) : void"} to stream the data while limiting 
-	 	the number of bytes which are read per second.
-	\item \textit{"+update(o : Observable, arg : Object) : void)} to save the database when it has changed.
-	\end{itemize}
-The following methods were removed:
-	\begin{itemize}
-	\item \textit{"+init()"}. Reasons for this decicision are stated above in the added method \textit{"+start(...)"}.
-	\item \textit{"+keyGen(amtRevocable : int, amtPrivateKeys : int, keyDir : File)"}
-	\item \textit{"+addUser(name : String)"}, \textit{"+revokeUser(name : String)"}, \textit{"+authorizeUser(name : String)"}
-		and \textit{"+showUsers()"} have been moved to the class \textit{ServerData}. Also some of them have been renamed.
-	\item \textit{"+showStatistics()"} and \textit{"+showInfo()"} have been removed at all because they were not needed anymore.
-	\end{itemize}
-\item \textbf{\textit{class Shell<ID>}}\newline
-The following method was added:
-	\begin{itemize}
-	\item \textit{"+Shell(in : BufferedReader, out: PrintStream, err : PrintStream, control: Controller)"}. The parameter \textit{control : Controller}
-		has been added.
-	\item \textit{"+parseInt(strr : String) : Optional<Integer>"} so that converting Strings to Integer is possible.
-	\end{itemize}
-	
-	\item \textbf{\textit{class ServerData<ID>}}\newline
-	The following methods were added :
-  \begin{itemize}
- 	 \item \textit{"+initAfterDeserialization()"} to initalize the data after it was read from a file.
-	 \item \textit{"+revoke(users : Set<User<ID>>) : void"} so that we can revoke multiple users at the same time.
-	 \item \textit{"+revoke(user : User<ID>) : void"} so that we can revoke only one user.
-	 \item \textit{"+unrevoke(user : User<ID>) : void} so that we can authorize a user.
-	 \item \textit{"+isRevoked(user : User<ID> ) : boolean"} to let us know if a user is revoked or not.
-	 \item \textit{"+Serverdata(userManager : BroadcastSchemeUserManager<ID>, keyManager :  BroadcastSchemeKeyManager<ID>)"} 
-		to provide all classes the Serverdata uses.
-	 \item \textit{"+getUsers() : Set<User<ID>> "} to return all users in our collection.
-	\end{itemize}
 
-   \item \textbf{\textit{class LogbackUtils}}
-	\begin{itemize}
-	 \item This class was added to provied a logger. The logger is used to provide debug information and to provide information to the user.
-	\end{itemize}
-	
-	 \item \textbf{\textit{class NaorPinkasServerData}}
-	\begin{itemize}
-	 \item This class \textit{"NaorPinkasServerData"} was added for representing the server data according to Naor-Pinkas.
-	\end{itemize}
-	
-	 \item \textbf{\textit{class OptParse}}
-	\begin{itemize}
-	 \item This class \textit{"OptParse"} was added for providing a Command line option parser.
-	\end{itemize}
-	
-   \item \textit{\textbf{class ShellCommand}}
-	\begin{itemize}
-	 \item The class \textit{"ShellCommand"} was added for representing the commands available in the shell.
-	\end{itemize}
-	
+\item \lstinline|Controller|
+\begin{itemize}
+ \item Added backend functions for the newly designed shell commands.
+ \item Added convenience methods for usage in the shell.
 \end{itemize}
 
+\item \lstinline|ServerData<ID|
+\begin{itemize}
+	\item Transformed into an abstract class. All the functionality in here is now
+	      independent of the NP scheme. The reference implementation that is used for
+				NP is called \lstinline|NaorPinkasServerData|.
+	\item Added an interface to revoke multiple users (because revoking users must cause a
+	      key update!)
+\end{itemize}
+
+\item \lstinline|LogbackUtils|
+  \begin{itemize}
+   \item Convenience functions to configure Logback's output.
+  \end{itemize}
+
+\item \lstinline|OptParse|
+\begin{itemize}
+	\item Convenience when working with command line arguments and the \emph{JCommander} library.
+\end{itemize}
+
+\end{itemize}
 
 \subsection{Package cryptocast.server.programs}
-This  completely new package contains some classes used for testing and setting up the server:
+All the main programs are added here. Most notably, theses are:
 \begin{itemize}
-	\item \textit{Benchmarks} gathers data about the time several functions needed by the cryptography are running
-		with several paramters. The available benchmarks are  lagrange, encrypt, multi-encrypt, decrypt, multi-eval, keygen, multi-exp.
-		TODO: translate bechmarks in proper language, add description below
-	\item \textit{Client} starts a cterminal-based client. A keyfile must be provided to it to run.
-	\item \textit{HttpStreamer} 
-	\item \textit{TcpStreamer}
-	\item \textit{Server}: Runs a server.
+ \item \lstinline|Benchmarks| Several benchmarks for various operations that the
+   server and client need to perform.
+ \item \lstinline|Server|  The CryptoCast server.
 \end{itemize}
-
 
 \subsection{Package cryptocast.client}
 
-
 \begin{itemize}
-
 \item \textbf{\textit{class StreamViewerActivity}} \newline
-   This class now implements  \textit{MediaController.MediaPlayerContro}l to provide better 
-	control of the media player. In addition, the following methods were added:
-	\begin{itemize}
-	 \item \textit{"+setStatusText(text : String)"} to set the player's status text.
-	 \item \textit{"+createErrorPopup(message : String")} to create an error popup from other classes.
-	\end{itemize}
-	
-	 \item \textbf{\textit{class MainActivity}}
-	\begin{itemize}
-	 \item \textit{"+connectToServer(View view) : void"} was renamed to \textit{+onConnect(View view) : void"}.
-	 \item \textit{"+onOldServers(View view) : void"} was added to start a new server fragment for showing the 
-	  list of all servers.
-		\item \textit{"+getConnectAddr() : Optional<InetSocketAddress>"} was added to get the socket address 
-		and to check, if the host name and the port number are valid.
-	\end{itemize}
-	
-	\item \textbf{\textit{class ServerHistory}} \newline
-	The following methods were added :
-	\begin{itemize}
+   This class now implements  \textit{MediaController.MediaPlayerContro}l to provide better
+  control of the media player. In addition, the following methods were added:
+  \begin{itemize}
+   \item \textit{"+setStatusText(text : String)"} to set the player's status text.
+   \item \textit{"+createErrorPopup(message : String")} to create an error popup from other classes.
+  \end{itemize}
+
+   \item \textbf{\textit{class MainActivity}}
+  \begin{itemize}
+   \item \textit{"+connectToServer(View view) : void"} was renamed to \textit{+onConnect(View view) : void"}.
+   \item \textit{"+onOldServers(View view) : void"} was added to start a new server fragment for showing the
+    list of all servers.
+    \item \textit{"+getConnectAddr() : Optional<InetSocketAddress>"} was added to get the socket address
+    and to check, if the host name and the port number are valid.
+  \end{itemize}
+
+  \item \textbf{\textit{class ServerHistory}} \newline
+  The following methods were added :
+  \begin{itemize}
    \item \textit{"+deleteServer(InetSocketAddress addr) : void"} to delete a server from the server history.
-	 \item \textit{"+invalidateKeyFile(InetSocketAddress addr) : void"} to delete a saved key file of the server.
-	 \item \textit{"+getKeyFile(InetSocketAddress addr) : Optional<File>"} to return the key file of the given server.
-	 \item \textit{"+getServerList() : List<InetSocketAddress>"} to return a list of the saved servers, that simplifies the access for listing them in options and main menu.
-	\end{itemize}
+   \item \textit{"+invalidateKeyFile(InetSocketAddress addr) : void"} to delete a saved key file of the server.
+   \item \textit{"+getKeyFile(InetSocketAddress addr) : Optional<File>"} to return the key file of the given server.
+   \item \textit{"+getServerList() : List<InetSocketAddress>"} to return a list of the saved servers, that simplifies the access for listing them in options and main menu.
+  \end{itemize}
 
  \item \textit{\textbf{class ClientActivity}}
-	\begin{itemize}
-	 \item This class was added as base activity, which provides basic common functionality.
-	\end{itemize}
-	 
+  \begin{itemize}
+   \item This class was added as base activity, which provides basic common functionality.
+  \end{itemize}
+
     \item \textbf{\textit{class ClientApplication}}
-	\begin{itemize}
-	 \item This class was added for maintaining the global application state.
-	\end{itemize}
-	
-	\item \textbf{\textit{class HelpActivity}}
-	\begin{itemize}
-	 \item This class was added to represent an activity that displays the help page.
-	\end{itemize}
-	
-	\item \textbf{\textit{class AboutActivity}}
-	\begin{itemize}
-	 \item This class was added to represent the about dialog.
-	\end{itemize}
-	
+  \begin{itemize}
+   \item This class was added for maintaining the global application state.
+  \end{itemize}
+
+  \item \textbf{\textit{class HelpActivity}}
+  \begin{itemize}
+   \item This class was added to represent an activity that displays the help page.
+  \end{itemize}
+
+  \item \textbf{\textit{class AboutActivity}}
+  \begin{itemize}
+   \item This class was added to represent the about dialog.
+  \end{itemize}
+
    \item \textbf{\textit{class MessageFragment}}
   \begin{itemize}
-	 \item The class \textit{"ErrorFragment"} was renamed to \textit{"MessageFragment"}.
-	\end{itemize}
-	
-	\item \textbf{\textit{class ServersFragment}}
-	\begin{itemize}
-	 \item This class was added to represent a dialog with a list of all saved servers and a button.
-	\end{itemize}
-	
-	\item \textbf{\textit{class ServerListAdapter}}
-	\begin{itemize}
-	\item This class was added to provide an adapter between the ListElements and the view showing them.
-	\end{itemize}
-	
-	\item \textbf{\textit{class RawStreamMediaPlayer}}
-	\begin{itemize}
+   \item The class \textit{"ErrorFragment"} was renamed to \textit{"MessageFragment"}.
+  \end{itemize}
+
+  \item \textbf{\textit{class ServersFragment}}
+  \begin{itemize}
+   \item This class was added to represent a dialog with a list of all saved servers and a button.
+  \end{itemize}
+
+  \item \textbf{\textit{class ServerListAdapter}}
+  \begin{itemize}
+  \item This class was added to provide an adapter between the ListElements and the view showing them.
+  \end{itemize}
+
+  \item \textbf{\textit{class RawStreamMediaPlayer}}
+  \begin{itemize}
   \item This class was added to provide Media player to play audio from a raw InputStream.
-	\end{itemize}
-	
-    \item \textbf{\textit{class StreamConnector}} 
-	\begin{itemize}
-	 \item This class was added to separate work from the StreamViewerActivity class 
-	in a separate thread to prevent the GUI not from showing properly.
-	\end{itemize}
-	
+  \end{itemize}
+
+    \item \textbf{\textit{class StreamConnector}}
+  \begin{itemize}
+   \item This class was added to separate work from the StreamViewerActivity class
+  in a separate thread to prevent the GUI not from showing properly.
+  \end{itemize}
+
 \end{itemize}
 
-	
+
 \subsection{Package cryptocast.client.filechooser}
 
 \begin{itemize}
 
  \item \textit{\textbf{class NavigateUpListElement}}
-	\begin{itemize}
-	 \item This class was added as a list element in our file chooser representing a directory.
-	\end{itemize}
-	 
+  \begin{itemize}
+   \item This class was added as a list element in our file chooser representing a directory.
+  \end{itemize}
+
     \item \textbf{\textit{class FileChooserState}}
-	\begin{itemize}
-	 \item This class was added to represent the state of a file chooser.
-	\end{itemize}
-	
+  \begin{itemize}
+   \item This class was added to represent the state of a file chooser.
+  \end{itemize}
+
 \end{itemize}
-	
+
 \subsection{Package cryptocast.util}
 
+Mostly everything in this package are helper functions that were extracted from code
+in other packages during refactoring.
+
 \begin{itemize}
-  
-   \item \textbf{\textit{class ByteUtils}}
-	\begin{itemize}
-	 \item This class was added to provide several bytes and byte arrays utility functions.
-	\end{itemize}
-	
-	 \item \textbf{\textit{class ErrorUtils}}
-	\begin{itemize}
-	 \item This class was added to provide several error handling utility methods.
-	\end{itemize}
-	
-	 \item \textbf{\textit{class MapUtils}}
-	\begin{itemize}
-	 \item This class was added to provide map utility methods.
-	\end{itemize}
-	
-   \item \textit{\textbf{class NativeUtils}}
-	\begin{itemize}
-	 \item This class was added to provide several utility methods for easier native code calls.
-	\end{itemize}
-	
-	\item \textit{\textbf{class SerializationUtils}}
-	\begin{itemize}
-	 \item This class was added to provide several serialization utility methods.
-	\end{itemize}
-	
-	\item \textit{\textbf{class FileUtils}}
-	\begin{itemize}
-	 \item This class was added to provide file/io utility methods.
-	\end{itemize}
-	
-	\item \textit{\textbf{class Generator<T>}}
-	\begin{itemize}
-	 \item This class was added to represent a range generator.
-	\end{itemize}
-	
-	\item \textit{\textbf{class OptimisticGenerator<T>}}
-	\begin{itemize}
-	 \item This class was added to represent a optimistic generator.
-	\end{itemize}
-	
-	\item \textit{\textbf{interface CanBeObserved}}
-	\begin{itemize}
-	 \item This interface was added to represent an observable object.
-	\end{itemize}
-	
-	\end{itemize}
-	
-	
+  \item \lstinline|OptimisticGenerator|
+  \begin{itemize}
+   \item Provides a very generic and powerful abstraction of a range generator. We use this
+	 for the user key generation, because our polynomial evaluation algorithm is fast only
+	 if we generate keys in bulks. So we just compute the keys in blocks of powers of two.
+	 The result is that we never have more than $2n$ keys ready, where $n$ is the number of users
+	 and that we can dynamically grow the number of users efficiently.
+  \end{itemize}
+
+  \item \lstinline|CanBeObserved|
+  \begin{itemize}
+   \item This interface was added because we need it in the declaration of \lstinline|NPServerInterface|,
+	 where we can't use the abstract class \lstinline|java.util.Observable|
+  \end{itemize}
+
+  \end{itemize}
+
 \subsection{Package cryptocast.crypto}
 
 \begin{itemize}
-	
-	
-	 \item \textbf{\textit{CyclicGroupOfPrimeOrder<T>}}
-	\begin{itemize}
-	 \item This class was added to represent a cyclic group $(G, \otimes)$ of prime order $q$ over a subset 
-    $G$ of the values of type T, generated by $g$.
+   \item \lstinline|BroadcastSchemeUserManager|
+	 \begin{itemize}
+	 	 \item Revocation of users is a costly operation: A new session key must be encrypted
+		 using Naor-Pinkas and decrypted on the client side. If a user wants to revoke multiple
+		 users, he needed to do so using repeated calls to the \lstinline|revoke| method.
+		 A straightforward implementation of \lstinline|BroadcastEncryptionServer| just triggers
+		 a key update whenever a user is revoked. Since this is the implementation we decided to
+		 stick with, we provide a method to revoke multiple users at once, triggering only
+		 a single key update. This method is exposed to the user by an extension of the \lstinline|revoke| command
+		 in the server shell.
 	\end{itemize}
-	
-   \item \textit{\textbf{class DecryptionError}}
-	\begin{itemize}
-	 \item This class was added to throw an exception when an error occurs while decpryting a stream.
-	\end{itemize}
-	
-	\item \textit{\textbf{class DynamicCipherInputStream}}
-	\begin{itemize}
-	 \item This class was added to represent a dynamic cipher input stream, which is an input stream that
-	  needs to be decrypted. This stream uses a message-based communication channel.
-	\end{itemize}
-	
-	\item \textit{\textbf{class DynamicCipherKeyUpdateMessage}}
-	\begin{itemize}
-	 \item This class was added to represent a message for dynamic updates of the cipher key.
-	\end{itemize}
-	
-	\item \textit{\textbf{class DynamicCipherOutputStream}}
-	\begin{itemize}
-	 \item This class was added to represent a dynamic cipher output stream, which is an output stream 
-	 that is decrypted upon writing. This stream uses a message-based communication channel.
-	\end{itemize}
-	
-	\item \textit{\textbf{interface EllipticCurve<T, P>}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-	
-	\item \textit{\textbf{class EllipticCurveGroup<T, P, C extends EllipticCurve<T, P> >}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-	
-	\item \textit{\textbf{class EllipticCurveOverFp}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-	
-	\item \textit{\textbf{class InsufficientInformationError}}
-	\begin{itemize}
-	 \item This class was added to throw an exception when insufficient information is provided for the Naor-Pinkas Client.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NoMoreRevocationsPossibleError}}
-	\begin{itemize}
-	 \item This class was added to throw an exception when no more revocations are possible.
-	\end{itemize}
-	
-	\item \textit{\textbf{class PolynomialMultiEvaluation}}
-	\begin{itemize}
-	 \item This class was added to evaluate a polynomial at multiple points. A native function is used, 
-	 if n is bigger than a specific threshold.
-	\end{itemize}
-	
-	\item \textit{\textbf{class SchnorrGroup}}
-	\begin{itemize}
-	 \item This class was added to represent a schnorr group.
-	\end{itemize}
-	
-	\item \textbf{\textit{class CryptoUtils}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-		
+
+   \item \lstinline|CyclicGroupOfPrimeOrder|
+  \begin{itemize}
+		\item Captures the common interface between the DDH groups we support:
+	 \lstinline|SchnorrGroup| and \lstinline|EllipticCurveGroup|. A great advantage
+	 is that we can formulate multiexponentation using Shamir's trick generically. Even more importantly,
+	 we can formulate the Naor-Pinkas-Scheme completely independently from the group we use!
+  \end{itemize}
+
+   \item \lstinline|CryptoUtils|
+  \begin{itemize}
+   \item Simple helper methods for one-shot encryption and decryption using AES. We use this
+	 to encrypt the session key with the shared Naor-Pinkas secret. We also add a function that
+	 encrypts a hashed version of a plain text, so we notice when we obtain the wrong session
+	 key because we used a keyfile for the wrong server (because Lagrange interpolation will work,
+	 it will just give us a wrong result).
+  \end{itemize}
+
+  \item \lstinline|DynamicCipherInputStream|, \lstinline|DynamicCipherOutputStream|
+  \begin{itemize}
+   \item These classes provide the core abstraction of out broadcast scheme protocol: They
+	 implement the network protocol used between a server and the clients. \\
+	 It is based on symmetric encryption with a session key that can be changed at any
+	 time during transmission.
+	 The protocol works with two types of messages: Payload messages and key updates.
+	 Payload messages contain AES-encrypted data and key update messages contain a new session key,
+	 encrypted and decrypted with an abstract \lstinline|Encryptor|/\lstinline|Decryptor| pair. \\
+	 In the case of CryptoCast, the two instances use the Naor-Pinkas scheme to communicate
+	 the secret between the server and authorized clients.
+  \end{itemize}
+
+  \item \lstinline|EllipticCurve|, \lstinline|EllipticCurveOverFp|, \lstinline|EllipticCurveGroup|
+  \begin{itemize}
+   \item Provide the mathematical means to implement Naor-Pinkas based on elliptic curves.
+	 The common structure of \lstinline|EllipticCurveGroup| and \lstinline|SchnorrGroup| is
+	 captured by  \lstinline|CyclicGroupOfPrimeOrder| (see above).
+  \end{itemize}
+
+   \item \lstinline|DecryptionError|, \lstinline|InsufficientInformationError|, \lstinline|NoMoreRevocationsPossibleError|
+  \begin{itemize}
+   \item Exception classes for different parts of our algorithms.
+  \end{itemize}
+
+  \item \lstinline|SchnorrGroup|
+  \begin{itemize}
+   \item Represents the mathematical structure that is used in the Naor-Pinkas paper
+	 to implement the scheme.
+  \end{itemize}
+
 \end{itemize}
 
 \subsection{Package cryptocast.crypto.naorpinkas}
 
+The prefix of all the \lstinline|NaorPinkasXYZ| classes was renamed to just \lstinline|NP| for readability.
+
+Since we decided to provide an implementation of NP based on elliptic curves, we needed to extract
+the common parts of the algorithm to avoid code duplication.
+
+However, the server needs to work with both implementations, so a common facade is also needed.
+
+Also, due to the different implementations, type arguments were introduced to tie an instance
+to a specific underlying type of group. This introduces compiler-checked guarantees that prevent
+confusion between the different implementations and avoids casting.
+
 \begin{itemize}
-	
-	
-	\item \textit{\textbf{class ECNPClient}}
+  \item \lstinline|NPServerInterface|
 	\begin{itemize}
-	 \item TODO.
+		\item Describes the interface of the NP server that is available to users of the API.
+		      This is what the CryptoCast server uses.
 	\end{itemize}
-	
-	\item \textit{\textbf{class ECNPServer}}
+
+	\item \lstinline|NPServerFactory|
 	\begin{itemize}
-	 \item TODO.
+		\item Describes a strategy to generate server instance. Implementations are
+		      \lstinline|ECNPServerFactory| and \lstinline|SchnorrNPServerFactory|, which
+					create the differrent server implementations.
 	\end{itemize}
-	
-	\item \textit{\textbf{class ECNPServerFactory}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NPClient<T, G extends CyclicGroupOfPrimeOrder<T> > }}
-	\begin{itemize}
-	 \item The class \textit{\textbf{NaorPinkasClient}} was replaced by this class.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NPIdentity}}
-	\begin{itemize}
-	 \item The class \textit{\textbf{NaorPinkasIdentity}} was replaced by this class.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NPKey<T, G extends CyclicGroupOfPrimeOrder<T> >}}
-	\begin{itemize}
-	 \item The class \textit{\textbf{NaorPinkasPersonalKey}} was replaced by this class.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NPKeyGenerator<T, G extends CyclicGroupOfPrimeOrder<T> >}}
-	\begin{itemize}
-	 \item This class was added for generating naor-pinkas keys.
-	\end{itemize}
-	
-	\item \textbf{\textit{class SchnorrNPServerFactory}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NPMessage<T, G extends CyclicGroupOfPrimeOrder<T> >}}
-	\begin{itemize}
-	 \item This class was added to represent a naor-pinkas message sent from the server to the clients.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NPServer<T, G extends CyclicGroupOfPrimeOrder<T> >}}
-	\begin{itemize}
-	 \item The class \textit{\textbf{NaorPinkasServer}} was replaced by this class.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NPServerContext<T, G extends CyclicGroupOfPrimeOrder<T> >}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-	
-	\item \textit{\textbf{class interface NPServerFactory}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-	
-	\item \textit{\textbf{interface NPServerInterface}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NPShare<T, G extends CyclicGroupOfPrimeOrder<T> >}}
-	\begin{itemize}
-	 \item The class \textit{\textbf{NaorPinkasShare}} was replaced by this class.
-	\end{itemize}
-	
-	\item \textit{\textbf{class NPShareCombinator<T, G extends CyclicGroupOfPrimeOrder<T> >}}
-	\begin{itemize}
-	 \item The class \textit{\textbf{NaorPinkasShareCombinator}} was replaced by this class.
-	\end{itemize}
-	
-	\item \textit{\textbf{class SchnorrNPClient}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-	
-	\item \textit{\textbf{class SchnorrNPServer}}
-	\begin{itemize}
-	 \item TODO.
-	\end{itemize}
-		
 \end{itemize}
-	
-
-
 
 \end{document}
 

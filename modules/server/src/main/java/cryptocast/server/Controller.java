@@ -9,7 +9,6 @@ import java.net.SocketAddress;
 import java.security.PrivateKey;
 import java.util.Map;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.Set;
 
 import javax.sound.sampled.AudioFormat;
@@ -33,14 +32,14 @@ import cryptocast.comm.*;
  * Deals with user-interactions and therefore changes data in the model if
  * necessary.
  */
-public class Controller implements Observer {
+public class Controller {
     private static final Logger log = LoggerFactory.getLogger(Controller.class);
-    
-    // don't use AES-256 because that would require all users 
+
+    // don't use AES-256 because that would require all users
     // to have the Unlimited Strength Jurisdiction Policy Files installed.
     // Also, AES-128 seems to be more secure
     private static final int AES_KEY_BITS = 128;
-    
+
     private NaorPinkasServerData data;
     private MessageOutChannel rawOut;
     private File databaseFile;
@@ -50,7 +49,7 @@ public class Controller implements Observer {
     private SwitchableInputStream switchableInput;
     private SwitchableOutputStream switchableOutput;
     NPServerFactory serverFactory;
-    
+
     private static Function<Throwable, Boolean> fatalExceptionHandler =
             new Function<Throwable, Boolean>() {
                 @Override
@@ -60,7 +59,7 @@ public class Controller implements Observer {
                     return false; // just for the lulz
                 }
             };
-            
+
     private Controller(NaorPinkasServerData data, File databaseFile,
             MessageOutChannel rawOut,
             BroadcastEncryptionServer<NPIdentity> encServer,
@@ -81,7 +80,7 @@ public class Controller implements Observer {
 
     /**
      * Creates a Controller with the given parameters
-     * 
+     *
      * @param databaseFile The database file.
      * @param listenAddr The socket address to bind to.
      * @param keyBroadcastIntervalSecs the broadcast interval in seconds
@@ -91,7 +90,7 @@ public class Controller implements Observer {
      */
     public static Controller start(File databaseFile, SocketAddress listenAddr,
                                    int keyBroadcastIntervalSecs,
-                                   NPServerFactory serverFactory) 
+                                   NPServerFactory serverFactory)
                    throws IOException, ClassNotFoundException {
         databaseFile.getParentFile().mkdirs();
         NaorPinkasServerData data;
@@ -105,8 +104,8 @@ public class Controller implements Observer {
         ServerMultiMessageOutChannel multicastServer = new ServerMultiMessageOutChannel(
                 socket, fatalExceptionHandler);
         new Thread(multicastServer, "TcpMulticastServer").start();
-        
-        final BroadcastEncryptionServer<NPIdentity> broadcastServer = 
+
+        final BroadcastEncryptionServer<NPIdentity> broadcastServer =
                 startBroadcastEncryptionServer(data, multicastServer, keyBroadcastIntervalSecs);
         final SwitchableInputStream input = new SwitchableInputStream();
         final SwitchableOutputStream output = new SwitchableOutputStream();
@@ -131,7 +130,7 @@ public class Controller implements Observer {
 
     /**
      * Saves the users's personal keys in a keyfile at the given directory.
-     * 
+     *
      * @param dir The directory to save the keyfiles in.
      * @param users The users who their personal keys will be saved.
      * @throws IOException
@@ -149,7 +148,7 @@ public class Controller implements Observer {
 
     /**
      * Saves the database.
-     * 
+     *
      * @throws IOException
      */
     public void saveDatabase() throws IOException {
@@ -163,15 +162,15 @@ public class Controller implements Observer {
     public NaorPinkasServerData getModel() {
         return data;
     }
-    
+
     /**
-     * Reinitializes the cryptography. 
+     * Reinitializes the cryptography.
      * All data of the current session will be lost forever!
-     * 
+     *
      * @param t the size of the polynomial.
      * @throws IOException
      */
-    public void reinitializeCrypto(int t) 
+    public void reinitializeCrypto(int t)
             throws IOException {
         data = createNewData(t, serverFactory);
         encServer = startBroadcastEncryptionServer(
@@ -182,7 +181,7 @@ public class Controller implements Observer {
 
     /**
      * Streams the data.
-     * 
+     *
      * @param in The input stream.
      * @throws IOException
      */
@@ -192,7 +191,7 @@ public class Controller implements Observer {
 
     /**
      * Streams the data.
-     * 
+     *
      * @param in The input stream.
      * @param maxBytesPerSec Maximum bytes per second.
      * @throws IOException
@@ -211,7 +210,7 @@ public class Controller implements Observer {
         new Thread(server, "BroadcastEncServer").start();
         return server;
     }
-    
+
     /**
      * @return The database file.
      */
@@ -235,7 +234,7 @@ public class Controller implements Observer {
 
     /**
      * Streams simple text.
-     * 
+     *
      * @throws IOException
      * @throws InterruptedException
      */
@@ -250,7 +249,7 @@ public class Controller implements Observer {
 
     /**
      * Streams audio.
-     * 
+     *
      * @param file The audio file from which the data is read.
      * @throws IOException
      * @throws UnsupportedAudioFileException
@@ -280,14 +279,4 @@ public class Controller implements Observer {
         InputStream in = new FileInputStream(file);
         stream(in, bitrate / 8);
     }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        try {
-            saveDatabase();
-        } catch (Exception e) {
-            log.error("Error while saving database", e);
-        }
-    }
-
 }
