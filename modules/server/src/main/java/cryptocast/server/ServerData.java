@@ -131,7 +131,9 @@ public class ServerData<ID> implements Serializable {
     }
 
     /**
-     * @return all users.
+     * Returns the users.
+     * 
+     * @return a set of all users.
      */
     public Set<User<ID>> getUsers() {
         return users;
