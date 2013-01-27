@@ -227,11 +227,26 @@ Due to missing functionality in the \textit{MediaPlayer} class (for example: buf
   \item This class was added to provide Media player to play audio from a raw InputStream.
   \end{itemize}
 
-    \item \lstinline|class StreamConnector|
+  \item \lstinline|class StreamConnector|
   \begin{itemize}
-   \item This class was added to separate work from the StreamViewerActivity class
+  \item This class was added to separate work from the StreamViewerActivity class
   in a separate thread to prevent the GUI not from showing properly.
   \end{itemize}
+
+  \item \lstinline|class OptionsActivity|
+  \begin{itemize}
+  \item \lstinline|public void onCreateContextMenu(ContextMenu menu, View ContextMenuInfo menuInfo)| was added to 
+  create a context menu to edit the server history.
+  \item \lstinline|public public boolean onContextItemSelected(MenuItem item)| was added to edit the selected item in the server history
+    \end{itemize}
+
+  
+  \item \lstinline|class KeyChoiceActivity|
+  \begin{itemize}
+  \item Methods were removed because the key file arguments are passed new via \lstinline|getIntent().getExtras()|. 
+  \end{itemize}
+
+
 
 \end{itemize}
 
