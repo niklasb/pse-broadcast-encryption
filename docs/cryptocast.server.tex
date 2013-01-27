@@ -31,19 +31,13 @@ Deals with user-interactions and therefore changes data in the model if
 + getT() : int \\
 + getListenAddress() : SocketAddress \\
 + streamSampleText() \\
-+ streamAudio(file : File) \\
-+ update(o : Observable, arg : Object)
++ streamAudio(file : File)
 }
 \end{tikzpicture}
 \vspace{0.3em}
 \end{minipage}
 
 
-
-\textbf{\sffamily Superclasses and Interfaces}
-\begin{itemize}
-\item \lstinline|java.util.Observer|
-\end{itemize}
 
 
 \textbf{\sffamily Constructors}
@@ -88,7 +82,7 @@ Saves the database.
 
 
 \item \lstinline|public void| \lstinline|reinitializeCrypto|\lstinline|(int t)|\\ \\[-0.6em]
-Reinitializes the cryptography. 
+Reinitializes the cryptography.
  All data of the current session will be lost forever!
 \begin{itemize}
 \item \lstinline|t|: the size of the polynomial.
@@ -138,11 +132,6 @@ Streams audio.
 \begin{itemize}
 \item \lstinline|file|: The audio file from which the data is read.
 \end{itemize}
-
-
-
-\item \lstinline|public void| \lstinline|update|\lstinline|(Observable o, Object arg)| \\[-0.6em]
-
 
 
 
@@ -387,9 +376,9 @@ Checks whether the user is revoked.
 \emph{Returns:} \lstinline|true|, if the user was revoked or \lstinline|false| otherwise.
 
 \item \lstinline|public Set<User<ID>, ID>| \lstinline|getUsers|\lstinline|()|\\ \\[-0.6em]
-\emph{Returns:} all users.
+Returns the users.
 
-
+\emph{Returns:} a set of all users.
 
 \end{itemize}
 
@@ -421,6 +410,8 @@ Creates a new Command with the given values
 \begin{itemize}
 \item \lstinline|name|: The name of the command
 \item \lstinline|syntax|: The syntax of the command
+\item \lstinline|shortDesc|: A short description of the functionality
+\item \lstinline|longDesc|: A long description of the funktionality
 \end{itemize}
 
 
