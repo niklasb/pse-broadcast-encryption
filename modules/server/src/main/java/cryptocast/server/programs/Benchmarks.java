@@ -26,14 +26,14 @@ class Result {
     private double total;
     private int n;
     private int freq;
-    
+
     public Result(int freq) {
         this.freq = freq;
     }
     public double getMax() { return max; }
     public double getMin() { return min; }
     public double getAvg() { return total / n; }
-    
+
     void report(double t) {
         max = Math.max(max, t);
         min = Math.min(min, t);
@@ -43,9 +43,9 @@ class Result {
             print();
         }
     }
-    
+
     public void print() {
-        System.out.printf("%5d  min %.3f  max %.3f  avg %.3f\n", 
+        System.out.printf("%5d  min %.3f  max %.3f  avg %.3f\n",
                 n, getMin(), getMax(), getAvg());
     }
 }
@@ -60,24 +60,24 @@ interface Benchmark extends Runnable {
  */
 public final class Benchmarks {
     private static final Logger log = LoggerFactory.getLogger(Benchmarks.class);
-    
+
     private static class OptsCommon extends OptParse.WithHelp {
         @Parameter(names = { "-n" }, description = "Number of repetitions")
         public int n = 100;
         @Parameter(names = { "-f" }, description = "Report frequency")
         public int f = 1;
     }
-    
+
     private static class WithECOrSchnorr {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.WithECOrSchnorr.class);
-        
+
         @Parameter(names = { "-g" }, description = "The group (ec or schnorr)")
         protected String g = "schnorr";
-        
+
         protected NPServerFactory serverFactory;
         protected NPServerInterface server;
-        
+
         protected SchnorrGroup schnorrGroup;
         protected EllipticCurveGroup<BigInteger, EllipticCurveOverFp.Point, EllipticCurveOverFp>
               ecGroup;
@@ -95,35 +95,35 @@ public final class Benchmarks {
                 throw new Exception("Invalid group: `" + g + "'");
             }
         }
-        
+
         protected void createServer(int t) {
             server = serverFactory.construct(t);
         }
-        
+
         protected boolean isEc() {
             return g.equals("ec");
         }
-        
+
         protected boolean isSchnorr() {
             return g.equals("schnorr");
         }
     }
-    
+
     @Parameters(commandDescription = "Calculate the lagrange coefficients")
     private static class LagrangeBenchmark implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.LagrangeBenchmark.class);
-        
+
         @Parameter(names = { "-t" }, description = "Degree of the polynomial")
         private int t = 100;
         @Parameter(names = { "-b" }, description = "The bit size of the modulus")
         private int b = 160;
         @Parameter(names = { "-x" }, description = "The number of threads")
         private int numThreads = 2;
-        
+
         IntegersModuloPrime field;
         ImmutableList<BigInteger> xs;
-        
+
         public void beforeAll() throws Exception {
             BigInteger p = makePrime(b);
             field =  new IntegersModuloPrime(p);
@@ -135,38 +135,38 @@ public final class Benchmarks {
             }
             xs = builder.build();
         }
-        
+
         public void before() {}
-        
+
         public void run() {
             LagrangeInterpolation.computeCoefficients(field, xs, numThreads);
         }
     }
-    
+
     @Parameters(commandDescription = "Calculate the product of powers in a cyclic group")
     private static class MultiExpBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.MultiExpBenchmark.class);
-        
+
         @Parameter(names = { "-t" }, description = "The number of powers")
         private int t = 100;
-        
+
         @Parameter(names = { "-k" }, description = "The chunk size to use for Shamir's trick")
         private int k = 5;
-        
+
         ImmutableList<BigInteger> basesSchnorr;
         ImmutableList<EllipticCurveOverFp.Point> basesEc;
         ImmutableList<BigInteger> exps;
-        
+
         public void beforeAll() throws Exception {
             super.beforeAll();
             Random rnd = new Random();
             IntegersModuloPrime modQ;
             if (isEc()) {
-                ImmutableList.Builder<EllipticCurveOverFp.Point> builder = 
+                ImmutableList.Builder<EllipticCurveOverFp.Point> builder =
                              ImmutableList.builder();
                 for (int i = 0; i < t; i++) {
-                    builder.add(ecGroup.getBasePoint());
+                    builder.add(ecGroup.getGenerator());
                 }
                 basesEc = builder.build();
                 modQ = ecGroup.getFieldModOrder();
@@ -184,9 +184,9 @@ public final class Benchmarks {
             }
             exps = cbuilder.build();
         }
-        
+
         public void before() {}
-        
+
         public void run() {
             if (g.equals("ec")) {
                 ecGroup.multiexpShamir(basesEc, exps, k);
@@ -195,17 +195,17 @@ public final class Benchmarks {
             }
         }
     }
-    
+
     @Parameters(commandDescription = "Encrypt a 128-bit key using Naor-Pinkas")
     private static class EncryptBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.EncryptBenchmark.class);
-        
+
         @Parameter(names = { "-t" }, description = "Number of revocable users")
         private int t = 100;
-        
+
         byte[] plain;
-        
+
         public void beforeAll() throws Exception {
             super.beforeAll();
             long start;
@@ -222,25 +222,25 @@ public final class Benchmarks {
             server.encrypt(plain);
             log.info("Took {} ms", System.currentTimeMillis() - start);
         }
-        
+
         public void before() {}
-        
+
         public void run() {
             byte[] cipher = server.encrypt(plain);
             log.debug("128-bit key was encrypted to {} bytes of ciphertext", cipher.length);
         }
     }
-    
+
     @Parameters(commandDescription = "Encrypt a 128-bit key using Naor-Pinkas multiple times, with revocations in between")
     private static class MultiEncryptBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.MultiEncryptBenchmark.class);
-        
+
         @Parameter(names = { "-t" }, description = "Number of revocable users")
         private int t = 100;
-        
+
         byte[] plain;
-        
+
         public void beforeAll() throws Exception {
             super.beforeAll();
             log.info("Naor-Pinkas options: t={}", t);
@@ -248,14 +248,14 @@ public final class Benchmarks {
             gen.init(128);
             plain = gen.generateKey().getEncoded();
         }
-        
+
         public void before() {
             log.info("Generating server...");
             long t1 = System.currentTimeMillis();
             createServer(t);
             log.info("Done! Took {} ms", System.currentTimeMillis() - t1);
         }
-        
+
         public void run() {
             try {
                 server.encrypt(plain);
@@ -272,19 +272,19 @@ public final class Benchmarks {
             }
         }
     }
-    
+
     @Parameters(commandDescription = "Decrypt a 128-bit key using Naor-Pinkas")
     private static class DecryptBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.DecryptBenchmark.class);
-        
+
         @Parameter(names = { "-t" }, description = "Number of revocable users")
         private int t = 100;
-        
+
         ECNPClient ecClient;
         SchnorrNPClient schnorrClient;
         byte[] cipher;
-        
+
         public void beforeAll() throws Exception {
             super.beforeAll();
             log.info("Naor-Pinkas options: t={}", t);
@@ -302,9 +302,9 @@ public final class Benchmarks {
             byte[] plain = gen.generateKey().getEncoded();
             cipher = server.encrypt(plain);
         }
-        
+
         public void before() {}
-        
+
         public void run() {
             try {
                 if (isSchnorr()) {
@@ -322,7 +322,7 @@ public final class Benchmarks {
     private static class MultiEvalBenchmark implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.MultiEvalBenchmark.class);
-        
+
         @Parameter(names = { "-t" }, description = "Degree of the polynomial")
         private int t = 100;
         @Parameter(names = { "-b" }, description = "The bit size of the modulus")
@@ -333,15 +333,15 @@ public final class Benchmarks {
         private int numThreads = 4;
         @Parameter(names = { "-c" }, description = "The number of points to evaluate at once")
         private int chunkSize = 1024;
-        
+
         IntegersModuloPrime field;
         ImmutableList<BigInteger> xs;
         Polynomial<BigInteger> poly;
-        
+
         public void beforeAll() throws Exception {
             BigInteger p = makePrime(b);
             field =  new IntegersModuloPrime(p);
-            log.info("Multi-eval options: t={} b={} n={} numThreads={}, chunkSize={}", 
+            log.info("Multi-eval options: t={} b={} n={} numThreads={}, chunkSize={}",
                     t, p.bitLength(), n, numThreads, chunkSize);
             Random rnd = new Random();
             ImmutableList.Builder<BigInteger> builder = ImmutableList.builder();
@@ -351,31 +351,31 @@ public final class Benchmarks {
             xs = builder.build();
             poly = Polynomial.createRandomPolynomial(rnd, field, t);
         }
-        
+
         public void before() {}
-        
+
         public void run() {
             PolynomialMultiEvaluation eval = new PolynomialMultiEvaluation(xs, numThreads, chunkSize);
             eval.evaluate(poly);
         }
     }
-    
+
     @Parameters(commandDescription = "Generate client keys")
     private static class KeygenBenchmark extends WithECOrSchnorr implements Benchmark {
         private static final Logger log = LoggerFactory
                 .getLogger(Benchmarks.KeygenBenchmark.class);
-        
+
         @Parameter(names = { "-t" }, description = "Degree of the polynomial")
         private int t = 100;
         @Parameter(names = { "-n" }, description = "The number of users")
         private int n = 1000;
-        
+
         NPServerInterface server;
-        
+
         public void beforeAll() throws Exception {
             super.beforeAll();
         }
-        
+
         public void before() throws Exception {
             long start;
             log.info("Naor-Pinkas options: t={}", t);
@@ -390,14 +390,14 @@ public final class Benchmarks {
             server.encrypt(new byte[] { 0x1 });
             log.info("Took {} ms", System.currentTimeMillis() - start);
         }
-        
+
         public void run() {
             for (int i = 0; i < n; ++i) {
                 server.getPersonalKey(server.getIdentity(i));
             }
         }
     }
-    
+
     private static Map<String, Benchmark> commands = ImmutableMap.<String, Benchmark>builder()
             .put("lagrange", new LagrangeBenchmark())
             .put("encrypt", new EncryptBenchmark())
@@ -412,14 +412,14 @@ public final class Benchmarks {
         System.err.println("Available benchmarks: " + Joiner.on(", ").join(commands.keySet()));
         return;
     }
-    
+
     /**
      * @param args command line arguments
      */
     public static void main(String[] argv) throws Exception {
         LogbackUtils.removeAllAppenders();
         LogbackUtils.addStderrLogger(Level.DEBUG);
-        
+
         OptsCommon opts = new OptsCommon();
         JCommander jc = new JCommander(opts);
         for (Map.Entry<String, Benchmark> entry : commands.entrySet()) {
@@ -442,14 +442,14 @@ public final class Benchmarks {
         log.info("beforeAll took {} ms, starting tests!", System.currentTimeMillis() - start);
         runBenchmark(benchmark, opts.n, opts.f);
     }
-    
+
     private static void runBenchmark(Benchmark benchmark, int rep, int freq) throws Exception {
         Result res = measure(benchmark, rep, freq);
-        if (rep % freq != 0) { 
+        if (rep % freq != 0) {
             res.print();
         }
     }
-    
+
     private static Result measure(Benchmark benchmark, int rep, int freq) throws Exception {
         Result res = new Result(freq);
         for (int i = 0; i < rep; ++i) {
@@ -460,7 +460,7 @@ public final class Benchmarks {
         }
         return res;
     }
-    
+
     private static BigInteger makePrime(int b) {
         return BigInteger.valueOf(2).pow(b).nextProbablePrime();
     }
