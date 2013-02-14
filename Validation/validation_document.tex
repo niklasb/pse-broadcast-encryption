@@ -63,28 +63,34 @@ This document describes procedures concerning the testing of our CryptoCast proj
 The goal we have towards unit testing is to cover all of the possible scenarios we can think of via test cases.
 
 \subsubsection{cryptocast.crypto} This package provides basic primitives for working with broadcast encryption protocols and useful utilities for working with polynomials and elliptic curves over fields, which is necessary to implement the Naor-Pinkas scheme.
-The implemented unit tests cover all the functionalities provided in the package, especially the polynomial and langrange evaluation, modulo and elliptic curves computations and dynamic cipher streams generation.
+The implemented unit tests cover all the functionalities provided in the package, especially the polynomial and Langrange evaluation, modulo and elliptic curves computations and dynamic cipher streams generation.
 \subsubsection{cryptocast.crypto.noarpinkas}
 Contains tests for the Naor-Pinkas-based server and client implementations, including broadcasting and receiving encrypted streams using the Naor-Pinkas protocol.
 \subsubsection{cryptocast.comm}
 This package provides functionality related to communication between the different layers of the network protocol and to the communication between the server and clients. The unit tests in this package focus on the different stream-constructs regarding the send and receive functionality.
 \subsubsection{cryptocast.util}
-Has several unit tests for the general utility method that are use throughout the project.
+Has several unit tests for the general utility methods that are used throughout the project.
 \subsubsection{cryptocast.server}
 Tests in this package cover the server application implementation. Tests for managing the users and their keys as well as broadcasting are implemented here.
+
+\subsubsection{cryptocast.server.programs}
+The classes in this package were not tested, because they are not a part of the overall project. These programs just offer a convenient way of starting and benchmarking the server implementation.
+
 \subsubsection{cryptocast.client}
-Contains client tests that are implemented using the Robolectric framework, which allows running test suits using Android API without an emulator. The client project doesn't have many logic tests, because it mainly uses Android API without implementing any new logic. Besides, its components, cryptography and communication, are already tested.
+Contains client tests that are implemented using the Robolectric framework, which allows running test suits using the Android API without an emulator. The client project doesn't have many logic tests, because it mainly uses the Android API without implementing any new logic. Besides, its components, cryptography and communication, are already tested in the before-mentioned packages \textit{cryptocast.crypto} and \textit{cryptocast.comm}.
+
 \subsubsection{cryptocast.client.filechooser}
 File chooser tests are implemented in this package and cover choosing a key file from the filesystem, that is handled by the FileChooserActivity.
 
-\subsection{Test scnenarios}
-The test scenarios in the functional specifications document can be devided into two categories:
+
+\subsection{Test scenarios}
+The test scenarios in the functional specifications document can be divided into two categories:
 
 \begin{itemize}
-	\item User Interface (UI) tests, which involve running the client on an Android device and testing specific functionalitites regarding client-server interaction.
+	\item User Interface (UI) tests, which involve running the client on an Android device and testing specific functionalities regarding client-server interaction.
 	\item Logic tests throughout the projects realized as unit tests based on JUnit. 
 \end{itemize}
-All implemented tests are successful.
+
 \subsection{User Interface Test Scenarios}
 
 \subsubsection{/TF10/}
@@ -102,6 +108,7 @@ This scenario tests the normal program flow, where all actions are performed by 
    \item User plays the audio stream.
 \end{itemize}
 \end{itemize}
+The test was successful.
 
 \subsubsection{/TF15/}
 This scenario tests the program flow, where all actions are performed by an revoked user.
@@ -115,12 +122,13 @@ This scenario tests the program flow, where all actions are performed by an revo
    \item User starts the application.
    \item User enters the hostname and the portnumber.
    \item User chooses the key file.
-   \item An error message is displayed and the user can not view the stream.
+   \item An error message is displayed describing the problem and the user can not view the stream.
 \end{itemize}
 \end{itemize}
+The test was successful.
 
 \subsubsection{/TF60/}
-This scenario tests a connection to an already visited server by an authorized user..
+This scenario tests a connection to an already visited server by an authorized user.
 
 \begin{itemize}
 	\item Actor: Client user.
@@ -129,10 +137,12 @@ This scenario tests a connection to an already visited server by an authorized u
 	\item Program Flow:
 	\begin{itemize}
    \item User starts the application.
-   \item User enters the hoastname and the portnumber.
+   \item User enters the hostname and the portnumber.
    \item User plays the audio stream.
 \end{itemize}
 \end{itemize}
+The test was successful.
+\newpage
 
 \subsubsection{/TF80/}
 This scenario tests covers invalid input and actions taken by the user.
@@ -144,28 +154,31 @@ This scenario tests covers invalid input and actions taken by the user.
 	\item Program Flow:
 	\begin{itemize}
    \item User starts the application.
-   \item User enters a worng hoastname and the portnumber.
+   \item User enters a wrong hostname and the port number.
    \item An error message is displayed describing the problem.
- 	 \item User corrects the hoastname and the portnumber.
+ 	 \item User corrects the hostname and the portnumber.
 	 \item User chooses the key file.
    \item User plays the audio stream.
 \end{itemize}
 \end{itemize}
+The test was successful.
 
 \subsection{Logic Test Scenarios}
 
 \subsubsection{/TF20/}
-This scenario tests the key generation functiolaty in the server.
+This scenario tests the key generation functionality in the server.
+
 \begin{itemize}
 	\item Actor: Server user.
 	\item Start Constraints: none.
-	\item Goal: New identities and private keys are stored for all users.
+	\item Goal: New identities and private keys are assigned to all users.
 	\item Program Flow:
 	\begin{itemize}
    \item User starts the server.
    \item User initializes the server with a specific number of users that can be revoked.
 \end{itemize}
 \end{itemize}
+The test was successful.
 
 \subsubsection{/TF30/}
 This scenario tests broadcast functionality in the server.
@@ -181,6 +194,7 @@ This scenario tests broadcast functionality in the server.
    \item Server starts streaming.
 \end{itemize}
 \end{itemize}
+The test was successful.
 
 \subsubsection{/TF40/}
 This scenario tests revoke functionality in the server.
@@ -193,24 +207,26 @@ This scenario tests revoke functionality in the server.
 	\begin{itemize}
    \item Start the server.
    \item Revoke a specific user.
-   \item The revoked user can no longer encrypt the stream
+   \item The revoked user can no longer encrypt the stream.
 \end{itemize}
 \end{itemize}
+The test was successful.
+
 
 \subsubsection{/TF50/}
 This scenario tests add-user functionality in the server.
 
 \begin{itemize}
 	\item Actor: Server user.
-	\item Start Constraints: Existing private keys.
-	\item Goal: The generated key for the given user is saved.
+	\item Start Constraints: none.
+	\item Goal: New user is added and a new key is generated and assigned to this user.
 	\item Program Flow:
 	\begin{itemize}
    \item Start the server.
-   \item Add new user.
-   \item A key is generated, saved and assigned to the new user.
+   \item Add a new user.
 \end{itemize}
 \end{itemize}
+The test was successful.
 
 \subsubsection{/TF70/}
 This scenario covers illegal actions taken by the user.
@@ -218,18 +234,18 @@ This scenario covers illegal actions taken by the user.
 \begin{itemize}
 	\item Actor: Server user.
 	\item Start Constraints: none.
-	\item Goal: An error message is displayed.
+	\item Goal: An error message is displayed describing the problem.
 	\item Following illegal actions are covered:
 	\begin{itemize}
-   \item Server starts the broadcast without generating the keys first.
-   \item A new user is added before the keys are generated.
    \item An existing user is added.
    \item A non-existing user is revoked.
    \item A non-existing user is unrevoked.
 \end{itemize}
 \end{itemize}
+The test was successful.
 
 
+\newpage
 \section{Code Coverage}
 This section describes the status of our code coverage evaluation tests. For code coverage measurement we used EclEmma.
 EclEmma is an Eclipse plug-in that generates code coverage reports and provide simple trace information about test cases. Coverage is defined as a measure of the completeness of the set of test cases, based on the relation between the total sum of all instructions and methods to the total sum of all methods, that are called by the test cases.
@@ -242,6 +258,7 @@ It has 81.5\% of the methods covered.
 \begin{illustration}{Code coverage for package cryptocast.crypto}
 \includegraphics[width=450px]{figures/images/crypto.jpg}
 \end{illustration}
+\newpage
 
 \subsection{cryptocast.crypto.noarpinkas}
 The evaluation of the code coverage for the package cryptocast.crypto.noarpinkas is as shown in the following figure.
@@ -258,10 +275,10 @@ It has 63.9\% of the methods covered.
 \begin{illustration}{Code coverage for package cryptocast.comm}
 \includegraphics[width=450px]{figures/images/comm.jpg}
 \end{illustration}
-
+\newpage
 \subsection{cryptocast.server}
 The evaluation of the code coverage for the package cryptocast.server is as shown in the following figure.
-It has 40.0\% of the methods covered.
+It has 40.0\% of the methods covered. The server project is based entirely on the functionality provided by the crypto and communications parts, without implementing a lot of extra or new logic. The fact that can be reflected in the coverage results, whereby the 40\% of the covered code base corresponds to those parts where the additional logic was implemented. An automated tool can only provide an estimate based on static code analysis without taking the semantics of the code base into consideration, which is why these test coverage reports are considered a guideline.
 
 \begin{illustration}{Code coverage for package cryptocast.server}
 \includegraphics[width=450px]{figures/images/server.jpg}
@@ -270,7 +287,7 @@ It has 40.0\% of the methods covered.
 
 \subsection{cryptocast.util}
 The evaluation of the code coverage for the package cryptocast.util is as shown in the figure.
-It has 39.8\% of the methods covered.
+It has 39.8\% of the methods covered. The test coverage for the util project is relatively low, because most of the methods are convenience wrappers and helper functions around standard Java API.
 
 \begin{illustration}{Code coverage for package cryptocast.util}
 \includegraphics[width=450px]{figures/images/util.jpg}
