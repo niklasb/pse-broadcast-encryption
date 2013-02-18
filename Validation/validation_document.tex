@@ -62,16 +62,49 @@ This document describes procedures concerning the testing of our CryptoCast proj
 \subsection{Unit tests}
 The goal we have towards unit testing is to cover all of the possible scenarios we can think of via test cases.
 
+For code coverage measurement we used EclEmma.
+EclEmma is an Eclipse plug-in that generates code coverage reports and provide simple trace information about test cases. Coverage is defined as a measure of the completeness of the set of test cases, based on the relation between the total sum of all instructions and methods to the total sum of all methods, that are called by the test cases.
+
 \subsubsection{cryptocast.crypto} This package provides basic primitives for working with broadcast encryption protocols and useful utilities for working with polynomials and elliptic curves over fields, which is necessary to implement the Naor-Pinkas scheme.
 The implemented unit tests cover all the functionalities provided in the package, especially the polynomial and Langrange evaluation, modulo and elliptic curves computations and dynamic cipher streams generation.
+
+This package has 81.5\% of the methods covered:
+\begin{illustration}{Code coverage for package cryptocast.crypto}
+\includegraphics[width=450px]{figures/images/crypto.jpg}
+\end{illustration}
+
 \subsubsection{cryptocast.crypto.noarpinkas}
 Contains tests for the Naor-Pinkas-based server and client implementations, including broadcasting and receiving encrypted streams using the Naor-Pinkas protocol.
+
+It has with 89.8\% of the methods covered:
+\begin{illustration}{Code coverage for package cryptocast.crypto.noarpinkas}
+\includegraphics[width=450px]{figures/images/noarpinkas.jpg}
+\end{illustration}
+\newpage
 \subsubsection{cryptocast.comm}
 This package provides functionality related to communication between the different layers of the network protocol and to the communication between the server and clients. The unit tests in this package focus on the different stream-constructs regarding the send and receive functionality.
+
+It has 63.9\% of the methods covered.
+
+\begin{illustration}{Code coverage for package cryptocast.comm}
+\includegraphics[width=450px]{figures/images/comm.jpg}
+\end{illustration}
 \subsubsection{cryptocast.util}
 Has several unit tests for the general utility methods that are used throughout the project.
+
+It has 39.8\% of the methods covered. The test coverage for the util project is relatively low, because most of the methods are convenience wrappers and helper functions around standard Java API.
+
+\begin{illustration}{Code coverage for package cryptocast.util}
+\includegraphics[width=450px]{figures/images/util.jpg}
+\end{illustration}
 \subsubsection{cryptocast.server}
 Tests in this package cover the server application implementation. Tests for managing the users and their keys as well as broadcasting are implemented here.
+
+This package has 40.0\% of the methods covered. The server project is based entirely on the functionality provided by the crypto and communications parts, without implementing a lot of extra or new logic. The fact that can be reflected in the coverage results, whereby the 40\% of the covered code base corresponds to those parts where the additional logic was implemented. An automated tool can only provide an estimate based on static code analysis without taking the semantics of the code base into consideration, which is why these test coverage reports are considered a guideline.
+
+\begin{illustration}{Code coverage for package cryptocast.server}
+\includegraphics[width=450px]{figures/images/server.jpg}
+\end{illustration}
 
 \subsubsection{cryptocast.server.programs}
 The classes in this package were not tested, because they are not a part of the overall project. These programs just offer a convenient way of starting and benchmarking the server implementation.
@@ -243,56 +276,6 @@ This scenario covers illegal actions taken by the user.
 \end{itemize}
 \end{itemize}
 The test was successful.
-
-
-\newpage
-\section{Code Coverage}
-This section describes the status of our code coverage evaluation tests. For code coverage measurement we used EclEmma.
-EclEmma is an Eclipse plug-in that generates code coverage reports and provide simple trace information about test cases. Coverage is defined as a measure of the completeness of the set of test cases, based on the relation between the total sum of all instructions and methods to the total sum of all methods, that are called by the test cases.
-
-
-\subsection{cryptocast.crypto}
-The evaluation of the code coverage for the package cryptocast.crypto is as shown in the following figure.
-It has 81.5\% of the methods covered.
-
-\begin{illustration}{Code coverage for package cryptocast.crypto}
-\includegraphics[width=450px]{figures/images/crypto.jpg}
-\end{illustration}
-\newpage
-
-\subsection{cryptocast.crypto.noarpinkas}
-The evaluation of the code coverage for the package cryptocast.crypto.noarpinkas is as shown in the following figure.
-It has with 89.8\% of the methods covered.
-
-\begin{illustration}{Code coverage for package cryptocast.crypto.noarpinkas}
-\includegraphics[width=450px]{figures/images/noarpinkas.jpg}
-\end{illustration}
-
-\subsection{cryptocast.comm}
-The evaluation of the code coverage for the package cryptocast.comm is as shown in the following figure.
-It has 63.9\% of the methods covered.
-
-\begin{illustration}{Code coverage for package cryptocast.comm}
-\includegraphics[width=450px]{figures/images/comm.jpg}
-\end{illustration}
-\newpage
-\subsection{cryptocast.server}
-The evaluation of the code coverage for the package cryptocast.server is as shown in the following figure.
-It has 40.0\% of the methods covered. The server project is based entirely on the functionality provided by the crypto and communications parts, without implementing a lot of extra or new logic. The fact that can be reflected in the coverage results, whereby the 40\% of the covered code base corresponds to those parts where the additional logic was implemented. An automated tool can only provide an estimate based on static code analysis without taking the semantics of the code base into consideration, which is why these test coverage reports are considered a guideline.
-
-\begin{illustration}{Code coverage for package cryptocast.server}
-\includegraphics[width=450px]{figures/images/server.jpg}
-\end{illustration}
-
-
-\subsection{cryptocast.util}
-The evaluation of the code coverage for the package cryptocast.util is as shown in the figure.
-It has 39.8\% of the methods covered. The test coverage for the util project is relatively low, because most of the methods are convenience wrappers and helper functions around standard Java API.
-
-\begin{illustration}{Code coverage for package cryptocast.util}
-\includegraphics[width=450px]{figures/images/util.jpg}
-\end{illustration}
-
 
 \section{Conclusion}
 Taking the User Interface tests into consideration in addition to the logic unit tests provides a wide spectrum of test coverage, that guarantees to a high degree a correct flow and robust implementation of the delivered applications.
