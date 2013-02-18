@@ -294,7 +294,7 @@ in other packages during refactoring.
 \begin{itemize}
    \item \lstinline|BroadcastSchemeUserManager|
    \begin{itemize}
-      \item Revocation of users is a costly operation: A new session key must be encrypted
+     \item Revocation of users is a costly operation: A new session key must be encrypted
      using Naor-Pinkas and decrypted on the client side. If a user wants to revoke multiple
      users, he needed to do so using repeated calls to the \lstinline|revoke| method.
      A straightforward implementation of \lstinline|BroadcastEncryptionServer| just triggers
@@ -384,7 +384,8 @@ confusion between the different implementations and avoids casting.
 
 \section{Approximate time plan}
 
-The following diagram was created by examining the Git commit log of the project:
+The following diagram was created by examining the Git commit log of the project. It shows
+the places of the code base we worked on at different stages of the implementation.
 
 \begin{illustration}{An approximate time table of the project}
 \includegraphics[width=400px]{timetable.png}
