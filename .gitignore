@@ -17,3 +17,5 @@ TODO
 tmp
 .idea
 .settings
+.project
+.classpath
