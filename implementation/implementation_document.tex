@@ -391,5 +391,13 @@ the places of the code base we worked on at different stages of the implementati
 \includegraphics[width=400px]{timetable.png}
 \end{illustration}
 
+The chart shows that a lot of time was needed to implement the client UI. The main reason
+for this is that we tried different approaches to work around the broken \lstinline|MediaPlayer|
+implementation in Android API Level 8. We finally solved this by upgrading to API Level 10,
+where the implementation is a lot more mature.
+
+Towards the end of the implementation phase, we put most of the effort into creating a Naor-Pinkas
+backend based on elliptic curve cryptography and adding performance optimizations.
+
 \end{document}
 
