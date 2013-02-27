@@ -1,4 +1,4 @@
-*.pdf
+/validation_document.pdf
 *.class
 *.html
 *.log
